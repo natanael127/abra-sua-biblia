@@ -1,0 +1,3 @@
+[submodule "assets/data/bibles/catholic-open"]
+	path = assets/data/bibles/catholic-open
+	url = git@github.com:natanael127/biblias-catolicas.git

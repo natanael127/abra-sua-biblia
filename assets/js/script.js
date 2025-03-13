@@ -1,6 +1,7 @@
 // Global variables
 let bibleData = null;
 let instructionsBackup = null;
+const BIBLES_PATH = 'assets/data/bibles/';
 
 // Opções de formatação
 const displayOptions = {
@@ -64,7 +65,7 @@ async function loadAvailableBibles() {
         const defaultBible = bibleParam || preferences.savedBible;
         
         // Tenta carregar o índice de Bíblias disponíveis
-        const response = await fetch('assets/data/bibles/index.json');
+        const response = await fetch(`${BIBLES_PATH}index.json`);
         
         if (response.ok) {
             const biblesList = await response.json();
@@ -186,7 +187,7 @@ function processBibleData(data) {
 async function loadBibleFromPredefined(bibleName) {
     try {
         // Carregar o arquivo JSON da pasta de Bíblias
-        const response = await fetch(`assets/data/bibles/json/${bibleName}.json`);
+        const response = await fetch(`${BIBLES_PATH}catholic-open/json/${bibleName}.json`);
         
         if (!response.ok) {
             throw new Error(`Erro ao carregar arquivo: ${response.status} ${response.statusText}`);
