@@ -122,7 +122,6 @@ document.addEventListener('DOMContentLoaded', function() {
     instructionsBackup = document.getElementById('result').innerHTML;
     loadAvailableBibles();
     loadQuote();
-    fetchRepositoryInfo();
     updateUploadContainerVisibility();
     setupExpandableSections();
     setupControlButtons();
