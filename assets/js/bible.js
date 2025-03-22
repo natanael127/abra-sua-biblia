@@ -206,6 +206,49 @@ function getFormattedVerseTexts(parsedRef, chapterContent, displayOpt) {
     return verseTexts;
 }
 
+function getEfectiveVerses(versesList) {
+    let strOut = '';
+
+    if (versesList.length === 1) {
+        strOut = `,${versesList[0] + 1}`;
+    } else if (versesList.length !== 0) {
+        const ranges = [];
+        let rangeStart = versesList[0];
+        let rangeEnd = versesList[0];
+
+        for (let i = 1; i < versesList.length; i++) {
+            if (versesList[i] === rangeEnd + 1) {
+                // The current verse is consecutive to the previous one
+                rangeEnd = versesList[i];
+            } else {
+                // The current verse is not consecutive
+                if (rangeStart === rangeEnd) {
+                    ranges.push(`${rangeStart + 1}`); // Single verse
+                } else {
+                    ranges.push(`${rangeStart + 1}-${rangeEnd + 1}`); // Range
+                }
+                
+                // Start a new range
+                rangeStart = versesList[i];
+                rangeEnd = versesList[i];
+            }
+        }
+
+        // Add the last range
+        if (rangeStart === rangeEnd) {
+            // Single verse
+            ranges.push(`${rangeStart + 1}`);
+        } else {
+            // Range
+            ranges.push(`${rangeStart + 1}-${rangeEnd + 1}`);
+        }
+
+        strOut = `,${ranges.join('.')}`;
+    }
+
+    return strOut;
+}
+
 function generateResult(reference, basicInstructions, displayOpt) {
     let errorFlag = false;
     let htmlOut = '';
@@ -234,7 +277,11 @@ function generateResult(reference, basicInstructions, displayOpt) {
                 parsedRef.verses = fixVersesIndexes(parsedRef, chapterContent.length);
                 const verseTexts = getFormattedVerseTexts(parsedRef, chapterContent, displayOpt);
                 if (displayOpt.parenthesesCitation) {
-                    verseTexts.push(`<span class="verse-reference">(${reference})</span>`);
+                    let improvedRef = `${book.abbreviation} ${parsedRef.chapter}`;
+                    if (!parsedRef.allVerses) {
+                        improvedRef += getEfectiveVerses(parsedRef.verses);
+                    }
+                    verseTexts.push(`<span class="verse-reference">(${improvedRef})</span>`);
                 }
     
                 // Conteúdo principal dos versículos
