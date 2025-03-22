@@ -212,7 +212,64 @@ function getFormattedVerseTexts(parsedRef, chapterContent, displayOptions) {
     return verseTexts;
 }
 
-// Função para buscar o versículo
+function generateResult(reference, basicInstructions) {
+    let errorFlag = false;
+    let htmlOut = '';
+
+    // Analyze the reference
+    const parsedRef = parseReference(reference);
+    if (!parsedRef) {
+        errorFlag = true;
+        htmlOut = basicInstructions;
+    }
+
+    if (bibleData) {
+        // Find book
+        const book = bibleData.bible.books.find(b => 
+            b.abbreviation.toLowerCase() === parsedRef.book.toLowerCase() || 
+            b.name.toLowerCase() == parsedRef.book.toLowerCase()
+        );
+
+        if (!book) {
+            errorFlag = true;
+            htmlOut = `<span class="error">Livro "${parsedRef.book}" não encontrado.</span>`;
+        } else {
+            // Check if chapter exists
+            const chapterIndex = parsedRef.chapter - 1;
+            if (chapterIndex < 0 || chapterIndex >= book.chapters.length) {
+                errorFlag = true;
+                htmlOut = `<span class="error">Capítulo ${parsedRef.chapter} não encontrado em ${book.name}.</span>`;
+            } else {
+                htmlOut = `<div class="reference">${book.name} ${parsedRef.chapter}</div>`;
+
+                const chapterContent = book.chapters[chapterIndex];
+                parsedRef.verses = fixVersesIndexes(parsedRef, chapterContent.length);
+                const verseTexts = getFormattedVerseTexts(parsedRef, chapterContent, displayOptions);
+                if (displayOptions.parenthesesCitation) {
+                    verseTexts.push(`<span class="verse-reference">(${reference})</span>`);
+                }
+    
+                // Conteúdo principal dos versículos
+                if (displayOptions.lineBreaks) {
+                    joinedContent = verseTexts.join('<br>');
+                } else {
+                    joinedContent = verseTexts.join(' ');
+                }
+    
+                htmlOut += `<div class="verse-text">${joinedContent}</div>`;
+            }
+        }
+    } else {
+        errorFlag = true;
+        htmlOut = '<span class="error">É necessário carregar o arquivo da Bíblia primeiro.</span>';
+    }
+
+    return {
+        error: errorFlag,
+        html: htmlOut,
+    };
+}
+
 async function searchVerse() {
     const reference = document.getElementById('reference').value.trim();
     const resultElement = document.getElementById('result');
@@ -220,59 +277,12 @@ async function searchVerse() {
     
     // Salvar a referência atual ao pesquisar
     saveReferencePreference(reference);
-    
-    // Ocultar botão de copiar ao iniciar nova busca
-    copyButton.classList.remove('visible');
-    
-    // Verificar se a Bíblia foi carregada
-    if (!bibleData) {
-        resultElement.innerHTML = '<span class="error">É necessário carregar o arquivo da Bíblia primeiro.</span>';
-        return;
-    }
-    
-    // Analisar a referência
-    const parsedRef = parseReference(reference);
-    
-    if (!parsedRef) {
-        resultElement.innerHTML = instructionsBackup;
-        return;
-    }
-    
-    // Encontrar o livro
-    const book = bibleData.bible.books.find(b => 
-        b.abbreviation.toLowerCase() === parsedRef.book.toLowerCase() || 
-        b.name.toLowerCase() == parsedRef.book.toLowerCase()
-    );
-    
-    if (!book) {
-        resultElement.innerHTML = `<span class="error">Livro "${parsedRef.book}" não encontrado.</span>`;
-        return;
-    }
-    
-    // Verificar se o capítulo existe
-    const chapterIndex = parsedRef.chapter - 1;
-    if (chapterIndex < 0 || chapterIndex >= book.chapters.length) {
-        resultElement.innerHTML = `<span class="error">Capítulo ${parsedRef.chapter} não encontrado em ${book.name}.</span>`;
-        return;
-    }
 
-    resultElement.innerHTML = `<div class="reference">${book.name}</div>`;
-
-    const chapterContent = book.chapters[chapterIndex];
-    parsedRef.verses = fixVersesIndexes(parsedRef, chapterContent.length);
-    const verseTexts = getFormattedVerseTexts(parsedRef, chapterContent, displayOptions);
-    if (displayOptions.parenthesesCitation) {
-        verseTexts.push(`<span class="verse-reference">(${reference})</span>`);
-    }
-
-    // Conteúdo principal dos versículos
-    if (displayOptions.lineBreaks) {
-        joinedContent = verseTexts.join('<br>');
+    result = generateResult(reference, instructionsBackup);
+    if (result.error) {
+        copyButton.classList.remove('visible');
     } else {
-        joinedContent = verseTexts.join(' ');
+        copyButton.classList.add('visible');
     }
-
-    resultElement.innerHTML += `<div class="verse-text">${joinedContent}</div>`;
-
-    copyButton.classList.add('visible');
+    resultElement.innerHTML = result.html;
 }
