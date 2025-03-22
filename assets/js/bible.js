@@ -247,105 +247,125 @@ function getEfectiveVerses(versesList) {
     return strOut;
 }
 
-function generateResult(reference, basicInstructions, displayOpt, translationName = '') {
-    let errorFlag = false;
-    let htmlOut = '';
-
-    const parsedRef = parseReference(reference);
-    if (bibleData !== null && parsedRef !== null) {
-        // Find book
-        const book = bibleData.bible.books.find(b => 
-            b.abbreviation.toLowerCase() === parsedRef.book.toLowerCase() || 
-            b.name.toLowerCase() == parsedRef.book.toLowerCase()
-        );
-
-        if (!book) {
-            errorFlag = true;
-            htmlOut = `<span class="error">Livro "${parsedRef.book}" não encontrado.</span>`;
-        } else {
-            // Check if chapter exists
-            const chapterIndex = parsedRef.chapter - 1;
-            if (chapterIndex < 0 || chapterIndex >= book.chapters.length) {
-                errorFlag = true;
-                htmlOut = `<span class="error">Capítulo ${parsedRef.chapter} não encontrado em ${book.name}.</span>`;
-            } else {
-                // Adicionar nome da tradução se disponível
-                let headerText = `${book.name} ${parsedRef.chapter}`;
-                if (translationName) {
-                    headerText += ` <span class="translation-name">(${translationName})</span>`;
-                }
-                htmlOut = `<div class="reference">${headerText}</div>`;
-
-                const chapterContent = book.chapters[chapterIndex];
-                parsedRef.verses = fixVersesIndexes(parsedRef, chapterContent.length);
-                const verseTexts = getFormattedVerseTexts(parsedRef, chapterContent, displayOpt);
-                if (displayOpt.parenthesesCitation) {
-                    let improvedRef = `${book.abbreviation} ${parsedRef.chapter}`;
-                    if (!parsedRef.allVerses) {
-                        improvedRef += getEfectiveVerses(parsedRef.verses);
-                    }
-                    verseTexts.push(`<span class="verse-reference">(${improvedRef})</span>`);
-                }
+/**
+ * Core function to generate HTML result for a Bible reference
+ * @param {Object} options - Configuration options
+ * @param {string} options.reference - Bible reference to lookup
+ * @param {string} options.basicInstructions - Instructions to show on parsing error
+ * @param {Object} options.displayOpt - Display options
+ * @param {string} [options.translationName=''] - Translation name to display
+ * @param {Object} [options.tempBibleData=null] - Temporary Bible data to use instead of global
+ * @returns {Object} Result object with error flag and HTML content
+ */
+function generateResult(options) {
+    const { reference, basicInstructions, displayOpt, translationName = '' } = options;
+    const useTempData = options.tempBibleData !== undefined;
     
-                // Conteúdo principal dos versículos
-                if (displayOpt.lineBreaks) {
-                    joinedContent = verseTexts.join('<br>');
-                } else {
-                    joinedContent = verseTexts.join(' ');
-                }
+    // Store original data if we're using temporary data
+    const originalData = useTempData ? { data: bibleData, id: currentBibleId } : null;
     
-                htmlOut += `<div class="verse-text">${joinedContent}</div>`;
-            }
-        }
-    } else if (bibleData === null) {
-        errorFlag = true;
-        htmlOut = '<span class="error">É necessário carregar o arquivo da Bíblia primeiro.</span>';
-    } else if (parsedRef === null) {
-        errorFlag = true;
-        htmlOut = basicInstructions;
+    // Set up temporary data if provided
+    if (useTempData && options.tempBibleData) {
+        processBibleData(options.tempBibleData);
     }
 
-    return {
-        error: errorFlag,
-        html: htmlOut,
-    };
-}
-
-function generateResultFromExistent(reference, basicInstructions, displayOpt, translationName) {
+    // Check if Bible data is available
     if (bibleData === null) {
         return {
             error: true,
             html: '<span class="error">É necessário carregar o arquivo da Bíblia primeiro.</span>'
         };
     }
-    
-    return generateResult(reference, basicInstructions, displayOpt, translationName);
+
+    // Parse the reference
+    const parsedRef = parseReference(reference);
+    if (parsedRef === null) {
+        return {
+            error: true,
+            html: basicInstructions
+        };
+    }
+
+    // Generate the actual result
+    let errorFlag = false;
+    let htmlOut = '';
+
+    // Find book
+    const book = bibleData.bible.books.find(b => 
+        b.abbreviation.toLowerCase() === parsedRef.book.toLowerCase() || 
+        b.name.toLowerCase() === parsedRef.book.toLowerCase()
+    );
+
+    if (!book) {
+        errorFlag = true;
+        htmlOut = `<span class="error">Livro "${parsedRef.book}" não encontrado.</span>`;
+    } else {
+        // Check if chapter exists
+        const chapterIndex = parsedRef.chapter - 1;
+        if (chapterIndex < 0 || chapterIndex >= book.chapters.length) {
+            errorFlag = true;
+            htmlOut = `<span class="error">Capítulo ${parsedRef.chapter} não encontrado em ${book.name}.</span>`;
+        } else {
+            // Add translation name if available
+            let headerText = `${book.name} ${parsedRef.chapter}`;
+            if (translationName) {
+                headerText += ` <span class="translation-name">(${translationName})</span>`;
+            }
+            htmlOut = `<div class="reference">${headerText}</div>`;
+
+            const chapterContent = book.chapters[chapterIndex];
+            parsedRef.verses = fixVersesIndexes(parsedRef, chapterContent.length);
+            const verseTexts = getFormattedVerseTexts(parsedRef, chapterContent, displayOpt);
+            
+            if (displayOpt.parenthesesCitation) {
+                let improvedRef = `${book.abbreviation} ${parsedRef.chapter}`;
+                if (!parsedRef.allVerses) {
+                    improvedRef += getEfectiveVerses(parsedRef.verses);
+                }
+                verseTexts.push(`<span class="verse-reference">(${improvedRef})</span>`);
+            }
+
+            // Main verse content
+            const joinedContent = displayOpt.lineBreaks ? 
+                verseTexts.join('<br>') : 
+                verseTexts.join(' ');
+
+            htmlOut += `<div class="verse-text">${joinedContent}</div>`;
+        }
+    }
+
+    // Restore original data if we used temporary data
+    if (originalData) {
+        bibleData = originalData.data;
+        currentBibleId = originalData.id;
+    }
+
+    return {
+        error: errorFlag,
+        html: htmlOut
+    };
+}
+
+// Simplified wrapper functions
+function generateResultFromExistent(reference, basicInstructions, displayOpt, translationName) {
+    return generateResult({
+        reference,
+        basicInstructions,
+        displayOpt,
+        translationName
+    });
 }
 
 function generateResultFromData(reference, basicInstructions, displayOpt, fileData) {
-    // Salvar o estado atual
-    const previousBibleData = bibleData;
-    const previousBibleId = currentBibleId;
-    
-    // Carregar temporariamente os dados fornecidos
-    const loadSuccess = processBibleData(fileData);
-    
-    // Gerar o resultado
-    const result = loadSuccess 
-        ? generateResult(reference, basicInstructions, displayOpt, 'Bíblia carregada')
-        : {
-            error: true,
-            html: '<span class="error">Falha ao processar os dados da Bíblia.</span>'
-          };
-    
-    // Restaurar o estado anterior
-    bibleData = previousBibleData;
-    currentBibleId = previousBibleId;
-    
-    return result;
+    return generateResult({
+        reference,
+        basicInstructions,
+        displayOpt,
+        translationName: 'Bíblia carregada',
+        tempBibleData: fileData
+    });
 }
 
-// Nova função para processar dados de um upload a partir de string JSON
 function generateResultFromUpload(reference, basicInstructions, displayOpt) {
     if (!fileCache) {
         return {
@@ -355,11 +375,14 @@ function generateResultFromUpload(reference, basicInstructions, displayOpt) {
     }
     
     try {
-        // Tenta fazer o parse do JSON armazenado no fileCache
         const bibleData = JSON.parse(fileCache);
-        
-        // Usa a função existente para processar os dados já parseados
-        return generateResultFromData(reference, basicInstructions, displayOpt, bibleData);
+        return generateResult({
+            reference,
+            basicInstructions,
+            displayOpt,
+            translationName: 'Bíblia carregada',
+            tempBibleData: bibleData
+        });
     } catch (error) {
         console.error('Erro ao processar o JSON da Bíblia:', error);
         return {
