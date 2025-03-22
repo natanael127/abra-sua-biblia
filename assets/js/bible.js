@@ -103,13 +103,15 @@ function parseReference(reference) {
     const verseSegments = verseRef.split('.');
     let verses = [];
     
-    allAfterFirst = false;
-    for (const segment of verseSegments) {
+    allAfterLast = false;
+    let segmentIndex = 0;
+    while (segmentIndex < verseSegments.length && !allAfterLast) {
+        const segment = verseSegments[segmentIndex];
         // Verificar se é um intervalo (ex: 5-7) ou um único versículo
         if (segment.includes('-')) {
             [start, end] = segment.split('-').map(v => parseInt(v.trim()));
             if (isNaN(end)) {
-                allAfterFirst = true;
+                allAfterLast = true;
                 end = start;
             }
             if (!isNaN(start) && !isNaN(end)) {
@@ -125,13 +127,14 @@ function parseReference(reference) {
                 verses.push(verseNumber - 1);
             }
         }
+        segmentIndex++;
     }
     
     return {
         book: bookName,
         chapter: parseInt(chapter),
         verses: verses,
-        allAfterFirst: allAfterFirst
+        allAfterLast: allAfterLast
     };
 }
 
@@ -179,29 +182,25 @@ async function searchVerse() {
         return;
     }
 
-    firstVerse = 0;
-    if (parsedRef.allAfterFirst == true) {
-        firstVerse = parsedRef.verses[0];
-        parsedRef.verses = [];
-    }
     // Versículos contínuos
-    if ((parsedRef.verses === null) || (parsedRef.allAfterFirst == true)) {
+    if (parsedRef.verses === null) {
         parsedRef.verses = [];
 
-        for (let i = firstVerse; i < book.chapters[chapterIndex].length; i++) {
+        for (let i = 0; i < book.chapters[chapterIndex].length; i++) {
             parsedRef.verses.push(i);
         }
     }
     // Ordenar os versículos para garantir que estejam em ordem crescente
     parsedRef.verses.sort((a, b) => a - b);
-    
+
     const verseTexts = [];
     let previousVerse = -1;
-
-    for (let i = 0; i < parsedRef.verses.length; i++) {
-        isLastVerse = (i == parsedRef.verses.length - 1);
-        isFirstVerse = (i == 0);
-        const verseIndex = parsedRef.verses[i];
+    let indexListVerses = 0;
+    let isLastVerse = false;
+    while ((indexListVerses < parsedRef.verses.length) && !isLastVerse) {
+        isLastVerse = (indexListVerses == parsedRef.verses.length - 1);
+        isFirstVerse = (indexListVerses == 0);
+        const verseIndex = parsedRef.verses[indexListVerses];
 
         // Se não for o primeiro versículo e houver lacuna entre os versículos, adicione o marcador de omissão
         if (previousVerse >= 0 && verseIndex > previousVerse + 1) {
@@ -211,6 +210,13 @@ async function searchVerse() {
         }
 
         if (verseIndex >= 0 && verseIndex < book.chapters[chapterIndex].length) {
+            if (verseIndex == book.chapters[chapterIndex].length - 1) {
+                isLastVerse = true;
+            }
+            else if (isLastVerse && parsedRef.allAfterLast) {
+                isLastVerse = false;
+                parsedRef.verses.push(verseIndex + 1);
+            }
             const verseText = book.chapters[chapterIndex][verseIndex];
             if (verseText) { // Verifica se o versículo existe e não é vazio
                 let formattedVerse = verseText;
@@ -238,6 +244,8 @@ async function searchVerse() {
         }
 
         previousVerse = verseIndex;
+
+        indexListVerses++;
     }
 
     resultElement.innerHTML = `<div class="reference">${book.name}</div>`;
