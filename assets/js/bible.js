@@ -212,6 +212,8 @@ async function searchVerse() {
         if (verseIndex >= 0 && verseIndex < book.chapters[chapterIndex].length) {
             if (verseIndex == book.chapters[chapterIndex].length - 1) {
                 isLastVerse = true;
+                // Delete all verses after this one
+                parsedRef.verses.splice(indexListVerses + 1);
             } else if (isLastVerse && parsedRef.allAfterLast) {
                 isLastVerse = false;
                 parsedRef.verses.push(verseIndex + 1);
