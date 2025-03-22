@@ -83,26 +83,20 @@ function parseReference(reference) {
     // Padrão básico: Capítulo[,Versículo(s)]
     const basicPattern = /^(\d+)(?:,(.+))?$/;
     const match = others.match(basicPattern);
-    
+
     if (!match) {
         return null;
     }
-    
+
     const [, chapter, verseRef] = match;
 
-    // Se não houver referência de versículo, é o capítulo inteiro
-    if (!verseRef) {
-        return {
-            book: bookName,
-            chapter: parseInt(chapter),
-            verses: null
-        };
-    }
-    
     // Analisar a parte de versículos (pode conter múltiplas referências separadas por ponto)
-    const verseSegments = verseRef.split('.');
+    verseSegments = []
+    if (verseRef) {
+        verseSegments = verseRef.split('.');
+    }
+
     let verses = [];
-    
     allAfterLast = false;
     let segmentIndex = 0;
     while (segmentIndex < verseSegments.length && !allAfterLast) {
@@ -129,7 +123,13 @@ function parseReference(reference) {
         }
         segmentIndex++;
     }
-    
+
+    // Sort verses to ensure they are in ascending order
+    verses.sort((a, b) => a - b);
+
+    // Clean duplicates
+    verses = [...new Set(verses)];
+
     return {
         book: bookName,
         chapter: parseInt(chapter),
@@ -184,16 +184,12 @@ async function searchVerse() {
 
     const chapterContent = book.chapters[chapterIndex];
 
-    // Versículos contínuos
-    if (parsedRef.verses === null) {
-        parsedRef.verses = [];
-
+    // Todos os versículos do capítulo
+    if (parsedRef.verses.length == 0) {
         for (let i = 0; i < chapterContent.length; i++) {
             parsedRef.verses.push(i);
         }
     }
-    // Ordenar os versículos para garantir que estejam em ordem crescente
-    parsedRef.verses.sort((a, b) => a - b);
 
     const verseTexts = [];
     let previousVerse = -1;
