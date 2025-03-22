@@ -157,7 +157,7 @@ function fixVersesIndexes(parsedReference, numOfVerses) {
     return outputVersesList;
 }
 
-function getFormattedVerseTexts(parsedRef, chapterContent, displayOptions) {
+function getFormattedVerseTexts(parsedRef, chapterContent, displayOpt) {
     const verseTexts = [];
     let previousVerse = -1;
     let indexListVerses = 0;
@@ -169,7 +169,7 @@ function getFormattedVerseTexts(parsedRef, chapterContent, displayOptions) {
 
         // Se não for o primeiro versículo e houver lacuna entre os versículos, adicione o marcador de omissão
         if (previousVerse >= 0 && verseIndex > previousVerse + 1) {
-            if (displayOptions.ellipsis) {
+            if (displayOpt.ellipsis) {
                 verseTexts.push('[...]');
             }
         }
@@ -179,11 +179,11 @@ function getFormattedVerseTexts(parsedRef, chapterContent, displayOptions) {
             let formattedVerse = verseText;
 
             // Adicionar número do versículo como sobrescrito
-            if (displayOptions.verseNumbers) {
+            if (displayOpt.verseNumbers) {
                 formattedVerse = `<sup>${verseIndex + 1}</sup> ${formattedVerse}`;
             }
 
-            if (displayOptions.quotes) {
+            if (displayOpt.quotes) {
                 // Replace all kind of double quotes with single quotes
                 formattedVerse = formattedVerse.replaceAll(/"/g, "'");
                 formattedVerse = formattedVerse.replaceAll('"', "'");
@@ -206,7 +206,7 @@ function getFormattedVerseTexts(parsedRef, chapterContent, displayOptions) {
     return verseTexts;
 }
 
-function generateResult(reference, basicInstructions) {
+function generateResult(reference, basicInstructions, displayOpt) {
     let errorFlag = false;
     let htmlOut = '';
 
@@ -232,13 +232,13 @@ function generateResult(reference, basicInstructions) {
 
                 const chapterContent = book.chapters[chapterIndex];
                 parsedRef.verses = fixVersesIndexes(parsedRef, chapterContent.length);
-                const verseTexts = getFormattedVerseTexts(parsedRef, chapterContent, displayOptions);
-                if (displayOptions.parenthesesCitation) {
+                const verseTexts = getFormattedVerseTexts(parsedRef, chapterContent, displayOpt);
+                if (displayOpt.parenthesesCitation) {
                     verseTexts.push(`<span class="verse-reference">(${reference})</span>`);
                 }
     
                 // Conteúdo principal dos versículos
-                if (displayOptions.lineBreaks) {
+                if (displayOpt.lineBreaks) {
                     joinedContent = verseTexts.join('<br>');
                 } else {
                     joinedContent = verseTexts.join(' ');

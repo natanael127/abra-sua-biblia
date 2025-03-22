@@ -387,7 +387,7 @@ async function searchVerse() {
     // Salvar a referência atual ao pesquisar
     saveReferencePreference(reference);
 
-    result = generateResult(reference, instructionsBackup);
+    result = generateResult(reference, instructionsBackup, displayOptions);
     if (result.error) {
         copyButton.classList.remove('visible');
     } else {
