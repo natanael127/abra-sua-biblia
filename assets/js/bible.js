@@ -90,13 +90,15 @@ function parseReference(reference) {
 
     const [, chapter, verseRef] = match;
 
-    // Analisar a parte de versículos (pode conter múltiplas referências separadas por ponto)
+    // Versículos (pode conter múltiplas referências separadas por ponto)
     verseSegments = []
+    let allVerses = true;
     if (verseRef) {
         verseSegments = verseRef.split('.');
+        allVerses = false;
     }
 
-    let verses = [];
+    let versesList = [];
     allAfterLast = false;
     let segmentIndex = 0;
     while (segmentIndex < verseSegments.length && !allAfterLast) {
@@ -111,30 +113,31 @@ function parseReference(reference) {
             if (!isNaN(start) && !isNaN(end)) {
                 for (let i = start; i <= end; i++) {
                     if (i > 0) {
-                        verses.push(i - 1);
+                        versesList.push(i - 1);
                     }
                 }
             }
         } else {
             const verseNumber = parseInt(segment.trim());
             if (!isNaN(verseNumber)) {
-                verses.push(verseNumber - 1);
+                versesList.push(verseNumber - 1);
             }
         }
         segmentIndex++;
     }
 
     // Sort verses to ensure they are in ascending order
-    verses.sort((a, b) => a - b);
+    versesList.sort((a, b) => a - b);
 
     // Clean duplicates
-    verses = [...new Set(verses)];
+    versesList = [...new Set(versesList)];
 
     return {
         book: bookName,
         chapter: parseInt(chapter),
-        verses: verses,
-        allAfterLast: allAfterLast
+        verses: versesList,
+        allAfterLast: allAfterLast,
+        allVerses: allVerses,
     };
 }
 
