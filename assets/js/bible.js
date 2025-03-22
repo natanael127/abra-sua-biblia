@@ -216,14 +216,8 @@ function generateResult(reference, basicInstructions) {
     let errorFlag = false;
     let htmlOut = '';
 
-    // Analyze the reference
     const parsedRef = parseReference(reference);
-    if (!parsedRef) {
-        errorFlag = true;
-        htmlOut = basicInstructions;
-    }
-
-    if (bibleData) {
+    if (bibleData !== null && parsedRef !== null) {
         // Find book
         const book = bibleData.bible.books.find(b => 
             b.abbreviation.toLowerCase() === parsedRef.book.toLowerCase() || 
@@ -259,9 +253,12 @@ function generateResult(reference, basicInstructions) {
                 htmlOut += `<div class="verse-text">${joinedContent}</div>`;
             }
         }
-    } else {
+    } else if (bibleData === null) {
         errorFlag = true;
         htmlOut = '<span class="error">É necessário carregar o arquivo da Bíblia primeiro.</span>';
+    } else if (parsedRef === null) {
+        errorFlag = true;
+        htmlOut = basicInstructions;
     }
 
     return {
