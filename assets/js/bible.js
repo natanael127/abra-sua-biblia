@@ -141,6 +141,28 @@ function parseReference(reference) {
     };
 }
 
+function fixVersesIndexes(parsedReference, numOfVerses) {
+    outputVersesList = parsedReference.verses;
+    outputVersesList = outputVersesList.filter(
+        verse => verse >= 0 && verse < numOfVerses
+    );
+
+    if (parsedReference.allVerses) {
+        for (let i = 0; i < numOfVerses; i++) {
+            outputVersesList.push(i);
+        }
+    }
+
+    if (parsedReference.allAfterLast && outputVersesList.length > 0) {
+        lastIndex = outputVersesList[outputVersesList.length - 1];
+        for (let i = lastIndex + 1; i < numOfVerses; i++) {
+            outputVersesList.push(i);
+        }
+    }
+
+    return outputVersesList;
+}
+
 // Função para buscar o versículo
 async function searchVerse() {
     const reference = document.getElementById('reference').value.trim();
@@ -187,19 +209,7 @@ async function searchVerse() {
 
     const chapterContent = book.chapters[chapterIndex];
 
-    // Fix verses list according to the chapter content
-    parsedRef.verses = parsedRef.verses.filter(verse => verse >= 0 && verse < chapterContent.length);
-    if (parsedRef.verses.length == 0) {
-        for (let i = 0; i < chapterContent.length; i++) {
-            parsedRef.verses.push(i);
-        }
-    }
-    if (parsedRef.allAfterLast && parsedRef.verses.length > 0) {
-        lastIndex = parsedRef.verses[parsedRef.verses.length - 1];
-        for (let i = lastIndex + 1; i < chapterContent.length; i++) {
-            parsedRef.verses.push(i);
-        }
-    }
+    parsedRef.verses = fixVersesIndexes(parsedRef, chapterContent.length);
 
     // Get list of verses texts
     const verseTexts = [];
