@@ -70,6 +70,7 @@ function fixVersesIndexes(parsedReference, numOfVerses) {
     );
 
     if (parsedReference.allVerses) {
+        outputVersesList = [];
         for (let i = 0; i < numOfVerses; i++) {
             outputVersesList.push(i);
         }
