@@ -310,3 +310,61 @@ function generateResult(reference, basicInstructions, displayOpt, translationNam
         html: htmlOut,
     };
 }
+
+function generateResultFromExistent(reference, basicInstructions, displayOpt, translationName) {
+    if (bibleData === null) {
+        return {
+            error: true,
+            html: '<span class="error">É necessário carregar o arquivo da Bíblia primeiro.</span>'
+        };
+    }
+    
+    return generateResult(reference, basicInstructions, displayOpt, translationName);
+}
+
+function generateResultFromData(reference, basicInstructions, displayOpt, fileData) {
+    // Salvar o estado atual
+    const previousBibleData = bibleData;
+    const previousBibleId = currentBibleId;
+    
+    // Carregar temporariamente os dados fornecidos
+    const loadSuccess = processBibleData(fileData);
+    
+    // Gerar o resultado
+    const result = loadSuccess 
+        ? generateResult(reference, basicInstructions, displayOpt, 'Bíblia carregada')
+        : {
+            error: true,
+            html: '<span class="error">Falha ao processar os dados da Bíblia.</span>'
+          };
+    
+    // Restaurar o estado anterior
+    bibleData = previousBibleData;
+    currentBibleId = previousBibleId;
+    
+    return result;
+}
+
+// Nova função para processar dados de um upload a partir de string JSON
+function generateResultFromUpload(reference, basicInstructions, displayOpt) {
+    if (!fileCache) {
+        return {
+            error: true,
+            html: '<span class="error">Nenhum arquivo de Bíblia foi carregado.</span>'
+        };
+    }
+    
+    try {
+        // Tenta fazer o parse do JSON armazenado no fileCache
+        const bibleData = JSON.parse(fileCache);
+        
+        // Usa a função existente para processar os dados já parseados
+        return generateResultFromData(reference, basicInstructions, displayOpt, bibleData);
+    } catch (error) {
+        console.error('Erro ao processar o JSON da Bíblia:', error);
+        return {
+            error: true,
+            html: '<span class="error">Arquivo de Bíblia inválido ou corrompido.</span>'
+        };
+    }
+}

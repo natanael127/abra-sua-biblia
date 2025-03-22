@@ -1,6 +1,7 @@
 // Global variables
 let instructionsBackup = null;
 let currentTranslationName = '';
+let fileCache = '';
 
 // Opções de formatação
 const displayOptions = {
@@ -320,15 +321,8 @@ async function handleFileUpload(file) {
         const fileReader = new FileReader();
         
         fileReader.onload = function(event) {
-            try {
-                const data = JSON.parse(event.target.result);
-                const success = loadBibleFromData(data);
-                currentTranslationName = file.name.replace('.json', '');
-                resolve(success);
-            } catch (parseError) {
-                console.error('Erro ao processar JSON:', parseError);
-                resolve(false);
-            }
+            fileCache = event.target.result;
+            searchVerse();
         };
         
         fileReader.onerror = function() {
@@ -430,11 +424,18 @@ async function searchVerse() {
     const reference = document.getElementById('reference').value.trim();
     const resultElement = document.getElementById('result');
     const copyButton = document.getElementById('copy-button');
-    
+    const translationSelect = document.getElementById('bible-select');
+    const selectedBibleId = translationSelect.value;
+
     // Salvar a referência atual ao pesquisar
     saveReferencePreference(reference);
 
-    result = generateResult(reference, instructionsBackup, displayOptions, currentTranslationName);
+    if (selectedBibleId && selectedBibleId !== "upload") {
+        result = generateResultFromExistent(reference, instructionsBackup, displayOptions, currentTranslationName);
+    } else {
+        result = generateResultFromUpload(reference, instructionsBackup, displayOptions, fileCache);
+    }
+
     if (result.error) {
         copyButton.classList.remove('visible');
     } else {
