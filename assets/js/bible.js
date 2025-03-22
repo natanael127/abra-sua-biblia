@@ -256,12 +256,11 @@ async function searchVerse() {
         return;
     }
 
+    resultElement.innerHTML = `<div class="reference">${book.name}</div>`;
+
     const chapterContent = book.chapters[chapterIndex];
     parsedRef.verses = fixVersesIndexes(parsedRef, chapterContent.length);
     const verseTexts = getFormattedVerseTexts(parsedRef, chapterContent, displayOptions);
-
-    resultElement.innerHTML = `<div class="reference">${book.name}</div>`;
-
     if (displayOptions.parenthesesCitation) {
         verseTexts.push(`<span class="verse-reference">(${reference})</span>`);
     }
