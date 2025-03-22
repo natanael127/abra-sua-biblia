@@ -266,20 +266,3 @@ function generateResult(reference, basicInstructions) {
         html: htmlOut,
     };
 }
-
-async function searchVerse() {
-    const reference = document.getElementById('reference').value.trim();
-    const resultElement = document.getElementById('result');
-    const copyButton = document.getElementById('copy-button');
-    
-    // Salvar a referência atual ao pesquisar
-    saveReferencePreference(reference);
-
-    result = generateResult(reference, instructionsBackup);
-    if (result.error) {
-        copyButton.classList.remove('visible');
-    } else {
-        copyButton.classList.add('visible');
-    }
-    resultElement.innerHTML = result.html;
-}
