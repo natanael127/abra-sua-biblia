@@ -87,12 +87,9 @@ function fixVersesIndexes(parsedReference, numOfVerses) {
 
 function getFormattedVerseTexts(parsedRef, chapterContent, displayOpt) {
     const verseTexts = [];
+
     let previousVerse = -1;
-    let indexListVerses = 0;
-    let isLastVerse = false;
-    while ((indexListVerses < parsedRef.verses.length) && !isLastVerse) {
-        isLastVerse = (indexListVerses == parsedRef.verses.length - 1);
-        isFirstVerse = (indexListVerses == 0);
+    for (let indexListVerses = 0; indexListVerses < parsedRef.verses.length; indexListVerses++) {
         const verseIndex = parsedRef.verses[indexListVerses];
 
         // Se não for o primeiro versículo e houver lacuna entre os versículos, adicione o marcador de omissão
@@ -116,6 +113,10 @@ function getFormattedVerseTexts(parsedRef, chapterContent, displayOpt) {
                 formattedVerse = formattedVerse.replaceAll(/"/g, "'");
                 formattedVerse = formattedVerse.replaceAll('"', "'");
                 formattedVerse = formattedVerse.replaceAll('"', "'");
+
+                // Quote the first and last verse
+                let isLastVerse = (indexListVerses == parsedRef.verses.length - 1);
+                let isFirstVerse = (indexListVerses == 0);
                 if (isFirstVerse) {
                     formattedVerse = `"${formattedVerse}`;
                 }
@@ -128,9 +129,8 @@ function getFormattedVerseTexts(parsedRef, chapterContent, displayOpt) {
         }
 
         previousVerse = verseIndex;
-        indexListVerses++;
     }
-    
+
     return verseTexts;
 }
 
