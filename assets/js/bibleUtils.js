@@ -178,7 +178,7 @@ function getEfectiveVerses(versesList) {
     return strOut;
 }
 
-// Exportar as funções puras
+// Export purely functional functions
 window.BibleUtils = {
     parseReference,
     fixVersesIndexes,

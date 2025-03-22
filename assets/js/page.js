@@ -1,9 +1,8 @@
-// Global variables
+// Control variables
 let instructionsBackup = null;
 let currentTranslationName = '';
 let fileCache = '';
 
-// Opções de formatação
 const displayOptions = {
     quotes: true,
     verseNumbers: false,
@@ -12,7 +11,6 @@ const displayOptions = {
     parenthesesCitation: false
 };
 
-// Funções para salvar e carregar preferências de tradução e referência
 function saveBiblePreference(bibleId) {
     localStorage.setItem('selectedBible', bibleId);
 }
@@ -22,10 +20,8 @@ function saveReferencePreference(reference) {
 }
 
 function loadUserPreferences() {
-    // Carregar tradução salva (terá prioridade menor que parâmetros de URL)
     const savedBible = localStorage.getItem('selectedBible');
     
-    // Carregar última referência
     const savedReference = localStorage.getItem('lastReference');
     if (savedReference) {
         document.getElementById('reference').value = savedReference;
@@ -42,7 +38,6 @@ function getUrlParameter(name) {
     return searchParams.get(name);
 }
 
-// Função para carregar citação da URL
 function loadQuote() {
     const quoteParam = getUrlParameter('quote');
     if (quoteParam) {
@@ -52,7 +47,6 @@ function loadQuote() {
     return false;
 }
 
-// Função para verificar dinamicamente as Bíblias disponíveis
 async function loadAvailableBibles() {
     try {
         // Obtém o parâmetro 'bible' da URL
@@ -87,7 +81,6 @@ async function loadAvailableBibles() {
     }
 }
 
-// Função para preencher o select com as Bíblias disponíveis
 function populateBiblesSelect(biblesList, defaultBibleId = null) {
     const selectElement = document.getElementById('bible-select');
     
@@ -125,7 +118,6 @@ function populateBiblesSelect(biblesList, defaultBibleId = null) {
     selectElement.dispatchEvent(changeEvent);
 }
 
-// Nova função para mostrar/esconder o container de upload
 function updateUploadContainerVisibility() {
     const selectElement = document.getElementById('bible-select');
     const fileInputContainer = document.querySelector('.file-input-container');
@@ -160,7 +152,6 @@ function populateBooksSidebar(books) {
     });
 }
 
-// Função de debounce para limitar a frequência de chamadas
 function debounce(func, timeout = 500) {
     let timer;
     return (...args) => {
@@ -169,7 +160,6 @@ function debounce(func, timeout = 500) {
     };
 }
 
-// Versão com debounce da função searchVerse
 const debouncedSearchVerse = debounce(() => {
     searchVerse();
 });
@@ -211,7 +201,6 @@ function copyTextToClipboard(text) {
     });
 }
 
-// Função para configurar as seções expansíveis
 function setupExpandableSections() {
     const expandableSections = document.querySelectorAll('.expandable-section');
     
@@ -233,7 +222,6 @@ function setupExpandableSections() {
     });
 }
 
-// Função para configurar os botões de controle
 function setupControlButtons() {
     // Carregar as preferências salvas, se existirem
     loadDisplayPreferences();
@@ -269,7 +257,6 @@ function setupControlButtons() {
     });
 }
 
-// Funções auxiliares para conversão de IDs para chaves de opções
 function convertIdToOptionKey(id) {
     // Mapeamento de IDs para chaves de opções
     const map = {
@@ -282,12 +269,10 @@ function convertIdToOptionKey(id) {
     return map[id] || id;
 }
 
-// Salvar preferências no localStorage
 function saveDisplayPreferences() {
     localStorage.setItem('bibleDisplayOptions', JSON.stringify(displayOptions));
 }
 
-// Carregar preferências do localStorage
 function loadDisplayPreferences() {
     const savedOptions = localStorage.getItem('bibleDisplayOptions');
     if (savedOptions) {
@@ -296,7 +281,6 @@ function loadDisplayPreferences() {
     }
 }
 
-// Função para atualizar o nome da tradução atual
 function updateCurrentTranslationName(bibleId, biblesList) {
     if (!bibleId || bibleId === "upload") {
         currentTranslationName = '';
@@ -307,7 +291,6 @@ function updateCurrentTranslationName(bibleId, biblesList) {
     currentTranslationName = selectedBible ? selectedBible.name : '';
 }
 
-// Função para lidar com o upload de arquivo
 async function handleFileUpload(file) {
     if (!file) {
         return false;
@@ -333,7 +316,6 @@ async function handleFileUpload(file) {
     });
 }
 
-// Inicialização
 document.addEventListener('DOMContentLoaded', function() {
     instructionsBackup = document.getElementById('result').innerHTML;
     loadAvailableBibles();

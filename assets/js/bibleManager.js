@@ -1,4 +1,3 @@
-// Variáveis exportadas
 let bibleData = null;
 let currentBibleId = null;
 const BIBLES_PATH = 'assets/data/bibles/';
@@ -16,7 +15,6 @@ async function getAvailableBibles() {
     }
 }
 
-// Função central para processar dados de uma Bíblia
 function processBibleData(data, bibleId = null) {
     if (data && data.bible.books) {
         bibleData = data;
@@ -33,7 +31,6 @@ function processBibleData(data, bibleId = null) {
     }
 }
 
-// Função para carregar Bíblia de um arquivo predefinido
 async function loadBibleFromPredefined(bibleName) {
     // Se a mesma bíblia já estiver carregada, não precisa carregar novamente
     if (currentBibleId === bibleName && bibleData !== null) {
@@ -56,7 +53,6 @@ async function loadBibleFromPredefined(bibleName) {
     }
 }
 
-// Função para processar dados de uma Bíblia já carregados
 function loadBibleFromData(data) {
     try {
         const success = processBibleData(data, null); // Bíblia de arquivo não tem ID permanente
