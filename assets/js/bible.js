@@ -182,11 +182,13 @@ async function searchVerse() {
         return;
     }
 
+    const chapterContent = book.chapters[chapterIndex];
+
     // Versículos contínuos
     if (parsedRef.verses === null) {
         parsedRef.verses = [];
 
-        for (let i = 0; i < book.chapters[chapterIndex].length; i++) {
+        for (let i = 0; i < chapterContent.length; i++) {
             parsedRef.verses.push(i);
         }
     }
@@ -209,8 +211,8 @@ async function searchVerse() {
             }
         }
 
-        if (verseIndex >= 0 && verseIndex < book.chapters[chapterIndex].length) {
-            if (verseIndex == book.chapters[chapterIndex].length - 1) {
+        if (verseIndex >= 0 && verseIndex < chapterContent.length) {
+            if (verseIndex == chapterContent.length - 1) {
                 isLastVerse = true;
                 // Delete all verses after this one
                 parsedRef.verses.splice(indexListVerses + 1);
@@ -218,7 +220,7 @@ async function searchVerse() {
                 isLastVerse = false;
                 parsedRef.verses.push(verseIndex + 1);
             }
-            const verseText = book.chapters[chapterIndex][verseIndex];
+            const verseText = chapterContent[verseIndex];
             if (verseText) { // Verifica se o versículo existe e não é vazio
                 let formattedVerse = verseText;
 
