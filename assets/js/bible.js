@@ -346,7 +346,6 @@ function generateResult(options) {
     };
 }
 
-// Simplified wrapper functions
 function generateResultFromExistent(reference, basicInstructions, displayOpt, translationName) {
     return generateResult({
         reference,
@@ -356,18 +355,8 @@ function generateResultFromExistent(reference, basicInstructions, displayOpt, tr
     });
 }
 
-function generateResultFromData(reference, basicInstructions, displayOpt, fileData) {
-    return generateResult({
-        reference,
-        basicInstructions,
-        displayOpt,
-        translationName: 'Bíblia carregada',
-        tempBibleData: fileData
-    });
-}
-
-function generateResultFromUpload(reference, basicInstructions, displayOpt) {
-    if (!fileCache) {
+function generateResultFromUpload(reference, basicInstructions, displayOpt, fileRaw) {
+    if (!fileRaw) {
         return {
             error: true,
             html: '<span class="error">Nenhum arquivo de Bíblia foi carregado.</span>'
@@ -375,13 +364,12 @@ function generateResultFromUpload(reference, basicInstructions, displayOpt) {
     }
     
     try {
-        const bibleData = JSON.parse(fileCache);
         return generateResult({
             reference,
             basicInstructions,
             displayOpt,
             translationName: 'Bíblia carregada',
-            tempBibleData: bibleData
+            tempBibleData: JSON.parse(fileRaw)
         });
     } catch (error) {
         console.error('Erro ao processar o JSON da Bíblia:', error);
