@@ -212,8 +212,7 @@ async function searchVerse() {
         if (verseIndex >= 0 && verseIndex < book.chapters[chapterIndex].length) {
             if (verseIndex == book.chapters[chapterIndex].length - 1) {
                 isLastVerse = true;
-            }
-            else if (isLastVerse && parsedRef.allAfterLast) {
+            } else if (isLastVerse && parsedRef.allAfterLast) {
                 isLastVerse = false;
                 parsedRef.verses.push(verseIndex + 1);
             }
