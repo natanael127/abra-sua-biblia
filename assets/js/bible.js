@@ -187,13 +187,21 @@ async function searchVerse() {
 
     const chapterContent = book.chapters[chapterIndex];
 
-    // Todos os versículos do capítulo
+    // Fix verses list according to the chapter content
+    parsedRef.verses = parsedRef.verses.filter(verse => verse >= 0 && verse < chapterContent.length);
     if (parsedRef.verses.length == 0) {
         for (let i = 0; i < chapterContent.length; i++) {
             parsedRef.verses.push(i);
         }
     }
+    if (parsedRef.allAfterLast && parsedRef.verses.length > 0) {
+        lastIndex = parsedRef.verses[parsedRef.verses.length - 1];
+        for (let i = lastIndex + 1; i < chapterContent.length; i++) {
+            parsedRef.verses.push(i);
+        }
+    }
 
+    // Get list of verses texts
     const verseTexts = [];
     let previousVerse = -1;
     let indexListVerses = 0;
@@ -210,39 +218,29 @@ async function searchVerse() {
             }
         }
 
-        if (verseIndex >= 0 && verseIndex < chapterContent.length) {
-            if (verseIndex == chapterContent.length - 1) {
-                isLastVerse = true;
-                // Delete all verses after this one
-                parsedRef.verses.splice(indexListVerses + 1);
-            } else if (isLastVerse && parsedRef.allAfterLast) {
-                isLastVerse = false;
-                parsedRef.verses.push(verseIndex + 1);
+        const verseText = chapterContent[verseIndex];
+        if (verseText) { // Verifica se o versículo existe e não é vazio
+            let formattedVerse = verseText;
+
+            // Adicionar número do versículo como sobrescrito
+            if (displayOptions.verseNumbers) {
+                formattedVerse = `<sup>${verseIndex + 1}</sup> ${formattedVerse}`;
             }
-            const verseText = chapterContent[verseIndex];
-            if (verseText) { // Verifica se o versículo existe e não é vazio
-                let formattedVerse = verseText;
 
-                // Adicionar número do versículo como sobrescrito
-                if (displayOptions.verseNumbers) {
-                    formattedVerse = `<sup>${verseIndex + 1}</sup> ${formattedVerse}`;
+            if (displayOptions.quotes) {
+                // Replace all kind of double quotes with single quotes
+                formattedVerse = formattedVerse.replaceAll(/"/g, "'");
+                formattedVerse = formattedVerse.replaceAll('"', "'");
+                formattedVerse = formattedVerse.replaceAll('"', "'");
+                if (isFirstVerse) {
+                    formattedVerse = `"${formattedVerse}`;
                 }
-
-                if (displayOptions.quotes) {
-                    // Replace all kind of double quotes with single quotes
-                    formattedVerse = formattedVerse.replaceAll(/"/g, "'");
-                    formattedVerse = formattedVerse.replaceAll('"', "'");
-                    formattedVerse = formattedVerse.replaceAll('"', "'");
-                    if (isFirstVerse) {
-                        formattedVerse = `"${formattedVerse}`;
-                    }
-                    if (isLastVerse) {
-                        formattedVerse = `${formattedVerse}"`;
-                    }
+                if (isLastVerse) {
+                    formattedVerse = `${formattedVerse}"`;
                 }
-
-                verseTexts.push(formattedVerse);
             }
+
+            verseTexts.push(formattedVerse);
         }
 
         previousVerse = verseIndex;
