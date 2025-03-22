@@ -1,11 +1,26 @@
 // Variáveis exportadas
 let bibleData = null;
+let currentBibleId = null;
 const BIBLES_PATH = 'assets/data/bibles/';
 
+async function getAvailableBibles() {
+    try {
+        const response = await fetch(`${BIBLES_PATH}index.json`);
+        if (!response.ok) {
+            return [];
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Erro ao carregar lista de Bíblias:', error);
+        return [];
+    }
+}
+
 // Função central para processar dados de uma Bíblia
-function processBibleData(data) {
+function processBibleData(data, bibleId = null) {
     if (data && data.bible.books) {
         bibleData = data;
+        currentBibleId = bibleId;
 
         // Preencher e mostrar a barra lateral com os livros disponíveis
         populateBooksSidebar(bibleData.bible.books);
@@ -13,12 +28,18 @@ function processBibleData(data) {
         return true;
     } else {
         bibleData = null;
+        currentBibleId = null;
         return false;
     }
 }
 
 // Função para carregar Bíblia de um arquivo predefinido
 async function loadBibleFromPredefined(bibleName) {
+    // Se a mesma bíblia já estiver carregada, não precisa carregar novamente
+    if (currentBibleId === bibleName && bibleData !== null) {
+        return true;
+    }
+    
     try {
         // Carregar o arquivo JSON da pasta de Bíblias
         const response = await fetch(`${BIBLES_PATH}catholic-open/json/final/${bibleName}.json`);
@@ -28,45 +49,22 @@ async function loadBibleFromPredefined(bibleName) {
         }
         
         const data = await response.json();
-        return processBibleData(data);
+        return processBibleData(data, bibleName);
     } catch (error) {
         console.error('Erro ao carregar a Bíblia:', error);
         return false;
     }
 }
 
-// Função para processar um arquivo JSON carregado pelo usuário
-function loadBibleFromFile(file) {
-    return new Promise((resolve, reject) => {
-        if (!file) {
-            resolve(false);
-            return;
-        }
-        
-        if (file.type !== 'application/json' && !file.name.endsWith('.json')) {
-            resolve(false);
-            return;
-        }
-        
-        const fileReader = new FileReader();
-        
-        fileReader.onload = function(event) {
-            try {
-                const data = JSON.parse(event.target.result);
-                const success = processBibleData(data);
-                resolve(success);
-            } catch (parseError) {
-                console.error('Erro ao processar JSON:', parseError);
-                resolve(false);
-            }
-        };
-        
-        fileReader.onerror = function() {
-            resolve(false);
-        };
-        
-        fileReader.readAsText(file);
-    });
+// Função para processar dados de uma Bíblia já carregados
+function loadBibleFromData(data) {
+    try {
+        const success = processBibleData(data, null); // Bíblia de arquivo não tem ID permanente
+        return success;
+    } catch (parseError) {
+        console.error('Erro ao processar dados da Bíblia:', parseError);
+        return false;
+    }
 }
 
 // Função para analisar referências complexas
@@ -249,7 +247,7 @@ function getEfectiveVerses(versesList) {
     return strOut;
 }
 
-function generateResult(reference, basicInstructions, displayOpt) {
+function generateResult(reference, basicInstructions, displayOpt, translationName = '') {
     let errorFlag = false;
     let htmlOut = '';
 
@@ -271,7 +269,12 @@ function generateResult(reference, basicInstructions, displayOpt) {
                 errorFlag = true;
                 htmlOut = `<span class="error">Capítulo ${parsedRef.chapter} não encontrado em ${book.name}.</span>`;
             } else {
-                htmlOut = `<div class="reference">${book.name} ${parsedRef.chapter}</div>`;
+                // Adicionar nome da tradução se disponível
+                let headerText = `${book.name} ${parsedRef.chapter}`;
+                if (translationName) {
+                    headerText += ` <span class="translation-name">(${translationName})</span>`;
+                }
+                htmlOut = `<div class="reference">${headerText}</div>`;
 
                 const chapterContent = book.chapters[chapterIndex];
                 parsedRef.verses = fixVersesIndexes(parsedRef, chapterContent.length);

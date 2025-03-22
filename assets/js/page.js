@@ -1,5 +1,6 @@
 // Global variables
 let instructionsBackup = null;
+let currentTranslationName = '';
 
 // Opções de formatação
 const displayOptions = {
@@ -62,22 +63,22 @@ async function loadAvailableBibles() {
         // Prioridade: 1º parâmetro da URL, 2º preferência salva
         const defaultBible = bibleParam || preferences.savedBible;
         
-        // Tenta carregar o índice de Bíblias disponíveis
-        const response = await fetch(`${BIBLES_PATH}index.json`);
+        // Obter a lista de bíblias disponíveis usando a função do bible.js
+        const biblesList = await getAvailableBibles();
         
-        if (response.ok) {
-            const biblesList = await response.json();
+        if (biblesList && biblesList.length > 0) {
             populateBiblesSelect(biblesList, defaultBible);
             searchVerse();
 
             // Carregar a Bíblia padrão e executar a busca se existir uma Bíblia selecionada
             if (defaultBible) {
                 await loadBibleFromPredefined(defaultBible);
+                updateCurrentTranslationName(defaultBible, biblesList);
                 // Executar a busca após carregar a Bíblia
                 searchVerse();
             }
         } else {
-            console.error('Arquivo index.json não encontrado. Nenhuma Bíblia disponível para carregar.');
+            console.error('Nenhuma Bíblia disponível para carregar.');
             // Mantém o select com apenas a opção padrão
         }
     } catch (error) {
@@ -294,6 +295,50 @@ function loadDisplayPreferences() {
     }
 }
 
+// Função para atualizar o nome da tradução atual
+function updateCurrentTranslationName(bibleId, biblesList) {
+    if (!bibleId || bibleId === "upload") {
+        currentTranslationName = '';
+        return;
+    }
+    
+    const selectedBible = biblesList.find(bible => bible.id === bibleId);
+    currentTranslationName = selectedBible ? selectedBible.name : '';
+}
+
+// Função para lidar com o upload de arquivo
+async function handleFileUpload(file) {
+    if (!file) {
+        return false;
+    }
+    
+    if (file.type !== 'application/json' && !file.name.endsWith('.json')) {
+        return false;
+    }
+    
+    return new Promise((resolve, reject) => {
+        const fileReader = new FileReader();
+        
+        fileReader.onload = function(event) {
+            try {
+                const data = JSON.parse(event.target.result);
+                const success = loadBibleFromData(data);
+                currentTranslationName = file.name.replace('.json', '');
+                resolve(success);
+            } catch (parseError) {
+                console.error('Erro ao processar JSON:', parseError);
+                resolve(false);
+            }
+        };
+        
+        fileReader.onerror = function() {
+            resolve(false);
+        };
+        
+        fileReader.readAsText(file);
+    });
+}
+
 // Inicialização
 document.addEventListener('DOMContentLoaded', function() {
     instructionsBackup = document.getElementById('result').innerHTML;
@@ -304,16 +349,18 @@ document.addEventListener('DOMContentLoaded', function() {
     setupControlButtons();
 
     // Adicionar event listener para o select de bíblias
-    document.getElementById('bible-select').addEventListener('change', function() {
+    document.getElementById('bible-select').addEventListener('change', async function() {
         updateUploadContainerVisibility();
         
         // Salvar a tradução escolhida (se não for upload)
         if (this.value && this.value !== "upload") {
             saveBiblePreference(this.value);
+            const biblesList = await getAvailableBibles();
+            updateCurrentTranslationName(this.value, biblesList);
         }
 
         if (this.value && this.value !== "upload") {
-            loadBibleFromPredefined(this.value);
+            await loadBibleFromPredefined(this.value);
             searchVerse();
         }
     });
@@ -333,7 +380,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Listener no input de arquivo
     document.getElementById('bible-file').addEventListener('change', async function() {
-        await loadBibleFromFile(this.files[0]);
+        await handleFileUpload(this.files[0]);
         searchVerse();
     });
 
@@ -387,7 +434,7 @@ async function searchVerse() {
     // Salvar a referência atual ao pesquisar
     saveReferencePreference(reference);
 
-    result = generateResult(reference, instructionsBackup, displayOptions);
+    result = generateResult(reference, instructionsBackup, displayOptions, currentTranslationName);
     if (result.error) {
         copyButton.classList.remove('visible');
     } else {
