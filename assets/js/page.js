@@ -68,6 +68,14 @@ async function loadAvailableBibles() {
         if (response.ok) {
             const biblesList = await response.json();
             populateBiblesSelect(biblesList, defaultBible);
+            searchVerse();
+
+            // Carregar a Bíblia padrão e executar a busca se existir uma Bíblia selecionada
+            if (defaultBible) {
+                await loadBibleFromPredefined(defaultBible);
+                // Executar a busca após carregar a Bíblia
+                searchVerse();
+            }
         } else {
             console.error('Arquivo index.json não encontrado. Nenhuma Bíblia disponível para carregar.');
             // Mantém o select com apenas a opção padrão
@@ -306,6 +314,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (this.value && this.value !== "upload") {
             loadBibleFromPredefined(this.value);
+            searchVerse();
         }
     });
     
@@ -325,6 +334,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Listener no input de arquivo
     document.getElementById('bible-file').addEventListener('change', async function() {
         await loadBibleFromFile(this.files[0]);
+        searchVerse();
     });
 
     // Novo: Adicionar evento de input para busca automática enquanto digita

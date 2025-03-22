@@ -9,12 +9,6 @@ function processBibleData(data) {
 
         // Preencher e mostrar a barra lateral com os livros disponíveis
         populateBooksSidebar(bibleData.bible.books);
-        
-        // Atualizar o resultado se já houver uma referência
-        const reference = document.getElementById('reference').value.trim();
-        if (reference) {
-            searchVerse();
-        }
 
         return true;
     } else {
