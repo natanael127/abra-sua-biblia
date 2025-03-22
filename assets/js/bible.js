@@ -163,6 +163,55 @@ function fixVersesIndexes(parsedReference, numOfVerses) {
     return outputVersesList;
 }
 
+function getFormattedVerseTexts(parsedRef, chapterContent, displayOptions) {
+    const verseTexts = [];
+    let previousVerse = -1;
+    let indexListVerses = 0;
+    let isLastVerse = false;
+    while ((indexListVerses < parsedRef.verses.length) && !isLastVerse) {
+        isLastVerse = (indexListVerses == parsedRef.verses.length - 1);
+        isFirstVerse = (indexListVerses == 0);
+        const verseIndex = parsedRef.verses[indexListVerses];
+
+        // Se não for o primeiro versículo e houver lacuna entre os versículos, adicione o marcador de omissão
+        if (previousVerse >= 0 && verseIndex > previousVerse + 1) {
+            if (displayOptions.ellipsis) {
+                verseTexts.push('[...]');
+            }
+        }
+
+        const verseText = chapterContent[verseIndex];
+        if (verseText) { // Verifica se o versículo existe e não é vazio
+            let formattedVerse = verseText;
+
+            // Adicionar número do versículo como sobrescrito
+            if (displayOptions.verseNumbers) {
+                formattedVerse = `<sup>${verseIndex + 1}</sup> ${formattedVerse}`;
+            }
+
+            if (displayOptions.quotes) {
+                // Replace all kind of double quotes with single quotes
+                formattedVerse = formattedVerse.replaceAll(/"/g, "'");
+                formattedVerse = formattedVerse.replaceAll('"', "'");
+                formattedVerse = formattedVerse.replaceAll('"', "'");
+                if (isFirstVerse) {
+                    formattedVerse = `"${formattedVerse}`;
+                }
+                if (isLastVerse) {
+                    formattedVerse = `${formattedVerse}"`;
+                }
+            }
+
+            verseTexts.push(formattedVerse);
+        }
+
+        previousVerse = verseIndex;
+        indexListVerses++;
+    }
+    
+    return verseTexts;
+}
+
 // Função para buscar o versículo
 async function searchVerse() {
     const reference = document.getElementById('reference').value.trim();
@@ -208,55 +257,8 @@ async function searchVerse() {
     }
 
     const chapterContent = book.chapters[chapterIndex];
-
     parsedRef.verses = fixVersesIndexes(parsedRef, chapterContent.length);
-
-    // Get list of verses texts
-    const verseTexts = [];
-    let previousVerse = -1;
-    let indexListVerses = 0;
-    let isLastVerse = false;
-    while ((indexListVerses < parsedRef.verses.length) && !isLastVerse) {
-        isLastVerse = (indexListVerses == parsedRef.verses.length - 1);
-        isFirstVerse = (indexListVerses == 0);
-        const verseIndex = parsedRef.verses[indexListVerses];
-
-        // Se não for o primeiro versículo e houver lacuna entre os versículos, adicione o marcador de omissão
-        if (previousVerse >= 0 && verseIndex > previousVerse + 1) {
-            if (displayOptions.ellipsis) {
-                verseTexts.push('[...]');
-            }
-        }
-
-        const verseText = chapterContent[verseIndex];
-        if (verseText) { // Verifica se o versículo existe e não é vazio
-            let formattedVerse = verseText;
-
-            // Adicionar número do versículo como sobrescrito
-            if (displayOptions.verseNumbers) {
-                formattedVerse = `<sup>${verseIndex + 1}</sup> ${formattedVerse}`;
-            }
-
-            if (displayOptions.quotes) {
-                // Replace all kind of double quotes with single quotes
-                formattedVerse = formattedVerse.replaceAll(/"/g, "'");
-                formattedVerse = formattedVerse.replaceAll('"', "'");
-                formattedVerse = formattedVerse.replaceAll('"', "'");
-                if (isFirstVerse) {
-                    formattedVerse = `"${formattedVerse}`;
-                }
-                if (isLastVerse) {
-                    formattedVerse = `${formattedVerse}"`;
-                }
-            }
-
-            verseTexts.push(formattedVerse);
-        }
-
-        previousVerse = verseIndex;
-
-        indexListVerses++;
-    }
+    const verseTexts = getFormattedVerseTexts(parsedRef, chapterContent, displayOptions);
 
     resultElement.innerHTML = `<div class="reference">${book.name}</div>`;
 
