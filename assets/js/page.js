@@ -328,10 +328,9 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('bible-select').addEventListener('change', async function() {
         updateUploadContainerVisibility();
 
-        // Clear the file input and cache if "upload" is selected
+        // Process last file
         if (this.value === "upload") {
-            fileCache = '';
-            document.getElementById('bible-file').value = '';
+            handleFileUpload(document.getElementById('bible-file').files[0]);
         }
         // Salvar a tradução escolhida (se não for upload)
         else if (this.value) {
