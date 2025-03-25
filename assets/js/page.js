@@ -327,9 +327,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Adicionar event listener para o select de bíblias
     document.getElementById('bible-select').addEventListener('change', async function() {
         updateUploadContainerVisibility();
-        
+
+        // Clear the file input and cache if "upload" is selected
+        if (this.value === "upload") {
+            fileCache = '';
+            document.getElementById('bible-file').value = '';
+        }
         // Salvar a tradução escolhida (se não for upload)
-        if (this.value && this.value !== "upload") {
+        else if (this.value) {
             saveBiblePreference(this.value);
             const biblesList = await getAvailableBibles();
             updateCurrentTranslationName(this.value, biblesList);
