@@ -180,48 +180,74 @@ function getEfectiveVerses(versesList) {
 
 function convertOsisToJson(xmlContent) {
     return new Promise((resolve, reject) => {
-        xml2js.parseString(xmlContent, (err, parsedData) => {
-            if (err) {
-                console.error('Erro ao analisar o XML:', err);
-                reject(err);
+        try {
+            // Use the browser's built-in XML parser
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(xmlContent, "text/xml");
+            
+            // Handle parsing errors
+            const parseError = xmlDoc.getElementsByTagName("parsererror");
+            if (parseError.length > 0) {
+                reject(new Error("XML parsing error: " + parseError[0].textContent));
                 return;
             }
-
-            // Extract relevant data and convert to JSON
+            
             const books = [];
-            if (parsedData && parsedData.osis && parsedData.osis.osisText) {
-                const bookDivs = parsedData.osis.osisText[0].div;
-                if (bookDivs) {
-                    bookDivs.forEach(bookDiv => {
-                        if (bookDiv.$ && bookDiv.$.type === 'book') {
-                            const bookName = bookDiv.$.osisID;
-                            const chapters = [];
-                            if (bookDiv.chapter) {
-                                bookDiv.chapter.forEach(chapter => {
-                                    const verses = [];
-                                    if (chapter.verse) {
-                                        chapter.verse.forEach(verse => {
-                                            verses.push(verse._ || '');
-                                        });
-                                    }
-                                    chapters.push(verses);
-                                });
-                            }
-                            books.push({
-                                name: bookName,
-                                abbreviation: bookName,
-                                chapters: chapters,
-                            });
-                        }
-                    });
-                }
+            // Get all book divs
+            const osisText = xmlDoc.getElementsByTagName("osisText")[0];
+            if (!osisText) {
+                reject(new Error("Invalid OSIS format: osisText element not found"));
+                return;
             }
-
-            resolve({
-                name: "imported",       // TODO: get from XML
-                books: books,
+            
+            // Find all div elements with type="book"
+            const bookDivs = Array.from(osisText.getElementsByTagName("div"))
+                .filter(div => div.getAttribute("type") === "book");
+            
+            bookDivs.forEach(bookDiv => {
+                const bookName = bookDiv.getAttribute("osisID");
+                const chapters = [];
+                
+                // Process chapters
+                const chapterElements = Array.from(bookDiv.getElementsByTagName("chapter"));
+                chapterElements.forEach(chapterElem => {
+                    const verses = [];
+                    
+                    // Process verses
+                    const verseElements = Array.from(chapterElem.getElementsByTagName("verse"));
+                    verseElements.forEach(verseElem => {
+                        // Get the text content of the verse
+                        let verseText = "";
+                        for (const node of verseElem.childNodes) {
+                            if (node.nodeType === Node.TEXT_NODE) {
+                                verseText += node.textContent;
+                            } else if (node.nodeType === Node.ELEMENT_NODE) {
+                                verseText += node.textContent;
+                            }
+                        }
+                        verses.push(verseText.trim());
+                    });
+                    
+                    chapters.push(verses);
+                });
+                
+                books.push({
+                    name: bookName,
+                    abbreviation: bookName,
+                    chapters: chapters,
+                });
             });
-        });
+            
+            resolve({
+                bible: {
+                    name: "imported",
+                    books: books,
+                }
+            });
+            
+        } catch (error) {
+            reject(error);
+        }
     });
 }
 
