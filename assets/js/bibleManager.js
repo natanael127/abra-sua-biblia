@@ -124,7 +124,7 @@ function generateResult(options) {
             // Add translation name if available
             let headerText = `${book.name} ${parsedRef.chapter}`;
             if (bibleData.bible.name) {
-                headerText += ` <span class="translation-name">(${bibleData.bible.name})</span>`;
+                headerText += ` - ${bibleData.bible.name}`;
             }
             htmlOut = `<div class="reference">${headerText}</div>`;
 
