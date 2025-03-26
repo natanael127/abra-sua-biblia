@@ -2,6 +2,7 @@
 let instructionsBackup = null;
 let currentTranslationName = '';
 let fileCache = '';
+const MAX_HISTORY_SIZE = 10;
 
 const displayOptions = {
     quotes: true,
@@ -255,6 +256,8 @@ function setupControlButtons() {
             searchVerse();
         });
     });
+
+    document.getElementById('history-button').classList.remove('active');
 }
 
 function convertIdToOptionKey(id) {
@@ -314,6 +317,119 @@ async function handleFileUpload(file) {
         
         fileReader.readAsText(file);
     });
+}
+
+function saveSearchToHistory(reference) {
+    if (!reference.trim()) return;
+    
+    // Get existing history
+    let searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+    
+    // Remove this item if it exists already (to avoid duplicates)
+    searchHistory = searchHistory.filter(item => item !== reference);
+    
+    // Check if this reference is the start of any existing item in history
+    const isStartOfExisting = searchHistory.some(item => 
+        item.toLowerCase().startsWith(reference.toLowerCase()) && item.length > reference.length
+    );
+    
+    // Remove any history items that are the start of this reference
+    searchHistory = searchHistory.filter(item => 
+        !(reference.toLowerCase().startsWith(item.toLowerCase()) && item.length < reference.length)
+    );
+    
+    // Only add if it's not a prefix of an existing item
+    if (!isStartOfExisting) {
+        // Add the new search at the beginning
+        searchHistory.unshift(reference);
+        
+        // Limit history size
+        if (searchHistory.length > MAX_HISTORY_SIZE) {
+            searchHistory = searchHistory.slice(0, MAX_HISTORY_SIZE);
+        }
+    }
+    
+    // Save back to localStorage
+    localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+}
+
+function loadSearchHistory() {
+    return JSON.parse(localStorage.getItem('searchHistory') || '[]');
+}
+
+function showHistoryModal() {
+    document.getElementById('history-button').classList.add('active');
+    
+    // Criar modal se não existir
+    let modal = document.getElementById('history-modal');
+    let overlay = document.getElementById('modal-overlay');
+    
+    if (!modal) {
+        // Criar overlay
+        overlay = document.createElement('div');
+        overlay.id = 'modal-overlay';
+        overlay.className = 'modal-overlay';
+        document.body.appendChild(overlay);
+        
+        // Criar modal
+        modal = document.createElement('div');
+        modal.id = 'history-modal';
+        modal.className = 'history-modal';
+        modal.innerHTML = `
+            <div class="history-modal-header">
+                <h3 class="history-modal-title">Histórico de buscas</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <ul class="history-list"></ul>
+        `;
+        document.body.appendChild(modal);
+        
+        // Adicionar evento ao botão fechar
+        modal.querySelector('.close-modal').addEventListener('click', hideHistoryModal);
+        
+        // Fechar ao clicar no overlay
+        overlay.addEventListener('click', hideHistoryModal);
+    }
+    
+    // Preencher histórico
+    const historyList = modal.querySelector('.history-list');
+    historyList.innerHTML = '';
+    
+    const history = loadSearchHistory();
+    
+    if (history.length === 0) {
+        const emptyItem = document.createElement('li');
+        emptyItem.className = 'history-list-item';
+        emptyItem.textContent = 'Nenhuma busca recente';
+        historyList.appendChild(emptyItem);
+    } else {
+        history.forEach(item => {
+            const listItem = document.createElement('li');
+            listItem.className = 'history-list-item';
+            listItem.textContent = item;
+            listItem.addEventListener('click', function() {
+                document.getElementById('reference').value = item;
+                hideHistoryModal();
+                searchVerse();
+            });
+            historyList.appendChild(listItem);
+        });
+    }
+    
+    // Mostrar modal e overlay
+    modal.classList.add('show');
+    overlay.classList.add('show');
+}
+
+function hideHistoryModal() {
+    const modal = document.getElementById('history-modal');
+    const overlay = document.getElementById('modal-overlay');
+    
+    // Remover classe ativa do botão de histórico
+    document.getElementById('history-button').classList.remove('active');
+    
+    if (modal) modal.classList.remove('show');
+    if (overlay) overlay.classList.remove('show');
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -404,6 +520,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
         }
     });
+
+    // Add click event to history button
+    document.getElementById('history-button').addEventListener('click', function(event) {
+        event.preventDefault();
+        showHistoryModal();
+    });
 });
 
 async function searchVerse() {
@@ -426,6 +548,9 @@ async function searchVerse() {
         copyButton.classList.remove('visible');
     } else {
         copyButton.classList.add('visible');
+        if (reference) {
+            saveSearchToHistory(reference);
+        }
     }
     resultElement.innerHTML = result.html;
 }
