@@ -192,6 +192,19 @@ function convertOsisToJson(xmlContent) {
                 return;
             }
             
+            // Extract Bible name from header > work > title
+            let bibleName = "imported";  // Default name if not found
+            const header = xmlDoc.getElementsByTagName("header")[0];
+            if (header) {
+                const work = header.getElementsByTagName("work")[0];
+                if (work) {
+                    const title = work.getElementsByTagName("title")[0];
+                    if (title) {
+                        bibleName = title.textContent.trim();
+                    }
+                }
+            }
+
             const books = [];
             // Get all book divs
             const osisText = xmlDoc.getElementsByTagName("osisText")[0];
@@ -240,7 +253,7 @@ function convertOsisToJson(xmlContent) {
             
             resolve({
                 bible: {
-                    name: "imported",
+                    name: bibleName,
                     books: books,
                 }
             });

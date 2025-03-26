@@ -69,12 +69,11 @@ function loadBibleFromData(data) {
  * @param {string} options.reference - Bible reference to lookup
  * @param {string} options.basicInstructions - Instructions to show on parsing error
  * @param {Object} options.displayOpt - Display options
- * @param {string} [options.translationName=''] - Translation name to display
  * @param {Object} [options.tempBibleData=null] - Temporary Bible data to use instead of global
  * @returns {Object} Result object with error flag and HTML content
  */
 function generateResult(options) {
-    const { reference, basicInstructions, displayOpt, translationName = '' } = options;
+    const { reference, basicInstructions, displayOpt } = options;
     const useTempData = options.tempBibleData !== undefined;
     
     // Store original data if we're using temporary data
@@ -124,8 +123,8 @@ function generateResult(options) {
         } else {
             // Add translation name if available
             let headerText = `${book.name} ${parsedRef.chapter}`;
-            if (translationName) {
-                headerText += ` <span class="translation-name">(${translationName})</span>`;
+            if (bibleData.bible.name) {
+                headerText += ` <span class="translation-name">(${bibleData.bible.name})</span>`;
             }
             htmlOut = `<div class="reference">${headerText}</div>`;
 
@@ -162,12 +161,11 @@ function generateResult(options) {
     };
 }
 
-function generateResultFromExistent(reference, basicInstructions, displayOpt, translationName) {
+function generateResultFromExistent(reference, basicInstructions, displayOpt) {
     return generateResult({
         reference,
         basicInstructions,
-        displayOpt,
-        translationName
+        displayOpt
     });
 }
 
