@@ -179,51 +179,50 @@ function getEfectiveVerses(versesList) {
 }
 
 function convertOsisToJson(xmlContent) {
-    result = null;
+    return new Promise((resolve, reject) => {
+        xml2js.parseString(xmlContent, (err, parsedData) => {
+            if (err) {
+                console.error('Erro ao analisar o XML:', err);
+                reject(err);
+                return;
+            }
 
-    xml2js.parseString(xmlContent, (err, parsedData) => {
-        if (err) {
-            console.error('Erro ao analisar o XML:', err);
-            return;
-        }
-
-        // Extract relevant data and convert to JSON
-        const books = [];
-        if (parsedData && parsedData.osis && parsedData.osis.osisText) {
-            const bookDivs = parsedData.osis.osisText[0].div;
-            if (bookDivs) {
-                bookDivs.forEach(bookDiv => {
-                    if (bookDiv.$ && bookDiv.$.type === 'book') {
-                        const bookName = bookDiv.$.osisID;
-                        const chapters = [];
-                        if (bookDiv.chapter) {
-                            bookDiv.chapter.forEach(chapter => {
-                                const verses = [];
-                                if (chapter.verse) {
-                                    chapter.verse.forEach(verse => {
-                                        verses.push(verse._ || '');
-                                    });
-                                }
-                                chapters.push(verses);
+            // Extract relevant data and convert to JSON
+            const books = [];
+            if (parsedData && parsedData.osis && parsedData.osis.osisText) {
+                const bookDivs = parsedData.osis.osisText[0].div;
+                if (bookDivs) {
+                    bookDivs.forEach(bookDiv => {
+                        if (bookDiv.$ && bookDiv.$.type === 'book') {
+                            const bookName = bookDiv.$.osisID;
+                            const chapters = [];
+                            if (bookDiv.chapter) {
+                                bookDiv.chapter.forEach(chapter => {
+                                    const verses = [];
+                                    if (chapter.verse) {
+                                        chapter.verse.forEach(verse => {
+                                            verses.push(verse._ || '');
+                                        });
+                                    }
+                                    chapters.push(verses);
+                                });
+                            }
+                            books.push({
+                                name: bookName,
+                                abbreviation: bookName,
+                                chapters: chapters,
                             });
                         }
-                        books.push({
-                            name: bookName,
-                            abbreviation: bookName,
-                            chapters: chapters,
-                        });
-                    }
-                });
+                    });
+                }
             }
-        }
 
-        result = {
-            name: "imported",       // TODO: get from XML
-            books: books,
-        }
+            resolve({
+                name: "imported",       // TODO: get from XML
+                books: books,
+            });
+        });
     });
-
-    return result;
 }
 
 // Export purely functional functions

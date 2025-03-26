@@ -299,16 +299,37 @@ async function handleFileUpload(file) {
         return false;
     }
     
-    if (file.type !== 'application/json' && !file.name.endsWith('.json')) {
+    // Check if file is JSON or XML
+    const isJson = file.type === 'application/json' || file.name.endsWith('.json');
+    const isXml = file.type === 'application/xml' || file.name.endsWith('.xml') || file.name.endsWith('.osis');
+    
+    if (!isJson && !isXml) {
         return false;
     }
     
     return new Promise((resolve, reject) => {
         const fileReader = new FileReader();
         
-        fileReader.onload = function(event) {
-            fileCache = event.target.result;
+        fileReader.onload = async function(event) {
+            const content = event.target.result;
+            
+            if (isXml) {
+                try {
+                    // Convert XML to JSON using convertOsisToJson
+                    const jsonData = await window.BibleUtils.convertOsisToJson(content);
+                    fileCache = JSON.stringify(jsonData);
+                } catch (error) {
+                    console.error('Error converting XML to JSON:', error);
+                    resolve(false);
+                    return;
+                }
+            } else {
+                // JSON files stored directly
+                fileCache = content;
+            }
+            
             searchVerse();
+            resolve(true);
         };
         
         fileReader.onerror = function() {
