@@ -304,13 +304,28 @@ button:hover {
 .close-modal {
     background: none;
     border: none;
-    font-size: 20px;
+    font-size: 24px;
     cursor: pointer;
     color: #666;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    transition: background-color 0.2s, color 0.2s;
+    padding: 0;
+    line-height: 1;
 }
 
 .close-modal:hover {
     color: #333;
+    background-color: #f0f0f0;
+}
+
+.close-modal:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(21, 101, 192, 0.5);
 }
 
 .history-list {
