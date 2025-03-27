@@ -364,3 +364,19 @@ button:hover {
 .modal-overlay.show {
     display: block;
 }
+
+/* Estilos para o conteúdo do modal de ajuda */
+.help-content {
+    padding: 15px 20px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.help-icon {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+#help-modal.history-modal {
+    max-width: 600px; /* Um pouco mais largo para o conteúdo de ajuda */
+}

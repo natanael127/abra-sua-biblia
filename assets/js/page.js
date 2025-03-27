@@ -258,6 +258,7 @@ function setupControlButtons() {
     });
 
     document.getElementById('history-button').classList.remove('active');
+    document.getElementById('help-button').classList.remove('active');
 }
 
 function convertIdToOptionKey(id) {
@@ -453,6 +454,60 @@ function hideHistoryModal() {
     if (overlay) overlay.classList.remove('show');
 }
 
+function showHelpModal() {
+    document.getElementById('help-button').classList.add('active');
+
+    // Criar modal se não existir
+    let modal = document.getElementById('help-modal');
+    let overlay = document.getElementById('modal-overlay');
+
+    if (!modal) {
+        // Criar overlay se não existir
+        if (!overlay) {
+            overlay = document.createElement('div');
+            overlay.id = 'modal-overlay';
+            overlay.className = 'modal-overlay';
+            document.body.appendChild(overlay);
+        }
+
+        // Criar modal
+        modal = document.createElement('div');
+        modal.id = 'help-modal';
+        modal.className = 'history-modal'; // Reusa a classe do modal de histórico
+        modal.innerHTML = `
+            <div class="history-modal-header">
+                <h3 class="history-modal-title">Referência bíblica</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="help-content">
+                ${instructionsBackup}
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        // Adicionar evento ao botão fechar
+        modal.querySelector('.close-modal').addEventListener('click', hideHelpModal);
+        
+        // Fechar ao clicar no overlay
+        overlay.addEventListener('click', hideHelpModal);
+    }
+
+    // Mostrar modal e overlay
+    modal.classList.add('show');
+    overlay.classList.add('show');
+}
+
+function hideHelpModal() {
+    const modal = document.getElementById('help-modal');
+    const overlay = document.getElementById('modal-overlay');
+
+    // Remover classe ativa do botão de ajuda
+    document.getElementById('help-button').classList.remove('active');
+
+    if (modal) modal.classList.remove('show');
+    if (overlay) overlay.classList.remove('show');
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     instructionsBackup = document.getElementById('result').innerHTML;
     loadAvailableBibles();
@@ -546,6 +601,12 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('history-button').addEventListener('click', function(event) {
         event.preventDefault();
         showHistoryModal();
+    });
+    
+    // Add click event to help button
+    document.getElementById('help-button').addEventListener('click', function(event) {
+        event.preventDefault();
+        showHelpModal();
     });
 });
 
