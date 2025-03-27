@@ -7,7 +7,8 @@ let currentTranslationName = '';
 let fileCache = '';
 const modalButtonMap = {
     'history-modal': 'history-button',
-    'help-modal': 'help-button'
+    'reference-help-modal': 'reference-help-button',
+    'file-help-modal': 'file-help-button'
 };
 
 const displayOptions = {
@@ -263,8 +264,13 @@ function setupControlButtons() {
         });
     });
 
-    document.getElementById('history-button').classList.remove('active');
-    document.getElementById('help-button').classList.remove('active');
+    for (let modalId in modalButtonMap) {
+        const buttonId = modalButtonMap[modalId];
+        const button = document.getElementById(buttonId);
+        if (button) {
+            button.classList.remove('active');
+        }
+    }
 }
 
 function convertIdToOptionKey(id) {
@@ -520,20 +526,49 @@ function hideHistoryModal() {
 
 function showHelpModal() {
     // Create modal if it doesn't exist
-    let modal = document.getElementById('help-modal');
+    let modal = document.getElementById('reference-help-modal');
     if (!modal) {
         modal = createModal({
-            id: 'help-modal',
+            id: 'reference-help-modal',
             title: 'Referência bíblica',
             content: instructionsBackup
         });
     }
     
-    showModal('help-modal', 'help-button');
+    showModal('reference-help-modal', modalButtonMap['reference-help-modal']);
 }
 
 function hideHelpModal() {
-    hideModal('help-modal', 'help-button');
+    hideModal('reference-help-modal', modalButtonMap['reference-help-modal']);
+}
+
+function showFormatHelpModal() {
+    // Create modal if it doesn't exist
+    let modal = document.getElementById('file-help-modal');
+    if (!modal) {
+        modal = createModal({
+            id: 'file-help-modal',
+            title: 'Formatos suportados',
+            content: `
+                <ul>
+                    <li>
+                        <strong>EBF/JSON</strong> -
+                        <a href="https://github.com/natanael127/easy-bible-format">Easy Bible Format</a>
+                    </li>
+                    <li>
+                        <strong>OSIS/XML</strong> -
+                        <a href="https://crosswire.org/osis/">Open Scripture Information Standard</a>
+                    </li>
+                </ul>
+            `
+        });
+    }
+
+    showModal('file-help-modal', modalButtonMap['file-help-modal']);
+}
+
+function hideFormatHelpModal() {
+    hideModal('file-help-modal', modalButtonMap['file-help-modal']);
 }
 
 function closeActiveModal() {
@@ -650,12 +685,26 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault();
         showHistoryModal();
     });
-    
-    // Add click event to help button
-    document.getElementById('help-button').addEventListener('click', function(event) {
-        event.preventDefault();
-        showHelpModal();
-    });
+
+    for (let modalId in modalButtonMap) {
+        const buttonId = modalButtonMap[modalId];
+        const button = document.getElementById(buttonId);
+        
+        if (button) {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                if (modalId === 'history-modal') {
+                    showHistoryModal();
+                } else if (modalId === 'reference-help-modal') {
+                    showHelpModal();
+                } else if (modalId === 'file-help-modal') {
+                    showFormatHelpModal();
+                } else {
+                    console.error('Modal desconhecido:', modalId);
+                }
+            });
+        }
+    }
 });
 
 async function searchVerse() {
