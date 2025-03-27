@@ -525,6 +525,21 @@ function hideHelpModal() {
     hideModal('help-modal', 'help-button');
 }
 
+function closeActiveModal() {
+    modalIds = ['history-modal', 'help-modal'];
+
+    output = false;
+    for (let id of modalIds) {
+        const modal = document.getElementById(id);
+        if (modal && modal.classList.contains('show')) {
+            hideModal(id);
+            output = true;
+        }
+    }
+
+    return output;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     instructionsBackup = document.getElementById('result').innerHTML;
     loadAvailableBibles();
@@ -532,6 +547,13 @@ document.addEventListener('DOMContentLoaded', function() {
     updateUploadContainerVisibility();
     setupExpandableSections();
     setupControlButtons();
+    
+    // Add global event listener for Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeActiveModal();
+        }
+    });
 
     // Adicionar event listener para o select de bíblias
     document.getElementById('bible-select').addEventListener('change', async function() {
