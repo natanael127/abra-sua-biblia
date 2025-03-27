@@ -545,11 +545,11 @@ function showFileHelpModal() {
                 <ul>
                     <li>
                         <strong>EBF/JSON</strong><br>
-                        <a href="https://github.com/natanael127/easy-bible-format">Easy Bible Format</a>
+                        <a href="https://github.com/natanael127/easy-bible-format" target="_blank" rel="noopener noreferrer">Easy Bible Format</a>
                     </li>
                     <li>
                         <strong>OSIS/XML</strong><br>
-                        <a href="https://crosswire.org/osis/">Open Scripture Information Standard</a>
+                        <a href="https://crosswire.org/osis/" target="_blank" rel="noopener noreferrer">Open Scripture Information Standard</a>
                     </li>
                 </ul>
             `
