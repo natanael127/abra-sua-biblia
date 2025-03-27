@@ -1,8 +1,14 @@
+// Constants
+const MAX_HISTORY_SIZE = 10;
+
 // Control variables
 let instructionsBackup = null;
 let currentTranslationName = '';
 let fileCache = '';
-const MAX_HISTORY_SIZE = 10;
+const modalButtonMap = {
+    'history-modal': 'history-button',
+    'help-modal': 'help-button'
+};
 
 const displayOptions = {
     quotes: true,
@@ -401,7 +407,9 @@ function createModal(options) {
         if (options.className) {
             modal.classList.add(options.className);
         }
-        
+
+        modal.dataset.buttonId = modalButtonMap[options.id];
+
         modal.innerHTML = `
             <div class="history-modal-header">
                 <h3 class="history-modal-title">${options.title}</h3>
@@ -415,12 +423,15 @@ function createModal(options) {
         
         // Add close button event
         modal.querySelector('.close-modal').addEventListener('click', () => {
-            hideModal(options.id);
+            hideModal(options.id, modal.dataset.buttonId);
         });
         
         // Close when clicking overlay
         overlay.addEventListener('click', () => {
-            hideModal(options.id);
+            // Find all open modals and close them with their associated buttons
+            document.querySelectorAll('.history-modal.show').forEach(openModal => {
+                hideModal(openModal.id, openModal.dataset.buttonId);
+            });
         });
     }
     
@@ -526,12 +537,6 @@ function hideHelpModal() {
 }
 
 function closeActiveModal() {
-    // Map of modal IDs to their corresponding button IDs
-    const modalButtonMap = {
-        'history-modal': 'history-button',
-        'help-modal': 'help-button'
-    };
-
     let output = false;
     for (let modalId in modalButtonMap) {
         const modal = document.getElementById(modalId);
