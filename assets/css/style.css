@@ -269,7 +269,7 @@ button:hover {
     }
 }
 
-.history-modal {
+.app-modal {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -283,11 +283,11 @@ button:hover {
     display: none;
 }
 
-.history-modal.show {
+.app-modal.show {
     display: block;
 }
 
-.history-modal-header {
+.app-modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -295,7 +295,7 @@ button:hover {
     border-bottom: 1px solid #eee;
 }
 
-.history-modal-title {
+.app-modal-title {
     font-size: 18px;
     font-weight: bold;
     margin: 0;
@@ -377,6 +377,6 @@ button:hover {
     font-size: 16px;
 }
 
-#help-modal.history-modal {
+#help-modal.app-modal {
     max-width: 600px; /* Um pouco mais largo para o conteúdo de ajuda */
 }

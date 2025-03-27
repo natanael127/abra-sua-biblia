@@ -403,7 +403,7 @@ function createModal(options) {
         // Create modal
         modal = document.createElement('div');
         modal.id = options.id;
-        modal.className = 'history-modal'; // Base class used by both modals
+        modal.className = 'app-modal';
         if (options.className) {
             modal.classList.add(options.className);
         }
@@ -411,8 +411,8 @@ function createModal(options) {
         modal.dataset.buttonId = modalButtonMap[options.id];
 
         modal.innerHTML = `
-            <div class="history-modal-header">
-                <h3 class="history-modal-title">${options.title}</h3>
+            <div class="app-modal-header">
+                <h3 class="app-modal-title">${options.title}</h3>
                 <button class="close-modal">&times;</button>
             </div>
             <div class="help-content">
@@ -429,7 +429,7 @@ function createModal(options) {
         // Close when clicking overlay
         overlay.addEventListener('click', () => {
             // Find all open modals and close them with their associated buttons
-            document.querySelectorAll('.history-modal.show').forEach(openModal => {
+            document.querySelectorAll('.app-modal.show').forEach(openModal => {
                 hideModal(openModal.id, openModal.dataset.buttonId);
             });
         });
