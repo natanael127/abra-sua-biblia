@@ -143,10 +143,10 @@ function populateBooksSidebar(books) {
         bookElement.textContent = book.abbreviation || book.name.substring(0, 3);
         bookElement.title = book.name;
         
-        // Adicionar evento de clique para preencher automaticamente o campo de busca apenas com a abreviação
         bookElement.addEventListener('click', function() {
-            document.getElementById('reference').value = `${book.abbreviation || book.name.substring(0, 3)}`;
+            document.getElementById('reference').value = `${book.abbreviation || book.name.substring(0, 3)} 1`;
             document.getElementById('reference').focus();
+            searchVerse();
         });
         
         bookList.appendChild(bookElement);
