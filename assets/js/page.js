@@ -441,6 +441,8 @@ function showHistoryModal() {
     // Mostrar modal e overlay
     modal.classList.add('show');
     overlay.classList.add('show');
+    // Enable pointer events when showing the modal
+    overlay.style.pointerEvents = 'auto';
 }
 
 function hideHistoryModal() {
@@ -451,7 +453,11 @@ function hideHistoryModal() {
     document.getElementById('history-button').classList.remove('active');
     
     if (modal) modal.classList.remove('show');
-    if (overlay) overlay.classList.remove('show');
+    if (overlay) {
+        overlay.classList.remove('show');
+        // Disable pointer events when hidden to allow interaction with page elements
+        overlay.style.pointerEvents = 'none';
+    }
 }
 
 function showHelpModal() {
@@ -495,6 +501,8 @@ function showHelpModal() {
     // Mostrar modal e overlay
     modal.classList.add('show');
     overlay.classList.add('show');
+    // Enable pointer events when showing the modal
+    overlay.style.pointerEvents = 'auto';
 }
 
 function hideHelpModal() {
@@ -505,7 +513,11 @@ function hideHelpModal() {
     document.getElementById('help-button').classList.remove('active');
 
     if (modal) modal.classList.remove('show');
-    if (overlay) overlay.classList.remove('show');
+    if (overlay) {
+        overlay.classList.remove('show');
+        // Disable pointer events when hidden
+        overlay.style.pointerEvents = 'none';
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
