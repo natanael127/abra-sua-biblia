@@ -520,11 +520,7 @@ function showHistoryModal() {
     showModal('history-modal', 'history-button');
 }
 
-function hideHistoryModal() {
-    hideModal('history-modal', 'history-button');
-}
-
-function showHelpModal() {
+function showReferenceHelpModal() {
     // Create modal if it doesn't exist
     let modal = document.getElementById('reference-help-modal');
     if (!modal) {
@@ -538,11 +534,7 @@ function showHelpModal() {
     showModal('reference-help-modal', modalButtonMap['reference-help-modal']);
 }
 
-function hideHelpModal() {
-    hideModal('reference-help-modal', modalButtonMap['reference-help-modal']);
-}
-
-function showFormatHelpModal() {
+function showFileHelpModal() {
     // Create modal if it doesn't exist
     let modal = document.getElementById('file-help-modal');
     if (!modal) {
@@ -565,10 +557,6 @@ function showFormatHelpModal() {
     }
 
     showModal('file-help-modal', modalButtonMap['file-help-modal']);
-}
-
-function hideFormatHelpModal() {
-    hideModal('file-help-modal', modalButtonMap['file-help-modal']);
 }
 
 function closeActiveModal() {
@@ -680,12 +668,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Add click event to history button
-    document.getElementById('history-button').addEventListener('click', function(event) {
-        event.preventDefault();
-        showHistoryModal();
-    });
-
     for (let modalId in modalButtonMap) {
         const buttonId = modalButtonMap[modalId];
         const button = document.getElementById(buttonId);
@@ -696,9 +678,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (modalId === 'history-modal') {
                     showHistoryModal();
                 } else if (modalId === 'reference-help-modal') {
-                    showHelpModal();
+                    showReferenceHelpModal();
                 } else if (modalId === 'file-help-modal') {
-                    showFormatHelpModal();
+                    showFileHelpModal();
                 } else {
                     console.error('Modal desconhecido:', modalId);
                 }
