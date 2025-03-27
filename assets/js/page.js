@@ -379,41 +379,103 @@ function loadSearchHistory() {
     return JSON.parse(localStorage.getItem('searchHistory') || '[]');
 }
 
-function showHistoryModal() {
-    document.getElementById('history-button').classList.add('active');
-    
-    // Criar modal se não existir
-    let modal = document.getElementById('history-modal');
+// Modal utility functions
+function createModal(options) {
+    // options: { id, title, content, className }
+    let modal = document.getElementById(options.id);
     let overlay = document.getElementById('modal-overlay');
     
     if (!modal) {
-        // Criar overlay
-        overlay = document.createElement('div');
-        overlay.id = 'modal-overlay';
-        overlay.className = 'modal-overlay';
-        document.body.appendChild(overlay);
+        // Create overlay if needed
+        if (!overlay) {
+            overlay = document.createElement('div');
+            overlay.id = 'modal-overlay';
+            overlay.className = 'modal-overlay';
+            document.body.appendChild(overlay);
+        }
         
-        // Criar modal
+        // Create modal
         modal = document.createElement('div');
-        modal.id = 'history-modal';
-        modal.className = 'history-modal';
+        modal.id = options.id;
+        modal.className = 'history-modal'; // Base class used by both modals
+        if (options.className) {
+            modal.classList.add(options.className);
+        }
+        
         modal.innerHTML = `
             <div class="history-modal-header">
-                <h3 class="history-modal-title">Histórico de buscas</h3>
+                <h3 class="history-modal-title">${options.title}</h3>
                 <button class="close-modal">&times;</button>
             </div>
-            <ul class="history-list"></ul>
+            <div class="help-content">
+                ${options.content}
+            </div>
         `;
         document.body.appendChild(modal);
         
-        // Adicionar evento ao botão fechar
-        modal.querySelector('.close-modal').addEventListener('click', hideHistoryModal);
+        // Add close button event
+        modal.querySelector('.close-modal').addEventListener('click', () => {
+            hideModal(options.id);
+        });
         
-        // Fechar ao clicar no overlay
-        overlay.addEventListener('click', hideHistoryModal);
+        // Close when clicking overlay
+        overlay.addEventListener('click', () => {
+            hideModal(options.id);
+        });
     }
     
-    // Preencher histórico
+    return modal;
+}
+
+function showModal(modalId, buttonId) {
+    // Activate button
+    if (buttonId) {
+        document.getElementById(buttonId).classList.add('active');
+    }
+    
+    const modal = document.getElementById(modalId);
+    const overlay = document.getElementById('modal-overlay');
+    
+    if (modal && overlay) {
+        // Show modal and overlay
+        modal.classList.add('show');
+        overlay.classList.add('show');
+        // Enable pointer events
+        overlay.style.pointerEvents = 'auto';
+    }
+}
+
+function hideModal(modalId, buttonId) {
+    const modal = document.getElementById(modalId);
+    const overlay = document.getElementById('modal-overlay');
+    
+    // Deactivate button if provided
+    if (buttonId) {
+        document.getElementById(buttonId).classList.remove('active');
+    }
+    
+    if (modal) modal.classList.remove('show');
+    if (overlay) {
+        overlay.classList.remove('show');
+        // Disable pointer events
+        overlay.style.pointerEvents = 'none';
+    }
+}
+
+function showHistoryModal() {
+    const historyButton = document.getElementById('history-button');
+    
+    // Create modal if it doesn't exist
+    let modal = document.getElementById('history-modal');
+    if (!modal) {
+        modal = createModal({
+            id: 'history-modal',
+            title: 'Histórico de buscas',
+            content: '<ul class="history-list"></ul>'
+        });
+    }
+    
+    // Update history list
     const historyList = modal.querySelector('.history-list');
     historyList.innerHTML = '';
     
@@ -431,93 +493,36 @@ function showHistoryModal() {
             listItem.textContent = item;
             listItem.addEventListener('click', function() {
                 document.getElementById('reference').value = item;
-                hideHistoryModal();
+                hideModal('history-modal', 'history-button');
                 searchVerse();
             });
             historyList.appendChild(listItem);
         });
     }
     
-    // Mostrar modal e overlay
-    modal.classList.add('show');
-    overlay.classList.add('show');
-    // Enable pointer events when showing the modal
-    overlay.style.pointerEvents = 'auto';
+    showModal('history-modal', 'history-button');
 }
 
 function hideHistoryModal() {
-    const modal = document.getElementById('history-modal');
-    const overlay = document.getElementById('modal-overlay');
-    
-    // Remover classe ativa do botão de histórico
-    document.getElementById('history-button').classList.remove('active');
-    
-    if (modal) modal.classList.remove('show');
-    if (overlay) {
-        overlay.classList.remove('show');
-        // Disable pointer events when hidden to allow interaction with page elements
-        overlay.style.pointerEvents = 'none';
-    }
+    hideModal('history-modal', 'history-button');
 }
 
 function showHelpModal() {
-    document.getElementById('help-button').classList.add('active');
-
-    // Criar modal se não existir
+    // Create modal if it doesn't exist
     let modal = document.getElementById('help-modal');
-    let overlay = document.getElementById('modal-overlay');
-
     if (!modal) {
-        // Criar overlay se não existir
-        if (!overlay) {
-            overlay = document.createElement('div');
-            overlay.id = 'modal-overlay';
-            overlay.className = 'modal-overlay';
-            document.body.appendChild(overlay);
-        }
-
-        // Criar modal
-        modal = document.createElement('div');
-        modal.id = 'help-modal';
-        modal.className = 'history-modal'; // Reusa a classe do modal de histórico
-        modal.innerHTML = `
-            <div class="history-modal-header">
-                <h3 class="history-modal-title">Referência bíblica</h3>
-                <button class="close-modal">&times;</button>
-            </div>
-            <div class="help-content">
-                ${instructionsBackup}
-            </div>
-        `;
-        document.body.appendChild(modal);
-
-        // Adicionar evento ao botão fechar
-        modal.querySelector('.close-modal').addEventListener('click', hideHelpModal);
-        
-        // Fechar ao clicar no overlay
-        overlay.addEventListener('click', hideHelpModal);
+        modal = createModal({
+            id: 'help-modal',
+            title: 'Referência bíblica',
+            content: instructionsBackup
+        });
     }
-
-    // Mostrar modal e overlay
-    modal.classList.add('show');
-    overlay.classList.add('show');
-    // Enable pointer events when showing the modal
-    overlay.style.pointerEvents = 'auto';
+    
+    showModal('help-modal', 'help-button');
 }
 
 function hideHelpModal() {
-    const modal = document.getElementById('help-modal');
-    const overlay = document.getElementById('modal-overlay');
-
-    // Remover classe ativa do botão de ajuda
-    document.getElementById('help-button').classList.remove('active');
-
-    if (modal) modal.classList.remove('show');
-    if (overlay) {
-        overlay.classList.remove('show');
-        // Disable pointer events when hidden
-        overlay.style.pointerEvents = 'none';
-    }
+    hideModal('help-modal', 'help-button');
 }
 
 document.addEventListener('DOMContentLoaded', function() {
