@@ -526,13 +526,17 @@ function hideHelpModal() {
 }
 
 function closeActiveModal() {
-    modalIds = ['history-modal', 'help-modal'];
+    // Map of modal IDs to their corresponding button IDs
+    const modalButtonMap = {
+        'history-modal': 'history-button',
+        'help-modal': 'help-button'
+    };
 
-    output = false;
-    for (let id of modalIds) {
-        const modal = document.getElementById(id);
+    let output = false;
+    for (let modalId in modalButtonMap) {
+        const modal = document.getElementById(modalId);
         if (modal && modal.classList.contains('show')) {
-            hideModal(id);
+            hideModal(modalId, modalButtonMap[modalId]);
             output = true;
         }
     }
