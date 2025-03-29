@@ -128,9 +128,13 @@ function generateResult(options) {
             }
             htmlOut = `<div class="reference">${headerText}</div>`;
 
-            const chapterContent = book.chapters[chapterIndex];
-            parsedRef.verses = BibleUtils.fixVersesIndexes(parsedRef, chapterContent.length);
-            const verseTexts = BibleUtils.getFormattedVerseTexts(parsedRef, chapterContent, displayOpt);
+            const chapterObject = book.chapters[chapterIndex];
+            chapterVerses = [];
+            for (const verseObject of chapterObject.verses) {
+                chapterVerses.push(verseObject.text);
+            }
+            parsedRef.verses = BibleUtils.fixVersesIndexes(parsedRef, chapterVerses.length);
+            const verseTexts = BibleUtils.getFormattedVerseTexts(parsedRef, chapterVerses, displayOpt);
             
             if (displayOpt.parenthesesCitation) {
                 let improvedRef = `${book.abbreviation} ${parsedRef.chapter}`;
