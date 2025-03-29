@@ -178,7 +178,7 @@ function getEfectiveVerses(versesList) {
     return strOut;
 }
 
-function convertOsisToJson(xmlContent) {
+function convertOsisToEbf(xmlContent) {
     return new Promise((resolve, reject) => {
         try {
             // Use the browser's built-in XML parser
@@ -238,10 +238,14 @@ function convertOsisToJson(xmlContent) {
                                 verseText += node.textContent;
                             }
                         }
-                        verses.push(verseText.trim());
+                        verses.push({
+                            text: verseText.trim(),
+                        });
                     });
                     
-                    chapters.push(verses);
+                    chapters.push({
+                        verses: verses,
+                    });
                 });
                 
                 books.push({
@@ -270,5 +274,5 @@ window.BibleUtils = {
     fixVersesIndexes,
     getFormattedVerseTexts,
     getEfectiveVerses,
-    convertOsisToJson,
+    convertOsisToEbf,
 };
