@@ -105,10 +105,12 @@ function generateResult(options) {
     let errorFlag = false;
     let htmlOut = '';
 
-    // Find book
+    // Find book - priorities: abbreviation, usfm_id, name
+    userBook = parsedRef.book.toLowerCase();
     const book = bibleData.bible.books.find(b => 
-        b.abbreviation.toLowerCase() === parsedRef.book.toLowerCase() || 
-        b.name.toLowerCase() === parsedRef.book.toLowerCase()
+        b.abbreviation.toLowerCase() === userBook || 
+        b.usfm_id.toLowerCase() === userBook || 
+        b.name.toLowerCase() === userBook
     );
 
     if (!book) {
