@@ -249,8 +249,10 @@ function convertOsisToEbf(xmlContent) {
                 });
                 
                 books.push({
+                    // TODO: Differentiate between bookName and osisID
                     name: bookName,
                     abbreviation: bookName,
+                    usfm_id: bookName,
                     chapters: chapters,
                 });
             });
