@@ -105,12 +105,12 @@ function generateResult(options) {
     let errorFlag = false;
     let htmlOut = '';
 
-    // Find book - priorities: abbreviation, usfm_id, name
+    // Find book - priorities: abbreviation, usfm_id, names array
     userBook = parsedRef.book.toLowerCase();
     const book = bibleData.bible.books.find(b => 
         (b.abbreviation && b.abbreviation.toLowerCase() === userBook) || 
         (b.usfm_id && b.usfm_id.toLowerCase() === userBook) || 
-        (b.name && b.name.toLowerCase() === userBook)
+        (b.names && b.names.some(name => name.toLowerCase() === userBook))
     );
 
     if (!book) {
@@ -121,10 +121,10 @@ function generateResult(options) {
         const chapterIndex = parsedRef.chapter - 1;
         if (chapterIndex < 0 || chapterIndex >= book.chapters.length) {
             errorFlag = true;
-            htmlOut = `<span class="error">Capítulo ${parsedRef.chapter} não encontrado em ${book.name}.</span>`;
+            htmlOut = `<span class="error">Capítulo ${parsedRef.chapter} não encontrado em ${book.names[0]}.</span>`;
         } else {
             // Add translation name if available
-            let headerText = `${book.name} ${parsedRef.chapter}`;
+            let headerText = `${book.names[0]} ${parsedRef.chapter}`;
             if (bibleData.bible.name) {
                 headerText += ` - ${bibleData.bible.name}`;
             }
