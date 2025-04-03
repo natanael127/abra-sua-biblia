@@ -108,9 +108,9 @@ function generateResult(options) {
     // Find book - priorities: abbreviation, usfm_id, name
     userBook = parsedRef.book.toLowerCase();
     const book = bibleData.bible.books.find(b => 
-        b.abbreviation.toLowerCase() === userBook || 
-        b.usfm_id.toLowerCase() === userBook || 
-        b.name.toLowerCase() === userBook
+        (b.abbreviation && b.abbreviation.toLowerCase() === userBook) || 
+        (b.usfm_id && b.usfm_id.toLowerCase() === userBook) || 
+        (b.name && b.name.toLowerCase() === userBook)
     );
 
     if (!book) {
