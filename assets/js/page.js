@@ -148,7 +148,7 @@ function populateBooksSidebar(books) {
         const bookElement = document.createElement('div');
         bookElement.className = 'book-item';
         bookElement.textContent = book.abbreviation || book.name.substring(0, 3);
-        bookElement.title = book.name;
+        bookElement.title = book.names[0];
         
         bookElement.addEventListener('click', function() {
             document.getElementById('reference').value = `${book.abbreviation || book.name.substring(0, 3)} 1`;
