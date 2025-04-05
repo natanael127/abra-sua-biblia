@@ -340,8 +340,86 @@ function getFollowingPElements(chapterElement) {
     return pElements;
 }
 
+/**
+ * Detects the format of the provided XML content
+ * @param {string} xmlContent - The XML content to analyze
+ * @returns {string} - 'osis', 'usfx', or 'unknown'
+ */
+function detectXmlFormat(xmlContent) {
+    try {
+        // Use the browser's built-in XML parser
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlContent, "text/xml");
+        
+        // Handle parsing errors
+        const parseError = xmlDoc.getElementsByTagName("parsererror");
+        if (parseError.length > 0) {
+            return 'unknown';
+        }
+        
+        // Check for OSIS format
+        const osisText = xmlDoc.getElementsByTagName("osisText");
+        const osisDiv = Array.from(xmlDoc.getElementsByTagName("div")).filter(div => div.getAttribute("type") === "book");
+        
+        if (osisText.length > 0 || osisDiv.length > 0) {
+            return 'osis';
+        }
+        
+        // Check for USFX format
+        const usfxElement = xmlDoc.getElementsByTagName("usfx");
+        const bookElements = xmlDoc.getElementsByTagName("book");
+        const hasUsfxStructure = bookElements.length > 0 && 
+                                Array.from(bookElements).some(el => el.getAttribute("id"));
+        
+        if (usfxElement.length > 0 || hasUsfxStructure) {
+            return 'usfx';
+        }
+        
+        // If no clear format is detected
+        return 'unknown';
+    } catch (error) {
+        console.error('Error detecting XML format:', error);
+        return 'unknown';
+    }
+}
+
+/**
+ * Converts XML content to Easy Bible Format (EBF)
+ * It auto-detects whether the XML is in OSIS or USFX format
+ * @param {string} xmlContent - The XML content to convert
+ * @returns {Promise<Object>} - Promise that resolves to the EBF object
+ */
+function convertXmlToEbf(xmlContent) {
+    return new Promise((resolve, reject) => {
+        try {
+            const format = detectXmlFormat(xmlContent);
+            
+            switch (format) {
+                case 'osis':
+                    convertOsisToEbf(xmlContent)
+                        .then(result => resolve(result))
+                        .catch(error => reject(error));
+                    break;
+                    
+                case 'usfx':
+                    convertUsfxToEbf(xmlContent)
+                        .then(result => resolve(result))
+                        .catch(error => reject(error));
+                    break;
+                    
+                default:
+                    reject(new Error("Unsupported XML format. The XML provided is neither OSIS nor USFX format."));
+                    break;
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
 // Export functions
 window.XmlBibles = {
     convertOsisToEbf,
-    convertUsfxToEbf
+    convertUsfxToEbf,
+    convertXmlToEbf
 };

@@ -334,7 +334,7 @@ async function handleFileUpload(file) {
             
             if (isXml) {
                 try {
-                    const jsonData = await window.XmlBibles.convertOsisToEbf(content);
+                    const jsonData = await window.XmlBibles.convertXmlToEbf(content);
                     fileCache = JSON.stringify(jsonData);
                 } catch (error) {
                     console.error('Error converting XML to JSON:', error);
