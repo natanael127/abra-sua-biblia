@@ -158,6 +158,12 @@ function populateBooksSidebar(books) {
         
         bookList.appendChild(bookElement);
     });
+
+    // Update the expandable section header with book count
+    const bookSectionHeader = document.querySelector('.book-section .expandable-header');
+    if (bookSectionHeader) {
+        bookSectionHeader.innerHTML = `Livros (${books.length})<span class="expand-icon">▼</span>`;
+    }
 }
 
 function debounce(func, timeout = 500) {
