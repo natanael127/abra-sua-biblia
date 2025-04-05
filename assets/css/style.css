@@ -148,6 +148,13 @@ button:hover {
     border-color: #0d47a1;
 }
 
+.control-button:disabled {
+    background-color: #f0f0f0;
+    color: #aaa;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
 .verse-reference {
     font-weight: normal;
     font-style: italic;
@@ -379,4 +386,9 @@ button:hover {
 
 #help-modal.app-modal {
     max-width: 600px; /* Um pouco mais largo para o conteúdo de ajuda */
+}
+
+.download-icon {
+    font-weight: bold;
+    font-size: 16px;
 }

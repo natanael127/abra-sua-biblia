@@ -5,6 +5,7 @@ const MAX_HISTORY_SIZE = 10;
 let instructionsBackup = null;
 let currentTranslationName = '';
 let fileCache = '';
+let convertedEbfData = null;
 const modalButtonMap = {
     'history-modal': 'history-button',
     'reference-help-modal': 'reference-help-button',
@@ -336,14 +337,24 @@ async function handleFileUpload(file) {
                 try {
                     const jsonData = await window.XmlBibles.convertXmlToEbf(content);
                     fileCache = JSON.stringify(jsonData);
+                    convertedEbfData = jsonData;
+                    enableDownloadButton(file.name);
                 } catch (error) {
                     console.error('Error converting XML to JSON:', error);
+                    disableDownloadButton();
                     resolve(false);
                     return;
                 }
             } else {
                 // JSON files stored directly
                 fileCache = content;
+                try {
+                    convertedEbfData = JSON.parse(content);
+                    enableDownloadButton(file.name);
+                } catch (error) {
+                    console.error('Error parsing JSON:', error);
+                    disableDownloadButton();
+                }
             }
             
             searchVerse();
@@ -351,11 +362,65 @@ async function handleFileUpload(file) {
         };
         
         fileReader.onerror = function() {
+            disableDownloadButton();
             resolve(false);
         };
         
         fileReader.readAsText(file);
     });
+}
+
+// Função para habilitar o botão de download
+function enableDownloadButton(fileName) {
+    const downloadButton = document.getElementById('download-ebf-button');
+    downloadButton.disabled = false;
+    downloadButton.dataset.filename = fileName;
+}
+
+// Função para desabilitar o botão de download
+function disableDownloadButton() {
+    const downloadButton = document.getElementById('download-ebf-button');
+    downloadButton.disabled = true;
+    delete downloadButton.dataset.filename;
+}
+
+// Função para gerar o download do arquivo EBF
+function downloadEbfFile() {
+    if (!convertedEbfData) return;
+    
+    const downloadButton = document.getElementById('download-ebf-button');
+    const fileName = downloadButton.dataset.filename;
+    
+    // Gerar novo nome de arquivo com extensão .ebf1.json
+    let newFileName;
+    const lastDotIndex = fileName.lastIndexOf('.');
+    
+    if (lastDotIndex !== -1) {
+        // Se tem extensão, substitui
+        newFileName = fileName.substring(0, lastDotIndex) + '.ebf1.json';
+    } else {
+        // Se não tem extensão, apenas adiciona
+        newFileName = fileName + '.ebf1.json';
+    }
+    
+    // Criar pretty print do JSON com indentação de 4 espaços
+    const prettyJson = JSON.stringify(convertedEbfData, null, 4);
+    
+    // Criar blob e link de download
+    const blob = new Blob([prettyJson], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = newFileName;
+    document.body.appendChild(a);
+    a.click();
+    
+    // Limpar recursos
+    setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }, 100);
 }
 
 function saveSearchToHistory(reference) {
@@ -689,6 +754,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
         }
     });
+
+    // Adicionar evento ao botão de download
+    document.getElementById('download-ebf-button').addEventListener('click', downloadEbfFile);
 
     for (let modalId in modalButtonMap) {
         const buttonId = modalButtonMap[modalId];
