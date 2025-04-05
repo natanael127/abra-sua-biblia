@@ -545,8 +545,9 @@ function showFileHelpModal() {
     if (!modal) {
         modal = createModal({
             id: 'file-help-modal',
-            title: 'Formatos suportados',
+            title: 'Upload de arquivos',
             content: `
+                <strong>Formatos suportados:</strong>
                 <ul>
                     <li>
                         <strong>EBF/JSON</strong><br>
@@ -555,6 +556,22 @@ function showFileHelpModal() {
                     <li>
                         <strong>OSIS/XML</strong><br>
                         <a href="https://crosswire.org/osis/" target="_blank" rel="noopener noreferrer">Open Scripture Information Standard</a>
+                    </li>
+                    <li>
+                        <strong>USFX/XML</strong><br>
+                        <a href="https://ebible.org/usfx/" target="_blank" rel="noopener noreferrer">Unified Scripture Format XML</a>
+                    </li>
+                </ul>
+                <strong>Repositórios de Bíblias:</strong>
+                <ul>
+                    <li>
+                        <a href="https://ebible.org/find/" target="_blank" rel="noopener noreferrer">eBible</a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/natanael127/ebf-converted-bibles" target="_blank" rel="noopener noreferrer">Bíblias convertidas para EBF</a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/gratis-bible/bible" target="_blank" rel="noopener noreferrer">Bíblias no formato OSIS</a>
                     </li>
                 </ul>
             `
