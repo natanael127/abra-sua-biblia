@@ -188,7 +188,160 @@ function convertOsisToEbf(xmlContent) {
     });
 }
 
+function convertUsfxToEbf(xmlContent) {
+    return new Promise((resolve, reject) => {
+        try {
+            // Use the browser's built-in XML parser
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(xmlContent, "text/xml");
+            
+            // Handle parsing errors
+            const parseError = xmlDoc.getElementsByTagName("parsererror");
+            if (parseError.length > 0) {
+                reject(new Error("XML parsing error: " + parseError[0].textContent));
+                return;
+            }
+            
+            // Get language code
+            const languageCode = xmlDoc.querySelector("languageCode")?.textContent || "und";
+            
+            // Get Bible name (use first book's id as a fallback)
+            let bibleName = "USFX Bible";
+            const firstBook = xmlDoc.querySelector("book");
+            if (firstBook) {
+                const idElement = firstBook.querySelector("id");
+                if (idElement && idElement.textContent.trim()) {
+                    bibleName = idElement.textContent.trim();
+                }
+            }
+            
+            const books = [];
+            // Get all book elements
+            const bookElements = xmlDoc.getElementsByTagName("book");
+            
+            for (let i = 0; i < bookElements.length; i++) {
+                const bookElement = bookElements[i];
+                const bookId = bookElement.getAttribute("id");
+                
+                // Get book names from TOC elements
+                const names = [];
+                const tocElements = bookElement.getElementsByTagName("toc");
+                let abbreviation = bookId; // Default to bookId if no toc level="3" is found
+                
+                for (let j = 0; j < tocElements.length; j++) {
+                    const tocElement = tocElements[j];
+                    const level = tocElement.getAttribute("level");
+                    const tocText = tocElement.textContent.trim();
+                    
+                    if (level === "3") {
+                        // Level 3 is the abbreviation
+                        abbreviation = tocText;
+                    } else {
+                        // Other levels are book names
+                        if (tocText && !names.includes(tocText)) {
+                            names.push(tocText);
+                        }
+                    }
+                }
+                
+                // Process chapters
+                const chapters = [];
+                const chapterElements = bookElement.getElementsByTagName("c");
+                
+                for (let j = 0; j < chapterElements.length; j++) {
+                    const chapterElement = chapterElements[j];
+                    const pElements = getFollowingPElements(chapterElement);
+                    
+                    const verses = [];
+                    
+                    // Process each paragraph that contains verses
+                    for (let k = 0; k < pElements.length; k++) {
+                        const pElement = pElements[k];
+                        const verseElements = pElement.getElementsByTagName("v");
+                        
+                        for (let l = 0; l < verseElements.length; l++) {
+                            const verseElement = verseElements[l];
+                            let verseText = "";
+                            
+                            // Get all text until <ve/> tag or next verse
+                            let currentNode = verseElement.nextSibling;
+                            while (currentNode && 
+                                   !(currentNode.nodeType === Node.ELEMENT_NODE && 
+                                     currentNode.tagName === "ve") && 
+                                   !(currentNode.nodeType === Node.ELEMENT_NODE && 
+                                     currentNode.tagName === "v")) {
+                                
+                                if (currentNode.nodeType === Node.TEXT_NODE) {
+                                    verseText += currentNode.textContent;
+                                } else if (currentNode.nodeType === Node.ELEMENT_NODE) {
+                                    // Skip footnote content but include other elements
+                                    if (currentNode.tagName !== "f") {
+                                        verseText += currentNode.textContent;
+                                    }
+                                }
+                                currentNode = currentNode.nextSibling;
+                            }
+                            
+                            verses.push({
+                                text: verseText.trim()
+                            });
+                        }
+                    }
+                    
+                    chapters.push({
+                        verses: verses
+                    });
+                }
+                
+                books.push({
+                    names: names,
+                    abbreviation: abbreviation,
+                    usfm_id: bookId,
+                    chapters: chapters
+                });
+            }
+            
+            resolve({
+                bible: {
+                    name: bibleName,
+                    language: languageCode,
+                    books: books
+                }
+            });
+            
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+// Helper function to get all <p> elements that follow the chapter
+// until the next chapter element or end of book
+function getFollowingPElements(chapterElement) {
+    const pElements = [];
+    let currentNode = chapterElement.nextSibling;
+    
+    while (currentNode) {
+        // Break if we encounter the next chapter
+        if (currentNode.nodeType === Node.ELEMENT_NODE && 
+            currentNode.tagName === "c") {
+            break;
+        }
+        
+        // Add paragraph elements
+        if (currentNode.nodeType === Node.ELEMENT_NODE && 
+            currentNode.tagName === "p") {
+            pElements.push(currentNode);
+        }
+        
+        currentNode = currentNode.nextSibling;
+    }
+    
+    return pElements;
+}
+
 // Export functions
 window.XmlBibles = {
-    convertOsisToEbf
+    convertOsisToEbf,
+    convertUsfxToEbf
 };
