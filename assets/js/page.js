@@ -375,6 +375,7 @@ function enableDownloadButton(fileName) {
     const downloadButton = document.getElementById('download-ebf-button');
     downloadButton.disabled = false;
     downloadButton.dataset.filename = fileName;
+    downloadButton.classList.remove('active');
 }
 
 // Função para desabilitar o botão de download
@@ -382,6 +383,7 @@ function disableDownloadButton() {
     const downloadButton = document.getElementById('download-ebf-button');
     downloadButton.disabled = true;
     delete downloadButton.dataset.filename;
+    downloadButton.classList.remove('active');
 }
 
 // Função para gerar o download do arquivo EBF
@@ -390,7 +392,8 @@ function downloadEbfFile() {
     
     const downloadButton = document.getElementById('download-ebf-button');
     const fileName = downloadButton.dataset.filename;
-    
+    downloadButton.classList.remove('active');
+
     // Gerar novo nome de arquivo com extensão .ebf1.json
     let newFileName;
     const lastDotIndex = fileName.lastIndexOf('.');
