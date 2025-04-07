@@ -39,7 +39,7 @@ async function loadBibleFromPredefined(bibleName) {
     
     try {
         // Carregar o arquivo JSON da pasta de Bíblias
-        const response = await fetch(`${BIBLES_PATH}catholic-open/json/${bibleName}.json`);
+        const response = await fetch(`${BIBLES_PATH}catholic-open/json/${bibleName}.ebf1.json`);
         
         if (!response.ok) {
             throw new Error(`Erro ao carregar arquivo: ${response.status} ${response.statusText}`);
