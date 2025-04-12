@@ -1,5 +1,3 @@
-let bibleData = null;
-let currentBibleId = null;
 const BIBLES_PATH = 'assets/data/bibles/';
 
 async function getAvailableBibles() {
@@ -17,26 +15,18 @@ async function getAvailableBibles() {
 
 function processBibleData(data, bibleId = null) {
     if (data && data.bible.books) {
-        bibleData = data;
-        currentBibleId = bibleId;
 
         // Preencher e mostrar a barra lateral com os livros disponíveis
-        populateBooksSidebar(bibleData.bible.books);
+        // TODO: remove it to page.js
+        populateBooksSidebar(data.bible.books);
 
         return true;
     } else {
-        bibleData = null;
-        currentBibleId = null;
         return false;
     }
 }
 
 async function loadBibleFromPredefined(bibleName) {
-    // Se a mesma bíblia já estiver carregada, não precisa carregar novamente
-    if (currentBibleId === bibleName && bibleData !== null) {
-        return bibleData; // Retornamos o objeto já carregado
-    }
-    
     try {
         // Carregar o arquivo JSON da pasta de Bíblias
         const response = await fetch(`${BIBLES_PATH}catholic-open/json/${bibleName}.ebf1.json`);
@@ -60,17 +50,10 @@ async function loadBibleFromPredefined(bibleName) {
 }
 
 function generateResult(reference, basicInstructions, displayOpt, ebfObject = null) {
-    // Store original data if we're using temporary data
-    const useTempData = ebfObject !== null;
-    const originalData = useTempData ? { data: bibleData, id: currentBibleId } : null;
-    
-    // Set up temporary data if provided
-    if (useTempData) {
-        processBibleData(ebfObject);
-    }
+    processBibleData(ebfObject);
 
     // Check if Bible data is available
-    if (bibleData === null) {
+    if (ebfObject === null) {
         return {
             error: true,
             html: '<span class="error">É necessário carregar o arquivo da Bíblia primeiro.</span>'
@@ -92,7 +75,7 @@ function generateResult(reference, basicInstructions, displayOpt, ebfObject = nu
 
     // Find book - priorities: abbreviation, usfm_id, names array
     userBook = parsedRef.book.toLowerCase();
-    const book = bibleData.bible.books.find(b => 
+    const book = ebfObject.bible.books.find(b => 
         (b.abbreviation && b.abbreviation.toLowerCase() === userBook) || 
         (b.usfm_id && b.usfm_id.toLowerCase() === userBook) || 
         (b.names && b.names.some(name => name.toLowerCase() === userBook))
@@ -110,8 +93,8 @@ function generateResult(reference, basicInstructions, displayOpt, ebfObject = nu
         } else {
             // Add translation name if available
             let headerText = `${book.names[0]} ${parsedRef.chapter}`;
-            if (bibleData.bible.name) {
-                headerText += ` - ${bibleData.bible.name}`;
+            if (ebfObject.bible.name) {
+                headerText += ` - ${ebfObject.bible.name}`;
             }
             htmlOut = `<div class="reference">${headerText}</div>`;
 
@@ -138,12 +121,6 @@ function generateResult(reference, basicInstructions, displayOpt, ebfObject = nu
 
             htmlOut += `<div class="verse-text">${joinedContent}</div>`;
         }
-    }
-
-    // Restore original data if we used temporary data
-    if (originalData) {
-        bibleData = originalData.data;
-        currentBibleId = originalData.id;
     }
 
     return {
