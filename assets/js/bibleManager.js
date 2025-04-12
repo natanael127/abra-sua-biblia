@@ -53,16 +53,6 @@ async function loadBibleFromPredefined(bibleName) {
     }
 }
 
-function loadBibleFromData(data) {
-    try {
-        const success = processBibleData(data, null); // Bíblia de arquivo não tem ID permanente
-        return success;
-    } catch (parseError) {
-        console.error('Erro ao processar dados da Bíblia:', parseError);
-        return false;
-    }
-}
-
 /**
  * Core function to generate HTML result for a Bible reference
  * @param {Object} options - Configuration options
