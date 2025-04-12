@@ -6,10 +6,9 @@ body {
     line-height: 1.6;
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap; /* Permite quebra de linha para elementos flex */
+    flex-wrap: wrap;
 }
 
-/* Add this new rule to center the page title */
 .page-title {
     text-align: center;
 }
@@ -90,8 +89,6 @@ button:hover {
     position: relative;
 }
 
-
-/* Estilos para os botões de controle */
 .control-buttons {
     display: flex;
     justify-content: space-between;
@@ -188,7 +185,6 @@ button:hover {
     width: 100%;
 }
 
-/* Estilos para seções expansíveis gerais */
 .expandable-section {
     margin-bottom: 10px;
     border: 1px solid #eee;
@@ -224,7 +220,7 @@ button:hover {
 }
 
 .expandable-content.expanded {
-    max-height: 500px; /* Altura suficiente para conter o conteúdo */
+    max-height: 500px;
     padding: 15px;
 }
 
@@ -232,12 +228,10 @@ button:hover {
     transform: rotate(180deg);
 }
 
-/* Estilo específico para a seção de livros */
 .book-section .expandable-content.expanded {
-    max-height: 800px; /* Mais altura para acomodar muitos livros */
+    max-height: 800px;
 }
 
-/* Media queries para responsividade */
 @media (max-width: 768px) {
     body {
         flex-direction: column;
@@ -347,7 +341,6 @@ button:hover {
     display: block;
 }
 
-/* Estilos para o conteúdo do modal de ajuda */
 .help-content {
     padding: 15px 20px;
     max-height: 400px;
@@ -360,7 +353,7 @@ button:hover {
 }
 
 #help-modal.app-modal {
-    max-width: 600px; /* Um pouco mais largo para o conteúdo de ajuda */
+    max-width: 600px;
 }
 
 .download-icon {
@@ -368,7 +361,6 @@ button:hover {
     font-size: 16px;
 }
 
-/* Renomeado de control-button para format-button */
 .format-button {
     flex: 1;
     padding: 8px 5px;
@@ -399,7 +391,6 @@ button:hover {
     opacity: 0.7;
 }
 
-/* Novos estilos para action-button */
 .action-buttons {
     display: flex;
     justify-content: space-between;
@@ -442,19 +433,17 @@ button:hover {
     display: none;
 }
 
-/* Media queries para responsividade dos action buttons */
 @media (max-width: 768px) {
     .action-buttons {
-        gap: 5px; /* Reduzir o espaçamento entre os botões */
+        gap: 5px;
     }
     
     .action-button {
-        padding: 6px 3px; /* Reduzir o padding */
-        font-size: 16px; /* Reduzir o tamanho da fonte */
+        padding: 6px 3px;
+        font-size: 16px;
     }
 }
 
-/* Estilo para mensagens temporárias */
 .temporary-message {
     position: fixed;
     bottom: 30px;
@@ -479,7 +468,6 @@ button:hover {
     opacity: 1;
 }
 
-/* Ajustar em dispositivos móveis */
 @media (max-width: 768px) {
     .temporary-message {
         width: 80%;
