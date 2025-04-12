@@ -445,11 +445,12 @@ button:hover {
 /* Media queries para responsividade dos action buttons */
 @media (max-width: 768px) {
     .action-buttons {
-        flex-wrap: wrap;
+        gap: 5px; /* Reduzir o espaçamento entre os botões */
     }
     
-    .action-buttons .action-button {
-        flex-basis: calc(50% - 5px);
+    .action-button {
+        padding: 6px 3px; /* Reduzir o padding */
+        font-size: 16px; /* Reduzir o tamanho da fonte */
     }
 }
 
