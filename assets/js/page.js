@@ -241,10 +241,10 @@ function setupControlButtons() {
     // Carregar as preferências salvas, se existirem
     loadDisplayPreferences();
     
-    // Configurar cada botão de controle
-    const controlButtons = document.querySelectorAll('.control-button');
+    // Configurar cada botão de formatação
+    const formatButtons = document.querySelectorAll('.format-button');
     
-    controlButtons.forEach(button => {
+    formatButtons.forEach(button => {
         // Aplicar o estado inicial (ativo/inativo) com base nas preferências
         const optionName = button.id.replace('display-', '');
         const optionKey = convertIdToOptionKey(optionName);
@@ -277,6 +277,65 @@ function setupControlButtons() {
         if (button) {
             button.classList.remove('active');
         }
+    }
+    
+    // Configuração dos botões de ação
+    setupActionButtons();
+}
+
+function setupActionButtons() {
+    // Adicionar comportamento padrão para os botões de ação
+    const actionButtons = document.querySelectorAll('.action-button');
+    
+    actionButtons.forEach(button => {
+        // Limpar qualquer evento anterior
+        const newButton = button.cloneNode(true);
+        button.parentNode.replaceChild(newButton, button);
+        
+        // Para cada botão de ação, adicionar o comportamento visual padrão
+        newButton.addEventListener('click', function(event) {
+            const button = this;
+            
+            // Verificar se é o botão de copiar
+            if (button.id === 'copy-button') {
+                handleCopyButtonClick();
+            } 
+            // Verificar se é o botão de compartilhar
+            else if (button.id === 'share-button') {
+                shareCurrentReference();
+            }
+            // Verificar se é o botão de capítulo anterior
+            else if (button.id === 'prev-chapter-button') {
+                navigateToPreviousChapter();
+            }
+            // Verificar se é o botão de próximo capítulo
+            else if (button.id === 'next-chapter-button') {
+                navigateToNextChapter();
+            }
+            
+            // Feedback visual comum para todos os botões de ação
+            button.classList.add('success');
+            setTimeout(() => {
+                button.classList.remove('success');
+            }, 500);
+        });
+    });
+}
+
+function handleCopyButtonClick() {
+    const verseTextElement = document.querySelector('.verse-text');
+    
+    if (verseTextElement) {
+        let textToCopy = verseTextElement.innerHTML
+            .replace(/<br>/g, '\n')
+            .replace(/<[^>]+>/g, ''); // Remove HTML tags
+        
+        // Tentar copiar usando diferentes métodos
+        copyTextToClipboard(textToCopy)
+            .catch(err => {
+                console.error('Erro ao copiar texto:', err);
+                alert('Não foi possível copiar o texto. Por favor, tente novamente.');
+            });
     }
 }
 
@@ -765,18 +824,6 @@ function shareCurrentReference() {
     
     // Copy to clipboard
     copyTextToClipboard(shareUrl)
-        .then(() => {
-            const shareButton = document.getElementById('share-button');
-            shareButton.classList.add('success');
-            
-            // Show tooltip or feedback
-            alert("Link copiado para a área de transferência!");
-            
-            // Reset the button
-            setTimeout(() => {
-                shareButton.classList.remove('success');
-            }, 2000);
-        })
         .catch(err => {
             console.error('Erro ao copiar link:', err);
             alert("Erro ao copiar o link. Por favor, tente novamente.");
@@ -840,40 +887,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Novo: Adicionar evento de input para busca automática enquanto digita
     document.getElementById('reference').addEventListener('input', debouncedSearchVerse);
-
-    // Função para copiar o texto bíblico para o clipboard
-    document.getElementById('copy-button').addEventListener('click', function() {
-        const copyButton = document.getElementById('copy-button');
-
-        // Obter o texto bíblico
-        const verseTextElement = document.querySelector('.verse-text');
-
-        if (verseTextElement) {
-            let textToCopy = verseTextElement.innerHTML
-                .replace(/<br>/g, '\n')
-                .replace(/<[^>]+>/g, ''); // Remove HTML tags
-            
-            // Tentar copiar usando diferentes métodos
-            copyTextToClipboard(textToCopy)
-                .then(() => {
-                    // Feedback visual de sucesso
-                    copyButton.classList.add('success');
-                    
-                    // Restaurar o botão após 2 segundos
-                    setTimeout(() => {
-                        copyButton.classList.remove('success');
-                    }, 5000);
-                })
-                .catch(err => {
-                    console.error('Erro ao copiar texto:', err);
-                    copyButton.classList.add('error');
-                    
-                    setTimeout(() => {
-                        copyButton.classList.remove('error');
-                    }, 5000);
-                });
-        }
-    });
 
     // Adicionar evento ao botão de download
     document.getElementById('download-ebf-button').addEventListener('click', downloadEbfFile);

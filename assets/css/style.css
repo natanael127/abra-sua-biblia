@@ -90,31 +90,6 @@ button:hover {
     position: relative;
 }
 
-.copy-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: #1565c0;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 5px 10px;
-    font-size: 14px;
-    cursor: pointer;
-    display: none; /* Inicialmente oculto */
-}
-
-.copy-button:hover {
-    background-color: #0d47a1;
-}
-
-.copy-button.visible {
-    display: block;
-}
-
-.copy-button.success {
-    background-color: #4CAF50;
-}
 
 /* Estilos para os botões de controle */
 .control-buttons {
@@ -391,4 +366,89 @@ button:hover {
 .download-icon {
     font-weight: bold;
     font-size: 16px;
+}
+
+/* Renomeado de control-button para format-button */
+.format-button {
+    flex: 1;
+    padding: 8px 5px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    transition: background-color 0.2s, color 0.2s;
+    color: black;
+}
+
+.format-button:hover {
+    background-color: #e0e0e0;
+}
+
+.format-button.active {
+    background-color: #1565c0;
+    color: white;
+    border-color: #0d47a1;
+}
+
+.format-button:disabled {
+    background-color: #f0f0f0;
+    color: #aaa;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Novos estilos para action-button */
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    width: 100%;
+    gap: 10px;
+}
+
+.action-button {
+    flex: 1;
+    padding: 8px 5px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 20px;
+    text-align: center;
+    transition: background-color 0.3s, color 0.3s;
+    color: black;
+}
+
+.action-button:hover {
+    background-color: #e0e0e0;
+}
+
+.action-button.success {
+    background-color: #1565c0;
+    color: white;
+    border-color: #0d47a1;
+}
+
+.action-button:disabled {
+    background-color: #f0f0f0;
+    color: #aaa;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.action-button.hidden {
+    display: none;
+}
+
+/* Media queries para responsividade dos action buttons */
+@media (max-width: 768px) {
+    .action-buttons {
+        flex-wrap: wrap;
+    }
+    
+    .action-buttons .action-button {
+        flex-basis: calc(50% - 5px);
+    }
 }
