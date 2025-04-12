@@ -284,7 +284,7 @@ function setupActionButtons() {
         button.parentNode.replaceChild(newButton, button);
         
         // Para cada botão de ação, adicionar o comportamento visual padrão
-        newButton.addEventListener('click', function(event) {
+        newButton.addEventListener('click', function() {
             const button = this;
             
             // Verificar qual ação executar baseado no ID do botão
@@ -419,7 +419,7 @@ async function handleFileUpload(file) {
         return false;
     }
     
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         const fileReader = new FileReader();
         
         fileReader.onload = async function(event) {
@@ -627,7 +627,6 @@ function hideModal(modalId) {
 }
 
 function showHistoryModal() {
-    const historyButton = document.getElementById('history-button');
     
     // Create modal if it doesn't exist
     let modal = document.getElementById('history-modal');
@@ -921,7 +920,6 @@ function checkNavigationButtonsVisibility() {
 async function searchVerse() {
     const reference = document.getElementById('reference').value.trim();
     const resultElement = document.getElementById('result');
-    const copyButton = document.getElementById('copy-button');
     const translationSelect = document.getElementById('bible-select');
     const selectedBibleId = translationSelect.value;
 
