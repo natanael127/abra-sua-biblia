@@ -326,6 +326,35 @@ function setupActionButtons() {
     });
 }
 
+function showTemporaryMessage(message) {
+    // Remover qualquer mensagem existente
+    const existingMessage = document.querySelector('.temporary-message');
+    if (existingMessage) {
+        existingMessage.remove();
+    }
+    
+    // Criar o elemento de mensagem
+    const messageElement = document.createElement('div');
+    messageElement.className = 'temporary-message';
+    messageElement.textContent = message;
+    
+    // Adicionar à página
+    document.body.appendChild(messageElement);
+    
+    // Mostrar com animação
+    setTimeout(() => {
+        messageElement.classList.add('show');
+    }, 10);
+    
+    // Remover após 3 segundos
+    setTimeout(() => {
+        messageElement.classList.remove('show');
+        setTimeout(() => {
+            messageElement.remove();
+        }, 500); // Esperar a animação de fade-out
+    }, 3000);
+}
+
 function handleCopyButtonClick() {
     const verseTextElement = document.querySelector('.verse-text');
     
@@ -336,9 +365,13 @@ function handleCopyButtonClick() {
         
         // Tentar copiar usando diferentes métodos
         copyTextToClipboard(textToCopy)
+            .then(() => {
+                // Exibir mensagem de sucesso
+                showTemporaryMessage('Texto copiado');
+            })
             .catch(err => {
                 console.error('Erro ao copiar texto:', err);
-                alert('Não foi possível copiar o texto. Por favor, tente novamente.');
+                showTemporaryMessage('Erro ao copiar texto');
             });
     }
 }
@@ -813,9 +846,13 @@ function shareCurrentReference() {
     
     // Copy to clipboard
     copyTextToClipboard(shareUrl)
+        .then(() => {
+            // Exibir mensagem de sucesso
+            showTemporaryMessage('Link copiado');
+        })
         .catch(err => {
             console.error('Erro ao copiar link:', err);
-            alert("Erro ao copiar o link. Por favor, tente novamente.");
+            showTemporaryMessage('Erro ao copiar link');
         });
 }
 
