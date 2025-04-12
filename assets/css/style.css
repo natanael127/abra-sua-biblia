@@ -456,6 +456,20 @@ button:hover {
     opacity: 1;
 }
 
+#floating-action-buttons {
+    display: none;
+    margin: 15px 0;
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 10px;
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#floating-action-buttons.visible {
+    display: flex;
+}
+
 @media (max-width: 768px) {
     .temporary-message {
         width: 80%;
