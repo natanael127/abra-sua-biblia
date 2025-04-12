@@ -6,11 +6,11 @@ let instructionsBackup = null;
 let currentTranslationName = '';
 let fileCache = '';
 let convertedEbfData = null;
-const modalButtonMap = {
-    'history-modal': 'history-button',
-    'reference-help-modal': 'reference-help-button',
-    'file-help-modal': 'file-help-button'
-};
+const modalList = [
+    'history-modal',
+    'reference-help-modal',
+    'file-help-modal',
+];
 
 const displayOptions = {
     quotes: true,
@@ -271,14 +271,6 @@ function setupControlButtons() {
         });
     });
 
-    for (let modalId in modalButtonMap) {
-        const buttonId = modalButtonMap[modalId];
-        const button = document.getElementById(buttonId);
-        if (button) {
-            button.classList.remove('active');
-        }
-    }
-    
     // Configuração dos botões de ação
     setupActionButtons();
 }
@@ -296,28 +288,40 @@ function setupActionButtons() {
         newButton.addEventListener('click', function(event) {
             const button = this;
             
-            // Verificar se é o botão de copiar
+            // Verificar qual ação executar baseado no ID do botão
             if (button.id === 'copy-button') {
                 handleCopyButtonClick();
             } 
-            // Verificar se é o botão de compartilhar
             else if (button.id === 'share-button') {
                 shareCurrentReference();
             }
-            // Verificar se é o botão de capítulo anterior
             else if (button.id === 'prev-chapter-button') {
                 navigateToPreviousChapter();
             }
-            // Verificar se é o botão de próximo capítulo
             else if (button.id === 'next-chapter-button') {
                 navigateToNextChapter();
             }
-            
+            else if (button.id === 'download-ebf-button') {
+                downloadEbfFile();
+            }
+            else if (button.id === 'history-button') {
+                showHistoryModal();
+            }
+            else if (button.id === 'reference-help-button') {
+                showReferenceHelpModal();
+            }
+            else if (button.id === 'file-help-button') {
+                showFileHelpModal();
+            }
+
+            // Não aplicar efeito visual se o botão estiver desabilitado
+            if (button.disabled) return;
+
             // Feedback visual comum para todos os botões de ação
             button.classList.add('success');
             setTimeout(() => {
                 button.classList.remove('success');
-            }, 500);
+            }, 1000);
         });
     });
 }
@@ -434,7 +438,6 @@ function enableDownloadButton(fileName) {
     const downloadButton = document.getElementById('download-ebf-button');
     downloadButton.disabled = false;
     downloadButton.dataset.filename = fileName;
-    downloadButton.classList.remove('active');
 }
 
 // Função para desabilitar o botão de download
@@ -442,7 +445,6 @@ function disableDownloadButton() {
     const downloadButton = document.getElementById('download-ebf-button');
     downloadButton.disabled = true;
     delete downloadButton.dataset.filename;
-    downloadButton.classList.remove('active');
 }
 
 // Função para gerar o download do arquivo EBF
@@ -451,7 +453,6 @@ function downloadEbfFile() {
     
     const downloadButton = document.getElementById('download-ebf-button');
     const fileName = downloadButton.dataset.filename;
-    downloadButton.classList.remove('active');
 
     // Gerar novo nome de arquivo com extensão .ebf1.json
     let newFileName;
@@ -546,8 +547,6 @@ function createModal(options) {
             modal.classList.add(options.className);
         }
 
-        modal.dataset.buttonId = modalButtonMap[options.id];
-
         modal.innerHTML = `
             <div class="app-modal-header">
                 <h3 class="app-modal-title">${options.title}</h3>
@@ -561,14 +560,14 @@ function createModal(options) {
         
         // Add close button event
         modal.querySelector('.close-modal').addEventListener('click', () => {
-            hideModal(options.id, modal.dataset.buttonId);
+            hideModal(options.id);
         });
         
         // Close when clicking overlay
         overlay.addEventListener('click', () => {
             // Find all open modals and close them with their associated buttons
             document.querySelectorAll('.app-modal.show').forEach(openModal => {
-                hideModal(openModal.id, openModal.dataset.buttonId);
+                hideModal(openModal.id);
             });
         });
     }
@@ -576,12 +575,7 @@ function createModal(options) {
     return modal;
 }
 
-function showModal(modalId, buttonId) {
-    // Activate button
-    if (buttonId) {
-        document.getElementById(buttonId).classList.add('active');
-    }
-    
+function showModal(modalId) {
     const modal = document.getElementById(modalId);
     const overlay = document.getElementById('modal-overlay');
     
@@ -594,14 +588,9 @@ function showModal(modalId, buttonId) {
     }
 }
 
-function hideModal(modalId, buttonId) {
+function hideModal(modalId) {
     const modal = document.getElementById(modalId);
     const overlay = document.getElementById('modal-overlay');
-    
-    // Deactivate button if provided
-    if (buttonId) {
-        document.getElementById(buttonId).classList.remove('active');
-    }
     
     if (modal) modal.classList.remove('show');
     if (overlay) {
@@ -642,14 +631,14 @@ function showHistoryModal() {
             listItem.textContent = item;
             listItem.addEventListener('click', function() {
                 document.getElementById('reference').value = item;
-                hideModal('history-modal', 'history-button');
+                hideModal('history-modal');
                 searchVerse();
             });
             historyList.appendChild(listItem);
         });
     }
     
-    showModal('history-modal', 'history-button');
+    showModal('history-modal');
 }
 
 function showReferenceHelpModal() {
@@ -663,7 +652,7 @@ function showReferenceHelpModal() {
         });
     }
     
-    showModal('reference-help-modal', modalButtonMap['reference-help-modal']);
+    showModal('reference-help-modal');
 }
 
 function showFileHelpModal() {
@@ -705,15 +694,15 @@ function showFileHelpModal() {
         });
     }
 
-    showModal('file-help-modal', modalButtonMap['file-help-modal']);
+    showModal('file-help-modal');
 }
 
 function closeActiveModal() {
     let output = false;
-    for (let modalId in modalButtonMap) {
-        const modal = document.getElementById(modalId);
+    for (let modalId in modalList) {
+        const modal = document.getElementById(modalList[modalId]);
         if (modal && modal.classList.contains('show')) {
-            hideModal(modalId, modalButtonMap[modalId]);
+            hideModal(modalList[modalId]);
             output = true;
         }
     }
@@ -888,33 +877,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Novo: Adicionar evento de input para busca automática enquanto digita
     document.getElementById('reference').addEventListener('input', debouncedSearchVerse);
 
-    // Adicionar evento ao botão de download
-    document.getElementById('download-ebf-button').addEventListener('click', downloadEbfFile);
-
     // Setup navigation buttons
     document.getElementById('prev-chapter-button').addEventListener('click', navigateToPreviousChapter);
     document.getElementById('next-chapter-button').addEventListener('click', navigateToNextChapter);
     document.getElementById('share-button').addEventListener('click', shareCurrentReference);
-
-    for (let modalId in modalButtonMap) {
-        const buttonId = modalButtonMap[modalId];
-        const button = document.getElementById(buttonId);
-        
-        if (button) {
-            button.addEventListener('click', function(event) {
-                event.preventDefault();
-                if (modalId === 'history-modal') {
-                    showHistoryModal();
-                } else if (modalId === 'reference-help-modal') {
-                    showReferenceHelpModal();
-                } else if (modalId === 'file-help-modal') {
-                    showFileHelpModal();
-                } else {
-                    console.error('Modal desconhecido:', modalId);
-                }
-            });
-        }
-    }
 });
 
 async function searchVerse() {
