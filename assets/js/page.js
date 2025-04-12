@@ -75,7 +75,7 @@ async function loadAvailableBibles() {
 
             // Carregar a Bíblia padrão e executar a busca se existir uma Bíblia selecionada
             if (defaultBible) {
-                await loadBibleFromPredefined(defaultBible);
+                ebfData = await loadBibleFromPredefined(defaultBible);
                 updateCurrentTranslationName(defaultBible, biblesList);
                 // Executar a busca após carregar a Bíblia
                 searchVerse();
@@ -839,7 +839,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         if (this.value && this.value !== "upload") {
-            await loadBibleFromPredefined(this.value);
+            ebfData = await loadBibleFromPredefined(this.value);
             searchVerse();
         }
     });
@@ -926,11 +926,7 @@ async function searchVerse() {
     // Salvar a referência atual ao pesquisar
     saveReferencePreference(reference);
 
-    if (selectedBibleId && selectedBibleId !== "upload") {
-        result = generateResultFromExistent(reference, instructionsBackup, displayOptions, currentTranslationName);
-    } else {
-        result = generateResultFromUpload(reference, instructionsBackup, displayOptions, ebfData);
-    }
+    result = generateResultFromEbf(reference, instructionsBackup, displayOptions, ebfData);
 
     if (result.error) {
         document.getElementById('prev-chapter-button').classList.add('hidden');

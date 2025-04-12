@@ -34,7 +34,7 @@ function processBibleData(data, bibleId = null) {
 async function loadBibleFromPredefined(bibleName) {
     // Se a mesma bíblia já estiver carregada, não precisa carregar novamente
     if (currentBibleId === bibleName && bibleData !== null) {
-        return true;
+        return bibleData; // Retornamos o objeto já carregado
     }
     
     try {
@@ -46,10 +46,16 @@ async function loadBibleFromPredefined(bibleName) {
         }
         
         const data = await response.json();
-        return processBibleData(data, bibleName);
+        const success = processBibleData(data, bibleName);
+        
+        if (success) {
+            return data;
+        } else {
+            return null;
+        }
     } catch (error) {
         console.error('Erro ao carregar a Bíblia:', error);
-        return false;
+        return null;
     }
 }
 
@@ -157,15 +163,7 @@ function generateResult(options) {
     };
 }
 
-function generateResultFromExistent(reference, basicInstructions, displayOpt) {
-    return generateResult({
-        reference,
-        basicInstructions,
-        displayOpt
-    });
-}
-
-function generateResultFromUpload(reference, basicInstructions, displayOpt, ebfContent) {
+function generateResultFromEbf(reference, basicInstructions, displayOpt, ebfContent) {
     if (!ebfContent) {
         return {
             error: true,
