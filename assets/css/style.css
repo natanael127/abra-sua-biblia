@@ -89,7 +89,7 @@ button:hover {
     position: relative;
 }
 
-.control-buttons {
+.buttons-block {
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
@@ -391,14 +391,6 @@ button:hover {
     opacity: 0.7;
 }
 
-.action-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    width: 100%;
-    gap: 10px;
-}
-
 .action-button {
     flex: 1;
     padding: 8px 5px;
@@ -434,10 +426,6 @@ button:hover {
 }
 
 @media (max-width: 768px) {
-    .action-buttons {
-        gap: 5px;
-    }
-    
     .action-button {
         padding: 6px 3px;
         font-size: 16px;
