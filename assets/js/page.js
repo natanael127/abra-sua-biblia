@@ -4,7 +4,6 @@ const MAX_HISTORY_SIZE = 10;
 // Control variables
 let instructionsBackup = null;
 let currentTranslationName = '';
-let fileCache = '';
 let convertedEbfData = null;
 const modalList = [
     'history-modal',
@@ -429,7 +428,6 @@ async function handleFileUpload(file) {
             if (isXml) {
                 try {
                     const jsonData = await window.XmlBibles.convertXmlToEbf(content);
-                    fileCache = JSON.stringify(jsonData);
                     convertedEbfData = jsonData;
                     enableDownloadButton(file.name);
                 } catch (error) {
@@ -440,7 +438,6 @@ async function handleFileUpload(file) {
                 }
             } else {
                 // JSON files stored directly
-                fileCache = content;
                 try {
                     convertedEbfData = JSON.parse(content);
                     enableDownloadButton(file.name);
@@ -943,7 +940,7 @@ async function searchVerse() {
     if (selectedBibleId && selectedBibleId !== "upload") {
         result = generateResultFromExistent(reference, instructionsBackup, displayOptions, currentTranslationName);
     } else {
-        result = generateResultFromUpload(reference, instructionsBackup, displayOptions, fileCache);
+        result = generateResultFromUpload(reference, instructionsBackup, displayOptions, convertedEbfData);
     }
 
     if (result.error) {

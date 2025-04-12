@@ -175,8 +175,8 @@ function generateResultFromExistent(reference, basicInstructions, displayOpt) {
     });
 }
 
-function generateResultFromUpload(reference, basicInstructions, displayOpt, fileRaw) {
-    if (!fileRaw) {
+function generateResultFromUpload(reference, basicInstructions, displayOpt, ebfContent) {
+    if (!ebfContent) {
         return {
             error: true,
             html: '<span class="error">Nenhum arquivo de Bíblia foi carregado.</span>'
@@ -189,7 +189,7 @@ function generateResultFromUpload(reference, basicInstructions, displayOpt, file
             basicInstructions,
             displayOpt,
             translationName: 'Bíblia carregada',
-            tempBibleData: JSON.parse(fileRaw)
+            tempBibleData: ebfContent
         });
     } catch (error) {
         console.error('Erro ao processar o JSON da Bíblia:', error);
