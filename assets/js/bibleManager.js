@@ -59,25 +59,14 @@ async function loadBibleFromPredefined(bibleName) {
     }
 }
 
-/**
- * Core function to generate HTML result for a Bible reference
- * @param {Object} options - Configuration options
- * @param {string} options.reference - Bible reference to lookup
- * @param {string} options.basicInstructions - Instructions to show on parsing error
- * @param {Object} options.displayOpt - Display options
- * @param {Object} [options.tempBibleData=null] - Temporary Bible data to use instead of global
- * @returns {Object} Result object with error flag and HTML content
- */
-function generateResult(options) {
-    const { reference, basicInstructions, displayOpt } = options;
-    const useTempData = options.tempBibleData !== undefined;
-    
+function generateResult(reference, basicInstructions, displayOpt, ebfObject = null) {
     // Store original data if we're using temporary data
+    const useTempData = ebfObject !== null;
     const originalData = useTempData ? { data: bibleData, id: currentBibleId } : null;
     
     // Set up temporary data if provided
-    if (useTempData && options.tempBibleData) {
-        processBibleData(options.tempBibleData);
+    if (useTempData) {
+        processBibleData(ebfObject);
     }
 
     // Check if Bible data is available
@@ -172,12 +161,7 @@ function generateResultFromEbf(reference, basicInstructions, displayOpt, ebfCont
     }
     
     try {
-        return generateResult({
-            reference,
-            basicInstructions,
-            displayOpt,
-            tempBibleData: ebfContent
-        });
+        return generateResult(reference, basicInstructions, displayOpt, ebfContent);
     } catch (error) {
         console.error('Erro ao processar o JSON da Bíblia:', error);
         return {
