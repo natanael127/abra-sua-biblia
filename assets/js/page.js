@@ -874,13 +874,7 @@ document.addEventListener('DOMContentLoaded', function() {
         searchVerse();
     });
 
-    // Novo: Adicionar evento de input para busca automática enquanto digita
     document.getElementById('reference').addEventListener('input', debouncedSearchVerse);
-
-    // Setup navigation buttons
-    document.getElementById('prev-chapter-button').addEventListener('click', navigateToPreviousChapter);
-    document.getElementById('next-chapter-button').addEventListener('click', navigateToNextChapter);
-    document.getElementById('share-button').addEventListener('click', shareCurrentReference);
 });
 
 async function searchVerse() {
