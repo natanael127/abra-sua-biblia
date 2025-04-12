@@ -867,6 +867,16 @@ document.addEventListener('DOMContentLoaded', function() {
             closeActiveModal();
         }
     });
+    
+    // Monitorar scroll para mostrar/esconder botões flutuantes
+    window.addEventListener('scroll', checkNavigationButtonsVisibility);
+    window.addEventListener('resize', checkNavigationButtonsVisibility);
+
+    // Configurar listeners para botões flutuantes
+    document.getElementById('floating-prev-chapter-button').addEventListener('click', navigateToPreviousChapter);
+    document.getElementById('floating-next-chapter-button').addEventListener('click', navigateToNextChapter);
+    document.getElementById('floating-copy-button').addEventListener('click', handleCopyButtonClick);
+    document.getElementById('floating-share-button').addEventListener('click', shareCurrentReference);
 
     // Adicionar event listener para o select de bíblias
     document.getElementById('bible-select').addEventListener('change', async function() {
@@ -911,6 +921,57 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('reference').addEventListener('input', debouncedSearchVerse);
 });
 
+// Função para verificar visibilidade dos botões de navegação
+function checkNavigationButtonsVisibility() {
+    const originalButtons = document.querySelector('.action-buttons');
+    const floatingButtons = document.querySelector('.floating-action-buttons');
+    
+    if (!originalButtons || !floatingButtons) return;
+    
+    // Verificar se os botões originais estão visíveis
+    const rect = originalButtons.getBoundingClientRect();
+    const isVisible = (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+    
+    // Mostrar/esconder botões flutuantes com base na visibilidade dos originais
+    if (!isVisible && !floatingButtons.classList.contains('visible')) {
+        floatingButtons.classList.add('visible');
+    } else if (isVisible && floatingButtons.classList.contains('visible')) {
+        floatingButtons.classList.remove('visible');
+    }
+    
+    // Manter o mesmo estado de visibilidade (hidden/visible) nos botões flutuantes
+    const prevButton = document.getElementById('prev-chapter-button');
+    const nextButton = document.getElementById('next-chapter-button');
+    const copyButton = document.getElementById('copy-button');
+    const shareButton = document.getElementById('share-button');
+    
+    const floatingPrevButton = document.getElementById('floating-prev-chapter-button');
+    const floatingNextButton = document.getElementById('floating-next-chapter-button');
+    const floatingCopyButton = document.getElementById('floating-copy-button');
+    const floatingShareButton = document.getElementById('floating-share-button');
+    
+    if (prevButton && floatingPrevButton) {
+        floatingPrevButton.classList.toggle('hidden', prevButton.classList.contains('hidden'));
+    }
+    
+    if (nextButton && floatingNextButton) {
+        floatingNextButton.classList.toggle('hidden', nextButton.classList.contains('hidden'));
+    }
+    
+    if (copyButton && floatingCopyButton) {
+        floatingCopyButton.classList.toggle('hidden', copyButton.classList.contains('hidden'));
+    }
+    
+    if (shareButton && floatingShareButton) {
+        floatingShareButton.classList.toggle('hidden', shareButton.classList.contains('hidden'));
+    }
+}
+
 async function searchVerse() {
     const reference = document.getElementById('reference').value.trim();
     const resultElement = document.getElementById('result');
@@ -932,15 +993,30 @@ async function searchVerse() {
         document.getElementById('copy-button').classList.add('hidden');
         document.getElementById('share-button').classList.add('hidden');
         document.getElementById('next-chapter-button').classList.add('hidden');
+        
+        // Também esconder os botões flutuantes
+        document.getElementById('floating-prev-chapter-button').classList.add('hidden');
+        document.getElementById('floating-copy-button').classList.add('hidden');
+        document.getElementById('floating-share-button').classList.add('hidden');
+        document.getElementById('floating-next-chapter-button').classList.add('hidden');
     } else {
         document.getElementById('prev-chapter-button').classList.remove('hidden');
         document.getElementById('copy-button').classList.remove('hidden');
         document.getElementById('share-button').classList.remove('hidden');
         document.getElementById('next-chapter-button').classList.remove('hidden');
         
+        // Também mostrar os botões flutuantes
+        document.getElementById('floating-prev-chapter-button').classList.remove('hidden');
+        document.getElementById('floating-copy-button').classList.remove('hidden');
+        document.getElementById('floating-share-button').classList.remove('hidden');
+        document.getElementById('floating-next-chapter-button').classList.remove('hidden');
+        
         if (reference) {
             saveSearchToHistory(reference);
         }
     }
     resultElement.innerHTML = result.html;
+    
+    // Verificar visibilidade dos botões após atualizar o conteúdo
+    checkNavigationButtonsVisibility();
 }
