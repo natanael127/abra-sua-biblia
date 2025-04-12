@@ -923,13 +923,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Função para verificar visibilidade dos botões de navegação
 function checkNavigationButtonsVisibility() {
-    const originalButtons = document.querySelector('.action-buttons');
-    const floatingButtons = document.querySelector('.floating-action-buttons');
+    const staticButtons = document.getElementById('static-action-buttons');
+    const floatingButtons = document.getElementById('floating-action-buttons');
     
-    if (!originalButtons || !floatingButtons) return;
+    if (!staticButtons || !floatingButtons) return;
     
     // Verificar se os botões originais estão visíveis
-    const rect = originalButtons.getBoundingClientRect();
+    const rect = staticButtons.getBoundingClientRect();
     const isVisible = (
         rect.top >= 0 &&
         rect.left >= 0 &&

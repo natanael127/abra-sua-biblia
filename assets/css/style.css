@@ -468,25 +468,6 @@ button:hover {
     opacity: 1;
 }
 
-/* Estilos para botões de navegação flutuantes */
-.floating-action-buttons {
-    display: none;
-    justify-content: space-between;
-    margin-top: 15px;
-    width: 100%;
-    gap: 10px;
-}
-
-.floating-action-buttons.visible {
-    display: flex;
-}
-
-.floating-action-buttons .action-button {
-    flex: 1;
-    max-width: 150px;
-    margin: 0 auto;
-}
-
 @media (max-width: 768px) {
     .temporary-message {
         width: 80%;
