@@ -662,6 +662,127 @@ function closeActiveModal() {
     return output;
 }
 
+// Navigation functions for chapter traversal
+function navigateToPreviousChapter() {
+    const reference = document.getElementById('reference').value.trim();
+    if (!reference) return;
+    
+    // Extract book and chapter from the reference
+    const match = reference.match(/^(\d*\s*[A-Za-zÀ-ÖØ-öø-ÿ]+)\s+(\d+)/);
+    if (!match) return;
+    
+    const [_, book, chapterStr] = match;
+    const chapter = parseInt(chapterStr, 10);
+    
+    // Can't go before chapter 1
+    if (chapter <= 1) return;
+    
+    // Navigate to previous chapter (whole chapter)
+    const newReference = `${book} ${chapter - 1}`;
+    document.getElementById('reference').value = newReference;
+    saveReferencePreference(newReference);
+    searchVerse();
+}
+
+function navigateToNextChapter() {
+    const reference = document.getElementById('reference').value.trim();
+    if (!reference) return;
+    
+    // Extract book and chapter from the reference
+    const match = reference.match(/^(\d*\s*[A-Za-zÀ-ÖØ-öø-ÿ]+)\s+(\d+)/);
+    if (!match) return;
+    
+    const [_, book, chapterStr] = match;
+    const chapter = parseInt(chapterStr, 10);
+    
+    // Check if this is the last chapter
+    const maxChapter = getMaxChapterForBook(book.trim());
+    if (maxChapter && chapter >= maxChapter) return;
+    
+    // Navigate to next chapter (whole chapter)
+    const newReference = `${book} ${chapter + 1}`;
+    document.getElementById('reference').value = newReference;
+    saveReferencePreference(newReference);
+    searchVerse();
+}
+
+function getMaxChapterForBook(bookName) {
+    // Try to get max chapter from bible data
+    try {
+        const bibleData = getCurrentBibleData();
+        if (!bibleData || !bibleData.books) return null;
+        
+        // Try to find the book by name or abbreviation
+        const book = bibleData.books.find(b => 
+            b.name.toLowerCase() === bookName.toLowerCase() || 
+            (b.abbreviation && b.abbreviation.toLowerCase() === bookName.toLowerCase()) ||
+            b.names.some(name => name.toLowerCase() === bookName.toLowerCase())
+        );
+        
+        if (book && book.chapters) {
+            return book.chapters.length;
+        }
+    } catch (error) {
+        console.error('Error getting max chapter:', error);
+    }
+    
+    return null;
+}
+
+function getCurrentBibleData() {
+    // Try to get the current bible data either from memory or localStorage
+    const selectElement = document.getElementById('bible-select');
+    const selectedBibleId = selectElement.value;
+    
+    if (selectedBibleId === "upload" && fileCache) {
+        try {
+            return JSON.parse(fileCache);
+        } catch (e) {
+            console.error('Error parsing file cache:', e);
+        }
+    }
+    
+    // If we're using a predefined Bible, get it from BibleManager
+    return window.BibleManager ? window.BibleManager.getCurrentBible() : null;
+}
+
+function shareCurrentReference() {
+    const reference = document.getElementById('reference').value.trim();
+    if (!reference) return;
+    
+    const selectElement = document.getElementById('bible-select');
+    const selectedBibleId = selectElement.value;
+    
+    // Don't share if using an uploaded Bible
+    if (selectedBibleId === "upload") {
+        alert("Não é possível compartilhar referências de Bíblias carregadas manualmente.");
+        return;
+    }
+    
+    // Create the share URL
+    const baseUrl = window.location.origin + window.location.pathname;
+    const shareUrl = `${baseUrl}?bible=${encodeURIComponent(selectedBibleId)}&quote=${encodeURIComponent(reference)}`;
+    
+    // Copy to clipboard
+    copyTextToClipboard(shareUrl)
+        .then(() => {
+            const shareButton = document.getElementById('share-button');
+            shareButton.classList.add('success');
+            
+            // Show tooltip or feedback
+            alert("Link copiado para a área de transferência!");
+            
+            // Reset the button
+            setTimeout(() => {
+                shareButton.classList.remove('success');
+            }, 2000);
+        })
+        .catch(err => {
+            console.error('Erro ao copiar link:', err);
+            alert("Erro ao copiar o link. Por favor, tente novamente.");
+        });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     instructionsBackup = document.getElementById('result').innerHTML;
     loadAvailableBibles();
@@ -723,10 +844,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Função para copiar o texto bíblico para o clipboard
     document.getElementById('copy-button').addEventListener('click', function() {
         const copyButton = document.getElementById('copy-button');
-        
+
         // Obter o texto bíblico
         const verseTextElement = document.querySelector('.verse-text');
-        
+
         if (verseTextElement) {
             let textToCopy = verseTextElement.innerHTML
                 .replace(/<br>/g, '\n')
@@ -736,30 +857,31 @@ document.addEventListener('DOMContentLoaded', function() {
             copyTextToClipboard(textToCopy)
                 .then(() => {
                     // Feedback visual de sucesso
-                    copyButton.textContent = 'Copiado!';
                     copyButton.classList.add('success');
                     
                     // Restaurar o botão após 2 segundos
                     setTimeout(() => {
-                        copyButton.textContent = 'Copiar';
                         copyButton.classList.remove('success');
-                    }, 2000);
+                    }, 5000);
                 })
                 .catch(err => {
                     console.error('Erro ao copiar texto:', err);
-                    copyButton.textContent = 'Erro!';
                     copyButton.classList.add('error');
                     
                     setTimeout(() => {
-                        copyButton.textContent = 'Copiar';
                         copyButton.classList.remove('error');
-                    }, 2000);
+                    }, 5000);
                 });
         }
     });
 
     // Adicionar evento ao botão de download
     document.getElementById('download-ebf-button').addEventListener('click', downloadEbfFile);
+
+    // Setup navigation buttons
+    document.getElementById('prev-chapter-button').addEventListener('click', navigateToPreviousChapter);
+    document.getElementById('next-chapter-button').addEventListener('click', navigateToNextChapter);
+    document.getElementById('share-button').addEventListener('click', shareCurrentReference);
 
     for (let modalId in modalButtonMap) {
         const buttonId = modalButtonMap[modalId];
@@ -799,9 +921,16 @@ async function searchVerse() {
     }
 
     if (result.error) {
-        copyButton.classList.remove('visible');
+        document.getElementById('prev-chapter-button').classList.add('hidden');
+        document.getElementById('copy-button').classList.add('hidden');
+        document.getElementById('share-button').classList.add('hidden');
+        document.getElementById('next-chapter-button').classList.add('hidden');
     } else {
-        copyButton.classList.add('visible');
+        document.getElementById('prev-chapter-button').classList.remove('hidden');
+        document.getElementById('copy-button').classList.remove('hidden');
+        document.getElementById('share-button').classList.remove('hidden');
+        document.getElementById('next-chapter-button').classList.remove('hidden');
+        
         if (reference) {
             saveSearchToHistory(reference);
         }
