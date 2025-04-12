@@ -742,18 +742,14 @@ function navigateToPreviousChapter() {
     const reference = document.getElementById('reference').value.trim();
     if (!reference) return;
     
-    // Extract book and chapter from the reference
-    const match = reference.match(/^(\d*\s*[A-Za-zÀ-ÖØ-öø-ÿ]+)\s+(\d+)/);
-    if (!match) return;
-    
-    const [_, book, chapterStr] = match;
-    const chapter = parseInt(chapterStr, 10);
+    const parsedRef = window.BibleUtils.parseReference(reference);
+    if (!parsedRef) return;
     
     // Can't go before chapter 1
-    if (chapter <= 1) return;
+    if (parsedRef.chapter <= 1) return;
     
     // Navigate to previous chapter (whole chapter)
-    const newReference = `${book} ${chapter - 1}`;
+    const newReference = `${parsedRef.book} ${parsedRef.chapter - 1}`;
     document.getElementById('reference').value = newReference;
     saveReferencePreference(newReference);
     searchVerse();
@@ -763,17 +759,13 @@ function navigateToNextChapter() {
     const reference = document.getElementById('reference').value.trim();
     if (!reference) return;
     
-    // Extract book and chapter from the reference
-    const match = reference.match(/^(\d*\s*[A-Za-zÀ-ÖØ-öø-ÿ]+)\s+(\d+)/);
-    if (!match) return;
-    
-    const [_, book, chapterStr] = match;
-    const chapter = parseInt(chapterStr, 10);
+    const parsedRef = window.BibleUtils.parseReference(reference);
+    if (!parsedRef) return;
     
     // TODO: check if this is the last chapter
     
     // Navigate to next chapter (whole chapter)
-    const newReference = `${book} ${chapter + 1}`;
+    const newReference = `${parsedRef.book} ${parsedRef.chapter + 1}`;
     document.getElementById('reference').value = newReference;
     saveReferencePreference(newReference);
     searchVerse();
