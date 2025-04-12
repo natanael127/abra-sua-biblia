@@ -314,9 +314,6 @@ function setupActionButtons() {
                 showFileHelpModal();
             }
 
-            // Não aplicar efeito visual se o botão estiver desabilitado
-            if (button.disabled) return;
-
             // Feedback visual comum para todos os botões de ação
             button.classList.add('success');
             setTimeout(() => {
