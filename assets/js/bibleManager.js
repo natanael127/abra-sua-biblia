@@ -176,7 +176,6 @@ function generateResultFromEbf(reference, basicInstructions, displayOpt, ebfCont
             reference,
             basicInstructions,
             displayOpt,
-            translationName: 'Bíblia carregada',
             tempBibleData: ebfContent
         });
     } catch (error) {
