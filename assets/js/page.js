@@ -4,7 +4,7 @@ const MAX_HISTORY_SIZE = 10;
 // Control variables
 let instructionsBackup = null;
 let currentTranslationName = '';
-let convertedEbfData = null;
+let ebfData = null;
 const modalList = [
     'history-modal',
     'reference-help-modal',
@@ -427,8 +427,7 @@ async function handleFileUpload(file) {
             
             if (isXml) {
                 try {
-                    const jsonData = await window.XmlBibles.convertXmlToEbf(content);
-                    convertedEbfData = jsonData;
+                    ebfData = await window.XmlBibles.convertXmlToEbf(content);
                     enableDownloadButton(file.name);
                 } catch (error) {
                     console.error('Error converting XML to JSON:', error);
@@ -439,7 +438,7 @@ async function handleFileUpload(file) {
             } else {
                 // JSON files stored directly
                 try {
-                    convertedEbfData = JSON.parse(content);
+                    ebfData = JSON.parse(content);
                     enableDownloadButton(file.name);
                 } catch (error) {
                     console.error('Error parsing JSON:', error);
@@ -476,7 +475,7 @@ function disableDownloadButton() {
 
 // Função para gerar o download do arquivo EBF
 function downloadEbfFile() {
-    if (!convertedEbfData) return;
+    if (!ebfData) return;
     
     const downloadButton = document.getElementById('download-ebf-button');
     const fileName = downloadButton.dataset.filename;
@@ -494,7 +493,7 @@ function downloadEbfFile() {
     }
     
     // Criar pretty print do JSON com indentação de 4 espaços
-    const prettyJson = JSON.stringify(convertedEbfData, null, 4);
+    const prettyJson = JSON.stringify(ebfData, null, 4);
     
     // Criar blob e link de download
     const blob = new Blob([prettyJson], { type: 'application/json' });
@@ -932,7 +931,7 @@ async function searchVerse() {
     if (selectedBibleId && selectedBibleId !== "upload") {
         result = generateResultFromExistent(reference, instructionsBackup, displayOptions, currentTranslationName);
     } else {
-        result = generateResultFromUpload(reference, instructionsBackup, displayOptions, convertedEbfData);
+        result = generateResultFromUpload(reference, instructionsBackup, displayOptions, ebfData);
     }
 
     if (result.error) {
