@@ -773,55 +773,13 @@ function navigateToNextChapter() {
     const [_, book, chapterStr] = match;
     const chapter = parseInt(chapterStr, 10);
     
-    // Check if this is the last chapter
-    const maxChapter = getMaxChapterForBook(book.trim());
-    if (maxChapter && chapter >= maxChapter) return;
+    // TODO: check if this is the last chapter
     
     // Navigate to next chapter (whole chapter)
     const newReference = `${book} ${chapter + 1}`;
     document.getElementById('reference').value = newReference;
     saveReferencePreference(newReference);
     searchVerse();
-}
-
-function getMaxChapterForBook(bookName) {
-    // Try to get max chapter from bible data
-    try {
-        const bibleData = getCurrentBibleData();
-        if (!bibleData || !bibleData.books) return null;
-        
-        // Try to find the book by name or abbreviation
-        const book = bibleData.books.find(b => 
-            b.name.toLowerCase() === bookName.toLowerCase() || 
-            (b.abbreviation && b.abbreviation.toLowerCase() === bookName.toLowerCase()) ||
-            b.names.some(name => name.toLowerCase() === bookName.toLowerCase())
-        );
-        
-        if (book && book.chapters) {
-            return book.chapters.length;
-        }
-    } catch (error) {
-        console.error('Error getting max chapter:', error);
-    }
-    
-    return null;
-}
-
-function getCurrentBibleData() {
-    // Try to get the current bible data either from memory or localStorage
-    const selectElement = document.getElementById('bible-select');
-    const selectedBibleId = selectElement.value;
-    
-    if (selectedBibleId === "upload" && fileCache) {
-        try {
-            return JSON.parse(fileCache);
-        } catch (e) {
-            console.error('Error parsing file cache:', e);
-        }
-    }
-    
-    // If we're using a predefined Bible, get it from BibleManager
-    return window.BibleManager ? window.BibleManager.getCurrentBible() : null;
 }
 
 function shareCurrentReference() {
