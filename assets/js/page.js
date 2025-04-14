@@ -75,6 +75,7 @@ async function loadAvailableBibles() {
             // Carregar a Bíblia padrão e executar a busca se existir uma Bíblia selecionada
             if (defaultBible) {
                 ebfData = await loadBibleFromPredefined(defaultBible);
+                populateBooksSidebar(ebfData.bible.books);
                 searchVerse();
             }
         } else {
@@ -826,6 +827,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (this.value && this.value !== "upload") {
             ebfData = await loadBibleFromPredefined(this.value);
+            populateBooksSidebar(ebfData.bible.books);
             searchVerse();
         }
     });

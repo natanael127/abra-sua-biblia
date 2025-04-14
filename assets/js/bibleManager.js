@@ -13,45 +13,26 @@ async function getAvailableBibles() {
     }
 }
 
-function processBibleData(data, bibleId = null) {
-    if (data && data.bible.books) {
-
-        // Preencher e mostrar a barra lateral com os livros disponíveis
-        // TODO: remove it to page.js
-        populateBooksSidebar(data.bible.books);
-
-        return true;
-    } else {
-        return false;
-    }
-}
-
 async function loadBibleFromPredefined(bibleName) {
+    output = null;
+
     try {
         // Carregar o arquivo JSON da pasta de Bíblias
         const response = await fetch(`${BIBLES_PATH}catholic-open/json/${bibleName}.ebf1.json`);
-        
+
         if (!response.ok) {
             throw new Error(`Erro ao carregar arquivo: ${response.status} ${response.statusText}`);
         }
-        
-        const data = await response.json();
-        const success = processBibleData(data, bibleName);
-        
-        if (success) {
-            return data;
-        } else {
-            return null;
-        }
+
+        output = await response.json();
     } catch (error) {
         console.error('Erro ao carregar a Bíblia:', error);
-        return null;
     }
+
+    return output;
 }
 
 function generateResult(reference, basicInstructions, displayOpt, ebfObject = null) {
-    processBibleData(ebfObject);
-
     // Check if Bible data is available
     if (ebfObject === null) {
         return {
