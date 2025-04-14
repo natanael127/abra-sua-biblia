@@ -70,17 +70,8 @@ async function loadAvailableBibles() {
         
         if (biblesList && biblesList.length > 0) {
             populateBiblesSelect(biblesList, defaultBible);
-            searchVerse();
-
-            // Carregar a Bíblia padrão e executar a busca se existir uma Bíblia selecionada
-            if (defaultBible) {
-                ebfData = await loadBibleFromPredefined(defaultBible);
-                populateBooksSidebar(ebfData.bible.books);
-                searchVerse();
-            }
         } else {
             console.error('Nenhuma Bíblia disponível para carregar.');
-            // Mantém o select com apenas a opção padrão
         }
     } catch (error) {
         console.error('Erro ao carregar lista de Bíblias:', error);
