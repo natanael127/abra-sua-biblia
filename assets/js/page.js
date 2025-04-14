@@ -748,8 +748,7 @@ function navigateToNextChapter() {
     const parsedRef = window.BibleUtils.parseReference(reference);
     if (!parsedRef) return;
     
-    // TODO: check if this is the last chapter
-    
+    if (parsedRef.chapter >= getNumOfChapters(parsedRef.book, ebfData)) return;
     // Navigate to next chapter (whole chapter)
     const newReference = `${parsedRef.book} ${parsedRef.chapter + 1}`;
     document.getElementById('reference').value = newReference;

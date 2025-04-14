@@ -32,6 +32,14 @@ async function loadBibleFromPredefined(bibleName) {
     return output;
 }
 
+function findBookByString(bookString, ebfObject) {
+    return ebfObject.bible.books.find(b => 
+        (b.abbreviation && b.abbreviation.toLowerCase() === bookString.toLowerCase()) || 
+        (b.usfm_id && b.usfm_id.toLowerCase() === bookString.toLowerCase()) || 
+        (b.names && b.names.some(name => name.toLowerCase() === bookString.toLowerCase()))
+    );
+}
+
 function generateResult(reference, basicInstructions, displayOpt, ebfObject = null) {
     // Check if Bible data is available
     if (ebfObject === null) {
@@ -54,13 +62,7 @@ function generateResult(reference, basicInstructions, displayOpt, ebfObject = nu
     let errorFlag = false;
     let htmlOut = '';
 
-    // Find book - priorities: abbreviation, usfm_id, names array
-    userBook = parsedRef.book.toLowerCase();
-    const book = ebfObject.bible.books.find(b => 
-        (b.abbreviation && b.abbreviation.toLowerCase() === userBook) || 
-        (b.usfm_id && b.usfm_id.toLowerCase() === userBook) || 
-        (b.names && b.names.some(name => name.toLowerCase() === userBook))
-    );
+    const book = findBookByString(parsedRef.book, ebfObject);
 
     if (!book) {
         errorFlag = true;
@@ -127,4 +129,15 @@ function generateResultFromEbf(reference, basicInstructions, displayOpt, ebfCont
             html: '<span class="error">Arquivo de Bíblia inválido ou corrompido.</span>'
         };
     }
+}
+
+function getNumOfChapters(abbreviation, ebfObject) {
+    let numChapters = 0;
+
+    const book = findBookByString(abbreviation, ebfObject);
+    if (book) {
+        numChapters = book.chapters.length;
+    }
+
+    return numChapters;
 }
