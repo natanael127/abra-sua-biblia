@@ -723,37 +723,31 @@ function closeActiveModal() {
     return output;
 }
 
-// Navigation functions for chapter traversal
 function navigateToPreviousChapter() {
     const reference = document.getElementById('reference').value.trim();
-    if (!reference) return;
-    
+
     const parsedRef = window.BibleUtils.parseReference(reference);
-    if (!parsedRef) return;
-    
-    // Can't go before chapter 1
-    if (parsedRef.chapter <= 1) return;
-    
-    // Navigate to previous chapter (whole chapter)
-    const newReference = `${parsedRef.book} ${parsedRef.chapter - 1}`;
-    document.getElementById('reference').value = newReference;
-    saveReferencePreference(newReference);
-    searchVerse();
+
+    if (parsedRef && parsedRef.chapter && parsedRef.chapter > 1) {
+        // Navigate to previous chapter (whole chapter)
+        const newReference = `${parsedRef.book} ${parsedRef.chapter - 1}`;
+        document.getElementById('reference').value = newReference;
+        saveReferencePreference(newReference);
+        searchVerse();
+    }
 }
 
 function navigateToNextChapter() {
     const reference = document.getElementById('reference').value.trim();
-    if (!reference) return;
-    
+
     const parsedRef = window.BibleUtils.parseReference(reference);
-    if (!parsedRef) return;
-    
-    if (parsedRef.chapter >= getNumOfChapters(parsedRef.book, ebfData)) return;
-    // Navigate to next chapter (whole chapter)
-    const newReference = `${parsedRef.book} ${parsedRef.chapter + 1}`;
-    document.getElementById('reference').value = newReference;
-    saveReferencePreference(newReference);
-    searchVerse();
+    if (parsedRef && parsedRef.chapter && parsedRef.chapter < getNumOfChapters(parsedRef.book, ebfData)) {
+        // Navigate to next chapter (whole chapter)
+        const newReference = `${parsedRef.book} ${parsedRef.chapter + 1}`;
+        document.getElementById('reference').value = newReference;
+        saveReferencePreference(newReference);
+        searchVerse();
+    }
 }
 
 function shareCurrentReference() {
