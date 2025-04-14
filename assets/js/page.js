@@ -3,7 +3,6 @@ const MAX_HISTORY_SIZE = 10;
 
 // Control variables
 let instructionsBackup = null;
-let currentTranslationName = '';
 let ebfData = null;
 const modalList = [
     'history-modal',
@@ -76,8 +75,6 @@ async function loadAvailableBibles() {
             // Carregar a Bíblia padrão e executar a busca se existir uma Bíblia selecionada
             if (defaultBible) {
                 ebfData = await loadBibleFromPredefined(defaultBible);
-                updateCurrentTranslationName(defaultBible, biblesList);
-                // Executar a busca após carregar a Bíblia
                 searchVerse();
             }
         } else {
@@ -394,16 +391,6 @@ function loadDisplayPreferences() {
         const parsedOptions = JSON.parse(savedOptions);
         Object.assign(displayOptions, parsedOptions);
     }
-}
-
-function updateCurrentTranslationName(bibleId, biblesList) {
-    if (!bibleId || bibleId === "upload") {
-        currentTranslationName = '';
-        return;
-    }
-    
-    const selectedBible = biblesList.find(bible => bible.id === bibleId);
-    currentTranslationName = selectedBible ? selectedBible.name : '';
 }
 
 async function handleFileUpload(file) {
@@ -835,7 +822,6 @@ document.addEventListener('DOMContentLoaded', function() {
         else if (this.value) {
             saveBiblePreference(this.value);
             const biblesList = await getAvailableBibles();
-            updateCurrentTranslationName(this.value, biblesList);
         }
 
         if (this.value && this.value !== "upload") {
