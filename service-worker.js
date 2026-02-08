@@ -47,7 +47,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch event - serve from cache, fallback to network
+// Fetch event - Stale While Revalidate strategy
 self.addEventListener('fetch', (event) => {
   // Skip non-GET requests
   if (event.request.method !== 'GET') {
@@ -60,34 +60,15 @@ self.addEventListener('fetch', (event) => {
   }
 
   event.respondWith(
-    caches.match(event.request)
-      .then((cachedResponse) => {
-        if (cachedResponse) {
-          // Return cached version
-          return cachedResponse;
-        }
-
-        // Not in cache, fetch from network
-        return fetch(event.request)
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.match(event.request).then((cachedResponse) => {
+        // Fetch from network in background to update cache
+        const fetchPromise = fetch(event.request)
           .then((networkResponse) => {
-            // Check if valid response
-            if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
-              return networkResponse;
+            // Only cache valid responses
+            if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
+              cache.put(event.request, networkResponse.clone());
             }
-
-            // Clone the response
-            const responseToCache = networkResponse.clone();
-
-            // Cache the fetched resource (especially Bible JSON files)
-            caches.open(CACHE_NAME)
-              .then((cache) => {
-                // Cache Bible data files dynamically
-                if (event.request.url.includes('/assets/data/bibles/') ||
-                    event.request.url.includes('.ebf1.json')) {
-                  cache.put(event.request, responseToCache);
-                }
-              });
-
             return networkResponse;
           })
           .catch(() => {
@@ -95,9 +76,13 @@ self.addEventListener('fetch', (event) => {
             if (event.request.mode === 'navigate') {
               return caches.match('/index.html');
             }
-            return new Response('Offline', { status: 503, statusText: 'Offline' });
+            return null;
           });
-      })
+
+        // Return cached response immediately, or wait for network
+        return cachedResponse || fetchPromise;
+      });
+    })
   );
 });
 
