@@ -7,6 +7,19 @@
     <link rel="shortcut icon" href="assets/icons/favicon.ico" type="image/x-icon">
     <link rel="icon" href="assets/icons/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="assets/css/style.css">
+    <!-- Theme initialization script (prevents flash of wrong theme) -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('selectedTheme') || 'auto';
+            let effectiveTheme = savedTheme;
+            if (savedTheme === 'auto') {
+                effectiveTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            if (effectiveTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-V7M3H6L9Y6"></script>
     <script>
@@ -25,6 +38,9 @@
                     <h3 class="page-title">Abra sua Bíblia &rArr;</h3>
                     <select id="bible-select">
                     </select>
+                    <button id="theme-button" class="theme-button" title="Tema: Automático">
+                        <span id="theme-icon">🌓</span>
+                    </button>
                 </div>
             </div>
 

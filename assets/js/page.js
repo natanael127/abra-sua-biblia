@@ -1,9 +1,25 @@
 // Constants
 const MAX_HISTORY_SIZE = 10;
 
+// Theme constants
+const THEME_LIGHT = 'light';
+const THEME_DARK = 'dark';
+const THEME_AUTO = 'auto';
+const THEME_ICONS = {
+    [THEME_LIGHT]: '☀️',
+    [THEME_DARK]: '🌙',
+    [THEME_AUTO]: '🌓'
+};
+const THEME_TITLES = {
+    [THEME_LIGHT]: 'Tema: Claro',
+    [THEME_DARK]: 'Tema: Escuro',
+    [THEME_AUTO]: 'Tema: Automático'
+};
+
 // Control variables
 let instructionsBackup = null;
 let ebfData = null;
+let currentTheme = THEME_AUTO;
 const modalList = [
     'history-modal',
     'reference-help-modal',
@@ -38,6 +54,72 @@ function loadUserPreferences() {
         savedBible: savedBible,
         savedReference: savedReference 
     };
+}
+
+// Theme functions
+function saveThemePreference(theme) {
+    localStorage.setItem('selectedTheme', theme);
+}
+
+function loadThemePreference() {
+    return localStorage.getItem('selectedTheme') || THEME_AUTO;
+}
+
+function getSystemTheme() {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return THEME_DARK;
+    }
+    return THEME_LIGHT;
+}
+
+function applyTheme(theme) {
+    currentTheme = theme;
+    let effectiveTheme = theme;
+    
+    if (theme === THEME_AUTO) {
+        effectiveTheme = getSystemTheme();
+    }
+    
+    if (effectiveTheme === THEME_DARK) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+        document.documentElement.removeAttribute('data-theme');
+    }
+    
+    // Update button icon and title
+    const themeIcon = document.getElementById('theme-icon');
+    const themeButton = document.getElementById('theme-button');
+    
+    if (themeIcon) {
+        themeIcon.textContent = THEME_ICONS[theme];
+    }
+    if (themeButton) {
+        themeButton.title = THEME_TITLES[theme];
+    }
+}
+
+function cycleTheme() {
+    const themeOrder = [THEME_AUTO, THEME_LIGHT, THEME_DARK];
+    const currentIndex = themeOrder.indexOf(currentTheme);
+    const nextIndex = (currentIndex + 1) % themeOrder.length;
+    const nextTheme = themeOrder[nextIndex];
+    
+    saveThemePreference(nextTheme);
+    applyTheme(nextTheme);
+}
+
+function initializeTheme() {
+    const savedTheme = loadThemePreference();
+    applyTheme(savedTheme);
+    
+    // Listen for system theme changes when in auto mode
+    if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function() {
+            if (currentTheme === THEME_AUTO) {
+                applyTheme(THEME_AUTO);
+            }
+        });
+    }
 }
 
 function getUrlParameter(name) {
@@ -776,12 +858,18 @@ function shareCurrentReference() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize theme first to avoid flash of wrong theme
+    initializeTheme();
+
     instructionsBackup = document.getElementById('result').innerHTML;
     loadAvailableBibles();
     loadQuote();
     updateUploadContainerVisibility();
     setupExpandableSections();
     setupControlButtons();
+
+    // Theme button event listener
+    document.getElementById('theme-button').addEventListener('click', cycleTheme);
     
     // Add global event listener for Escape key
     document.addEventListener('keydown', function(event) {
