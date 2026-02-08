@@ -424,6 +424,11 @@ async function handleFileUpload(file) {
                     disableDownloadButton();
                 }
             }
+
+            // Atualizar a lista de livros na sidebar
+            if (ebfData && ebfData.bible && ebfData.bible.books) {
+                populateBooksSidebar(ebfData.bible.books);
+            }
             
             searchVerse();
             resolve(true);
