@@ -74,20 +74,21 @@ function generateResult(reference, basicInstructions, displayOpt, ebfObject = nu
             errorFlag = true;
             htmlOut = `<span class="error">Capítulo ${parsedRef.chapter} não encontrado em ${book.names[0]}.</span>`;
         } else {
-            // Add translation name if available
+            const chapterObject = book.chapters[chapterIndex];
+
+            // Add translation name and chapter title if available
             let headerText = `${book.names[0]} ${parsedRef.chapter}`;
+            if (chapterObject.title) {
+                headerText += `: ${chapterObject.title}`;
+            }
             if (ebfObject.bible.name) {
-                headerText += ` - ${ebfObject.bible.name}`;
+                headerText += ` (${ebfObject.bible.name})`;
             }
             htmlOut = `<div class="reference">${headerText}</div>`;
 
-            const chapterObject = book.chapters[chapterIndex];
-            chapterVerses = [];
-            for (const verseObject of chapterObject.verses) {
-                chapterVerses.push(verseObject.text);
-            }
-            parsedRef.verses = BibleUtils.fixVersesIndexes(parsedRef, chapterVerses.length);
-            const verseTexts = BibleUtils.getFormattedVerseTexts(parsedRef, chapterVerses, displayOpt);
+            // Add chapter title if sectionTitles is enabled
+            parsedRef.verses = BibleUtils.fixVersesIndexes(parsedRef, chapterObject.verses.length);
+            const verseTexts = BibleUtils.getFormattedVerseTexts(parsedRef, chapterObject.verses, displayOpt);
             
             if (displayOpt.parenthesesCitation) {
                 let improvedRef = `${book.abbreviation} ${parsedRef.chapter}`;

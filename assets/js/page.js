@@ -31,7 +31,8 @@ const displayOptions = {
     verseNumbers: false,
     lineBreaks: false,
     ellipsis: true,
-    parenthesesCitation: false
+    parenthesesCitation: false,
+    sectionTitles: false
 };
 
 function saveBiblePreference(bibleId) {
@@ -428,6 +429,7 @@ function handleCopyButtonClick() {
     if (verseTextElement) {
         let textToCopy = verseTextElement.innerHTML
             .replace(/<br>/g, '\n')
+            .replace(/<\/span>/g, '\n')
             .replace(/<[^>]+>/g, ''); // Remove HTML tags
         
         // Tentar copiar usando diferentes métodos
@@ -450,7 +452,8 @@ function convertIdToOptionKey(id) {
         'verse-numbers': 'verseNumbers',
         'line-breaks': 'lineBreaks',
         'ellipsis': 'ellipsis',
-        'parentheses-citation': 'parenthesesCitation'
+        'parentheses-citation': 'parenthesesCitation',
+        'section-titles': 'sectionTitles'
     };
     return map[id] || id;
 }

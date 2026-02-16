@@ -100,13 +100,22 @@ function getFormattedVerseTexts(parsedRef, chapterContent, displayOpt) {
             }
         }
 
-        const verseText = chapterContent[verseIndex];
+        const verseObject = chapterContent[verseIndex];
+        // Support both verse objects and plain text strings
+        const verseText = typeof verseObject === 'string' ? verseObject : verseObject?.text;
+        const verseTitle = typeof verseObject === 'object' ? verseObject?.title : null;
+
         if (verseText) { // Verifica se o versículo existe e não é vazio
             let formattedVerse = verseText;
 
             // Adicionar número do versículo como sobrescrito
             if (displayOpt.verseNumbers) {
                 formattedVerse = `<sup>${verseIndex + 1}</sup> ${formattedVerse}`;
+            }
+
+            // Add verse title if sectionTitles is enabled (prepend to avoid double line break)
+            if (displayOpt.sectionTitles && verseTitle) {
+                formattedVerse = `<span class="section-title">${verseTitle}</span>${formattedVerse}`;
             }
 
             if (displayOpt.quotes) {

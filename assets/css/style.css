@@ -196,6 +196,25 @@ button:hover {
     color: var(--text-secondary);
 }
 
+.chapter-title {
+    font-weight: bold;
+    font-style: italic;
+    color: var(--text-secondary);
+    margin-top: 20px;
+    margin-bottom: 0;
+    font-size: 16px;
+}
+
+.section-title {
+    display: block;
+    font-weight: bold;
+    font-style: italic;
+    color: var(--text-secondary);
+    margin-top: 20px;
+    margin-bottom: 0;
+    font-size: 15px;
+}
+
 .bible-selection {
     display: flex;
     flex-wrap: nowrap;
