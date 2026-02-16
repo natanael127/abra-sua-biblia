@@ -78,7 +78,7 @@ function generateResult(reference, basicInstructions, displayOpt, ebfObject = nu
 
             // Add translation name and chapter title if available
             let headerText = `${book.names[0]} ${parsedRef.chapter}`;
-            if (displayOpt.sectionTitles && chapterObject.title) {
+            if (chapterObject.title) {
                 headerText += `: ${chapterObject.title}`;
             }
             if (ebfObject.bible.name) {
