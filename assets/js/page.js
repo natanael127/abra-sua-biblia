@@ -31,7 +31,8 @@ const displayOptions = {
     verseNumbers: false,
     lineBreaks: false,
     ellipsis: true,
-    parenthesesCitation: false
+    parenthesesCitation: false,
+    sectionTitles: false
 };
 
 function saveBiblePreference(bibleId) {
@@ -450,7 +451,8 @@ function convertIdToOptionKey(id) {
         'verse-numbers': 'verseNumbers',
         'line-breaks': 'lineBreaks',
         'ellipsis': 'ellipsis',
-        'parentheses-citation': 'parenthesesCitation'
+        'parentheses-citation': 'parenthesesCitation',
+        'section-titles': 'sectionTitles'
     };
     return map[id] || id;
 }
