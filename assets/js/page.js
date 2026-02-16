@@ -429,6 +429,7 @@ function handleCopyButtonClick() {
     if (verseTextElement) {
         let textToCopy = verseTextElement.innerHTML
             .replace(/<br>/g, '\n')
+            .replace(/<\/span>/g, '\n')
             .replace(/<[^>]+>/g, ''); // Remove HTML tags
         
         // Tentar copiar usando diferentes métodos
