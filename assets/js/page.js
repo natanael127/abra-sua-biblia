@@ -27,12 +27,12 @@ const modalList = [
 ];
 
 const displayOptions = {
-    quotes: true,
-    verseNumbers: false,
-    lineBreaks: false,
+    quotes: false,
+    verseNumbers: true,
+    lineBreaks: true,
     ellipsis: true,
-    parenthesesCitation: false,
-    sectionTitles: false
+    parenthesesCitation: true,
+    sectionTitles: true
 };
 
 function saveBiblePreference(bibleId) {
