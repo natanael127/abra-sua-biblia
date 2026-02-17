@@ -6,7 +6,7 @@ a partir dos arquivos de bíblia (.ebf1.json) encontrados nos diretórios config
 
 import json
 from pathlib import Path
-from typing import List, Dict
+from typing import List, Dict, Any, Optional
 
 # Diretório base onde este script está localizado
 BASE_DIR = Path(__file__).parent
@@ -26,8 +26,11 @@ BIBLE_FILE_PATTERN = "*.ebf1.json"
 # Arquivo de saída
 OUTPUT_FILE = BASE_DIR / "index.json"
 
+# Bíblia padrão (path relativo ao BASE_DIR, ou None para não definir)
+DEFAULT_BIBLE_PATH = "catholic-open/json/Ave-Maria.ebf1.json"
 
-def extract_bible_info(file_path: Path, base_dir: Path) -> Dict[str, str]:
+
+def extract_bible_info(file_path: Path, base_dir: Path) -> Dict:
     """
     Extrai informações da bíblia a partir do arquivo JSON.
     
@@ -36,7 +39,7 @@ def extract_bible_info(file_path: Path, base_dir: Path) -> Dict[str, str]:
         base_dir: Diretório base (onde está o index.json)
         
     Returns:
-        Dicionário com name e path da bíblia
+        Dicionário com name, path e opcionalmente default
     """
     with open(file_path, 'r', encoding='utf-8') as f:
         data = json.load(f)
@@ -48,13 +51,19 @@ def extract_bible_info(file_path: Path, base_dir: Path) -> Dict[str, str]:
     # O path é relativo ao diretório base (onde está o index.json)
     relative_path = file_path.relative_to(base_dir).as_posix()
     
-    return {
+    result = {
         "name": bible_name,
         "path": relative_path
     }
+    
+    # Adiciona campo default apenas se for a bíblia padrão
+    if DEFAULT_BIBLE_PATH and relative_path == DEFAULT_BIBLE_PATH:
+        result["default"] = True
+    
+    return result
 
 
-def scan_directory(directory: Path, base_dir: Path) -> List[Dict[str, str]]:
+def scan_directory(directory: Path, base_dir: Path) -> List[Dict[str, Any]]:
     """
     Escaneia um diretório em busca de arquivos de bíblia.
     
@@ -75,14 +84,15 @@ def scan_directory(directory: Path, base_dir: Path) -> List[Dict[str, str]]:
         try:
             bible_info = extract_bible_info(file_path, base_dir)
             bibles.append(bible_info)
-            print(f"  Encontrado: {bible_info['name']} -> {bible_info['path']}")
+            default_marker = " [PADRÃO]" if bible_info.get('default') else ""
+            print(f"  Encontrado: {bible_info['name']} -> {bible_info['path']}{default_marker}")
         except Exception as e:
             print(f"  Erro ao processar {file_path.name}: {e}")
     
     return bibles
 
 
-def build_index() -> List[Dict[str, str]]:
+def build_index() -> List[Dict[str, Any]]:
     """
     Constrói o índice completo escaneando todos os diretórios configurados.
     

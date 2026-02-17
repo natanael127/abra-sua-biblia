@@ -5,7 +5,8 @@
     },
     {
         "name": "Ave-Maria",
-        "path": "catholic-open/json/Ave-Maria.ebf1.json"
+        "path": "catholic-open/json/Ave-Maria.ebf1.json",
+        "default": true
     },
     {
         "name": "CNBB",

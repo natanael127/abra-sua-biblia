@@ -145,13 +145,21 @@ async function loadAvailableBibles() {
         // Carrega preferências salvas
         const preferences = loadUserPreferences();
         
-        // Prioridade: 1º parâmetro da URL, 2º preferência salva
-        const defaultBible = bibleParam || preferences.savedBible;
-        
         // Obter a lista de bíblias disponíveis usando a função do bible.js
         const biblesList = await getAvailableBibles();
         
         if (biblesList && biblesList.length > 0) {
+            // Prioridade: 1º parâmetro da URL, 2º preferência salva, 3º bíblia padrão do índice
+            let defaultBible = bibleParam || preferences.savedBible;
+            
+            // Se não há preferência externa, usar a bíblia marcada como default no índice
+            if (!defaultBible) {
+                const defaultBibleEntry = biblesList.find(bible => bible.default === true);
+                if (defaultBibleEntry) {
+                    defaultBible = defaultBibleEntry.name;
+                }
+            }
+            
             populateBiblesSelect(biblesList, defaultBible);
         } else {
             console.error('Nenhuma Bíblia disponível para carregar.');
