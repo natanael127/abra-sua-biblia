@@ -135,7 +135,7 @@ function getFormattedVerseTexts(parsedRef, chapterContent, displayOpt) {
                 // Replace all kind of double quotes with single quotes
                 formattedVerse = formattedVerse.replaceAll(/"/g, "'");
                 formattedVerse = formattedVerse.replaceAll('"', "'");
-                formattedVerse = formattedVerse.replaceAll('"', "'");
+                formattedVerse = formattedVerse.replaceAll(/&quot;/g, "'");
 
                 // Quote the first and last verse
                 let isLastVerse = (indexListVerses == parsedRef.verses.length - 1);
