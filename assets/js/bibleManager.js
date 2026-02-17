@@ -72,17 +72,22 @@ function generateResult(reference, basicInstructions, displayOpt, ebfObject = nu
         const chapterIndex = parsedRef.chapter - 1;
         if (chapterIndex < 0 || chapterIndex >= book.chapters.length) {
             errorFlag = true;
-            htmlOut = `<span class="error">Capítulo ${parsedRef.chapter} não encontrado em ${book.names[0]}.</span>`;
+            htmlOut = `<span class="error">Capítulo ${parsedRef.chapter} não encontrado em ${BibleUtils.escapeHtml(book.names[0])}.</span>`;
         } else {
             const chapterObject = book.chapters[chapterIndex];
 
             // Add translation name and chapter title if available
-            let headerText = `${book.names[0]} ${parsedRef.chapter}`;
-            if (chapterObject.title) {
-                headerText += `: ${chapterObject.title}`;
+            // Escape HTML to prevent injection
+            const bookName = BibleUtils.escapeHtml(book.names[0]);
+            const chapterTitle = BibleUtils.escapeHtml(chapterObject.title);
+            const bibleName = BibleUtils.escapeHtml(ebfObject.bible.name);
+            
+            let headerText = `${bookName} ${parsedRef.chapter}`;
+            if (chapterTitle) {
+                headerText += `: ${chapterTitle}`;
             }
-            if (ebfObject.bible.name) {
-                headerText += ` (${ebfObject.bible.name})`;
+            if (bibleName) {
+                headerText += ` (${bibleName})`;
             }
             htmlOut = `<div class="reference">${headerText}</div>`;
 
@@ -91,7 +96,7 @@ function generateResult(reference, basicInstructions, displayOpt, ebfObject = nu
             const verseTexts = BibleUtils.getFormattedVerseTexts(parsedRef, chapterObject.verses, displayOpt);
             
             if (displayOpt.parenthesesCitation) {
-                let improvedRef = `${book.abbreviation} ${parsedRef.chapter}`;
+                let improvedRef = `${BibleUtils.escapeHtml(book.abbreviation)} ${parsedRef.chapter}`;
                 if (!parsedRef.allVerses) {
                     improvedRef += BibleUtils.getEfectiveVerses(parsedRef.verses);
                 }

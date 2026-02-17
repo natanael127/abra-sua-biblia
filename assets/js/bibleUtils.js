@@ -1,3 +1,13 @@
+function escapeHtml(text) {
+    if (typeof text !== 'string') return text;
+    return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
 function parseReference(reference) {
     bookName = reference.split(' ')[0];
     others = reference.split(' ').slice(1).join(' ');
@@ -102,8 +112,11 @@ function getFormattedVerseTexts(parsedRef, chapterContent, displayOpt) {
 
         const verseObject = chapterContent[verseIndex];
         // Support both verse objects and plain text strings
-        const verseText = typeof verseObject === 'string' ? verseObject : verseObject?.text;
-        const verseTitle = typeof verseObject === 'object' ? verseObject?.title : null;
+        const rawVerseText = typeof verseObject === 'string' ? verseObject : verseObject?.text;
+        const rawVerseTitle = typeof verseObject === 'object' ? verseObject?.title : null;
+        // Escape HTML to prevent injection
+        const verseText = escapeHtml(rawVerseText);
+        const verseTitle = escapeHtml(rawVerseTitle);
 
         if (verseText) { // Verifica se o versículo existe e não é vazio
             let formattedVerse = verseText;
@@ -189,6 +202,7 @@ function getEfectiveVerses(versesList) {
 
 // Export purely functional functions
 window.BibleUtils = {
+    escapeHtml,
     parseReference,
     fixVersesIndexes,
     getFormattedVerseTexts,
