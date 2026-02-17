@@ -14,5 +14,20 @@
         "name": "CNBB",
         "path": "bibles/CNBB.ebf1.json",
         "type": "catholic"
+    },
+    {
+        "name": "Almeida Revisada Imprensa Bíblica",
+        "path": "bibles/pt_aa.ebf1.json",
+        "type": "protestant"
+    },
+    {
+        "name": "Almeida Corrigida e Revisada Fiel",
+        "path": "bibles/pt_acf.ebf1.json",
+        "type": "protestant"
+    },
+    {
+        "name": "Nova Versão Internacional",
+        "path": "bibles/pt_nvi.ebf1.json",
+        "type": "protestant"
     }
 ]
