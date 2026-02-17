@@ -9,7 +9,7 @@ const STATIC_ASSETS = [
   '/assets/js/bibleManager.js',
   '/assets/icons/favicon.ico',
   '/assets/icons/icon.png',
-  '/assets/data/bibles/index.json',
+  '/assets/data/index.json',
   '/manifest.json'
 ];
 
