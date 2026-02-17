@@ -1,18 +1,18 @@
 [
     {
         "name": "Aparecida",
-        "path": "Aparecida.ebf1.json",
+        "path": "bibles/Aparecida.ebf1.json",
         "type": "catholic"
     },
     {
         "name": "Ave-Maria",
-        "path": "Ave-Maria.ebf1.json",
+        "path": "bibles/Ave-Maria.ebf1.json",
         "type": "catholic",
         "default": true
     },
     {
         "name": "CNBB",
-        "path": "CNBB.ebf1.json",
+        "path": "bibles/CNBB.ebf1.json",
         "type": "catholic"
     }
 ]

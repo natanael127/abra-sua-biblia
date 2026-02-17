@@ -1,8 +1,8 @@
-const BIBLES_PATH = 'assets/data/bibles/';
+const DATA_PATH = 'assets/data/';
 
 async function getAvailableBibles() {
     try {
-        const response = await fetch(`${BIBLES_PATH}index.json`);
+        const response = await fetch(`${DATA_PATH}index.json`);
         if (!response.ok) {
             return [];
         }
@@ -17,8 +17,8 @@ async function loadBibleFromPath(biblePath) {
     output = null;
 
     try {
-        // Carregar o arquivo JSON usando o path relativo ao BIBLES_PATH
-        const response = await fetch(`${BIBLES_PATH}${biblePath}`);
+        // Carregar o arquivo JSON usando o path relativo ao DATA_PATH
+        const response = await fetch(`${DATA_PATH}${biblePath}`);
 
         if (!response.ok) {
             throw new Error(`Erro ao carregar arquivo: ${response.status} ${response.statusText}`);
