@@ -14,10 +14,7 @@ BASE_DIR = Path(__file__).parent
 # Lista de diretórios a serem escaneados (relativo ao BASE_DIR)
 # Adicione novos diretórios aqui conforme necessário
 BIBLE_DIRECTORIES = [
-    "catholic-open/json",
-    # Adicione outros diretórios aqui, ex:
-    # "protestant/json",
-    # "orthodox/json",
+    ".",
 ]
 
 # Padrão de arquivo para bíblias
@@ -27,7 +24,7 @@ BIBLE_FILE_PATTERN = "*.ebf1.json"
 OUTPUT_FILE = BASE_DIR / "index.json"
 
 # Bíblia padrão (path relativo ao BASE_DIR, ou None para não definir)
-DEFAULT_BIBLE_PATH = "catholic-open/json/Ave-Maria.ebf1.json"
+DEFAULT_BIBLE_PATH = "Ave-Maria.ebf1.json"
 
 # Quantidade de livros por tipo de bíblia
 BIBLE_TYPE_BOOKS = {
