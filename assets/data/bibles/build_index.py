@@ -29,6 +29,28 @@ OUTPUT_FILE = BASE_DIR / "index.json"
 # Bíblia padrão (path relativo ao BASE_DIR, ou None para não definir)
 DEFAULT_BIBLE_PATH = "catholic-open/json/Ave-Maria.ebf1.json"
 
+# Quantidade de livros por tipo de bíblia
+BIBLE_TYPE_BOOKS = {
+    "catholic": 73,    # 46 AT + 27 NT (inclui deuterocanônicos)
+    "protestant": 66,  # 39 AT + 27 NT
+}
+
+
+def get_bible_type(num_books: int) -> str:
+    """
+    Determina o tipo da bíblia baseado na quantidade de livros.
+    
+    Args:
+        num_books: Número de livros na bíblia
+        
+    Returns:
+        'catholic', 'protestant' ou 'other'
+    """
+    for bible_type, expected_books in BIBLE_TYPE_BOOKS.items():
+        if num_books == expected_books:
+            return bible_type
+    return "other"
+
 
 def extract_bible_info(file_path: Path, base_dir: Path) -> Dict:
     """
@@ -39,7 +61,7 @@ def extract_bible_info(file_path: Path, base_dir: Path) -> Dict:
         base_dir: Diretório base (onde está o index.json)
         
     Returns:
-        Dicionário com name, path e opcionalmente default
+        Dicionário com name, path, type e opcionalmente default
     """
     with open(file_path, 'r', encoding='utf-8') as f:
         data = json.load(f)
@@ -51,9 +73,14 @@ def extract_bible_info(file_path: Path, base_dir: Path) -> Dict:
     # O path é relativo ao diretório base (onde está o index.json)
     relative_path = file_path.relative_to(base_dir).as_posix()
     
+    # Determina o tipo baseado na quantidade de livros
+    books = data.get('bible', {}).get('books', [])
+    bible_type = get_bible_type(len(books))
+    
     result = {
         "name": bible_name,
-        "path": relative_path
+        "path": relative_path,
+        "type": bible_type
     }
     
     # Adiciona campo default apenas se for a bíblia padrão
@@ -85,7 +112,7 @@ def scan_directory(directory: Path, base_dir: Path) -> List[Dict[str, Any]]:
             bible_info = extract_bible_info(file_path, base_dir)
             bibles.append(bible_info)
             default_marker = " [PADRÃO]" if bible_info.get('default') else ""
-            print(f"  Encontrado: {bible_info['name']} -> {bible_info['path']}{default_marker}")
+            print(f"  Encontrado: {bible_info['name']} ({bible_info['type']}) -> {bible_info['path']}{default_marker}")
         except Exception as e:
             print(f"  Erro ao processar {file_path.name}: {e}")
     

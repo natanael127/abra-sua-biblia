@@ -169,6 +169,16 @@ async function loadAvailableBibles() {
     }
 }
 
+// Mapeamento de tipos para nomes de exibição
+const BIBLE_TYPE_LABELS = {
+    'catholic': 'Católicas',
+    'protestant': 'Evangélicas',
+    'other': 'Outras'
+};
+
+// Ordem de exibição dos tipos
+const BIBLE_TYPE_ORDER = ['catholic', 'protestant', 'other'];
+
 function populateBiblesSelect(biblesList, defaultBibleId = null) {
     const selectElement = document.getElementById('bible-select');
     
@@ -177,16 +187,39 @@ function populateBiblesSelect(biblesList, defaultBibleId = null) {
         selectElement.remove(1);
     }
     
-    // Adicionar as Bíblias disponíveis como opções
+    // Remover optgroups existentes
+    const existingOptgroups = selectElement.querySelectorAll('optgroup');
+    existingOptgroups.forEach(og => og.remove());
+    
+    // Agrupar bíblias por tipo
+    const biblesByType = {};
     biblesList.forEach(bible => {
-        const option = document.createElement('option');
-        option.value = bible.name;
-        option.textContent = bible.name;
-        option.dataset.path = bible.path;
-        selectElement.appendChild(option);
+        const type = bible.type || 'other';
+        if (!biblesByType[type]) {
+            biblesByType[type] = [];
+        }
+        biblesByType[type].push(bible);
+    });
+    
+    // Adicionar as Bíblias organizadas por tipo
+    BIBLE_TYPE_ORDER.forEach(type => {
+        if (biblesByType[type] && biblesByType[type].length > 0) {
+            const optgroup = document.createElement('optgroup');
+            optgroup.label = BIBLE_TYPE_LABELS[type] || type;
+            
+            biblesByType[type].forEach(bible => {
+                const option = document.createElement('option');
+                option.value = bible.name;
+                option.textContent = bible.name;
+                option.dataset.path = bible.path;
+                optgroup.appendChild(option);
+            });
+            
+            selectElement.appendChild(optgroup);
+        }
     });
 
-    // Adicionar opção "Fazer upload..."
+    // Adicionar opção "Fazer upload..." (fora dos grupos)
     const uploadOption = document.createElement('option');
     uploadOption.value = "upload";
     uploadOption.textContent = "Fazer upload...";
