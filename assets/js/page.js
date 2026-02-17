@@ -172,8 +172,9 @@ function populateBiblesSelect(biblesList, defaultBibleId = null) {
     // Adicionar as Bíblias disponíveis como opções
     biblesList.forEach(bible => {
         const option = document.createElement('option');
-        option.value = bible.id;
+        option.value = bible.name;
         option.textContent = bible.name;
+        option.dataset.path = bible.path;
         selectElement.appendChild(option);
     });
 
@@ -902,11 +903,12 @@ document.addEventListener('DOMContentLoaded', function() {
         // Salvar a tradução escolhida (se não for upload)
         else if (this.value) {
             saveBiblePreference(this.value);
-            const biblesList = await getAvailableBibles();
         }
 
         if (this.value && this.value !== "upload") {
-            ebfData = await loadBibleFromPredefined(this.value);
+            const selectedOption = this.options[this.selectedIndex];
+            const biblePath = selectedOption.dataset.path;
+            ebfData = await loadBibleFromPath(biblePath);
             populateBooksSidebar(ebfData.bible.books);
             searchVerse();
         }

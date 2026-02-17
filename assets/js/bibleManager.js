@@ -13,12 +13,12 @@ async function getAvailableBibles() {
     }
 }
 
-async function loadBibleFromPredefined(bibleName) {
+async function loadBibleFromPath(biblePath) {
     output = null;
 
     try {
-        // Carregar o arquivo JSON da pasta de Bíblias
-        const response = await fetch(`${BIBLES_PATH}catholic-open/json/${bibleName}.ebf1.json`);
+        // Carregar o arquivo JSON usando o path relativo ao BIBLES_PATH
+        const response = await fetch(`${BIBLES_PATH}${biblePath}`);
 
         if (!response.ok) {
             throw new Error(`Erro ao carregar arquivo: ${response.status} ${response.statusText}`);

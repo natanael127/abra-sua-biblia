@@ -5,7 +5,6 @@ a partir dos arquivos de bíblia (.ebf1.json) encontrados nos diretórios config
 """
 
 import json
-import os
 from pathlib import Path
 from typing import List, Dict
 
@@ -28,37 +27,40 @@ BIBLE_FILE_PATTERN = "*.ebf1.json"
 OUTPUT_FILE = BASE_DIR / "index.json"
 
 
-def extract_bible_info(file_path: Path) -> Dict[str, str]:
+def extract_bible_info(file_path: Path, base_dir: Path) -> Dict[str, str]:
     """
     Extrai informações da bíblia a partir do arquivo JSON.
     
     Args:
         file_path: Caminho para o arquivo .ebf1.json
+        base_dir: Diretório base (onde está o index.json)
         
     Returns:
-        Dicionário com id e name da bíblia
+        Dicionário com name e path da bíblia
     """
     with open(file_path, 'r', encoding='utf-8') as f:
         data = json.load(f)
     
-    # O ID é extraído do nome do arquivo (sem a extensão .ebf1.json)
+    # O nome é extraído do conteúdo do arquivo (será usado como ID e display)
     bible_id = file_path.stem.replace('.ebf1', '')
-    
-    # O nome é extraído do conteúdo do arquivo
     bible_name = data.get('bible', {}).get('name', bible_id)
     
+    # O path é relativo ao diretório base (onde está o index.json)
+    relative_path = file_path.relative_to(base_dir).as_posix()
+    
     return {
-        "id": bible_id,
-        "name": bible_name
+        "name": bible_name,
+        "path": relative_path
     }
 
 
-def scan_directory(directory: Path) -> List[Dict[str, str]]:
+def scan_directory(directory: Path, base_dir: Path) -> List[Dict[str, str]]:
     """
     Escaneia um diretório em busca de arquivos de bíblia.
     
     Args:
         directory: Caminho do diretório a ser escaneado
+        base_dir: Diretório base (onde está o index.json)
         
     Returns:
         Lista de dicionários com informações das bíblias encontradas
@@ -71,9 +73,9 @@ def scan_directory(directory: Path) -> List[Dict[str, str]]:
     
     for file_path in sorted(directory.glob(BIBLE_FILE_PATTERN)):
         try:
-            bible_info = extract_bible_info(file_path)
+            bible_info = extract_bible_info(file_path, base_dir)
             bibles.append(bible_info)
-            print(f"  Encontrado: {bible_info['name']} ({bible_info['id']})")
+            print(f"  Encontrado: {bible_info['name']} -> {bible_info['path']}")
         except Exception as e:
             print(f"  Erro ao processar {file_path.name}: {e}")
     
@@ -92,15 +94,15 @@ def build_index() -> List[Dict[str, str]]:
     for rel_dir in BIBLE_DIRECTORIES:
         directory = BASE_DIR / rel_dir
         print(f"Escaneando: {rel_dir}")
-        bibles = scan_directory(directory)
+        bibles = scan_directory(directory, BASE_DIR)
         all_bibles.extend(bibles)
     
-    # Remove duplicatas baseado no ID (mantém a primeira ocorrência)
-    seen_ids = set()
+    # Remove duplicatas baseado no nome (mantém a primeira ocorrência)
+    seen_names = set()
     unique_bibles = []
     for bible in all_bibles:
-        if bible['id'] not in seen_ids:
-            seen_ids.add(bible['id'])
+        if bible['name'] not in seen_names:
+            seen_names.add(bible['name'])
             unique_bibles.append(bible)
     
     return unique_bibles

@@ -1,14 +1,14 @@
 [
     {
-        "id": "Aparecida",
-        "name": "Aparecida"
+        "name": "Aparecida",
+        "path": "catholic-open/json/Aparecida.ebf1.json"
     },
     {
-        "id": "Ave-Maria",
-        "name": "Ave-Maria"
+        "name": "Ave-Maria",
+        "path": "catholic-open/json/Ave-Maria.ebf1.json"
     },
     {
-        "id": "CNBB",
-        "name": "CNBB"
+        "name": "CNBB",
+        "path": "catholic-open/json/CNBB.ebf1.json"
     }
 ]
