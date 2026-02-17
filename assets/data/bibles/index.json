@@ -1,5 +1,14 @@
 [
-    {"id": "Ave-Maria", "name": "Ave-Maria"},
-    {"id": "Aparecida", "name": "Aparecida"},
-    {"id": "CNBB", "name": "CNBB"}
+    {
+        "id": "Aparecida",
+        "name": "Aparecida"
+    },
+    {
+        "id": "Ave-Maria",
+        "name": "Ave-Maria"
+    },
+    {
+        "id": "CNBB",
+        "name": "CNBB"
+    }
 ]
