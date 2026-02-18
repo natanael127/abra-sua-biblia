@@ -1,7 +1,7 @@
 {
   "name": "Abra sua Bíblia!",
   "short_name": "Abra sua Bíblia",
-  "description": "Leia e pesquise a Bíblia Sagrada de forma rápida e prática",
+  "description": "Leia a Bíblia usando a tradução de sua preferência",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
