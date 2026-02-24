@@ -26,6 +26,11 @@
         "type": "protestant"
     },
     {
+        "name": "Almeida Revista e Atualizada",
+        "path": "bibles/pt_ara.ebf1.json",
+        "type": "protestant"
+    },
+    {
         "name": "Nova Versão Internacional",
         "path": "bibles/pt_nvi.ebf1.json",
         "type": "protestant"
