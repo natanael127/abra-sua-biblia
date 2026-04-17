@@ -24,6 +24,7 @@ const modalList = [
     'history-modal',
     'reference-help-modal',
     'file-help-modal',
+    'text-search-modal',
 ];
 
 const displayOptions = {
@@ -416,6 +417,9 @@ function setupActionButtons() {
             }
             else if (button.id === 'download-ebf-button') {
                 downloadEbfFile();
+            }
+            else if (button.id === 'text-search-button') {
+                showTextSearchModal();
             }
             else if (button.id === 'history-button') {
                 showHistoryModal();
@@ -831,6 +835,178 @@ function showFileHelpModal() {
     }
 
     showModal('file-help-modal');
+}
+
+// Text search modal
+let textSearchSelectedIndex = -1;
+
+function showTextSearchModal() {
+    let modal = document.getElementById('text-search-modal');
+    if (!modal) {
+        modal = createModal({
+            id: 'text-search-modal',
+            title: 'Busca textual',
+            className: 'text-search-modal',
+            content: ''
+        });
+
+        // Replace help-content with custom layout
+        const helpContent = modal.querySelector('.help-content');
+        helpContent.innerHTML = '';
+        helpContent.style.padding = '0';
+        helpContent.style.maxHeight = 'none';
+
+        const inputRow = document.createElement('div');
+        inputRow.className = 'text-search-input-row';
+        inputRow.innerHTML = '<input type="text" class="text-search-input" placeholder="Digite pelo menos 3 caracteres...">';
+        helpContent.appendChild(inputRow);
+
+        const countEl = document.createElement('div');
+        countEl.className = 'text-search-count';
+        helpContent.appendChild(countEl);
+
+        const resultsContainer = document.createElement('div');
+        resultsContainer.className = 'text-search-results';
+        helpContent.appendChild(resultsContainer);
+
+        const searchInput = modal.querySelector('.text-search-input');
+
+        const debouncedTextSearch = debounce(() => {
+            performTextSearch(searchInput.value.trim());
+        }, 300);
+
+        searchInput.addEventListener('input', debouncedTextSearch);
+
+        searchInput.addEventListener('keydown', function(event) {
+            const items = modal.querySelectorAll('.text-search-result-item');
+            if (items.length === 0) return;
+
+            if (event.key === 'ArrowDown') {
+                event.preventDefault();
+                textSearchSelectedIndex = Math.min(textSearchSelectedIndex + 1, items.length - 1);
+                updateTextSearchSelection(items);
+            } else if (event.key === 'ArrowUp') {
+                event.preventDefault();
+                textSearchSelectedIndex = Math.max(textSearchSelectedIndex - 1, 0);
+                updateTextSearchSelection(items);
+            } else if (event.key === 'Enter') {
+                event.preventDefault();
+                if (textSearchSelectedIndex >= 0 && textSearchSelectedIndex < items.length) {
+                    items[textSearchSelectedIndex].click();
+                }
+            }
+        });
+    }
+
+    // Reset state
+    const searchInput = modal.querySelector('.text-search-input');
+    searchInput.value = '';
+    modal.querySelector('.text-search-results').innerHTML = '';
+    modal.querySelector('.text-search-count').textContent = '';
+    textSearchSelectedIndex = -1;
+
+    showModal('text-search-modal');
+    setTimeout(() => searchInput.focus(), 50);
+}
+
+function updateTextSearchSelection(items) {
+    items.forEach((item, i) => {
+        item.classList.toggle('selected', i === textSearchSelectedIndex);
+    });
+    if (textSearchSelectedIndex >= 0 && items[textSearchSelectedIndex]) {
+        items[textSearchSelectedIndex].scrollIntoView({ block: 'nearest' });
+    }
+}
+
+function performTextSearch(query) {
+    const modal = document.getElementById('text-search-modal');
+    const resultsContainer = modal.querySelector('.text-search-results');
+    const countEl = modal.querySelector('.text-search-count');
+    textSearchSelectedIndex = -1;
+
+    if (!ebfData) {
+        resultsContainer.innerHTML = '<div class="text-search-no-results">Nenhuma Bíblia carregada</div>';
+        countEl.textContent = '';
+        return;
+    }
+
+    if (query.length < 3) {
+        resultsContainer.innerHTML = '';
+        countEl.textContent = '';
+        return;
+    }
+
+    const MAX_RESULTS = 200;
+    const results = [];
+    const queryLower = query.toLowerCase();
+
+    for (const book of ebfData.bible.books) {
+        for (let ci = 0; ci < book.chapters.length; ci++) {
+            const chapter = book.chapters[ci];
+            for (let vi = 0; vi < chapter.verses.length; vi++) {
+                const verse = chapter.verses[vi];
+                if (verse.text && verse.text.toLowerCase().includes(queryLower)) {
+                    results.push({
+                        bookAbbr: book.abbreviation || book.names[0].substring(0, 3),
+                        bookName: book.names[0],
+                        chapter: ci + 1,
+                        verse: vi + 1,
+                        text: verse.text
+                    });
+                    if (results.length >= MAX_RESULTS) break;
+                }
+            }
+            if (results.length >= MAX_RESULTS) break;
+        }
+        if (results.length >= MAX_RESULTS) break;
+    }
+
+    if (results.length === 0) {
+        resultsContainer.innerHTML = '<div class="text-search-no-results">Nenhum versículo encontrado</div>';
+        countEl.textContent = '';
+        return;
+    }
+
+    countEl.textContent = results.length >= MAX_RESULTS
+        ? `Primeiros ${MAX_RESULTS} resultados`
+        : `${results.length} resultado${results.length > 1 ? 's' : ''}`;
+
+    resultsContainer.innerHTML = '';
+    const fragment = document.createDocumentFragment();
+
+    results.forEach(r => {
+        const item = document.createElement('div');
+        item.className = 'text-search-result-item';
+
+        const textEl = document.createElement('div');
+        textEl.className = 'text-search-result-text';
+        textEl.innerHTML = highlightQuery(BibleUtils.escapeHtml(r.text), query);
+
+        const citation = `${r.bookAbbr} ${r.chapter},${r.verse}`;
+        const citeEl = document.createElement('div');
+        citeEl.className = 'text-search-result-citation';
+        citeEl.textContent = `${r.bookName} ${r.chapter},${r.verse}`;
+
+        item.appendChild(textEl);
+        item.appendChild(citeEl);
+
+        item.addEventListener('click', function() {
+            document.getElementById('reference').value = citation;
+            hideModal('text-search-modal');
+            searchVerse();
+        });
+
+        fragment.appendChild(item);
+    });
+
+    resultsContainer.appendChild(fragment);
+}
+
+function highlightQuery(escapedText, query) {
+    const escapedQuery = BibleUtils.escapeHtml(query);
+    // Case-insensitive replace, preserving original case in the output
+    const regex = new RegExp('(' + escapedQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+    return escapedText.replace(regex, '<mark>$1</mark>');
 }
 
 function closeActiveModal() {
