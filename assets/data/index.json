@@ -1,21 +1,5 @@
 [
     {
-        "name": "Aparecida",
-        "path": "bibles/Aparecida.ebf1.json",
-        "type": "catholic"
-    },
-    {
-        "name": "Ave-Maria",
-        "path": "bibles/Ave-Maria.ebf1.json",
-        "type": "catholic",
-        "default": true
-    },
-    {
-        "name": "CNBB",
-        "path": "bibles/CNBB.ebf1.json",
-        "type": "catholic"
-    },
-    {
         "name": "Almeida Revisada Imprensa Bíblica",
         "path": "bibles/pt_aa.ebf1.json",
         "type": "protestant"
@@ -26,9 +10,24 @@
         "type": "protestant"
     },
     {
+        "name": "Aparecida",
+        "path": "bibles/pt_aparecida.ebf1.json",
+        "type": "catholic"
+    },
+    {
         "name": "Almeida Revista e Atualizada",
         "path": "bibles/pt_ara.ebf1.json",
         "type": "protestant"
+    },
+    {
+        "name": "Ave-Maria",
+        "path": "bibles/pt_ave_maria.ebf1.json",
+        "type": "catholic"
+    },
+    {
+        "name": "CNBB",
+        "path": "bibles/pt_cnbb.ebf1.json",
+        "type": "catholic"
     },
     {
         "name": "Nova Versão Internacional",
