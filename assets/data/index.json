@@ -35,6 +35,11 @@
         "type": "protestant"
     },
     {
+        "name": "Edição Pastoral",
+        "path": "bibles/pt_pastoral.ebf1.json",
+        "type": "catholic"
+    },
+    {
         "name": "Pe. Matos Soares",
         "path": "bibles/pt_pe_matos_soares.ebf1.json",
         "type": "catholic"
