@@ -8,6 +8,17 @@ function escapeHtml(text) {
         .replace(/'/g, '&#39;');
 }
 
+// Double quotes in every shape the translations use, written as escapes because
+// they are easy to confuse on screen: straight ("), curly (“ ”), low („ ‟) and
+// angular (« »). The escaped form is the one escapeHtml produces from a straight
+// quote, so it has to be matched before the character class.
+const DOUBLE_QUOTES = /&quot;|["\u201C\u201D\u201E\u201F\u00AB\u00BB]/g;
+
+function toSingleQuotes(text) {
+    if (typeof text !== 'string') return text;
+    return text.replace(DOUBLE_QUOTES, "'");
+}
+
 function parseReference(reference) {
     bookName = reference.split(' ')[0];
     others = reference.split(' ').slice(1).join(' ');
@@ -115,8 +126,16 @@ function getFormattedVerseTexts(parsedRef, chapterContent, displayOpt) {
         const rawVerseText = typeof verseObject === 'string' ? verseObject : verseObject?.text;
         const rawVerseTitle = typeof verseObject === 'object' ? verseObject?.title : null;
         // Escape HTML to prevent injection
-        const verseText = escapeHtml(rawVerseText);
-        const verseTitle = escapeHtml(rawVerseTitle);
+        let verseText = escapeHtml(rawVerseText);
+        let verseTitle = escapeHtml(rawVerseTitle);
+
+        // Replace all kind of double quotes with single quotes, so they do not
+        // clash with the ones that wrap the citation. Done before building the
+        // HTML, otherwise the quotes of the tag attributes would be replaced too.
+        if (displayOpt.quotes) {
+            verseText = toSingleQuotes(verseText);
+            verseTitle = toSingleQuotes(verseTitle);
+        }
 
         if (verseText) { // Verifica se o versículo existe e não é vazio
             let formattedVerse = verseText;
@@ -132,11 +151,6 @@ function getFormattedVerseTexts(parsedRef, chapterContent, displayOpt) {
             }
 
             if (displayOpt.quotes) {
-                // Replace all kind of double quotes with single quotes
-                formattedVerse = formattedVerse.replaceAll(/"/g, "'");
-                formattedVerse = formattedVerse.replaceAll('"', "'");
-                formattedVerse = formattedVerse.replaceAll(/&quot;/g, "'");
-
                 // Quote the first and last verse
                 let isLastVerse = (indexListVerses == parsedRef.verses.length - 1);
                 let isFirstVerse = (indexListVerses == 0);
@@ -203,6 +217,7 @@ function getEfectiveVerses(versesList) {
 // Export purely functional functions
 window.BibleUtils = {
     escapeHtml,
+    toSingleQuotes,
     parseReference,
     fixVersesIndexes,
     getFormattedVerseTexts,
