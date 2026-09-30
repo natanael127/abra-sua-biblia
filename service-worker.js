@@ -47,7 +47,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch event - Stale While Revalidate strategy
+// Fetch event - Network First strategy (usa a internet; cache só se estiver offline)
 self.addEventListener('fetch', (event) => {
   // Skip non-GET requests
   if (event.request.method !== 'GET') {
@@ -61,27 +61,29 @@ self.addEventListener('fetch', (event) => {
 
   event.respondWith(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.match(event.request).then((cachedResponse) => {
-        // Fetch from network in background to update cache
-        const fetchPromise = fetch(event.request)
-          .then((networkResponse) => {
-            // Only cache valid responses
-            if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
-              cache.put(event.request, networkResponse.clone());
+      // 'no-cache' força o servidor a confirmar se o arquivo mudou (304 se não mudou),
+      // evitando reenviar arquivos grandes (Bíblias) sem necessidade
+      return fetch(event.request, { cache: 'no-cache' })
+        .then((networkResponse) => {
+          // Only cache valid responses
+          if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
+            cache.put(event.request, networkResponse.clone());
+          }
+          return networkResponse;
+        })
+        .catch(() => {
+          // Network failed, use cached copy
+          return cache.match(event.request).then((cachedResponse) => {
+            if (cachedResponse) {
+              return cachedResponse;
             }
-            return networkResponse;
-          })
-          .catch(() => {
-            // Network failed, return offline fallback for navigation requests
+            // Offline fallback for navigation requests
             if (event.request.mode === 'navigate') {
               return caches.match('/index.html');
             }
-            return null;
+            return Response.error();
           });
-
-        // Return cached response immediately, or wait for network
-        return cachedResponse || fetchPromise;
-      });
+        });
     })
   );
 });
