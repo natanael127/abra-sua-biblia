@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Abra sua Bíblia!</title>
-    <link rel="shortcut icon" href="assets/icons/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="assets/icons/favicon.ico" type="image/x-icon">
-    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
-    <link rel="manifest" href="manifest.json">
+    <link rel="shortcut icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="/assets/icons/icon-192x192.png">
+    <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#4a6da7">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -43,18 +43,9 @@
             }
         })();
     </script>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V7M3H6L9Y6"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-V7M3H6L9Y6');
-    </script>
 </head>
 <body>
-    <div class="main-content">
+    <div id="reader" class="main-content">
         <div class="container">
             <div class="preloaded-bibles">
                 <div class="bible-selection">
@@ -113,7 +104,7 @@
             <div class="buttons-block" id="static-action-buttons">
                 <button id="prev-chapter-button" class="action-button" title="Capítulo anterior">&#9664;</button>
                 <button id="copy-button" class="action-button" title="Copiar texto">&#128203;</button>
-                <button id="share-button" class="action-button" title="Compartilhar">&#128279;</button>
+                <button id="share-button" class="action-button" title="Compartilhar" aria-label="Compartilhar"><svg class="share-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg></button>
                 <button id="next-chapter-button" class="action-button" title="Próximo capítulo">&#9654;</button>
             </div>
 
@@ -155,7 +146,7 @@
                 <div class="buttons-block" id="floating-action-buttons">
                     <button id="floating-prev-chapter-button" class="action-button" title="Capítulo anterior">&#9664;</button>
                     <button id="floating-copy-button" class="action-button" title="Copiar texto">&#128203;</button>
-                    <button id="floating-share-button" class="action-button" title="Compartilhar">&#128279;</button>
+                    <button id="floating-share-button" class="action-button" title="Compartilhar" aria-label="Compartilhar"><svg class="share-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg></button>
                     <button id="floating-next-chapter-button" class="action-button" title="Próximo capítulo">&#9654;</button>
                 </div>
             </div>
@@ -184,8 +175,8 @@
                 <p>
                     <a href="mailto:contato@abrasuabiblia.com.br" target="_blank" rel="noopener noreferrer">contato@abrasuabiblia.com.br</a>
                 </p>
-                <!-- Preenchido no build com o hash do commit (vite.config.ts) -->
-                <p id="build-version" class="build-version">%GIT_DESCRIBE%</p>
+                <!-- Preenchido no build com o hash e a data do commit (scripts/build-version.ts) -->
+                <p id="build-version" class="build-version">Versão da página: %PAGE_VERSION%</p>
                 </div>
             </div>
         </div>

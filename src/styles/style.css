@@ -486,28 +486,24 @@ button:hover {
     }
 }
 
+/* Ícone de compartilhar (SVG): mesmo tamanho e cor do texto dos botões, nos dois temas */
+.share-icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.125em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* Mensagem temporária (Notyf): mesmas cores e fonte do restante da página */
 .temporary-message {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%) translateY(100px);
-    background-color: var(--button-active-bg);
-    color: white;
-    padding: 12px 24px;
     border-radius: 4px;
     font-size: 16px;
     font-weight: bold;
     box-shadow: 0 2px 10px var(--shadow-color);
-    opacity: 0;
-    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-    z-index: 1100;
-    text-align: center;
-    min-width: 200px;
-}
-
-.temporary-message.show {
-    transform: translateX(-50%) translateY(0);
-    opacity: 1;
 }
 
 #floating-action-buttons {
@@ -522,14 +518,6 @@ button:hover {
 
 #floating-action-buttons.visible {
     display: flex;
-}
-
-@media (max-width: 768px) {
-    .temporary-message {
-        width: 80%;
-        max-width: 300px;
-        bottom: 20px;
-    }
 }
 
 /* Botão de tema */
@@ -596,6 +584,13 @@ a:visited {
     padding: 0 20px 5px;
     font-size: 13px;
     color: var(--text-secondary);
+}
+
+.text-search-status {
+    padding: 0 20px 5px;
+    font-size: 12px;
+    font-style: italic;
+    color: var(--text-muted);
 }
 
 .text-search-results {

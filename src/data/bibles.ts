@@ -1,12 +1,14 @@
 import { type EbfDocument, validateEbf } from '../core/ebf';
 
 /** Pasta pública com o índice e as Bíblias EBF1, servida sem transformações. */
-export const DATA_PATH = 'assets/data/';
+export const DATA_PATH = '/assets/data/';
 
 export type BibleType = 'catholic' | 'protestant' | 'other';
 
 export interface BibleIndexEntry {
     name: string;
+    /** Identificador da Bíblia na URL, ex.: "ave-maria" em /ave-maria/jo/3,16. */
+    slug: string;
     /** Caminho relativo a DATA_PATH, ex.: "bibles/por_ave_maria.ebf1.json". */
     path: string;
     type?: BibleType;

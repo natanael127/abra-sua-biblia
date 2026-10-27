@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<usfx>
+    <languageCode>pt</languageCode>
+    <book id="GEN">
+        <id id="GEN">G&#234;nesis &amp; cia</id>
+        <toc level="1">G&#234;nesis</toc>
+        <toc level="2">G&#234;nesis</toc>
+        <toc level="3">Gn</toc>
+        <c id="1"/>
+        <p><v id="1"/>No &amp; princ&#237;pio<f>nota</f> <w s="H1">Deus</w><![CDATA[ cdata]]><!-- c --> criou<ve/><v id="2"/>E a terra
+            era vazia</p>
+        <p><v id="3"/>&lt;Haja&gt; luz</p>
+        <c id="2"/>
+        <p><v id="1"/>Assim</p>
+    </book>
+</usfx>

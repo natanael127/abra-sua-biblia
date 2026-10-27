@@ -7,13 +7,3 @@ export function byId(id: string, type: new () => HTMLElement = HTMLElement): HTM
     }
     return element;
 }
-
-export function debounce<A extends unknown[]>(func: (...args: A) => void, timeout = 500): (...args: A) => void {
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    return (...args: A) => {
-        clearTimeout(timer);
-        timer = setTimeout(() => {
-            func(...args);
-        }, timeout);
-    };
-}

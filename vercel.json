@@ -4,5 +4,11 @@
     "installCommand": "npm ci",
     "buildCommand": "npm run build",
     "outputDirectory": "dist",
-    "devCommand": "vite --port $PORT"
+    "devCommand": "vite --port $PORT",
+    "rewrites": [
+        {
+            "source": "/((?!assets/|src/|node_modules/|@)[^/.]*(?:/.*)?)",
+            "destination": "/index.html"
+        }
+    ]
 }

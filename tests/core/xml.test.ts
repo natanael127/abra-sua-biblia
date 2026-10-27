@@ -1,13 +1,16 @@
-// @vitest-environment jsdom
 /**
  * O legacy-expected.json foi gerado executando o conversor anterior
  * (assets/js/xmlBibles.js) sobre os mesmos arquivos de exemplo. A única
  * diferença intencional é bible.language, agora em ISO 639-3.
+ *
+ * O edge-expected.json foi gerado pela versão com o DOMParser do navegador,
+ * antes da troca pelo fast-xml-parser: entidades, referências numéricas,
+ * CDATA, comentários, notas e espaços. Os testes rodam no Node, sem DOM.
  */
 import Ajv from 'ajv';
 import { describe, expect, it } from 'vitest';
-import ebf1Schema from '../../schema/ebf1-schema.json';
-import { type EbfDocument, validateEbf } from '../../src/core/ebf';
+import ebf1Schema from 'easy-bible-format/ebf1-schema.json';
+import type { EbfDocument } from '../../src/core/ebf';
 import { convertOsisToEbf, convertUsfxToEbf, convertXmlToEbf, detectXmlFormat } from '../../src/core/xml';
 import { readFixture } from '../helpers';
 
@@ -34,9 +37,7 @@ describe('detectXmlFormat', () => {
 
 describe('convertXmlToEbf', () => {
     it.each(['sample.osis.xml', 'sample.usfx.xml'])('%s: igual ao conversor legado, com idioma ISO 639-3', (file) => {
-        const ebf = convertXmlToEbf(xml(file));
-        expect(ebf).toEqual(expected(file, 'por'));
-        expect(validateEbf(ebf)).toEqual([]);
+        expect(convertXmlToEbf(xml(file))).toEqual(expected(file, 'por'));
     });
 
     it('USFX convertido segue o schema oficial', () => {
@@ -51,6 +52,14 @@ describe('convertXmlToEbf', () => {
 
     it.each(['unknown.xml', 'broken.xml'])('%s: rejeita formato não suportado', (file) => {
         expect(() => convertXmlToEbf(xml(file))).toThrow(legacy[file]?.error);
+    });
+});
+
+describe('casos de borda (igual ao DOMParser)', () => {
+    const edge = JSON.parse(readFixture('xml/edge-expected.json')) as Record<string, EbfDocument>;
+
+    it.each(['edge.osis.xml', 'edge.usfx.xml'])('%s', (file) => {
+        expect(convertXmlToEbf(xml(file))).toEqual(edge[file]);
     });
 });
 
@@ -73,6 +82,7 @@ describe('conversores específicos', () => {
 
     it('XML malformado gera erro de parsing', () => {
         expect(() => convertUsfxToEbf('<usfx><book')).toThrow(/XML parsing error/);
+        expect(() => convertOsisToEbf('<osis><osisText></osis>')).toThrow(/XML parsing error/);
     });
 
     it('USFX sem languageCode usa "und"', () => {
