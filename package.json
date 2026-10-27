@@ -39,6 +39,7 @@
         "workbox-window": "^7.4.1"
     },
     "dependencies": {
-        "es-toolkit": "^1.53.0"
+        "es-toolkit": "^1.53.0",
+        "notyf": "^3.10.0"
     }
 }
