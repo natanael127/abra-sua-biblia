@@ -6,7 +6,11 @@
             "type": "object",
             "properties": {
                 "name": { "type": "string" },
-                "language": { "type": "string", "pattern": "^[a-z]{2}$" },
+                "language": {
+                    "type": "string",
+                    "pattern": "^[a-z]{3}$",
+                    "description": "ISO 639-3 language code in lowercase, e.g. \"por\""
+                },
                 "books": {
                     "type": "array",
                     "items": {

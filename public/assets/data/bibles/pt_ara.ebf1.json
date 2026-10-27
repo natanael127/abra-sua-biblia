@@ -1,7 +1,7 @@
 {
   "bible": {
     "name": "Almeida Revista e Atualizada",
-    "language": "pt",
+    "language": "por",
     "books": [
       {
         "names": [
@@ -167986,8 +167986,5 @@
         ]
       }
     ]
-  },
-  "metadata": {
-    "file_hash": "4242287c9aebf22c860a48714473e69762f69db010ff837f1876a56e86dc8b94"
   }
 }
