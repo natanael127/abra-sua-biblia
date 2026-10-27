@@ -254,7 +254,14 @@ test.describe('área de transferência', () => {
         await expect(page.locator('.temporary-message')).toHaveText('Texto copiado');
     });
 
-    test('compartilha um link que reabre a mesma referência', async ({ page, baseURL }) => {
+    test('sem a Web Share API, compartilhar copia um link que reabre a mesma referência', async ({
+        page,
+        context,
+        baseURL,
+    }) => {
+        await context.addInitScript(() => {
+            Reflect.deleteProperty(Navigator.prototype, 'share');
+        });
         await open(page, 'Jo 3,16');
         await page.locator('#share-button').click();
         await expect(page.locator('.temporary-message')).toHaveText('Link copiado');
@@ -263,6 +270,57 @@ test.describe('área de transferência', () => {
 
         await page.goto(link);
         await expect(result(page).locator('.verse-reference')).toHaveText('(Jo 3,16)');
+    });
+});
+
+test.describe('compartilhar pela Web Share API', () => {
+    test.beforeEach(async ({ context }) => {
+        // Simula a folha de compartilhamento do sistema; __shareResult escolhe a resposta
+        await context.addInitScript(() => {
+            const win = window as unknown as { __shared: ShareData[]; __shareResult?: string };
+            win.__shared = [];
+            Object.defineProperty(Navigator.prototype, 'share', {
+                configurable: true,
+                value: (data: ShareData) => {
+                    win.__shared.push(data);
+                    return win.__shareResult
+                        ? Promise.reject(new DOMException('', win.__shareResult))
+                        : Promise.resolve();
+                },
+            });
+        });
+    });
+
+    const shared = (page: Page) => page.evaluate(() => (window as unknown as { __shared: ShareData[] }).__shared);
+
+    test('abre a folha de compartilhamento com título e link do trecho', async ({ page, baseURL }) => {
+        await open(page, 'Jo 3,16');
+        await page.locator('#share-button').click();
+        await expect.poll(() => shared(page)).toEqual([
+            { title: 'Jo 3,16 (Ave-Maria)', text: 'Jo 3,16 (Ave-Maria)', url: `${baseURL}/ave-maria/jo/3,16` },
+        ]);
+        // Compartilhado pelo sistema: sem a mensagem de link copiado
+        await expect(page.locator('.temporary-message')).toHaveCount(0);
+    });
+
+    test('fechar a folha não copia nem mostra mensagem', async ({ page }) => {
+        await open(page, 'Jo 3,16');
+        await page.evaluate(() => {
+            (window as unknown as { __shareResult: string }).__shareResult = 'AbortError';
+        });
+        await page.locator('#share-button').click();
+        await expect.poll(async () => (await shared(page)).length).toBe(1);
+        await page.waitForTimeout(300);
+        await expect(page.locator('.temporary-message')).toHaveCount(0);
+    });
+
+    test('botões de compartilhar usam o ícone dos três nós', async ({ page }) => {
+        await open(page, 'Jo 3,16');
+        for (const id of ['#share-button', '#floating-share-button']) {
+            const button = page.locator(id);
+            await expect(button).toHaveAttribute('aria-label', 'Compartilhar');
+            await expect(button.locator('svg.share-icon circle')).toHaveCount(3);
+        }
     });
 });
 

@@ -29,6 +29,7 @@ import type { PathParams } from '../../router/path';
 import type { Router, Screen } from '../../router/router';
 import { showFileHelpModal, showHistoryModal, showReferenceHelpModal, showTextSearchModal } from '../../ui/dialogs';
 import { byId } from '../../ui/dom';
+import { shareLink } from '../../ui/share';
 import { copyTextToClipboard, showTemporaryMessage, toPlainText } from '../../ui/feedback';
 import * as storage from '../../ui/storage';
 import { parseLegacyLink, readerPath, referenceFromPath, UPLOAD_SLUG } from './url';
@@ -366,14 +367,18 @@ function shareCurrentReference(): void {
         return;
     }
 
-    const shareUrl = window.location.origin + currentPath(reference, true);
-
-    copyTextToClipboard(shareUrl).then(
-        () => {
-            showTemporaryMessage('Link copiado');
+    const bibleName = state.ebf?.bible.name;
+    shareLink({
+        title: bibleName ? `${reference} (${bibleName})` : reference,
+        url: window.location.origin + currentPath(reference, true),
+    }).then(
+        (result) => {
+            if (result === 'copied') {
+                showTemporaryMessage('Link copiado');
+            }
         },
         (error: unknown) => {
-            console.error('Erro ao copiar link:', error);
+            console.error('Erro ao compartilhar:', error);
             showTemporaryMessage('Erro ao copiar link');
         },
     );
