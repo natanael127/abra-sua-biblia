@@ -321,21 +321,18 @@ button:hover {
 }
 
 .app-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     background-color: var(--bg-primary);
+    color: var(--text-primary);
+    border: none;
     border-radius: 8px;
     box-shadow: 0 4px 20px var(--shadow-color);
-    z-index: 1000;
     width: 80%;
     max-width: 500px;
-    display: none;
+    padding: 0;
 }
 
-.app-modal.show {
-    display: block;
+.app-modal::backdrop {
+    background-color: var(--modal-overlay, rgba(0, 0, 0, 0.5));
 }
 
 .app-modal-header {
@@ -374,7 +371,7 @@ button:hover {
     background-color: var(--button-bg);
 }
 
-.close-modal:focus {
+.close-modal:focus-visible {
     outline: none;
     box-shadow: 0 0 0 2px rgba(21, 101, 192, 0.5);
 }
@@ -402,21 +399,6 @@ button:hover {
     background-color: var(--button-bg);
 }
 
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: var(--modal-overlay);
-    z-index: 999;
-    display: none;
-}
-
-.modal-overlay.show {
-    display: block;
-}
-
 .help-content {
     padding: 15px 20px;
     max-height: 400px;
@@ -426,10 +408,6 @@ button:hover {
 .help-icon {
     font-weight: bold;
     font-size: 16px;
-}
-
-#help-modal.app-modal {
-    max-width: 600px;
 }
 
 .download-icon {

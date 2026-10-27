@@ -3,7 +3,7 @@ import { join, resolve } from 'node:path';
 import type { EbfDocument } from '../src/core/ebf';
 
 export const ROOT_DIR = resolve(import.meta.dirname, '..');
-export const DATA_DIR = join(ROOT_DIR, 'assets/data');
+export const DATA_DIR = join(ROOT_DIR, 'public/assets/data');
 export const BIBLES_DIR = join(DATA_DIR, 'bibles');
 export const FIXTURES_DIR = join(import.meta.dirname, 'fixtures');
 

@@ -31,7 +31,7 @@ describe('Bíblias publicadas', () => {
             const entry = index.find((e) => e.path === `bibles/${file}`);
             expect(entry).toBeDefined();
             expect(entry?.name).toBe(bible.name);
-            const expectedBooks = entry ? BOOKS_BY_TYPE[entry.type] : undefined;
+            const expectedBooks = entry?.type ? BOOKS_BY_TYPE[entry.type] : undefined;
             if (expectedBooks !== undefined) {
                 expect(bible.books).toHaveLength(expectedBooks);
             }

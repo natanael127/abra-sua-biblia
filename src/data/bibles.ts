@@ -9,7 +9,7 @@ export interface BibleIndexEntry {
     name: string;
     /** Caminho relativo a DATA_PATH, ex.: "bibles/pt_ave_maria.ebf1.json". */
     path: string;
-    type: BibleType;
+    type?: BibleType;
     default?: boolean;
 }
 

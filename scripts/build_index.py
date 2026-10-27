@@ -8,8 +8,8 @@ import json
 from pathlib import Path
 from typing import List, Dict, Any, Optional
 
-# Diretório base onde este script está localizado
-BASE_DIR = Path(__file__).parent
+# Diretório de dados publicado pelo site (onde ficam o index.json e as bíblias)
+BASE_DIR = Path(__file__).resolve().parent.parent / "public" / "assets" / "data"
 
 # Lista de diretórios a serem escaneados (relativo ao BASE_DIR)
 # Adicione novos diretórios aqui conforme necessário

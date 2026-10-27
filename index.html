@@ -30,7 +30,6 @@
     <meta name="twitter:description" content="Leia a Bíblia usando a tradução de sua preferência">
     <meta name="twitter:image" content="https://www.abrasuabiblia.com.br/assets/icons/icon-512x512.png">
     
-    <link rel="stylesheet" href="assets/css/style.css">
     <!-- Theme initialization script (prevents flash of wrong theme) -->
     <script>
         (function() {
@@ -190,35 +189,6 @@
         </div>
     </div>
 
-    <script src="assets/js/page.js"></script>
-    <script src="assets/js/bibleUtils.js"></script>
-    <script src="assets/js/xmlBibles.js"></script>
-    <script src="assets/js/bibleManager.js"></script>
-    
-    <!-- Service Worker Registration -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js')
-                    .then((registration) => {
-                        console.log('Service Worker registrado com sucesso:', registration.scope);
-                        
-                        // Check for updates
-                        registration.addEventListener('updatefound', () => {
-                            const newWorker = registration.installing;
-                            newWorker.addEventListener('statechange', () => {
-                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                    // New content is available
-                                    console.log('Nova versão disponível!');
-                                }
-                            });
-                        });
-                    })
-                    .catch((error) => {
-                        console.log('Falha ao registrar Service Worker:', error);
-                    });
-            });
-        }
-    </script>
+    <script type="module" src="/src/main.ts"></script>
 </body>
 </html>
