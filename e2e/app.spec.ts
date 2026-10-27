@@ -514,6 +514,25 @@ test.describe('URL e histórico do navegador', () => {
         await expect(result(page).locator('.reference')).toHaveText('Gen 1 (Bíblia de Teste)');
     });
 
+    test('links da versão anterior redirecionam para a URL nova', async ({ page }) => {
+        await page.goto('/?bible=Ave-Maria&quote=Jo%203%2C16');
+        const length = await historyLength(page);
+        await expect(page).toHaveURL('/ave-maria/jo/3,16');
+        await expect(result(page).locator('.verse-reference')).toHaveText('(Jo 3,16)');
+        // O redirecionamento substitui a entrada: Voltar não retorna ao link antigo
+        expect(await historyLength(page)).toBe(length);
+
+        await page.goto('/?bible=CNBB&quote=Sl%2023%2C1-3');
+        await expect(page).toHaveURL('/cnbb/sl/23,1-3');
+        await expect(result(page).locator('.reference')).toContainText('(CNBB)');
+    });
+
+    test('link antigo com tradução inexistente abre a padrão e avisa', async ({ page }) => {
+        await page.goto('/?bible=N%C3%A3o%20Existe&quote=Jo%203%2C16');
+        await expect(page.locator('.temporary-message')).toHaveText('Tradução não encontrada');
+        await expect(page).toHaveURL('/ave-maria/jo/3,16');
+    });
+
     test('o servidor entrega a página em qualquer caminho da SPA', async ({ request }) => {
         for (const path of ['/ave-maria', '/ave-maria/mt/5,3-12.21-38', '/ave-maria/j%C3%B3/1']) {
             const response = await request.get(path);

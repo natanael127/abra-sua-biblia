@@ -26,3 +26,21 @@ export function referenceFromPath(book?: string, passage?: string): string {
     if (!book) return '';
     return `${book} ${passage ?? '1'}`;
 }
+
+export interface LegacyLink {
+    /** Nome da Bíblia, ex.: "Ave-Maria". */
+    bible?: string;
+    reference?: string;
+}
+
+/**
+ * Lê os links compartilhados pela versão anterior: /?bible=Ave-Maria&quote=Jo%203%2C16.
+ * Retorna null se a URL não tem esses parâmetros.
+ */
+export function parseLegacyLink(search: string): LegacyLink | null {
+    const params = new URLSearchParams(search);
+    const bible = params.get('bible')?.trim() || undefined;
+    const reference = params.get('quote')?.trim() || undefined;
+    if (!bible && !reference) return null;
+    return { bible, reference };
+}

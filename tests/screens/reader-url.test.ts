@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { matchPath } from '../../src/router/path';
-import { READER_PATTERN, readerPath, referenceFromPath } from '../../src/screens/reader/url';
+import { parseLegacyLink, READER_PATTERN, readerPath, referenceFromPath } from '../../src/screens/reader/url';
 
 describe('readerPath', () => {
     it('usa o livro em minúsculas e o trecho na notação da referência', () => {
@@ -33,5 +33,26 @@ describe('referenceFromPath', () => {
             const params = matchPath(READER_PATTERN, readerPath('ave-maria', reference))!;
             expect(referenceFromPath(params.book, params.passage)).toBe(reference.toLowerCase());
         }
+    });
+});
+
+describe('parseLegacyLink', () => {
+    it('lê os links da versão anterior', () => {
+        expect(parseLegacyLink('?bible=Ave-Maria&quote=Jo%203%2C16')).toEqual({ bible: 'Ave-Maria', reference: 'Jo 3,16' });
+        expect(parseLegacyLink('?bible=Edi%C3%A7%C3%A3o%20Pastoral&quote=Sl+23%2C1')).toEqual({
+            bible: 'Edição Pastoral',
+            reference: 'Sl 23,1',
+        });
+    });
+
+    it('aceita só um dos parâmetros', () => {
+        expect(parseLegacyLink('?quote=Mt%205')).toEqual({ bible: undefined, reference: 'Mt 5' });
+        expect(parseLegacyLink('?bible=CNBB')).toEqual({ bible: 'CNBB', reference: undefined });
+    });
+
+    it('ignora URLs sem os parâmetros ou com eles vazios', () => {
+        expect(parseLegacyLink('')).toBeNull();
+        expect(parseLegacyLink('?utm_source=x')).toBeNull();
+        expect(parseLegacyLink('?bible=&quote=%20')).toBeNull();
     });
 });

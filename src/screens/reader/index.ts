@@ -29,7 +29,7 @@ import { showFileHelpModal, showHistoryModal, showReferenceHelpModal, showTextSe
 import { byId, debounce } from '../../ui/dom';
 import { copyTextToClipboard, showTemporaryMessage, toPlainText } from '../../ui/feedback';
 import * as storage from '../../ui/storage';
-import { readerPath, referenceFromPath, UPLOAD_SLUG } from './url';
+import { parseLegacyLink, readerPath, referenceFromPath, UPLOAD_SLUG } from './url';
 
 const APP_TITLE = 'Abra sua Bíblia!';
 
@@ -94,9 +94,14 @@ let getRouter: () => Router;
 const referenceInput = () => byId('reference', HTMLInputElement);
 const bibleSelect = () => byId('bible-select', HTMLSelectElement);
 
-/** Encontra a Bíblia pelo slug ou pelo nome (preferências salvas por versões anteriores usam o nome). */
-const findBibleEntry = (id: string | null | undefined): BibleIndexEntry | undefined =>
-    id ? state.bibles.find((bible) => bible.slug === id.toLowerCase() || bible.name === id) : undefined;
+/**
+ * Encontra a Bíblia pelo slug ou pelo nome, sem diferenciar maiúsculas
+ * (links e preferências salvas por versões anteriores usam o nome).
+ */
+function findBibleEntry(id: string | null | undefined): BibleIndexEntry | undefined {
+    const wanted = id?.toLowerCase();
+    return wanted ? state.bibles.find((bible) => bible.slug === wanted || bible.name.toLowerCase() === wanted) : undefined;
+}
 
 const defaultBibleEntry = (): BibleIndexEntry | undefined =>
     state.bibles.find((bible) => bible.default) ?? state.bibles[0];
@@ -463,7 +468,8 @@ function setupReferenceInput(): void {
 
 /**
  * Exibe o estado da URL. Sem Bíblia na URL ("/"), restaura a última leitura
- * (ou a Bíblia padrão do índice); a URL é então corrigida para a canônica.
+ * (ou a Bíblia padrão do índice); links antigos (/?bible=&quote=) valem como
+ * na versão anterior. A URL é então corrigida para a canônica.
  */
 async function show(params: PathParams, biblesReady: Promise<void>): Promise<void> {
     const token = ++state.navToken;
@@ -474,16 +480,21 @@ async function show(params: PathParams, biblesReady: Promise<void>): Promise<voi
 
     let slug: string | undefined;
     let reference: string;
-    if (!params.bible) {
-        slug = (findBibleEntry(storage.getSavedBible()) ?? defaultBibleEntry())?.slug;
-        reference = storage.getSavedReference() ?? '';
-    } else {
+    if (params.bible) {
         slug = params.bible.toLowerCase();
         reference = referenceFromPath(params.book, params.passage);
         if (slug !== UPLOAD_SLUG && !findBibleEntry(slug)) {
             showTemporaryMessage('Tradução não encontrada');
             slug = defaultBibleEntry()?.slug;
         }
+    } else {
+        const legacy = parseLegacyLink(window.location.search);
+        const legacyBible = legacy?.bible ? findBibleEntry(legacy.bible) : undefined;
+        if (legacy?.bible && !legacyBible) {
+            showTemporaryMessage('Tradução não encontrada');
+        }
+        slug = (legacyBible ?? findBibleEntry(storage.getSavedBible()) ?? defaultBibleEntry())?.slug;
+        reference = legacy?.reference ?? storage.getSavedReference() ?? '';
     }
     if (!slug) return;
 
