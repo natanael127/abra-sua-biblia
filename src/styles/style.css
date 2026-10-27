@@ -651,3 +651,9 @@ a:visited {
     color: var(--text-secondary);
     font-size: 14px;
 }
+
+/* Versão do build (git describe), no fim da seção Sobre */
+.build-version {
+    font-style: italic;
+    font-size: 0.85em;
+}

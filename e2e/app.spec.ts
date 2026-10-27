@@ -278,6 +278,33 @@ test('script inline minificado aplica o tema salvo antes do bundle', async ({ pa
     await expect(page.locator('#theme-icon')).toHaveText('🌓');
 });
 
+test('seção Sobre termina com a versão do build (git describe)', async ({ page }) => {
+    await open(page);
+    await page.locator('#about-footer .expandable-header').click();
+    const version = page.locator('#about-footer .expandable-content > :last-child');
+    await expect(version).toHaveId('build-version');
+    await expect(version).toHaveText(/^(v\d+\.\d+\.\d+(-\d+-g[0-9a-f]+)?|[0-9a-f]{7,})(-dirty)?$/);
+    await expect(version).toHaveCSS('font-style', 'italic');
+
+    const sizes = await version.evaluate((element) => {
+        const content = element.closest('.expandable-content')!;
+        // Espera a animação de abertura da seção terminar
+        return new Promise<{ version: number; text: number; bottom: number; limit: number }>((resolve) => {
+            setTimeout(() => {
+                resolve({
+                    version: parseFloat(getComputedStyle(element).fontSize),
+                    text: parseFloat(getComputedStyle(content).fontSize),
+                    bottom: element.getBoundingClientRect().bottom,
+                    limit: content.getBoundingClientRect().bottom,
+                });
+            }, 500);
+        });
+    });
+    expect(sizes.version).toBeLessThan(sizes.text);
+    // A seção tem altura máxima com overflow oculto: a versão não pode ficar cortada
+    expect(sizes.bottom).toBeLessThanOrEqual(sizes.limit);
+});
+
 test('Bíblias são publicadas sem alteração', async ({ request }) => {
     const file = 'por_pastoral.ebf1.json';
     const response = await request.get(`/assets/data/bibles/${file}`);

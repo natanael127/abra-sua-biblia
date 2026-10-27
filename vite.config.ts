@@ -1,9 +1,34 @@
+import { execSync } from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { minify } from 'html-minifier-terser';
 import { type Plugin } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import { defineConfig } from 'vitest/config';
+import { escapeHtml } from './src/core/text';
+
+/** Descrição da versão; sem repositório git, usa o commit informado pela Vercel. */
+function describeVersion(): string {
+    try {
+        return execSync('git describe --tags --always --dirty=-dirty', {
+            encoding: 'utf8',
+            stdio: ['ignore', 'pipe', 'ignore'],
+        }).trim();
+    } catch {
+        return process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ?? 'versão desconhecida';
+    }
+}
+
+/** Troca %GIT_DESCRIBE% no index.html pela versão (no build e no servidor de desenvolvimento). */
+function injectVersion(): Plugin {
+    return {
+        name: 'inject-version',
+        buildStart() {
+            console.log(`Versão: ${describeVersion()}`);
+        },
+        transformIndexHtml: (html) => html.replace('%GIT_DESCRIBE%', escapeHtml(describeVersion())),
+    };
+}
 
 /** Minifica o index.html (inclusive os scripts inline) e o manifest.json publicados. */
 function minifyStaticFiles(): Plugin {
@@ -39,6 +64,7 @@ export default defineConfig({
         },
     },
     plugins: [
+        injectVersion(),
         minifyStaticFiles(),
         VitePWA({
             strategies: 'injectManifest',
