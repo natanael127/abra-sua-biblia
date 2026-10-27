@@ -7,6 +7,8 @@
  * - Todo o resto (página, index.json, Bíblias, manifest) usa rede primeiro:
  *   o cache só é usado offline. A requisição com `cache: 'no-cache'` faz o
  *   servidor responder 304 quando nada mudou, sem reenviar as Bíblias.
+ * - Toda navegação da SPA (/ave-maria/jo/3,16, /planos...) recebe a mesma
+ *   página, guardada numa única entrada do cache.
  */
 import { clientsClaim } from 'workbox-core';
 import { cleanupOutdatedCaches, matchPrecache, precache, precacheAndRoute } from 'workbox-precaching';
@@ -19,6 +21,10 @@ declare const self: ServiceWorkerGlobalScope;
 const LEGACY_CACHE = 'abra-sua-biblia-v1';
 const RUNTIME_CACHE = 'abra-sua-biblia-runtime';
 const APP_SHELL = 'index.html';
+/** URL pela qual a página é buscada em qualquer navegação (a Vercel a serve em todos os caminhos). */
+const APP_SHELL_URL = '/';
+/** Navegações que não são telas da SPA: arquivos publicados. */
+const NOT_SPA = [/^\/assets\//, /^\/[^/]+\.[a-z]+$/i];
 
 void self.skipWaiting();
 clientsClaim();
@@ -42,13 +48,16 @@ const networkFirst = new NetworkFirst({
 });
 
 registerRoute(
-    new NavigationRoute(async (options) => {
-        try {
-            return await networkFirst.handle(options);
-        } catch {
-            return (await matchPrecache(APP_SHELL)) ?? Response.error();
-        }
-    }),
+    new NavigationRoute(
+        async ({ event }) => {
+            try {
+                return await networkFirst.handle({ event, request: APP_SHELL_URL });
+            } catch {
+                return (await matchPrecache(APP_SHELL)) ?? Response.error();
+            }
+        },
+        { denylist: NOT_SPA },
+    ),
 );
 
 registerRoute(

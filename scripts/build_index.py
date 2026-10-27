@@ -5,6 +5,7 @@ a partir dos arquivos de bíblia (.ebf1.json) encontrados nos diretórios config
 """
 
 import json
+import re
 from pathlib import Path
 from typing import List, Dict, Any, Optional
 
@@ -25,6 +26,9 @@ OUTPUT_FILE = BASE_DIR / "index.json"
 
 # Bíblia padrão (path relativo ao BASE_DIR, ou None para não definir)
 DEFAULT_BIBLE_PATH = "bibles/por_ave_maria.ebf1.json"
+
+# Slugs que não podem identificar Bíblias, porque são caminhos usados pelo site
+RESERVED_SLUGS = {"upload", "assets"}
 
 # Quantidade de livros por tipo de bíblia
 BIBLE_TYPE_BOOKS = {
@@ -49,6 +53,21 @@ def get_bible_type(num_books: int) -> str:
     return "other"
 
 
+def get_bible_slug(bible_id: str) -> str:
+    """
+    Gera o identificador da Bíblia usado na URL (ex.: /ave-maria/jo/3,16)
+    a partir do nome do arquivo, sem o prefixo de idioma ISO 639-3.
+
+    Args:
+        bible_id: Nome do arquivo sem ".ebf1.json" (ex.: "por_ave_maria")
+
+    Returns:
+        Slug em minúsculas com hífens (ex.: "ave-maria")
+    """
+    slug = re.sub(r'^[a-z]{3}_', '', bible_id.lower())
+    return re.sub(r'[^a-z0-9]+', '-', slug).strip('-')
+
+
 def extract_bible_info(file_path: Path, base_dir: Path) -> Dict:
     """
     Extrai informações da bíblia a partir do arquivo JSON.
@@ -58,7 +77,7 @@ def extract_bible_info(file_path: Path, base_dir: Path) -> Dict:
         base_dir: Diretório base (onde está o index.json)
         
     Returns:
-        Dicionário com name, path, type e opcionalmente default
+        Dicionário com name, slug, path, type e opcionalmente default
     """
     with open(file_path, 'r', encoding='utf-8') as f:
         data = json.load(f)
@@ -76,6 +95,7 @@ def extract_bible_info(file_path: Path, base_dir: Path) -> Dict:
     
     result = {
         "name": bible_name,
+        "slug": get_bible_slug(bible_id),
         "path": relative_path,
         "type": bible_type
     }
@@ -139,6 +159,14 @@ def build_index() -> List[Dict[str, Any]]:
             seen_names.add(bible['name'])
             unique_bibles.append(bible)
     
+    # O slug identifica a Bíblia na URL: precisa ser único e não pode ser um caminho reservado
+    seen_slugs = set()
+    for bible in unique_bibles:
+        slug = bible['slug']
+        if not slug or slug in RESERVED_SLUGS or slug in seen_slugs:
+            raise ValueError(f"Slug inválido ou repetido: '{slug}' ({bible['path']})")
+        seen_slugs.add(slug)
+
     return unique_bibles
 
 
