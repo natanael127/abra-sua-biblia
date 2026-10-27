@@ -1,6 +1,9 @@
 import { execSync } from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import Ajv from 'ajv';
+import standaloneCode from 'ajv/dist/standalone';
 import { minify } from 'html-minifier-terser';
 import { type Plugin } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
@@ -63,6 +66,35 @@ function generateBibleIndex(): Plugin {
     };
 }
 
+const EBF1_VALIDATOR_ID = 'virtual:ebf1-validator';
+
+/**
+ * Módulo virtual com o validador do schema oficial do EBF1 (pacote
+ * easy-bible-format), gerado pelo ajv como código: o ajv não vai para o
+ * bundle, só o validador e dois auxiliares do runtime dele.
+ */
+function ebf1Validator(): Plugin {
+    const resolvedId = `\0${EBF1_VALIDATOR_ID}`;
+    return {
+        name: 'ebf1-validator',
+        resolveId: (id) => (id === EBF1_VALIDATOR_ID ? resolvedId : undefined),
+        load(id) {
+            if (id !== resolvedId) return undefined;
+            const schemaFile = fileURLToPath(import.meta.resolve('easy-bible-format/ebf1-schema.json'));
+            const schema = JSON.parse(readFileSync(schemaFile, 'utf8')) as object;
+            const ajv = new Ajv({ allErrors: true, strict: true, code: { source: true, esm: true } });
+            // O código gerado usa require() nos auxiliares do runtime; vira import para o bundle
+            const imports: string[] = [];
+            const code = standaloneCode(ajv, ajv.compile(schema)).replace(/require\("([^"]+)"\)/g, (_, path: string) => {
+                const name = `runtime${imports.length}`;
+                imports.push(`import * as ${name} from '${path}';`);
+                return name;
+            });
+            return `${imports.join('\n')}\n${code}`;
+        },
+    };
+}
+
 /** Minifica o index.html (inclusive os scripts inline) e o manifest.json publicados. */
 function minifyStaticFiles(): Plugin {
     let outDir = 'dist';
@@ -98,6 +130,7 @@ export default defineConfig({
     },
     plugins: [
         generateBibleIndex(),
+        ebf1Validator(),
         injectVersion(),
         minifyStaticFiles(),
         VitePWA({

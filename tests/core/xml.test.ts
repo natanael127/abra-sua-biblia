@@ -10,7 +10,7 @@
 import Ajv from 'ajv';
 import { describe, expect, it } from 'vitest';
 import ebf1Schema from 'easy-bible-format/ebf1-schema.json';
-import { type EbfDocument, validateEbf } from '../../src/core/ebf';
+import type { EbfDocument } from '../../src/core/ebf';
 import { convertOsisToEbf, convertUsfxToEbf, convertXmlToEbf, detectXmlFormat } from '../../src/core/xml';
 import { readFixture } from '../helpers';
 
@@ -37,9 +37,7 @@ describe('detectXmlFormat', () => {
 
 describe('convertXmlToEbf', () => {
     it.each(['sample.osis.xml', 'sample.usfx.xml'])('%s: igual ao conversor legado, com idioma ISO 639-3', (file) => {
-        const ebf = convertXmlToEbf(xml(file));
-        expect(ebf).toEqual(expected(file, 'por'));
-        expect(validateEbf(ebf)).toEqual([]);
+        expect(convertXmlToEbf(xml(file))).toEqual(expected(file, 'por'));
     });
 
     it('USFX convertido segue o schema oficial', () => {

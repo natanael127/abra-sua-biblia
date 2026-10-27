@@ -8,9 +8,11 @@
  * pacote easy-bible-format, fixado num commit) é verificada nos testes.
  *
  * Os tipos abaixo descrevem o que o site consegue ler, de forma mais tolerante
- * que o schema: abreviação, usfm_id e idioma são opcionais e um versículo pode
- * ser só o texto, como já aceitava a versão anterior do site.
+ * que o schema (abreviação, usfm_id e idioma opcionais, versículo só como
+ * texto), porque também cobrem a saída dos conversores de XML. Os arquivos
+ * JSON enviados pelo usuário precisam seguir o schema (validateEbf).
  */
+import validateEbf1Schema from 'virtual:ebf1-validator';
 
 export interface EbfCrossReference {
     usfm_id: string;
@@ -84,89 +86,16 @@ export function getNumOfChapters(ebf: EbfDocument, bookString: string): number {
     return findBook(ebf, bookString)?.chapters.length ?? 0;
 }
 
-const isObject = (value: unknown): value is Record<string, unknown> =>
-    typeof value === 'object' && value !== null && !Array.isArray(value);
-
-const isOptionalString = (value: unknown): boolean => value === undefined || typeof value === 'string';
-
 /**
- * Verifica se o documento tem a estrutura que o site consegue exibir (mais
- * tolerante que o schema oficial). Retorna a lista de problemas encontrados
- * (vazia quando o documento é aceito), cada um com o caminho do campo.
+ * Valida o documento contra o schema oficial do EBF1 (usado no upload de
+ * arquivos JSON). Retorna a lista de problemas encontrados (vazia quando o
+ * documento é válido), cada um com o caminho do campo.
  */
 export function validateEbf(data: unknown): string[] {
-    const errors: string[] = [];
-
-    if (!isObject(data) || !isObject(data.bible)) {
-        return ['bible: objeto ausente'];
-    }
-    const bible = data.bible;
-    if (typeof bible.name !== 'string') errors.push('bible.name: deve ser texto');
-    if (!isOptionalString(bible.language)) errors.push('bible.language: deve ser texto');
-    if (data.metadata !== undefined && !isObject(data.metadata)) errors.push('metadata: deve ser objeto');
-    if (!Array.isArray(bible.books)) {
-        errors.push('bible.books: deve ser lista');
-        return errors;
-    }
-
-    bible.books.forEach((book: unknown, b) => {
-        const bookPath = `bible.books[${b}]`;
-        if (!isObject(book)) {
-            errors.push(`${bookPath}: deve ser objeto`);
-            return;
-        }
-        if (!Array.isArray(book.names) || !book.names.every((n) => typeof n === 'string')) {
-            errors.push(`${bookPath}.names: deve ser lista de textos`);
-        }
-        if (!isOptionalString(book.abbreviation)) errors.push(`${bookPath}.abbreviation: deve ser texto`);
-        if (!isOptionalString(book.usfm_id)) errors.push(`${bookPath}.usfm_id: deve ser texto`);
-        if (!Array.isArray(book.chapters)) {
-            errors.push(`${bookPath}.chapters: deve ser lista`);
-            return;
-        }
-
-        book.chapters.forEach((chapter: unknown, c) => {
-            const chapterPath = `${bookPath}.chapters[${c}]`;
-            if (!isObject(chapter)) {
-                errors.push(`${chapterPath}: deve ser objeto`);
-                return;
-            }
-            if (!isOptionalString(chapter.title)) errors.push(`${chapterPath}.title: deve ser texto`);
-            if (!isOptionalString(chapter.comment)) errors.push(`${chapterPath}.comment: deve ser texto`);
-            if (!Array.isArray(chapter.verses)) {
-                errors.push(`${chapterPath}.verses: deve ser lista`);
-                return;
-            }
-
-            chapter.verses.forEach((verse: unknown, v) => {
-                const versePath = `${chapterPath}.verses[${v}]`;
-                if (typeof verse === 'string') return;
-                if (!isObject(verse)) {
-                    errors.push(`${versePath}: deve ser objeto ou texto`);
-                    return;
-                }
-                if (typeof verse.text !== 'string') errors.push(`${versePath}.text: deve ser texto`);
-                if (!isOptionalString(verse.title)) errors.push(`${versePath}.title: deve ser texto`);
-                if (!isOptionalString(verse.comment)) errors.push(`${versePath}.comment: deve ser texto`);
-                if (verse.references !== undefined) {
-                    const valid =
-                        Array.isArray(verse.references) &&
-                        verse.references.every(
-                            (r) =>
-                                isObject(r) &&
-                                typeof r.usfm_id === 'string' &&
-                                typeof r.chapter === 'number' &&
-                                typeof r.verse === 'number',
-                        );
-                    if (!valid) errors.push(`${versePath}.references: deve ser lista de {usfm_id, chapter, verse}`);
-                }
-            });
-        });
-    });
-
-    return errors;
+    if (validateEbf1Schema(data)) return [];
+    return (validateEbf1Schema.errors ?? []).map((error) => `${error.instancePath || '/'}: ${error.message ?? 'inválido'}`);
 }
 
 export function isEbfDocument(data: unknown): data is EbfDocument {
-    return validateEbf(data).length === 0;
+    return validateEbf1Schema(data);
 }

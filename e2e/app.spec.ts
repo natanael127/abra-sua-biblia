@@ -299,7 +299,13 @@ test.describe('upload de Bíblia', () => {
 
     test('aceita EBF1 em JSON', async ({ page }) => {
         await chooseUpload(page);
-        const ebf = { bible: { name: 'Minha', books: [{ names: ['Gen'], abbreviation: 'Gen', chapters: [{ verses: ['A', 'B'] }] }] } };
+        const ebf = {
+            bible: {
+                name: 'Minha',
+                language: 'por',
+                books: [{ names: ['Gen'], abbreviation: 'Gen', usfm_id: 'GEN', chapters: [{ verses: [{ text: 'A' }, { text: 'B' }] }] }],
+            },
+        };
         await page.locator('#bible-file').setInputFiles({
             name: 'minha.json',
             mimeType: 'application/json',
@@ -307,6 +313,24 @@ test.describe('upload de Bíblia', () => {
         });
         await expect(result(page).locator('.verse-text')).toContainText('A');
         await expect(result(page).locator('.reference')).toHaveText('Gen 1 (Minha)');
+    });
+
+    test('recusa JSON fora do schema oficial do EBF1', async ({ page }) => {
+        const errors: string[] = [];
+        page.on('console', (message) => {
+            if (message.type() === 'error') errors.push(message.text());
+        });
+        await chooseUpload(page);
+        // Versículo só como texto e sem usfm_id/idioma: o site aceitava antes da validação pelo schema
+        const ebf = { bible: { name: 'Antiga', books: [{ names: ['Gen'], abbreviation: 'Gen', chapters: [{ verses: ['A'] }] }] } };
+        await page.locator('#bible-file').setInputFiles({
+            name: 'antiga.json',
+            mimeType: 'application/json',
+            buffer: Buffer.from(JSON.stringify(ebf)),
+        });
+        await expect(page.locator('.temporary-message')).toHaveText('Arquivo de Bíblia inválido');
+        // O motivo fica no console, com o caminho do campo
+        expect(errors.join('\n')).toContain('/bible/books/0/chapters/0/verses/0');
     });
 
     test('recusa JSON que não é EBF1', async ({ page }) => {
