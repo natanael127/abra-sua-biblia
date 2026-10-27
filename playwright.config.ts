@@ -1,6 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
 
 const PORT = 4173;
+/** Pasta de build a testar; sem ela, gera o build de produção em dist/. Ex.: E2E_OUT_DIR=.vercel/output/static */
+const OUT_DIR = process.env.E2E_OUT_DIR;
+const preview = `npx vite preview --port ${PORT} --strictPort`;
 
 export default defineConfig({
     testDir: 'e2e',
@@ -18,7 +21,7 @@ export default defineConfig({
     ],
     // Testa o build de produção, igual ao publicado na Vercel
     webServer: {
-        command: `npm run build && npx vite preview --port ${PORT} --strictPort`,
+        command: OUT_DIR ? `${preview} --outDir ${OUT_DIR}` : `npm run build && ${preview}`,
         port: PORT,
         reuseExistingServer: !process.env.CI,
         timeout: 180_000,
