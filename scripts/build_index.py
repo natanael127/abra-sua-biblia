@@ -24,7 +24,7 @@ BIBLE_FILE_PATTERN = "*.ebf1.json"
 OUTPUT_FILE = BASE_DIR / "index.json"
 
 # Bíblia padrão (path relativo ao BASE_DIR, ou None para não definir)
-DEFAULT_BIBLE_PATH = "bibles/Ave-Maria.ebf1.json"
+DEFAULT_BIBLE_PATH = "bibles/por_ave_maria.ebf1.json"
 
 # Quantidade de livros por tipo de bíblia
 BIBLE_TYPE_BOOKS = {

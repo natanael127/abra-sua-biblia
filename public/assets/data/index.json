@@ -22,7 +22,8 @@
     {
         "name": "Ave-Maria",
         "path": "bibles/por_ave_maria.ebf1.json",
-        "type": "catholic"
+        "type": "catholic",
+        "default": true
     },
     {
         "name": "CNBB",

@@ -31,6 +31,12 @@ test('exibe a referência do link compartilhado', async ({ page }) => {
     await expect(result(page).locator('.verse-reference')).toHaveText('(Jo 3,16)');
 });
 
+test('primeira visita sem parâmetros abre a Bíblia padrão do índice', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('#bible-select')).toHaveValue('Ave-Maria');
+    await waitForBible(page);
+});
+
 test('atualiza o resultado enquanto digita', async ({ page }) => {
     await open(page);
     await reference(page).fill('Mt 5,3-5');
