@@ -5,6 +5,7 @@ import { minify } from 'html-minifier-terser';
 import { type Plugin } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import { defineConfig } from 'vitest/config';
+import { writeIndex } from './scripts/build-index';
 import { escapeHtml } from './src/core/text';
 
 const git = (args: string): string =>
@@ -46,6 +47,22 @@ function injectVersion(): Plugin {
     };
 }
 
+/**
+ * Gera o public/assets/data/index.json (lista de Bíblias) a partir dos
+ * arquivos *.ebf1.json e do settings.json, ao iniciar o build e o servidor de
+ * desenvolvimento. Falha se o índice não puder ser gerado.
+ */
+function generateBibleIndex(): Plugin {
+    return {
+        name: 'generate-bible-index',
+        buildStart() {
+            const entries = writeIndex();
+            const defaultBible = entries.find((entry) => entry.default)?.slug ?? '';
+            console.log(`index.json: ${entries.length} Bíblias (padrão: ${defaultBible})`);
+        },
+    };
+}
+
 /** Minifica o index.html (inclusive os scripts inline) e o manifest.json publicados. */
 function minifyStaticFiles(): Plugin {
     let outDir = 'dist';
@@ -80,6 +97,7 @@ export default defineConfig({
         },
     },
     plugins: [
+        generateBibleIndex(),
         injectVersion(),
         minifyStaticFiles(),
         VitePWA({

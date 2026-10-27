@@ -36,17 +36,20 @@ Na primeira execução dos testes E2E, instale o navegador com `npx playwright i
 
 ```
 index.html              página (ponto de entrada do Vite)
+settings.json           configuração do site (Bíblia padrão)
 src/
   core/                 lógica pura: formato EBF1, referências, renderização, busca, XML
   data/                 carregamento do índice e das Bíblias
+  router/               roteador da SPA (History API), independente das telas
+  screens/              telas; reader/ é a de leitura (/{bíblia}/{livro}/{trecho})
   ui/                   tema, modais, mensagens, preferências
   sw/                   service worker (Workbox)
-  app.ts                ligação entre a página e os módulos
+  app.ts                registro das telas e das rotas
 public/                 copiado sem alteração para o build
-  assets/data/          index.json e as Bíblias (*.ebf1.json)
+  assets/data/          Bíblias (*.ebf1.json) e o index.json gerado no build
   assets/icons/
   manifest.json
-scripts/                build_index.py e check-dist.mjs
+scripts/                build-index.ts (gera o index.json) e check-dist.mjs
 tests/                  testes unitários (Vitest)
 e2e/                    testes de ponta a ponta (Playwright)
 ```
@@ -63,9 +66,16 @@ exatamente como estão no repositório, para que possam ser baixadas e usadas em
 - `scripts/check-dist.mjs` roda ao fim de cada build e falha se algum arquivo publicado diferir
   da origem.
 
-Ao adicionar uma Bíblia, coloque o arquivo `.ebf1.json` em `public/assets/data/bibles` e
-regenere o índice:
+Para adicionar uma Bíblia, basta colocar o arquivo `.ebf1.json` em `public/assets/data/bibles`.
+O índice (`public/assets/data/index.json`, fora do git) é gerado por `scripts/build-index.ts` a
+cada `npm run build` e `npm run dev`: nome, tipo (católica/evangélica pela quantidade de livros)
+e o slug da URL, tirado do nome do arquivo sem o idioma (`por_ave_maria.ebf1.json` →
+`/ave-maria`). O build falha se houver nome ou slug repetido.
 
-```bash
-python3 scripts/build_index.py
+A Bíblia aberta na primeira visita fica no `settings.json`, pelo slug:
+
+```json
+{
+    "defaultBible": "ave-maria"
+}
 ```

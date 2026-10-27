@@ -6,3 +6,5 @@ coverage
 playwright-report
 test-results
 .playwright-mcp
+# Gerado pelo Vite a partir das Bíblias e do settings.json (scripts/build-index.ts)
+public/assets/data/index.json

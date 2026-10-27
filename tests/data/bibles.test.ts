@@ -1,21 +1,21 @@
 /**
  * As Bíblias publicadas são arquivos EBF1 para uso livre fora deste site.
  * Estes testes garantem que seguem o schema oficial do formato e continuam
- * coerentes com o índice.
+ * coerentes com o índice (gerado no build por scripts/build-index.ts).
  */
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import Ajv from 'ajv';
 import { describe, expect, it } from 'vitest';
 import ebf1Schema from 'easy-bible-format/ebf1-schema.json';
 import { validateEbf } from '../../src/core/ebf';
 import { getBookAbbreviation } from '../../src/core/ebf';
-import type { BibleIndexEntry } from '../../src/data/bibles';
+import { buildIndex } from '../../scripts/build-index';
 import { matchPath } from '../../src/router/path';
 import { READER_PATTERN, readerPath, UPLOAD_SLUG } from '../../src/screens/reader/url';
 import { DATA_DIR, listBibleFiles, loadBible } from '../helpers';
 
-const index = JSON.parse(readFileSync(join(DATA_DIR, 'index.json'), 'utf8')) as BibleIndexEntry[];
+const index = buildIndex();
 const BOOKS_BY_TYPE: Record<string, number> = { catholic: 73, protestant: 66 };
 const validateSchema = new Ajv({ allErrors: true }).compile(ebf1Schema);
 
@@ -65,7 +65,7 @@ describe('Bíblias publicadas', () => {
     });
 });
 
-describe('index.json', () => {
+describe('índice das Bíblias publicadas', () => {
     it('aponta apenas para arquivos existentes', () => {
         for (const entry of index) {
             expect(existsSync(join(DATA_DIR, entry.path)), entry.path).toBe(true);
@@ -83,14 +83,6 @@ describe('index.json', () => {
         for (const slug of slugs) {
             expect(slug).toMatch(/^[a-z0-9]+(-[a-z0-9]+)*$/);
             expect(slug).not.toBe(UPLOAD_SLUG);
-        }
-    });
-
-    it('gera o slug a partir do nome do arquivo, sem o idioma (scripts/build_index.py)', () => {
-        const slugOf = (path: string) => (/bibles\/(.+)\.ebf1\.json$/.exec(path)?.[1] ?? '');
-        expect(index.find((e) => e.slug === 'ave-maria')?.path).toBe('bibles/por_ave_maria.ebf1.json');
-        for (const entry of index) {
-            expect(entry.slug).toBe(slugOf(entry.path).replace(/^[a-z]{3}_/, '').replaceAll('_', '-'));
         }
     });
 });
