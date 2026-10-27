@@ -1,3 +1,4 @@
+import { execSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { expect, type Page, test } from '@playwright/test';
@@ -442,12 +443,15 @@ test('script inline minificado aplica o tema salvo antes do bundle', async ({ pa
     await expect(page.locator('#theme-icon')).toHaveText('🌓');
 });
 
-test('seção Sobre termina com a versão do build (hash do commit)', async ({ page }) => {
+test('seção Sobre termina com a versão do build (hash e data do commit)', async ({ page }) => {
     await open(page);
     await page.locator('#about-footer .expandable-header').click();
     const version = page.locator('#about-footer .expandable-content > :last-child');
     await expect(version).toHaveId('build-version');
-    await expect(version).toHaveText(/^Versão da página: [0-9a-f]{7}(-dirty)?$/);
+    // Hash e data do commit em UTC, iguais aos do git deste repositório
+    const head = execSync('git show -s --format=%h%n%ct HEAD', { encoding: 'utf8' }).trim().split('\n');
+    const date = new Date(Number(head[1]) * 1000).toISOString().slice(0, 19).replace('T', ' ');
+    await expect(version).toHaveText(new RegExp(`^Versão da página: ${head[0]}(-dirty)? ${date}$`));
     await expect(version).toHaveCSS('font-style', 'italic');
 
     const sizes = await version.evaluate((element) => {
