@@ -248,6 +248,29 @@ test.describe('upload de Bíblia', () => {
     });
 });
 
+test('carrega a aplicação com um único JS e um único CSS', async ({ page }) => {
+    const assets: string[] = [];
+    page.on('request', (request) => {
+        if (['script', 'stylesheet'].includes(request.resourceType()) && request.url().includes('/assets/')) {
+            assets.push(new URL(request.url()).pathname);
+        }
+    });
+    await open(page);
+    expect(assets.filter((path) => path.endsWith('.js'))).toHaveLength(1);
+    expect(assets.filter((path) => path.endsWith('.css'))).toHaveLength(1);
+});
+
+test('script inline minificado aplica o tema salvo antes do bundle', async ({ page, context }) => {
+    await context.addInitScript(() => {
+        localStorage.setItem('selectedTheme', 'dark');
+    });
+    // Sem o bundle da aplicação, só o script inline do index.html pode aplicar o tema
+    await page.route(/\/assets\/index-[^/]*\.js$/, (route) => route.abort());
+    await page.goto('/');
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+    await expect(page.locator('#theme-icon')).toHaveText('🌓');
+});
+
 test('Bíblias são publicadas sem alteração', async ({ request }) => {
     const file = 'por_pastoral.ebf1.json';
     const response = await request.get(`/assets/data/bibles/${file}`);
