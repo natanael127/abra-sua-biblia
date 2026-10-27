@@ -355,7 +355,7 @@ test('seção Sobre termina com a versão do build (hash do commit)', async ({ p
     await page.locator('#about-footer .expandable-header').click();
     const version = page.locator('#about-footer .expandable-content > :last-child');
     await expect(version).toHaveId('build-version');
-    await expect(version).toHaveText(/^[0-9a-f]{7}(-dirty)?$/);
+    await expect(version).toHaveText(/^Versão da página: [0-9a-f]{7}(-dirty)?$/);
     await expect(version).toHaveCSS('font-style', 'italic');
 
     const sizes = await version.evaluate((element) => {
