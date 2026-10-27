@@ -11,16 +11,23 @@ const git = (args: string): string =>
     execSync(`git ${args}`, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
 
 /**
- * Versão: hash curto do commit, com "-dirty" se houver alterações não
- * commitadas. As tags são ignoradas de propósito: a Vercel clona o
- * repositório raso e sem elas, e assim o resultado é igual em todo lugar.
- * Sem repositório git, usa o commit informado pela Vercel.
+ * Versão: hash curto (7 caracteres) do commit.
+ *
+ * No servidor da Vercel, vem do commit sincronizado com o git, sem "-dirty":
+ * lá não há alterações locais, mas a própria Vercel modifica o vercel.json
+ * durante o build e o git acusaria alterações. Nos builds locais, indica
+ * "-dirty" quando há alterações não commitadas. As tags são ignoradas para
+ * o resultado ser igual nos dois casos (a Vercel clona sem elas).
  */
 function describeVersion(): string {
+    const vercelCommit = process.env.VERCEL_GIT_COMMIT_SHA;
+    if (vercelCommit) {
+        return vercelCommit.slice(0, 7);
+    }
     try {
         return git(`describe --always --dirty=-dirty --exclude='*' --abbrev=7`);
     } catch {
-        return process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ?? 'versão desconhecida';
+        return 'versão desconhecida';
     }
 }
 
