@@ -3,7 +3,7 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-    { ignores: ['dist', 'dev-dist', 'node_modules', 'assets', 'public', 'service-worker.js', 'coverage', 'playwright-report', 'test-results'] },
+    { ignores: ['dist', 'dev-dist', 'node_modules', 'public', 'coverage', 'playwright-report', 'test-results'] },
     js.configs.recommended,
     ...tseslint.configs.strictTypeChecked,
     {
@@ -21,7 +21,7 @@ export default tseslint.config(
         languageOptions: { globals: { ...globals.node } },
     },
     {
-        files: ['tests/**', '*.ts'],
+        files: ['tests/**', 'e2e/**', '*.ts'],
         languageOptions: { globals: { ...globals.node } },
         rules: {
             '@typescript-eslint/no-non-null-assertion': 'off',
