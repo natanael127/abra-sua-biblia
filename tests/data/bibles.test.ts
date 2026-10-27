@@ -7,7 +7,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import Ajv from 'ajv';
 import { describe, expect, it } from 'vitest';
-import ebf1Schema from '../../schema/ebf1-schema.json';
+import ebf1Schema from 'easy-bible-format/ebf1-schema.json';
 import { validateEbf } from '../../src/core/ebf';
 import { getBookAbbreviation } from '../../src/core/ebf';
 import type { BibleIndexEntry } from '../../src/data/bibles';

@@ -4,8 +4,8 @@
  *
  * As Bíblias em public/assets/data/bibles seguem este formato e são publicadas
  * sem nenhuma transformação, para que possam ser baixadas e usadas em outros
- * projetos. A conformidade delas com o schema oficial (schema/ebf1-schema.json)
- * é verificada nos testes.
+ * projetos. A conformidade delas com o schema oficial (ebf1-schema.json do
+ * pacote easy-bible-format, fixado num commit) é verificada nos testes.
  *
  * Os tipos abaixo descrevem o que o site consegue ler, de forma mais tolerante
  * que o schema: abreviação, usfm_id e idioma são opcionais e um versículo pode

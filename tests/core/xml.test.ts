@@ -9,7 +9,7 @@
  */
 import Ajv from 'ajv';
 import { describe, expect, it } from 'vitest';
-import ebf1Schema from '../../schema/ebf1-schema.json';
+import ebf1Schema from 'easy-bible-format/ebf1-schema.json';
 import { type EbfDocument, validateEbf } from '../../src/core/ebf';
 import { convertOsisToEbf, convertUsfxToEbf, convertXmlToEbf, detectXmlFormat } from '../../src/core/xml';
 import { readFixture } from '../helpers';

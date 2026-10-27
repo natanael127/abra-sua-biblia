@@ -22,6 +22,7 @@
         "@types/html-minifier-terser": "^7.0.2",
         "@types/node": "^24.19.2",
         "ajv": "^8.20.0",
+        "easy-bible-format": "github:natanael127/easy-bible-format#c8d234cb97681a3517defb15e9faf292b19e5f6d",
         "eslint": "^10.13.0",
         "globals": "^17.13.0",
         "html-minifier-terser": "^7.2.0",

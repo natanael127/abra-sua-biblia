@@ -46,7 +46,6 @@ public/                 copiado sem alteração para o build
   assets/data/          index.json e as Bíblias (*.ebf1.json)
   assets/icons/
   manifest.json
-schema/                 schema oficial do EBF1
 scripts/                build_index.py e check-dist.mjs
 tests/                  testes unitários (Vitest)
 e2e/                    testes de ponta a ponta (Playwright)
@@ -58,7 +57,9 @@ As Bíblias ficam em `public/assets/data/bibles` no formato
 [Easy Bible Format (EBF1)](https://github.com/natanael127/easy-bible-format) e são publicadas
 exatamente como estão no repositório, para que possam ser baixadas e usadas em outros projetos:
 
-- os testes validam todas elas contra o schema oficial (`schema/ebf1-schema.json`);
+- os testes validam todas elas contra o schema oficial (`ebf1-schema.json`), que vem do
+  repositório do formato como dependência npm fixada num commit (`easy-bible-format` no
+  `package.json`). Para atualizar o schema, troque o hash do commit e rode `npm install`;
 - `scripts/check-dist.mjs` roda ao fim de cada build e falha se algum arquivo publicado diferir
   da origem.
 
