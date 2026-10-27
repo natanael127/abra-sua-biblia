@@ -1,3 +1,4 @@
+import clipboardCopy from 'clipboard-copy';
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
 import { escapeHtml } from '../core/text';
@@ -32,32 +33,12 @@ export function showTemporaryMessage(message: string): void {
     toasts.open({ type: 'info', message: escapeHtml(message) });
 }
 
-export async function copyTextToClipboard(text: string): Promise<void> {
-    // Clipboard API (mais moderna; ausente fora de contextos seguros)
-    const clipboard = navigator.clipboard as Clipboard | undefined;
-    if (clipboard) {
-        await clipboard.writeText(text);
-        return;
-    }
-
-    // Elemento temporário + execCommand (funciona melhor em dispositivos móveis antigos)
-    const textArea = document.createElement('textarea');
-    textArea.value = text;
-    textArea.style.position = 'fixed';
-    textArea.style.opacity = '0';
-    textArea.style.left = '-999999px';
-    textArea.style.top = '0';
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-
-    // eslint-disable-next-line @typescript-eslint/no-deprecated -- alternativa para navegadores sem Clipboard API
-    const successful = document.execCommand('copy');
-    textArea.remove();
-    if (!successful) {
-        throw new Error('Falha ao copiar texto com execCommand');
-    }
-}
+/**
+ * Copia o texto para a área de transferência: Clipboard API e, se ela não
+ * existir ou recusar (fora de contexto seguro, sem permissão), o
+ * execCommand('copy'), para navegadores antigos.
+ */
+export const copyTextToClipboard = (text: string): Promise<void> => clipboardCopy(text);
 
 /**
  * Converte o trecho exibido em texto puro: <br> e o fim de cada <span>

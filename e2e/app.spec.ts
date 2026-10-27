@@ -244,6 +244,16 @@ test.describe('área de transferência', () => {
         expect(copied).toMatch(/^16 Com efeito, de tal modo Deus amou o mundo.*vida eterna\.\n\(Jo 3,16\)\n$/);
     });
 
+    test('sem a Clipboard API, copia pelo método alternativo', async ({ page, context }) => {
+        // Como em navegadores antigos ou fora de contexto seguro
+        await context.addInitScript(() => {
+            Object.defineProperty(Navigator.prototype, 'clipboard', { get: () => undefined });
+        });
+        await open(page, 'Jo 3,16');
+        await page.locator('#copy-button').click();
+        await expect(page.locator('.temporary-message')).toHaveText('Texto copiado');
+    });
+
     test('compartilha um link que reabre a mesma referência', async ({ page, baseURL }) => {
         await open(page, 'Jo 3,16');
         await page.locator('#share-button').click();

@@ -40,6 +40,7 @@
         "workbox-window": "^7.4.1"
     },
     "dependencies": {
+        "clipboard-copy": "^4.0.1",
         "es-toolkit": "^1.53.0",
         "fast-xml-parser": "^5.11.2",
         "iso-639-3": "^3.0.1",
