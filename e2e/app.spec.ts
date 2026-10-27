@@ -210,9 +210,10 @@ test.describe('upload de Bíblia', () => {
         await open(page);
         await page.locator('#bible-select').selectOption('upload');
         await expect(page.locator('#bible-file')).toBeVisible();
-        // Livro que só existe nas Bíblias de teste
+        // Sem o arquivo, a referência fica na URL; o livro só existe nas Bíblias de teste
+        await expect(page).toHaveURL('/upload/jo/3,16');
         await reference(page).fill('Gen 1,1-2');
-        await expect(page).toHaveURL('/upload');
+        await expect(page).toHaveURL('/upload/gen/1,1-2');
     }
 
     test('converte OSIS e permite baixar o EBF1', async ({ page }) => {
@@ -503,6 +504,14 @@ test.describe('URL e histórico do navegador', () => {
         await expect(page.locator('.temporary-message')).toHaveText('Tradução não encontrada');
         await expect(page).toHaveURL('/ave-maria/jo/3,16');
         await expect(result(page).locator('.verse-reference')).toHaveText('(Jo 3,16)');
+    });
+
+    test('falha ao carregar a Bíblia mantém o trecho na URL', async ({ page }) => {
+        await page.route('**/por_cnbb.ebf1.json', (route) => route.abort());
+        await page.goto('/cnbb/jo/3,16');
+        await expect(page.locator('.temporary-message')).toHaveText('Erro ao carregar a Bíblia');
+        await expect(reference(page)).toHaveValue('jo 3,16');
+        expect(new URL(page.url()).pathname).toBe('/cnbb/jo/3,16');
     });
 
     test('caminho sem tela correspondente volta ao início', async ({ page }) => {

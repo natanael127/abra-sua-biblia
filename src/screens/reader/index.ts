@@ -117,8 +117,13 @@ function canonicalReference(reference: string): string {
     return `${getBookAbbreviation(book)}${reference.slice(parsed?.book.length)}`;
 }
 
+/**
+ * Caminho do estado atual. Referência inválida fica fora da URL; sem Bíblia
+ * carregada (falha na carga, upload ainda não feito), não dá para validar e a
+ * referência é mantida, para não perder o trecho pedido.
+ */
 function currentPath(reference: string, valid: boolean): string {
-    return readerPath(state.bibleSlug, valid ? canonicalReference(reference) : null);
+    return readerPath(state.bibleSlug, valid || !state.ebf ? canonicalReference(reference) : null);
 }
 
 function syncUrl(path: string, mode: UrlMode): void {
