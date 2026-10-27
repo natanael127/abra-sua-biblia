@@ -249,7 +249,7 @@ test.describe('upload de Bíblia', () => {
 });
 
 test('Bíblias são publicadas sem alteração', async ({ request }) => {
-    const file = 'pt_pastoral.ebf1.json';
+    const file = 'por_pastoral.ebf1.json';
     const response = await request.get(`/assets/data/bibles/${file}`);
     expect(response.ok()).toBe(true);
     expect(response.headers()['content-type']).toContain('application/json');

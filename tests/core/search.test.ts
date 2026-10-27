@@ -48,11 +48,11 @@ describe('searchVerses', () => {
     });
 
     it('limita a 200 resultados numa Bíblia completa', () => {
-        expect(searchVerses(loadBible('pt_ave_maria'), 'senhor')).toHaveLength(200);
+        expect(searchVerses(loadBible('por_ave_maria'), 'senhor')).toHaveLength(200);
     });
 
     it('encontra numa Bíblia completa digitando sem acento', () => {
-        const results = searchVerses(loadBible('pt_ave_maria'), 'bem-aventurados os puros de coracao');
+        const results = searchVerses(loadBible('por_ave_maria'), 'bem-aventurados os puros de coracao');
         expect(results.map((r) => `${r.bookAbbr} ${r.chapter},${r.verse}`)).toEqual(['Mt 5,8']);
     });
 });

@@ -7,7 +7,7 @@ export type BibleType = 'catholic' | 'protestant' | 'other';
 
 export interface BibleIndexEntry {
     name: string;
-    /** Caminho relativo a DATA_PATH, ex.: "bibles/pt_ave_maria.ebf1.json". */
+    /** Caminho relativo a DATA_PATH, ex.: "bibles/por_ave_maria.ebf1.json". */
     path: string;
     type?: BibleType;
     default?: boolean;
