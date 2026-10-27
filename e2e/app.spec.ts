@@ -20,11 +20,6 @@ async function waitForBible(page: Page) {
 const result = (page: Page) => page.locator('#result');
 const reference = (page: Page) => page.locator('#reference');
 
-test.beforeEach(async ({ context }) => {
-    // Sem Google Analytics nos testes
-    await context.route(/googletagmanager|google-analytics/, (route) => route.abort());
-});
-
 test('exibe a referência do link compartilhado', async ({ page }) => {
     await open(page, 'Jo 3,16');
     await expect(result(page).locator('.reference')).toHaveText('João 3 (Ave-Maria)');
@@ -274,6 +269,22 @@ test('carrega a aplicação com um único JS e um único CSS', async ({ page }) 
     await open(page);
     expect(assets.filter((path) => path.endsWith('.js'))).toHaveLength(1);
     expect(assets.filter((path) => path.endsWith('.css'))).toHaveLength(1);
+});
+
+test('não faz requisições a outros domínios (sem analytics)', async ({ page, baseURL }) => {
+    const external: string[] = [];
+    page.on('request', (request) => {
+        if (!request.url().startsWith(baseURL!)) external.push(request.url());
+    });
+    await open(page, 'Jo 3,16');
+    await reference(page).fill('Mt 5,3-12');
+    await expect(page).toHaveURL('/ave-maria/mt/5,3-12');
+    expect(external).toEqual([]);
+
+    const scripts = await page.locator('script').evaluateAll((elements) =>
+        elements.map((element) => element.getAttribute('src') ?? element.textContent),
+    );
+    expect(scripts.join('\n')).not.toMatch(/gtag|googletagmanager|dataLayer/);
 });
 
 test('script inline minificado aplica o tema salvo antes do bundle', async ({ page, context }) => {
