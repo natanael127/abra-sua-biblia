@@ -4,7 +4,12 @@
  *
  * As Bíblias em public/assets/data/bibles seguem este formato e são publicadas
  * sem nenhuma transformação, para que possam ser baixadas e usadas em outros
- * projetos. Estes tipos descrevem o formato; não o alteram.
+ * projetos. A conformidade delas com o schema oficial (schema/ebf1-schema.json)
+ * é verificada nos testes.
+ *
+ * Os tipos abaixo descrevem o que o site consegue ler, de forma mais tolerante
+ * que o schema: abreviação, usfm_id e idioma são opcionais e um versículo pode
+ * ser só o texto, como já aceitava a versão anterior do site.
  */
 
 export interface EbfCrossReference {
@@ -85,8 +90,9 @@ const isObject = (value: unknown): value is Record<string, unknown> =>
 const isOptionalString = (value: unknown): boolean => value === undefined || typeof value === 'string';
 
 /**
- * Valida a estrutura de um documento EBF1. Retorna a lista de problemas
- * encontrados (vazia quando o documento é válido), cada um com o caminho do campo.
+ * Verifica se o documento tem a estrutura que o site consegue exibir (mais
+ * tolerante que o schema oficial). Retorna a lista de problemas encontrados
+ * (vazia quando o documento é aceito), cada um com o caminho do campo.
  */
 export function validateEbf(data: unknown): string[] {
     const errors: string[] = [];

@@ -1,16 +1,20 @@
 /**
  * As Bíblias publicadas são arquivos EBF1 para uso livre fora deste site.
- * Estes testes garantem que continuam válidas e coerentes com o índice.
+ * Estes testes garantem que seguem o schema oficial do formato e continuam
+ * coerentes com o índice.
  */
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import Ajv from 'ajv';
 import { describe, expect, it } from 'vitest';
+import ebf1Schema from '../../schema/ebf1-schema.json';
 import { validateEbf } from '../../src/core/ebf';
 import type { BibleIndexEntry } from '../../src/data/bibles';
 import { DATA_DIR, listBibleFiles, loadBible } from '../helpers';
 
 const index = JSON.parse(readFileSync(join(DATA_DIR, 'index.json'), 'utf8')) as BibleIndexEntry[];
 const BOOKS_BY_TYPE: Record<string, number> = { catholic: 73, protestant: 66 };
+const validateSchema = new Ajv({ allErrors: true }).compile(ebf1Schema);
 
 describe('Bíblias publicadas', () => {
     const files = listBibleFiles();
@@ -22,7 +26,12 @@ describe('Bíblias publicadas', () => {
     describe.each(files)('%s', (file) => {
         const id = file.replace(/\.ebf1\.json$/, '');
 
-        it('segue o formato EBF1', () => {
+        it('segue o schema oficial do EBF1', () => {
+            validateSchema(loadBible(id));
+            expect(validateSchema.errors ?? []).toEqual([]);
+        });
+
+        it('é aceita pelo leitor do site', () => {
             expect(validateEbf(loadBible(id))).toEqual([]);
         });
 
