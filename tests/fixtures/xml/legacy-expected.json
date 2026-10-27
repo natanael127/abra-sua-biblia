@@ -1,0 +1,134 @@
+{
+  "sample.osis.xml": {
+    "ok": {
+      "bible": {
+        "name": "Bíblia de Teste",
+        "books": [
+          {
+            "names": [
+              "Gen"
+            ],
+            "abbreviation": "Gen",
+            "usfm_id": "GEN",
+            "chapters": [
+              {
+                "verses": [
+                  {
+                    "text": "No princípio, Deus criou os céus e a terra."
+                  },
+                  {
+                    "text": "A terra estava informe e vazia; as trevas cobriam o abismo."
+                  }
+                ]
+              },
+              {
+                "verses": [
+                  {
+                    "text": "Assim foram acabados os céus e a terra."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "names": [
+              "John"
+            ],
+            "abbreviation": "John",
+            "usfm_id": "JHN",
+            "chapters": [
+              {
+                "verses": [
+                  {
+                    "text": "Porque Deus amou o mundo de tal maneira..."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "names": [
+              "Unknown"
+            ],
+            "abbreviation": "Unknown",
+            "usfm_id": "Unknown",
+            "chapters": [
+              {
+                "verses": [
+                  {
+                    "text": "Livro fora da tabela."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "sample.usfx.xml": {
+    "ok": {
+      "bible": {
+        "name": "Gênesis - Bíblia USFX de Teste",
+        "language": "por",
+        "books": [
+          {
+            "names": [
+              "O Livro de Gênesis",
+              "Gênesis"
+            ],
+            "abbreviation": "Gn",
+            "usfm_id": "GEN",
+            "chapters": [
+              {
+                "verses": [
+                  {
+                    "text": "No princípio Deus criou os céus e a terra."
+                  },
+                  {
+                    "text": "A terra era sem forma e vazia."
+                  },
+                  {
+                    "text": "Disse Deus: Haja luz."
+                  },
+                  {
+                    "text": "E viu Deus que a luz era boa."
+                  }
+                ]
+              },
+              {
+                "verses": [
+                  {
+                    "text": "Assim foram acabados os céus."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "names": [
+              "Evangelho segundo João"
+            ],
+            "abbreviation": "JHN",
+            "usfm_id": "JHN",
+            "chapters": [
+              {
+                "verses": [
+                  {
+                    "text": "Porque Deus amou o mundo."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "unknown.xml": {
+    "error": "Unsupported XML format. The XML provided is neither OSIS nor USFX format."
+  },
+  "broken.xml": {
+    "error": "Unsupported XML format. The XML provided is neither OSIS nor USFX format."
+  }
+}

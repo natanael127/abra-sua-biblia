@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osis xmlns="http://www.bibletechnologies.net/2003/OSIS/namespace">
+  <osisText osisIDWork="Teste" xml:lang="pt">
+    <header>
+      <work osisWork="Teste">
+        <title>  Bíblia de Teste  </title>
+      </work>
+    </header>
+    <div type="book" osisID="Gen">
+      <chapter osisID="Gen.1">
+        <verse osisID="Gen.1.1">No princípio, Deus criou os céus e a terra.</verse>
+        <verse osisID="Gen.1.2">A terra estava <transChange type="added">informe</transChange> e vazia;<!-- comentário --> as trevas cobriam o abismo.</verse>
+      </chapter>
+      <chapter osisID="Gen.2">
+        <verse osisID="Gen.2.1">Assim foram acabados os céus e a terra.</verse>
+      </chapter>
+    </div>
+    <div type="book" osisID="John">
+      <chapter osisID="John.3">
+        <verse osisID="John.3.16">Porque Deus amou o mundo de tal maneira...</verse>
+      </chapter>
+    </div>
+    <div type="book" osisID="Unknown">
+      <chapter osisID="Unknown.1">
+        <verse osisID="Unknown.1.1">Livro fora da tabela.</verse>
+      </chapter>
+    </div>
+  </osisText>
+</osis>

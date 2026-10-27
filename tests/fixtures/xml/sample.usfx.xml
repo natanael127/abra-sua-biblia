@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<usfx>
+  <languageCode>por</languageCode>
+  <book id="GEN">
+    <id id="GEN">Gênesis - Bíblia USFX de Teste</id>
+    <toc level="1">O Livro de Gênesis</toc>
+    <toc level="2">Gênesis</toc>
+    <toc level="3">Gn</toc>
+    <toc level="2">Gênesis</toc>
+    <c id="1" />
+    <p><v id="1" />No princípio Deus criou os céus e a terra.<ve /><v id="2" />A terra era sem forma<f caller="+">nota de rodapé</f> e <w s="H1">vazia</w>.<ve /></p>
+    <p><v id="3" />Disse Deus: Haja luz.<v id="4" />E viu Deus que a luz era boa.</p>
+    <c id="2" />
+    <p><v id="1" />Assim foram acabados os céus.<ve /></p>
+  </book>
+  <book id="JHN">
+    <toc level="1">Evangelho segundo João</toc>
+    <c id="3" />
+    <p><v id="16" />Porque Deus amou o mundo.<ve /></p>
+  </book>
+</usfx>
