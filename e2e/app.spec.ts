@@ -223,11 +223,12 @@ test.describe('upload de Bíblia', () => {
         const download = await downloadPromise;
         expect(download.suggestedFilename()).toBe('sample.osis.ebf1.json');
         const content = JSON.parse(readFileSync(await download.path(), 'utf8')) as unknown;
-        const expected = JSON.parse(readFileSync(`${FIXTURES}/legacy-expected.json`, 'utf8')) as Record<
+        const legacy = JSON.parse(readFileSync(`${FIXTURES}/legacy-expected.json`, 'utf8')) as Record<
             string,
-            { ok: unknown }
+            { ok: { bible: { name: string; books: unknown[] } } }
         >;
-        expect(content).toEqual(expected['sample.osis.xml']?.ok);
+        const { name, books } = legacy['sample.osis.xml']!.ok.bible;
+        expect(content).toEqual({ bible: { name, language: 'por', books } });
     });
 
     test('aceita EBF1 em JSON', async ({ page }) => {

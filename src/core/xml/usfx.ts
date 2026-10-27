@@ -1,4 +1,5 @@
 import type { EbfBook, EbfChapter, EbfDocument, EbfVerseObject } from '../ebf';
+import { toIso6393 } from '../language';
 import { isElement, parseXml } from './parse';
 
 export function isUsfx(xmlDoc: Document): boolean {
@@ -67,7 +68,7 @@ function convertBook(bookElement: Element): EbfBook {
 export function convertUsfxToEbf(xmlContent: string): EbfDocument {
     const xmlDoc = parseXml(xmlContent);
 
-    const languageCode = xmlDoc.querySelector('languageCode')?.textContent || 'und';
+    const languageCode = toIso6393(xmlDoc.querySelector('languageCode')?.textContent);
 
     // Bible name: first book's id as a fallback
     const firstBookId = xmlDoc.querySelector('book')?.querySelector('id')?.textContent.trim();

@@ -1,4 +1,5 @@
 import type { EbfBook, EbfChapter, EbfDocument } from '../ebf';
+import { toIso6393 } from '../language';
 import { parseXml } from './parse';
 
 // Bible book mapping from OSIS to USFM IDs
@@ -146,5 +147,5 @@ export function convertOsisToEbf(xmlContent: string): EbfDocument {
             };
         });
 
-    return { bible: { name: bibleName, books } };
+    return { bible: { name: bibleName, language: toIso6393(osisText.getAttribute('xml:lang')), books } };
 }
