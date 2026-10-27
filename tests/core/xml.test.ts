@@ -1,8 +1,11 @@
-// @vitest-environment jsdom
 /**
  * O legacy-expected.json foi gerado executando o conversor anterior
  * (assets/js/xmlBibles.js) sobre os mesmos arquivos de exemplo. A única
  * diferença intencional é bible.language, agora em ISO 639-3.
+ *
+ * O edge-expected.json foi gerado pela versão com o DOMParser do navegador,
+ * antes da troca pelo fast-xml-parser: entidades, referências numéricas,
+ * CDATA, comentários, notas e espaços. Os testes rodam no Node, sem DOM.
  */
 import Ajv from 'ajv';
 import { describe, expect, it } from 'vitest';
@@ -54,6 +57,14 @@ describe('convertXmlToEbf', () => {
     });
 });
 
+describe('casos de borda (igual ao DOMParser)', () => {
+    const edge = JSON.parse(readFixture('xml/edge-expected.json')) as Record<string, EbfDocument>;
+
+    it.each(['edge.osis.xml', 'edge.usfx.xml'])('%s', (file) => {
+        expect(convertXmlToEbf(xml(file))).toEqual(edge[file]);
+    });
+});
+
 describe('conversores específicos', () => {
     it('OSIS sem osisText', () => {
         expect(() => convertOsisToEbf('<osis><div type="book" osisID="Gen"/></osis>')).toThrow(
@@ -73,6 +84,7 @@ describe('conversores específicos', () => {
 
     it('XML malformado gera erro de parsing', () => {
         expect(() => convertUsfxToEbf('<usfx><book')).toThrow(/XML parsing error/);
+        expect(() => convertOsisToEbf('<osis><osisText></osis>')).toThrow(/XML parsing error/);
     });
 
     it('USFX sem languageCode usa "und"', () => {

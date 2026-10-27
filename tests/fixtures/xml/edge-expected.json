@@ -1,0 +1,69 @@
+{
+  "edge.osis.xml": {
+    "bible": {
+      "name": "Bíblia & Teste — bordas",
+      "language": "por",
+      "books": [
+        {
+          "names": [
+            "Gen"
+          ],
+          "abbreviation": "Gen",
+          "usfm_id": "GEN",
+          "chapters": [
+            {
+              "verses": [
+                {
+                  "text": "No princípio Deus criounota <cd> <céus>"
+                },
+                {
+                  "text": "espaços   internos\n                    e quebra"
+                },
+                {
+                  "text": "&#233; literal \"aspas\" 'apóstrofo'"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "edge.usfx.xml": {
+    "bible": {
+      "name": "Gênesis & cia",
+      "language": "por",
+      "books": [
+        {
+          "names": [
+            "Gênesis"
+          ],
+          "abbreviation": "Gn",
+          "usfm_id": "GEN",
+          "chapters": [
+            {
+              "verses": [
+                {
+                  "text": "No & princípio Deus criou"
+                },
+                {
+                  "text": "E a terra\n            era vazia"
+                },
+                {
+                  "text": "<Haja> luz"
+                }
+              ]
+            },
+            {
+              "verses": [
+                {
+                  "text": "Assim"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
