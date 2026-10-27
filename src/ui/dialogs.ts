@@ -2,9 +2,11 @@ import { debounce } from 'es-toolkit';
 import type { EbfDocument } from '../core/ebf';
 import {
     highlightMatches,
-    MAX_SEARCH_RESULTS,
+    highlightTerms,
+    isSearchIndexReady,
     MIN_QUERY_LENGTH,
     prepareSearchIndex,
+    type SearchResponse,
     searchVerses,
 } from '../core/search';
 import { getModalContent, getOrCreateModal } from './modal';
@@ -88,6 +90,9 @@ export function showFileHelpModal(): void {
 
 const TEXT_SEARCH_ID = 'text-search-modal';
 
+/** Definido ao criar o modal de busca (há um só). */
+let onSearchOpened: (() => void) | undefined;
+
 function createTextSearchModal(getBible: () => EbfDocument | null, onSelect: SelectReference): HTMLDialogElement {
     const modal = getOrCreateModal({ id: TEXT_SEARCH_ID, title: 'Busca textual', className: 'text-search-modal' });
 
@@ -106,10 +111,14 @@ function createTextSearchModal(getBible: () => EbfDocument | null, onSelect: Sel
     const countEl = document.createElement('div');
     countEl.className = 'text-search-count';
 
+    // Ordem dos resultados; data-ranked indica a busca por relevância
+    const statusEl = document.createElement('div');
+    statusEl.className = 'text-search-status';
+
     const resultsContainer = document.createElement('div');
     resultsContainer.className = 'text-search-results';
 
-    content.append(inputRow, countEl, resultsContainer);
+    content.append(inputRow, countEl, statusEl, resultsContainer);
 
     let selectedIndex = -1;
 
@@ -121,9 +130,23 @@ function createTextSearchModal(getBible: () => EbfDocument | null, onSelect: Sel
         countEl.textContent = '';
     };
 
+    const showStatus = (bible: EbfDocument | null) => {
+        const ranked = !!bible && isSearchIndexReady(bible);
+        statusEl.dataset.ranked = String(ranked);
+        statusEl.textContent = ranked ? 'Por relevância' : 'Preparando a busca por relevância…';
+    };
+
+    const describeCount = ({ results, total, ranked }: SearchResponse) => {
+        if (total > results.length) {
+            return ranked ? `${results.length} mais relevantes de ${total}` : `Primeiros ${results.length} de ${total}`;
+        }
+        return `${total} resultado${total > 1 ? 's' : ''}`;
+    };
+
     const performSearch = (query: string) => {
         selectedIndex = -1;
         const bible = getBible();
+        showStatus(bible);
 
         if (!bible) {
             showMessage('Nenhuma Bíblia carregada');
@@ -135,38 +158,64 @@ function createTextSearchModal(getBible: () => EbfDocument | null, onSelect: Sel
             return;
         }
 
-        const results = searchVerses(bible, query);
-        if (results.length === 0) {
+        const response = searchVerses(bible, query);
+        if (response.results.length === 0) {
             showMessage('Nenhum versículo encontrado');
             return;
         }
 
-        countEl.textContent =
-            results.length >= MAX_SEARCH_RESULTS
-                ? `Primeiros ${MAX_SEARCH_RESULTS} resultados`
-                : `${results.length} resultado${results.length > 1 ? 's' : ''}`;
+        countEl.textContent = describeCount(response);
 
         const fragment = document.createDocumentFragment();
-        for (const r of results) {
+        for (const r of response.results) {
             const item = document.createElement('div');
             item.className = 'text-search-result-item';
 
             const textEl = document.createElement('div');
             textEl.className = 'text-search-result-text';
-            textEl.innerHTML = highlightMatches(r.text, query);
+            textEl.innerHTML = r.terms ? highlightTerms(r.text, r.terms) : highlightMatches(r.text, query);
 
             const citeEl = document.createElement('div');
             citeEl.className = 'text-search-result-citation';
             citeEl.textContent = `${r.bookName} ${r.chapter},${r.verse}`;
 
+            const reference = `${r.bookAbbr} ${r.chapter},${r.verse}`;
+            item.dataset.reference = reference;
             item.append(textEl, citeEl);
             item.addEventListener('click', () => {
                 modal.close();
-                onSelect(`${r.bookAbbr} ${r.chapter},${r.verse}`);
+                onSelect(reference);
             });
             fragment.appendChild(item);
         }
         resultsContainer.replaceChildren(fragment);
+    };
+
+    const resultItems = () => Array.from(resultsContainer.querySelectorAll<HTMLElement>('.text-search-result-item'));
+
+    const selectItem = (index: number) => {
+        const items = resultItems();
+        selectedIndex = index;
+        items.forEach((item, i) => {
+            item.classList.toggle('selected', i === selectedIndex);
+        });
+        items[selectedIndex]?.scrollIntoView({ block: 'nearest' });
+    };
+
+    /** Mostra o estado do índice e, quando ele fica pronto, refaz a busca aberta por relevância. */
+    onSearchOpened = () => {
+        const bible = getBible();
+        showStatus(bible);
+        if (!bible || isSearchIndexReady(bible)) return;
+        void prepareSearchIndex(bible).then(() => {
+            if (!modal.open || getBible() !== bible) return;
+            // Mantém selecionado o versículo que o usuário escolhia com as setas
+            const selected = resultItems()[selectedIndex]?.dataset.reference;
+            performSearch(searchInput.value.trim());
+            if (selected) {
+                selectItem(resultItems().findIndex((item) => item.dataset.reference === selected));
+            }
+        });
     };
 
     searchInput.addEventListener(
@@ -177,27 +226,19 @@ function createTextSearchModal(getBible: () => EbfDocument | null, onSelect: Sel
     );
 
     searchInput.addEventListener('keydown', (event) => {
-        const items = resultsContainer.querySelectorAll<HTMLElement>('.text-search-result-item');
+        const items = resultItems();
         if (items.length === 0) return;
 
         if (event.key === 'ArrowDown') {
             event.preventDefault();
-            selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+            selectItem(Math.min(selectedIndex + 1, items.length - 1));
         } else if (event.key === 'ArrowUp') {
             event.preventDefault();
-            selectedIndex = Math.max(selectedIndex - 1, 0);
+            selectItem(Math.max(selectedIndex - 1, 0));
         } else if (event.key === 'Enter') {
             event.preventDefault();
             items[selectedIndex]?.click();
-            return;
-        } else {
-            return;
         }
-
-        items.forEach((item, i) => {
-            item.classList.toggle('selected', i === selectedIndex);
-        });
-        items[selectedIndex]?.scrollIntoView({ block: 'nearest' });
     });
 
     modal.addEventListener('close', () => {
@@ -217,11 +258,6 @@ export function showTextSearchModal(getBible: () => EbfDocument | null, onSelect
     modal.showModal();
     modal.querySelector<HTMLInputElement>('.text-search-input')?.focus();
 
-    // Monta o índice enquanto o usuário começa a digitar, depois de desenhar o modal
-    const bible = getBible();
-    if (bible) {
-        setTimeout(() => {
-            prepareSearchIndex(bible);
-        }, 0);
-    }
+    // O índice já começou a ser montado na carga da Bíblia; ao ficar pronto, refaz a busca
+    onSearchOpened?.();
 }

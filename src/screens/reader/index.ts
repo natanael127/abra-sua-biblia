@@ -22,6 +22,7 @@ import {
 import { addToHistory } from '../../core/history';
 import { parseReference } from '../../core/reference';
 import { type DisplayOptions, renderReference } from '../../core/render';
+import { prepareSearchIndex } from '../../core/search';
 import { convertXmlToEbf } from '../../core/xml';
 import { type BibleIndexEntry, getAvailableBibles, loadBibleFromPath, parseEbfJson } from '../../data/bibles';
 import type { PathParams } from '../../router/path';
@@ -178,6 +179,10 @@ function goToReference(reference: string): void {
 function setBible(ebf: EbfDocument | null): void {
     state.ebf = ebf;
     populateBooks(ebf?.bible.books ?? []);
+    // Índice da busca por relevância, montado em segundo plano
+    if (ebf) {
+        void prepareSearchIndex(ebf);
+    }
 }
 
 function populateBooks(books: readonly EbfBook[]): void {

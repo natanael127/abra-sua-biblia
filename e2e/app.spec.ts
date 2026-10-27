@@ -141,13 +141,64 @@ test('busca textual com navegação por teclado', async ({ page }) => {
     await expect(reference(page)).toHaveValue('Mt 5,5');
 });
 
+/** Espera o índice da busca por relevância (montado em segundo plano após a carga da Bíblia). */
+async function waitForRankedSearch(page: Page) {
+    await expect(page.locator('#text-search-modal .text-search-status')).toHaveAttribute('data-ranked', 'true', {
+        timeout: 30_000,
+    });
+}
+
 test('busca textual ignora acentos e destaca o texto original', async ({ page }) => {
     await open(page);
     await page.locator('#text-search-button').click();
     const modal = page.locator('#text-search-modal');
+    await waitForRankedSearch(page);
     await modal.locator('.text-search-input').fill('puros de coracao');
-    await expect(modal.locator('.text-search-result-citation')).toHaveText(['Mateus 5,8']);
-    await expect(modal.locator('mark')).toHaveText('puros de coração');
+    await expect(modal.locator('.text-search-result-citation').first()).toHaveText('Mateus 5,8');
+    await expect(modal.locator('.text-search-result-item').first().locator('mark')).toHaveText('puros de coração');
+});
+
+test('busca por relevância: frase exata primeiro, prefixo e erro de digitação', async ({ page }) => {
+    await open(page);
+    await page.locator('#text-search-button').click();
+    const modal = page.locator('#text-search-modal');
+    const input = modal.locator('.text-search-input');
+    await waitForRankedSearch(page);
+    await expect(modal.locator('.text-search-status')).toHaveText('Por relevância');
+
+    await input.fill('Deus amou o mundo');
+    await expect(modal.locator('.text-search-result-citation').first()).toHaveText('João 3,16');
+
+    // "pastr": erro de digitação; "bo": prefixo da última palavra
+    await input.fill('pastr bo');
+    await expect(modal.locator('.text-search-result-citation', { hasText: /^João 10,11$/ })).toHaveCount(1);
+});
+
+test('ao reabrir a busca com o índice pronto, mostra a ordem por relevância', async ({ page }) => {
+    await open(page);
+    await page.locator('#text-search-button').click();
+    await waitForRankedSearch(page);
+    await page.keyboard.press('Escape');
+
+    await page.locator('#text-search-button').click();
+    const status = page.locator('#text-search-modal .text-search-status');
+    await expect(status).toHaveAttribute('data-ranked', 'true');
+    await expect(status).toHaveText('Por relevância');
+});
+
+test('a busca aberta é refeita por relevância quando o índice fica pronto', async ({ page }) => {
+    test.slow();
+    await open(page);
+    await page.locator('#text-search-button').click();
+    const modal = page.locator('#text-search-modal');
+    // Logo após a carga, o índice ainda pode estar em preparo: a busca por trecho acha só a frase
+    await modal.locator('.text-search-input').fill('puros de coracao');
+    await expect(modal.locator('.text-search-result-citation').first()).toHaveText('Mateus 5,8');
+
+    // Sem digitar de novo, os resultados passam a incluir os versículos com os termos separados
+    await waitForRankedSearch(page);
+    await expect(modal.locator('.text-search-result-item')).not.toHaveCount(1);
+    await expect(modal.locator('.text-search-result-citation').first()).toHaveText('Mateus 5,8');
 });
 
 test('modais fecham com Esc e com clique fora', async ({ page }) => {

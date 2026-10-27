@@ -574,6 +574,13 @@ a:visited {
     color: var(--text-secondary);
 }
 
+.text-search-status {
+    padding: 0 20px 5px;
+    font-size: 12px;
+    font-style: italic;
+    color: var(--text-muted);
+}
+
 .text-search-results {
     max-height: 400px;
     overflow-y: auto;
