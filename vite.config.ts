@@ -7,13 +7,18 @@ import { VitePWA } from 'vite-plugin-pwa';
 import { defineConfig } from 'vitest/config';
 import { escapeHtml } from './src/core/text';
 
-/** Descrição da versão; sem repositório git, usa o commit informado pela Vercel. */
+const git = (args: string): string =>
+    execSync(`git ${args}`, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+
+/**
+ * Versão: hash curto do commit, com "-dirty" se houver alterações não
+ * commitadas. As tags são ignoradas de propósito: a Vercel clona o
+ * repositório raso e sem elas, e assim o resultado é igual em todo lugar.
+ * Sem repositório git, usa o commit informado pela Vercel.
+ */
 function describeVersion(): string {
     try {
-        return execSync('git describe --tags --always --dirty=-dirty', {
-            encoding: 'utf8',
-            stdio: ['ignore', 'pipe', 'ignore'],
-        }).trim();
+        return git(`describe --always --dirty=-dirty --exclude='*' --abbrev=7`);
     } catch {
         return process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ?? 'versão desconhecida';
     }
@@ -24,7 +29,11 @@ function injectVersion(): Plugin {
     return {
         name: 'inject-version',
         buildStart() {
-            console.log(`Versão: ${describeVersion()}`);
+            const version = describeVersion();
+            console.log(`Versão: ${version}`);
+            if (version.endsWith('-dirty')) {
+                console.log(`Arquivos alterados em relação ao commit:\n${git('status --porcelain')}`);
+            }
         },
         transformIndexHtml: (html) => html.replace('%GIT_DESCRIBE%', escapeHtml(describeVersion())),
     };

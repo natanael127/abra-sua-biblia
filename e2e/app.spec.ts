@@ -278,12 +278,12 @@ test('script inline minificado aplica o tema salvo antes do bundle', async ({ pa
     await expect(page.locator('#theme-icon')).toHaveText('🌓');
 });
 
-test('seção Sobre termina com a versão do build (git describe)', async ({ page }) => {
+test('seção Sobre termina com a versão do build (hash do commit)', async ({ page }) => {
     await open(page);
     await page.locator('#about-footer .expandable-header').click();
     const version = page.locator('#about-footer .expandable-content > :last-child');
     await expect(version).toHaveId('build-version');
-    await expect(version).toHaveText(/^(v\d+\.\d+\.\d+(-\d+-g[0-9a-f]+)?|[0-9a-f]{7,})(-dirty)?$/);
+    await expect(version).toHaveText(/^[0-9a-f]{7}(-dirty)?$/);
     await expect(version).toHaveCSS('font-style', 'italic');
 
     const sizes = await version.evaluate((element) => {
