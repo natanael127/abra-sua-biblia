@@ -1,6 +1,11 @@
 import type { EbfDocument } from '../core/ebf';
-import { highlightQuery, MAX_SEARCH_RESULTS, MIN_QUERY_LENGTH, searchVerses } from '../core/search';
-import { escapeHtml } from '../core/text';
+import {
+    highlightMatches,
+    MAX_SEARCH_RESULTS,
+    MIN_QUERY_LENGTH,
+    prepareSearchIndex,
+    searchVerses,
+} from '../core/search';
 import { debounce } from './dom';
 import { getModalContent, getOrCreateModal } from './modal';
 
@@ -148,7 +153,7 @@ function createTextSearchModal(getBible: () => EbfDocument | null, onSelect: Sel
 
             const textEl = document.createElement('div');
             textEl.className = 'text-search-result-text';
-            textEl.innerHTML = highlightQuery(escapeHtml(r.text), query);
+            textEl.innerHTML = highlightMatches(r.text, query);
 
             const citeEl = document.createElement('div');
             citeEl.className = 'text-search-result-citation';
@@ -211,4 +216,12 @@ export function showTextSearchModal(getBible: () => EbfDocument | null, onSelect
         existing instanceof HTMLDialogElement ? existing : createTextSearchModal(getBible, onSelect);
     modal.showModal();
     modal.querySelector<HTMLInputElement>('.text-search-input')?.focus();
+
+    // Monta o índice enquanto o usuário começa a digitar, depois de desenhar o modal
+    const bible = getBible();
+    if (bible) {
+        setTimeout(() => {
+            prepareSearchIndex(bible);
+        }, 0);
+    }
 }

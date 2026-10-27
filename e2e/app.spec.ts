@@ -138,6 +138,15 @@ test('busca textual com navegação por teclado', async ({ page }) => {
     await expect(reference(page)).toHaveValue('Mt 5,5');
 });
 
+test('busca textual ignora acentos e destaca o texto original', async ({ page }) => {
+    await open(page);
+    await page.locator('#text-search-button').click();
+    const modal = page.locator('#text-search-modal');
+    await modal.locator('.text-search-input').fill('puros de coracao');
+    await expect(modal.locator('.text-search-result-citation')).toHaveText(['Mateus 5,8']);
+    await expect(modal.locator('mark')).toHaveText('puros de coração');
+});
+
 test('modais fecham com Esc e com clique fora', async ({ page }) => {
     await open(page);
     const modal = page.locator('#reference-help-modal');
