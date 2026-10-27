@@ -1,3 +1,4 @@
+import { debounce } from 'es-toolkit';
 import type { EbfDocument } from '../core/ebf';
 import {
     highlightMatches,
@@ -6,7 +7,6 @@ import {
     prepareSearchIndex,
     searchVerses,
 } from '../core/search';
-import { debounce } from './dom';
 import { getModalContent, getOrCreateModal } from './modal';
 
 /** Chamado quando o usuário escolhe uma referência num dos modais. */

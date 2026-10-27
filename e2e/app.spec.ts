@@ -416,11 +416,18 @@ test.describe('URL e histórico do navegador', () => {
         await expect(reference(page)).toHaveValue('Jo 3,16');
     });
 
-    test('Enter antes da atualização automática também cria a entrada', async ({ page }) => {
+    test('Enter exibe na hora e cria uma única entrada', async ({ page }) => {
         await open(page, 'Jo 3,16');
+        const initialLength = await historyLength(page);
         await reference(page).fill('Rm 8,28');
         await reference(page).press('Enter');
-        await expect(page).toHaveURL('/ave-maria/rm/8,28');
+        // Sem esperar a pausa da digitação (leitura imediata, sem as esperas do expect)
+        expect(await result(page).locator('.verse-reference').textContent()).toBe('(Rm 8,28)');
+        expect(new URL(page.url()).pathname).toBe('/ave-maria/rm/8,28');
+
+        // A atualização pendente da digitação não cria outra entrada
+        await page.waitForTimeout(800);
+        expect(await historyLength(page)).toBe(initialLength + 1);
 
         await page.goBack();
         await expect(page).toHaveURL('/ave-maria/jo/3,16');

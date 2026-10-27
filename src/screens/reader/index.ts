@@ -10,6 +10,7 @@
  *   entrada nas seguintes, até a edição terminar (Enter, sair do campo ou
  *   outra navegação).
  */
+import { debounce } from 'es-toolkit';
 import {
     type EbfBook,
     type EbfDocument,
@@ -26,12 +27,14 @@ import { type BibleIndexEntry, getAvailableBibles, loadBibleFromPath, parseEbfJs
 import type { PathParams } from '../../router/path';
 import type { Router, Screen } from '../../router/router';
 import { showFileHelpModal, showHistoryModal, showReferenceHelpModal, showTextSearchModal } from '../../ui/dialogs';
-import { byId, debounce } from '../../ui/dom';
+import { byId } from '../../ui/dom';
 import { copyTextToClipboard, showTemporaryMessage, toPlainText } from '../../ui/feedback';
 import * as storage from '../../ui/storage';
 import { parseLegacyLink, readerPath, referenceFromPath, UPLOAD_SLUG } from './url';
 
 const APP_TITLE = 'Abra sua Bíblia!';
+/** Pausa na digitação da referência antes de exibir o trecho. */
+const TYPING_DEBOUNCE_MS = 500;
 
 const BIBLE_TYPE_LABELS: Record<string, string> = {
     catholic: 'Católicas',
@@ -452,18 +455,18 @@ function setupReferenceInput(): void {
         storage.saveReference(input.value);
         state.editing = false;
     });
+    const showWhileTyping = debounce(() => {
+        showReference('edit');
+    }, TYPING_DEBOUNCE_MS);
+    input.addEventListener('input', showWhileTyping);
     input.addEventListener('keydown', (event) => {
         if (event.key === 'Enter') {
+            // Exibe já, sem esperar a pausa na digitação
+            showWhileTyping.cancel();
             showReference('edit');
             state.editing = false;
         }
     });
-    input.addEventListener(
-        'input',
-        debounce(() => {
-            showReference('edit');
-        }),
-    );
 }
 
 /**

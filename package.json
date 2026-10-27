@@ -37,5 +37,8 @@
         "workbox-routing": "^7.4.1",
         "workbox-strategies": "^7.4.1",
         "workbox-window": "^7.4.1"
+    },
+    "dependencies": {
+        "es-toolkit": "^1.53.0"
     }
 }
