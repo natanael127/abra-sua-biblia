@@ -1,7 +1,7 @@
 /**
  * Tela de leitura: escolha da tradução, referência e exibição do trecho.
  *
- * A URL reflete o trecho exibido (/{bíblia}/{livro}/{trecho}). Navegações
+ * A URL reflete o trecho exibido (/{idioma}/{bíblia}/{livro}/{trecho}). Navegações
  * externas (carga da página, Voltar/Avançar) chegam por `show`; as ações do
  * usuário na tela atualizam a URL:
  * - ações pontuais (livro, capítulo, histórico, busca, tradução) criam uma
@@ -24,7 +24,7 @@ import { parseReference } from '../../core/reference';
 import { type DisplayOptions, renderReference } from '../../core/render';
 import { prepareSearchIndex } from '../../core/search';
 import { convertXmlToEbf } from '../../core/xml';
-import { type BibleIndexEntry, getAvailableBibles, loadBibleFromPath, parseEbfJson } from '../../data/bibles';
+import { type BibleIndexEntry, bibleKey, getAvailableBibles, loadBibleFromPath, parseEbfJson } from '../../data/bibles';
 import type { PathParams } from '../../router/path';
 import type { Router, Screen } from '../../router/router';
 import { showFileHelpModal, showHistoryModal, showReferenceHelpModal, showTextSearchModal } from '../../ui/dialogs';
@@ -32,7 +32,7 @@ import { byId } from '../../ui/dom';
 import { shareLink } from '../../ui/share';
 import { copyTextToClipboard, showTemporaryMessage, toPlainText } from '../../ui/feedback';
 import * as storage from '../../ui/storage';
-import { parseLegacyLink, readerPath, referenceFromPath, UPLOAD_SLUG } from './url';
+import { parseLegacyLink, parseReaderParams, readerPath, referenceFromPath, UPLOAD_KEY } from './url';
 
 const APP_TITLE = 'Abra sua Bíblia!';
 /** Pausa na digitação da referência antes de exibir o trecho. */
@@ -80,8 +80,8 @@ const state = {
     instructionsHtml: '',
     displayOptions: storage.getSavedDisplayOptions(),
     bibles: [] as BibleIndexEntry[],
-    /** Slug da Bíblia selecionada (ou UPLOAD_SLUG); vazio até a primeira navegação. */
-    bibleSlug: '',
+    /** Identificador da Bíblia selecionada ("por/ave-maria", ou UPLOAD_KEY); vazio até a primeira navegação. */
+    bibleKey: '',
     /** Carga em andamento (ou concluída) da Bíblia selecionada. */
     bibleLoad: Promise.resolve(true),
     /** Bíblia enviada pelo usuário, mantida para Voltar/Avançar entre traduções. */
@@ -100,16 +100,22 @@ const referenceInput = () => byId('reference', HTMLInputElement);
 const bibleSelect = () => byId('bible-select', HTMLSelectElement);
 
 /**
- * Encontra a Bíblia pelo slug ou pelo nome, sem diferenciar maiúsculas
- * (links e preferências salvas por versões anteriores usam o nome).
+ * Encontra a Bíblia pelo identificador (idioma/slug) ou pelo nome, sem
+ * diferenciar maiúsculas (links e preferências salvas por versões anteriores
+ * usam o nome).
  */
 function findBibleEntry(id: string | null | undefined): BibleIndexEntry | undefined {
     const wanted = id?.toLowerCase();
-    return wanted ? state.bibles.find((bible) => bible.slug === wanted || bible.name.toLowerCase() === wanted) : undefined;
+    return wanted ? state.bibles.find((bible) => bibleKey(bible) === wanted || bible.name.toLowerCase() === wanted) : undefined;
 }
 
 const defaultBibleEntry = (): BibleIndexEntry | undefined =>
     state.bibles.find((bible) => bible.default) ?? state.bibles[0];
+
+/** Bíblia de um idioma: a padrão, se for dele, ou a primeira do índice. */
+const languageBibleEntry = (language: string | undefined): BibleIndexEntry | undefined =>
+    state.bibles.find((bible) => bible.language === language && bible.default) ??
+    state.bibles.find((bible) => bible.language === language);
 
 /** Troca o livro da referência pela abreviação da Bíblia carregada ("mateus 5" -> "Mt 5"). */
 function canonicalReference(reference: string): string {
@@ -125,11 +131,11 @@ function canonicalReference(reference: string): string {
  * referência é mantida, para não perder o trecho pedido.
  */
 function currentPath(reference: string, valid: boolean): string {
-    return readerPath(state.bibleSlug, valid || !state.ebf ? canonicalReference(reference) : null);
+    return readerPath(state.bibleKey, valid || !state.ebf ? canonicalReference(reference) : null);
 }
 
 function syncUrl(path: string, mode: UrlMode): void {
-    if (!state.bibleSlug) return;
+    if (!state.bibleKey) return;
 
     const router = getRouter();
     switch (mode) {
@@ -220,7 +226,7 @@ function populateBiblesSelect(biblesList: readonly BibleIndexEntry[]): void {
         optgroup.label = BIBLE_TYPE_LABELS[type] ?? type;
         for (const bible of bibles) {
             const option = document.createElement('option');
-            option.value = bible.slug;
+            option.value = bibleKey(bible);
             option.textContent = bible.name;
             optgroup.appendChild(option);
         }
@@ -228,7 +234,7 @@ function populateBiblesSelect(biblesList: readonly BibleIndexEntry[]): void {
     }
 
     const uploadOption = document.createElement('option');
-    uploadOption.value = UPLOAD_SLUG;
+    uploadOption.value = UPLOAD_KEY;
     uploadOption.textContent = 'Fazer upload...';
     select.appendChild(uploadOption);
 }
@@ -236,7 +242,7 @@ function populateBiblesSelect(biblesList: readonly BibleIndexEntry[]): void {
 function updateUploadVisibility(): void {
     const container = document.querySelector<HTMLElement>('.file-input-container');
     if (container) {
-        container.style.display = bibleSelect().value === UPLOAD_SLUG ? 'block' : 'none';
+        container.style.display = bibleSelect().value === UPLOAD_KEY ? 'block' : 'none';
     }
 }
 
@@ -244,24 +250,24 @@ function updateUploadVisibility(): void {
  * Seleciona e carrega a Bíblia. Resolve false se outra seleção a substituiu
  * antes de terminar de carregar.
  */
-function selectBible(slug: string): Promise<boolean> {
-    bibleSelect().value = slug;
+function selectBible(key: string): Promise<boolean> {
+    bibleSelect().value = key;
     updateUploadVisibility();
-    if (slug === state.bibleSlug) {
+    if (key === state.bibleKey) {
         return state.bibleLoad;
     }
 
     const token = ++state.loadToken;
-    state.bibleSlug = slug;
+    state.bibleKey = key;
 
-    if (slug === UPLOAD_SLUG) {
+    if (key === UPLOAD_KEY) {
         setBible(state.uploadedEbf);
         state.bibleLoad = Promise.resolve(true);
         return state.bibleLoad;
     }
 
-    storage.saveBible(slug);
-    const entry = findBibleEntry(slug);
+    storage.saveBible(key);
+    const entry = findBibleEntry(key);
     state.bibleLoad = (entry ? loadBibleFromPath(entry.path) : Promise.resolve(null)).then((ebf) => {
         if (token !== state.loadToken) return false;
         if (!ebf) {
@@ -304,7 +310,7 @@ async function handleFileUpload(file: File | undefined): Promise<void> {
         return;
     }
 
-    if (state.bibleSlug === UPLOAD_SLUG) {
+    if (state.bibleKey === UPLOAD_KEY) {
         setBible(state.uploadedEbf);
         showReference('replace');
     }
@@ -362,7 +368,7 @@ function shareCurrentReference(): void {
     const reference = referenceInput().value.trim();
     if (!reference) return;
 
-    if (state.bibleSlug === UPLOAD_SLUG) {
+    if (state.bibleKey === UPLOAD_KEY) {
         alert('Não é possível compartilhar referências de Bíblias carregadas manualmente.');
         return;
     }
@@ -496,14 +502,20 @@ async function show(params: PathParams, biblesReady: Promise<void>): Promise<voi
     await biblesReady;
     if (token !== state.navToken || state.bibles.length === 0) return;
 
-    let slug: string | undefined;
+    const target = parseReaderParams(params);
+    let key: string | undefined;
     let reference: string;
-    if (params.bible) {
-        slug = params.bible.toLowerCase();
-        reference = referenceFromPath(params.book, params.passage);
-        if (slug !== UPLOAD_SLUG && !findBibleEntry(slug)) {
+    if (target.bibleKey || target.language) {
+        key = target.bibleKey;
+        if (!key) {
+            const languageEntry = languageBibleEntry(target.language);
+            key = languageEntry && bibleKey(languageEntry);
+        }
+        reference = referenceFromPath(target.book, target.passage);
+        if (key !== UPLOAD_KEY && !findBibleEntry(key)) {
             showTemporaryMessage('Tradução não encontrada');
-            slug = defaultBibleEntry()?.slug;
+            const fallback = defaultBibleEntry();
+            key = fallback && bibleKey(fallback);
         }
     } else {
         const legacy = parseLegacyLink(window.location.search);
@@ -511,13 +523,14 @@ async function show(params: PathParams, biblesReady: Promise<void>): Promise<voi
         if (legacy?.bible && !legacyBible) {
             showTemporaryMessage('Tradução não encontrada');
         }
-        slug = (legacyBible ?? findBibleEntry(storage.getSavedBible()) ?? defaultBibleEntry())?.slug;
+        const entry = legacyBible ?? findBibleEntry(storage.getSavedBible()) ?? defaultBibleEntry();
+        key = entry && bibleKey(entry);
         reference = legacy?.reference ?? storage.getSavedReference() ?? '';
     }
-    if (!slug) return;
+    if (!key) return;
 
     referenceInput().value = reference;
-    const loaded = await selectBible(slug);
+    const loaded = await selectBible(key);
     if (!loaded || token !== state.navToken) return;
 
     referenceInput().value = canonicalReference(reference);

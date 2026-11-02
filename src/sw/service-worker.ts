@@ -7,7 +7,7 @@
  * - Todo o resto (página, index.json, Bíblias, manifest) usa rede primeiro:
  *   o cache só é usado offline. A requisição com `cache: 'no-cache'` faz o
  *   servidor responder 304 quando nada mudou, sem reenviar as Bíblias.
- * - Toda navegação da SPA (/ave-maria/jo/3,16, /planos...) recebe a mesma
+ * - Toda navegação da SPA (/por/ave-maria/jo/3,16, /planos...) recebe a mesma
  *   página, guardada numa única entrada do cache.
  */
 import { clientsClaim } from 'workbox-core';

@@ -69,13 +69,14 @@ exatamente como estão no repositório, para que possam ser baixadas e usadas em
 Para adicionar uma Bíblia, basta colocar o arquivo `.ebf1.json` em `public/assets/data/bibles`.
 O índice (`public/assets/data/index.json`, fora do git) é gerado por `scripts/build-index.ts` a
 cada `npm run build` e `npm run dev`: nome, tipo (católica/evangélica pela quantidade de livros)
-e o slug da URL, tirado do nome do arquivo sem o idioma (`por_ave_maria.ebf1.json` →
-`/ave-maria`). O build falha se houver nome ou slug repetido.
+o idioma (ISO 639-3) e o slug da URL, tirados do nome do arquivo (`por_ave_maria.ebf1.json` →
+`/por/ave-maria`, que abre em `/por/ave-maria/jo/3,16`). O nome do arquivo precisa começar pelo
+idioma. O build falha se houver nome repetido ou slug repetido no mesmo idioma.
 
-A Bíblia aberta na primeira visita fica no `settings.json`, pelo slug:
+A Bíblia aberta na primeira visita fica no `settings.json`, por idioma e slug:
 
 ```json
 {
-    "defaultBible": "ave-maria"
+    "defaultBible": "por/ave-maria"
 }
 ```

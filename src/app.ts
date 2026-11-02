@@ -1,7 +1,7 @@
 /**
  * Casca da SPA: registra as telas e suas rotas. Para uma tela nova, crie-a em
  * src/screens/ e inclua a rota antes da tela de leitura, cujo padrão
- * (/:bible?/...) aceita qualquer primeiro segmento.
+ * (/:language?/...) aceita qualquer primeiro segmento.
  */
 import { createRouter, type Router } from './router/router';
 import { createReaderScreen } from './screens/reader';

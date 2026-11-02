@@ -2,7 +2,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { shareLink } from '../../src/ui/share';
 
-const data = { title: 'Jo 3,16 (Ave-Maria)', url: 'https://www.abrasuabiblia.com.br/ave-maria/jo/3,16' };
+const data = { title: 'Jo 3,16 (Ave-Maria)', url: 'https://www.abrasuabiblia.com.br/por/ave-maria/jo/3,16' };
 
 const setNavigator = (name: 'share' | 'clipboard', value: unknown) => {
     Object.defineProperty(navigator, name, { value, configurable: true });

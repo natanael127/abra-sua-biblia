@@ -7,13 +7,18 @@ export type BibleType = 'catholic' | 'protestant' | 'other';
 
 export interface BibleIndexEntry {
     name: string;
-    /** Identificador da Bíblia na URL, ex.: "ave-maria" em /ave-maria/jo/3,16. */
+    /** Idioma ISO 639-3, ex.: "por" em /por/ave-maria/jo/3,16. */
+    language: string;
+    /** Identificador da Bíblia dentro do idioma, ex.: "ave-maria" em /por/ave-maria/jo/3,16. */
     slug: string;
     /** Caminho relativo a DATA_PATH, ex.: "bibles/por_ave_maria.ebf1.json". */
     path: string;
     type?: BibleType;
     default?: boolean;
 }
+
+/** Identificador da Bíblia na URL e nas preferências: idioma e slug, ex.: "por/ave-maria". */
+export const bibleKey = (entry: BibleIndexEntry): string => `${entry.language}/${entry.slug}`;
 
 export async function getAvailableBibles(fetchFn: typeof fetch = fetch): Promise<BibleIndexEntry[]> {
     try {

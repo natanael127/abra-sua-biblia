@@ -20,7 +20,7 @@ export interface Screen {
 }
 
 export interface Route {
-    /** Ex.: "/planos" ou "/:bible?/:book?/:passage?". A primeira rota correspondente vence. */
+    /** Ex.: "/planos" ou "/:language?/:bible?/:book?/:passage?". A primeira rota correspondente vence. */
     pattern: string;
     screen: Screen;
 }

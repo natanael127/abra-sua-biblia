@@ -1,24 +1,49 @@
 /**
- * URLs da tela de leitura: /{bíblia}/{livro}/{trecho}, ex.: /ave-maria/mt/5,3-12.21-38.
- * O livro é a abreviação da tradução, em minúsculas; o trecho segue a notação
- * da referência digitada.
+ * URLs da tela de leitura: /{idioma}/{bíblia}/{livro}/{trecho}, ex.:
+ * /por/ave-maria/mt/5,3-12.21-38. O idioma é o código ISO 639-3 da tradução;
+ * o livro é a abreviação da tradução, em minúsculas; o trecho segue a notação
+ * da referência digitada. A Bíblia carregada por upload não tem idioma:
+ * /upload/{livro}/{trecho}.
  */
-import { buildPath } from '../../router/path';
+import { buildPath, type PathParams } from '../../router/path';
 
 /** Padrão da rota da tela de leitura. */
-export const READER_PATTERN = '/:bible?/:book?/:passage?';
+export const READER_PATTERN = '/:language?/:bible?/:book?/:passage?';
 
 /** Identificador, na URL, da Bíblia carregada por upload (não pode ser compartilhada). */
-export const UPLOAD_SLUG = 'upload';
+export const UPLOAD_KEY = 'upload';
 
-/** Caminho do trecho; sem referência válida, só o da Bíblia. */
-export function readerPath(bibleSlug: string, reference?: string | null): string {
+/** O que a URL da tela de leitura pede. */
+export interface ReaderTarget {
+    /** Idioma e slug ("por/ave-maria") ou UPLOAD_KEY; ausente se a URL não indica a Bíblia. */
+    bibleKey?: string;
+    /** Idioma, quando é a única parte da Bíblia na URL ("/por"). */
+    language?: string;
+    book?: string;
+    passage?: string;
+}
+
+/** Interpreta os parâmetros de READER_PATTERN. */
+export function parseReaderParams(params: PathParams): ReaderTarget {
+    const language = params.language?.toLowerCase();
+    if (language === UPLOAD_KEY) {
+        return { bibleKey: UPLOAD_KEY, book: params.bible, passage: params.book };
+    }
+    if (!language || !params.bible) {
+        return { language };
+    }
+    return { bibleKey: `${language}/${params.bible.toLowerCase()}`, book: params.book, passage: params.passage };
+}
+
+/** Caminho do trecho; sem referência válida, só o da Bíblia. `bibleKey`: "por/ave-maria" ou UPLOAD_KEY. */
+export function readerPath(bibleKey: string, reference?: string | null): string {
+    const bibleSegments = bibleKey.split('/');
     const [book, ...rest] = (reference ?? '').trim().split(' ');
     const passage = rest.join(' ').trim();
     if (!book || !passage) {
-        return buildPath(bibleSlug);
+        return buildPath(...bibleSegments);
     }
-    return buildPath(bibleSlug, book.toLowerCase(), passage);
+    return buildPath(...bibleSegments, book.toLowerCase(), passage);
 }
 
 /** Referência a partir dos parâmetros da URL; só o livro abre o capítulo 1. */

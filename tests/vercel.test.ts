@@ -1,5 +1,5 @@
 /**
- * Rewrite da SPA na Vercel: as telas (/ave-maria/jo/3,16, /planos...) recebem
+ * Rewrite da SPA na Vercel: as telas (/por/ave-maria/jo/3,16, /planos...) recebem
  * o index.html. Arquivos publicados e caminhos internos do Vite (usados pelo
  * `vercel dev`, em que o rewrite vale antes do servidor do Vite) ficam de fora.
  */
@@ -20,10 +20,11 @@ describe('rewrite da SPA (vercel.json)', () => {
     it('entrega a página em todas as telas', () => {
         for (const path of [
             '/',
-            '/ave-maria',
-            '/ave-maria/jo/3,16',
-            '/ave-maria/mt/5,3-12.21-38',
-            '/ave-maria/j%C3%B3/1',
+            '/por',
+            '/por/ave-maria',
+            '/por/ave-maria/jo/3,16',
+            '/por/ave-maria/mt/5,3-12.21-38',
+            '/por/ave-maria/j%C3%B3/1',
             '/upload/gen/1,1-2',
             '/planos',
             '/a/b/c/d',

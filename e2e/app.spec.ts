@@ -7,7 +7,7 @@ import { readerPath } from '../src/screens/reader/url';
 const FIXTURES = 'tests/fixtures/xml';
 
 /** Abre a página com a Bíblia e a referência informadas e espera a Bíblia carregar. */
-async function open(page: Page, quote = 'Jo 3,16', bible = 'ave-maria') {
+async function open(page: Page, quote = 'Jo 3,16', bible = 'por/ave-maria') {
     await page.goto(readerPath(bible, quote));
     await expect(page.locator('#bible-select')).toHaveValue(bible);
     await waitForBible(page);
@@ -30,9 +30,9 @@ test('exibe a referência do link compartilhado', async ({ page }) => {
 
 test('primeira visita abre a Bíblia padrão do índice', async ({ page }) => {
     await page.goto('/');
-    await expect(page.locator('#bible-select')).toHaveValue('ave-maria');
+    await expect(page.locator('#bible-select')).toHaveValue('por/ave-maria');
     await waitForBible(page);
-    await expect(page).toHaveURL('/ave-maria');
+    await expect(page).toHaveURL('/por/ave-maria');
 });
 
 test('atualiza o resultado enquanto digita', async ({ page }) => {
@@ -106,7 +106,7 @@ test('troca de tradução mantém a referência', async ({ page }) => {
 
     // Na raiz, vale a preferência salva
     await page.goto('/');
-    await expect(page.locator('#bible-select')).toHaveValue('pastoral');
+    await expect(page.locator('#bible-select')).toHaveValue('por/pastoral');
     await expect(reference(page)).toHaveValue('Sl 23,1');
 });
 
@@ -267,7 +267,7 @@ test.describe('área de transferência', () => {
         await page.locator('#share-button').click();
         await expect(page.locator('.temporary-message')).toHaveText('Link copiado');
         const link = await page.evaluate(() => navigator.clipboard.readText());
-        expect(link).toBe(`${baseURL}/ave-maria/jo/3,16`);
+        expect(link).toBe(`${baseURL}/por/ave-maria/jo/3,16`);
 
         await page.goto(link);
         await expect(result(page).locator('.verse-reference')).toHaveText('(Jo 3,16)');
@@ -298,7 +298,7 @@ test.describe('compartilhar pela Web Share API', () => {
         await open(page, 'Jo 3,16');
         await page.locator('#share-button').click();
         await expect.poll(() => shared(page)).toEqual([
-            { title: 'Jo 3,16 (Ave-Maria)', text: 'Jo 3,16 (Ave-Maria)', url: `${baseURL}/ave-maria/jo/3,16` },
+            { title: 'Jo 3,16 (Ave-Maria)', text: 'Jo 3,16 (Ave-Maria)', url: `${baseURL}/por/ave-maria/jo/3,16` },
         ]);
         // Compartilhado pelo sistema: sem a mensagem de link copiado
         await expect(page.locator('.temporary-message')).toHaveCount(0);
@@ -423,7 +423,7 @@ test('não faz requisições a outros domínios (sem analytics)', async ({ page,
     });
     await open(page, 'Jo 3,16');
     await reference(page).fill('Mt 5,3-12');
-    await expect(page).toHaveURL('/ave-maria/mt/5,3-12');
+    await expect(page).toHaveURL('/por/ave-maria/mt/5,3-12');
     expect(external).toEqual([]);
 
     const scripts = await page.locator('script').evaluateAll((elements) =>
@@ -500,7 +500,7 @@ test('funciona offline depois da primeira visita', async ({ page, context }) => 
     await expect(result(page).locator('.verse-text')).toContainText('No princípio era o Verbo');
 
     // Endereço nunca visitado: o service worker entrega a mesma página
-    await page.goto('/ave-maria/mt/5,3-5');
+    await page.goto('/por/ave-maria/mt/5,3-5');
     await expect(result(page).locator('.verse-reference')).toHaveText('(Mt 5,3-5)');
 });
 
@@ -509,34 +509,34 @@ test.describe('URL e histórico do navegador', () => {
 
     test('a URL e o título acompanham o trecho exibido', async ({ page }) => {
         await open(page, 'Jo 3,16');
-        await expect(page).toHaveURL('/ave-maria/jo/3,16');
+        await expect(page).toHaveURL('/por/ave-maria/jo/3,16');
         await expect(page).toHaveTitle('Jo 3,16 (Ave-Maria) - Abra sua Bíblia!');
 
         await reference(page).fill('Mt');
-        await expect(page).toHaveURL('/ave-maria');
+        await expect(page).toHaveURL('/por/ave-maria');
         await expect(page).toHaveTitle('Abra sua Bíblia!');
     });
 
     test('Voltar e Avançar navegam entre os trechos', async ({ page }) => {
         await open(page, 'Jo 3,16');
         await page.locator('#next-chapter-button').click();
-        await expect(page).toHaveURL('/ave-maria/jo/4');
+        await expect(page).toHaveURL('/por/ave-maria/jo/4');
 
         await page.locator('.book-section .expandable-header').click();
         await page.locator('.book-item', { hasText: /^Ap$/ }).click();
-        await expect(page).toHaveURL('/ave-maria/ap/1');
+        await expect(page).toHaveURL('/por/ave-maria/ap/1');
 
         await page.goBack();
-        await expect(page).toHaveURL('/ave-maria/jo/4');
+        await expect(page).toHaveURL('/por/ave-maria/jo/4');
         await expect(reference(page)).toHaveValue('Jo 4');
         await expect(result(page).locator('.reference')).toHaveText('João 4 (Ave-Maria)');
 
         await page.goBack();
-        await expect(page).toHaveURL('/ave-maria/jo/3,16');
+        await expect(page).toHaveURL('/por/ave-maria/jo/3,16');
         await expect(result(page).locator('.verse-reference')).toHaveText('(Jo 3,16)');
 
         await page.goForward();
-        await expect(page).toHaveURL('/ave-maria/jo/4');
+        await expect(page).toHaveURL('/por/ave-maria/jo/4');
         await expect(reference(page)).toHaveValue('Jo 4');
     });
 
@@ -545,22 +545,22 @@ test.describe('URL e histórico do navegador', () => {
         const initialLength = await historyLength(page);
 
         await reference(page).fill('Mt 5');
-        await expect(page).toHaveURL('/ave-maria/mt/5');
+        await expect(page).toHaveURL('/por/ave-maria/mt/5');
         await reference(page).fill('Mt 5,3-12');
-        await expect(page).toHaveURL('/ave-maria/mt/5,3-12');
+        await expect(page).toHaveURL('/por/ave-maria/mt/5,3-12');
         expect(await historyLength(page)).toBe(initialLength + 1);
 
         // Enter encerra a edição: a próxima digitação cria outra entrada
         await reference(page).press('Enter');
         await reference(page).fill('Rm 8');
-        await expect(page).toHaveURL('/ave-maria/rm/8');
+        await expect(page).toHaveURL('/por/ave-maria/rm/8');
         expect(await historyLength(page)).toBe(initialLength + 2);
 
         await page.goBack();
-        await expect(page).toHaveURL('/ave-maria/mt/5,3-12');
+        await expect(page).toHaveURL('/por/ave-maria/mt/5,3-12');
         await expect(reference(page)).toHaveValue('Mt 5,3-12');
         await page.goBack();
-        await expect(page).toHaveURL('/ave-maria/jo/3,16');
+        await expect(page).toHaveURL('/por/ave-maria/jo/3,16');
         await expect(reference(page)).toHaveValue('Jo 3,16');
     });
 
@@ -571,14 +571,14 @@ test.describe('URL e histórico do navegador', () => {
         await reference(page).press('Enter');
         // Sem esperar a pausa da digitação (leitura imediata, sem as esperas do expect)
         expect(await result(page).locator('.verse-reference').textContent()).toBe('(Rm 8,28)');
-        expect(new URL(page.url()).pathname).toBe('/ave-maria/rm/8,28');
+        expect(new URL(page.url()).pathname).toBe('/por/ave-maria/rm/8,28');
 
         // A atualização pendente da digitação não cria outra entrada
         await page.waitForTimeout(800);
         expect(await historyLength(page)).toBe(initialLength + 1);
 
         await page.goBack();
-        await expect(page).toHaveURL('/ave-maria/jo/3,16');
+        await expect(page).toHaveURL('/por/ave-maria/jo/3,16');
     });
 
     test('troca de tradução entra no histórico', async ({ page }) => {
@@ -586,84 +586,96 @@ test.describe('URL e histórico do navegador', () => {
         test.slow();
         await open(page, 'Sl 23,1');
         await page.locator('#bible-select').selectOption('Edição Pastoral');
-        await expect(page).toHaveURL('/pastoral/sl/23,1');
+        await expect(page).toHaveURL('/por/pastoral/sl/23,1');
         await expect(result(page).locator('.reference')).toContainText('(Edição Pastoral)');
 
         await page.goBack();
-        await expect(page).toHaveURL('/ave-maria/sl/23,1');
-        await expect(page.locator('#bible-select')).toHaveValue('ave-maria');
+        await expect(page).toHaveURL('/por/ave-maria/sl/23,1');
+        await expect(page.locator('#bible-select')).toHaveValue('por/ave-maria');
         await expect(result(page).locator('.reference')).toContainText('(Ave-Maria)');
     });
 
     test('histórico de buscas e busca textual criam entradas', async ({ page }) => {
         await open(page, 'Jo 3,16');
         await reference(page).fill('Rm 8,28');
-        await expect(page).toHaveURL('/ave-maria/rm/8,28');
+        await expect(page).toHaveURL('/por/ave-maria/rm/8,28');
         await reference(page).blur();
 
         await page.locator('#history-button').click();
         await page.locator('#history-modal .history-list-item', { hasText: 'Jo 3,16' }).click();
-        await expect(page).toHaveURL('/ave-maria/jo/3,16');
+        await expect(page).toHaveURL('/por/ave-maria/jo/3,16');
 
         await page.locator('#text-search-button').click();
         await page.locator('#text-search-modal .text-search-input').fill('bem-aventurados os mansos');
         await expect(page.locator('#text-search-modal .text-search-count')).toHaveText('1 resultado');
         await page.locator('#text-search-modal .text-search-input').press('ArrowDown');
         await page.locator('#text-search-modal .text-search-input').press('Enter');
-        await expect(page).toHaveURL('/ave-maria/mt/5,5');
+        await expect(page).toHaveURL('/por/ave-maria/mt/5,5');
 
         await page.goBack();
-        await expect(page).toHaveURL('/ave-maria/jo/3,16');
+        await expect(page).toHaveURL('/por/ave-maria/jo/3,16');
         await page.goBack();
-        await expect(page).toHaveURL('/ave-maria/rm/8,28');
+        await expect(page).toHaveURL('/por/ave-maria/rm/8,28');
     });
 
     test('a raiz abre a última leitura, com a URL canônica', async ({ page }) => {
         await open(page, 'Jo 3,16');
         await reference(page).fill('Rm 8,28');
-        await expect(page).toHaveURL('/ave-maria/rm/8,28');
+        await expect(page).toHaveURL('/por/ave-maria/rm/8,28');
 
         await page.goto('/');
-        await expect(page).toHaveURL('/ave-maria/rm/8,28');
+        await expect(page).toHaveURL('/por/ave-maria/rm/8,28');
         await expect(result(page).locator('.verse-reference')).toHaveText('(Rm 8,28)');
     });
 
     test('links diretos são normalizados para a URL canônica', async ({ page }) => {
-        await page.goto('/AVE-MARIA/Mateus/5,3-5');
-        await expect(page).toHaveURL('/ave-maria/mt/5,3-5');
+        await page.goto('/POR/AVE-MARIA/Mateus/5,3-5');
+        await expect(page).toHaveURL('/por/ave-maria/mt/5,3-5');
         await expect(reference(page)).toHaveValue('Mt 5,3-5');
 
-        await page.goto('/ave-maria/mt');
-        await expect(page).toHaveURL('/ave-maria/mt/1');
+        await page.goto('/por/ave-maria/mt');
+        await expect(page).toHaveURL('/por/ave-maria/mt/1');
         await expect(reference(page)).toHaveValue('Mt 1');
     });
 
     test('livro com acento na URL (Jó não é Jo)', async ({ page }) => {
-        await page.goto('/ave-maria/J%C3%B3/1,1-3');
-        await expect(page).toHaveURL('/ave-maria/j%C3%B3/1,1-3');
+        await page.goto('/por/ave-maria/J%C3%B3/1,1-3');
+        await expect(page).toHaveURL('/por/ave-maria/j%C3%B3/1,1-3');
         await expect(reference(page)).toHaveValue('Jó 1,1-3');
         await expect(result(page).locator('.reference')).toHaveText(/^Jó 1/);
         await expect(result(page).locator('sup')).toHaveText(['1', '2', '3']);
     });
 
-    test('tradução inexistente abre a padrão e avisa', async ({ page }) => {
-        await page.goto('/nao-existe/jo/3,16');
+    test('só o idioma na URL abre a Bíblia padrão dele', async ({ page }) => {
+        await page.goto('/por');
+        await expect(page).toHaveURL('/por/ave-maria');
+        await expect(page.locator('#bible-select')).toHaveValue('por/ave-maria');
+    });
+
+    test('idioma inexistente abre a padrão e avisa', async ({ page }) => {
+        await page.goto('/xxx');
         await expect(page.locator('.temporary-message')).toHaveText('Tradução não encontrada');
-        await expect(page).toHaveURL('/ave-maria/jo/3,16');
+        await expect(page).toHaveURL('/por/ave-maria');
+    });
+
+    test('tradução inexistente abre a padrão e avisa', async ({ page }) => {
+        await page.goto('/por/nao-existe/jo/3,16');
+        await expect(page.locator('.temporary-message')).toHaveText('Tradução não encontrada');
+        await expect(page).toHaveURL('/por/ave-maria/jo/3,16');
         await expect(result(page).locator('.verse-reference')).toHaveText('(Jo 3,16)');
     });
 
     test('falha ao carregar a Bíblia mantém o trecho na URL', async ({ page }) => {
         await page.route('**/por_cnbb.ebf1.json', (route) => route.abort());
-        await page.goto('/cnbb/jo/3,16');
+        await page.goto('/por/cnbb/jo/3,16');
         await expect(page.locator('.temporary-message')).toHaveText('Erro ao carregar a Bíblia');
         await expect(reference(page)).toHaveValue('jo 3,16');
-        expect(new URL(page.url()).pathname).toBe('/cnbb/jo/3,16');
+        expect(new URL(page.url()).pathname).toBe('/por/cnbb/jo/3,16');
     });
 
     test('caminho sem tela correspondente volta ao início', async ({ page }) => {
-        await page.goto('/a/b/c/d');
-        await expect(page).toHaveURL('/ave-maria');
+        await page.goto('/a/b/c/d/e');
+        await expect(page).toHaveURL('/por/ave-maria');
         await waitForBible(page);
     });
 
@@ -678,8 +690,8 @@ test.describe('URL e histórico do navegador', () => {
         await page.goBack();
         await expect(page).toHaveURL('/upload');
         await page.goBack();
-        await expect(page).toHaveURL('/ave-maria/jo/3,16');
-        await expect(page.locator('#bible-select')).toHaveValue('ave-maria');
+        await expect(page).toHaveURL('/por/ave-maria/jo/3,16');
+        await expect(page.locator('#bible-select')).toHaveValue('por/ave-maria');
         await expect(page.locator('#bible-file')).toBeHidden();
 
         await page.goForward();
@@ -691,24 +703,24 @@ test.describe('URL e histórico do navegador', () => {
     test('links da versão anterior redirecionam para a URL nova', async ({ page }) => {
         await page.goto('/?bible=Ave-Maria&quote=Jo%203%2C16');
         const length = await historyLength(page);
-        await expect(page).toHaveURL('/ave-maria/jo/3,16');
+        await expect(page).toHaveURL('/por/ave-maria/jo/3,16');
         await expect(result(page).locator('.verse-reference')).toHaveText('(Jo 3,16)');
         // O redirecionamento substitui a entrada: Voltar não retorna ao link antigo
         expect(await historyLength(page)).toBe(length);
 
         await page.goto('/?bible=CNBB&quote=Sl%2023%2C1-3');
-        await expect(page).toHaveURL('/cnbb/sl/23,1-3');
+        await expect(page).toHaveURL('/por/cnbb/sl/23,1-3');
         await expect(result(page).locator('.reference')).toContainText('(CNBB)');
     });
 
     test('link antigo com tradução inexistente abre a padrão e avisa', async ({ page }) => {
         await page.goto('/?bible=N%C3%A3o%20Existe&quote=Jo%203%2C16');
         await expect(page.locator('.temporary-message')).toHaveText('Tradução não encontrada');
-        await expect(page).toHaveURL('/ave-maria/jo/3,16');
+        await expect(page).toHaveURL('/por/ave-maria/jo/3,16');
     });
 
     test('o servidor entrega a página em qualquer caminho da SPA', async ({ request }) => {
-        for (const path of ['/ave-maria', '/ave-maria/mt/5,3-12.21-38', '/ave-maria/j%C3%B3/1']) {
+        for (const path of ['/por/ave-maria', '/por/ave-maria/mt/5,3-12.21-38', '/por/ave-maria/j%C3%B3/1']) {
             const response = await request.get(path);
             expect(response.ok(), path).toBe(true);
             expect(await response.text(), path).toContain('id="reader"');

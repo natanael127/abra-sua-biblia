@@ -36,7 +36,8 @@ function generateBibleIndex(): Plugin {
         name: 'generate-bible-index',
         buildStart() {
             const entries = writeIndex();
-            const defaultBible = entries.find((entry) => entry.default)?.slug ?? '';
+            const defaultEntry = entries.find((entry) => entry.default);
+            const defaultBible = defaultEntry ? `${defaultEntry.language}/${defaultEntry.slug}` : '';
             console.log(`index.json: ${entries.length} Bíblias (padrão: ${defaultBible})`);
         },
     };

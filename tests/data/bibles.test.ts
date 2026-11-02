@@ -12,7 +12,7 @@ import { validateEbf } from '../../src/core/ebf';
 import { getBookAbbreviation } from '../../src/core/ebf';
 import { buildIndex } from '../../scripts/build-index';
 import { matchPath } from '../../src/router/path';
-import { READER_PATTERN, readerPath, UPLOAD_SLUG } from '../../src/screens/reader/url';
+import { parseReaderParams, READER_PATTERN, readerPath } from '../../src/screens/reader/url';
 import { DATA_DIR, listBibleFiles, loadBible } from '../helpers';
 
 const index = buildIndex();
@@ -58,8 +58,12 @@ describe('Bíblias publicadas', () => {
             const entry = index.find((e) => e.path === `bibles/${file}`)!;
             for (const book of loadBible(id).bible.books) {
                 const abbreviation = getBookAbbreviation(book);
-                const params = matchPath(READER_PATTERN, readerPath(entry.slug, `${abbreviation} 1,2-3`));
-                expect(params, abbreviation).toEqual({ bible: entry.slug, book: abbreviation.toLowerCase(), passage: '1,2-3' });
+                const params = matchPath(READER_PATTERN, readerPath(`${entry.language}/${entry.slug}`, `${abbreviation} 1,2-3`));
+                expect(parseReaderParams(params!), abbreviation).toEqual({
+                    bibleKey: `${entry.language}/${entry.slug}`,
+                    book: abbreviation.toLowerCase(),
+                    passage: '1,2-3',
+                });
             }
         });
     });
@@ -77,12 +81,18 @@ describe('índice das Bíblias publicadas', () => {
         expect(new Set(names).size).toBe(names.length);
     });
 
-    it('tem slugs únicos, legíveis na URL e diferentes dos caminhos reservados', () => {
-        const slugs = index.map((e) => e.slug);
-        expect(new Set(slugs).size).toBe(slugs.length);
-        for (const slug of slugs) {
-            expect(slug).toMatch(/^[a-z0-9]+(-[a-z0-9]+)*$/);
-            expect(slug).not.toBe(UPLOAD_SLUG);
+    it('tem idioma e slug legíveis na URL, únicos juntos', () => {
+        const keys = index.map((e) => `${e.language}/${e.slug}`);
+        expect(new Set(keys).size).toBe(keys.length);
+        for (const entry of index) {
+            expect(entry.language).toMatch(/^[a-z]{3}$/);
+            expect(entry.slug).toMatch(/^[a-z0-9]+(-[a-z0-9]+)*$/);
+        }
+    });
+
+    it('tem o idioma de cada Bíblia igual ao do arquivo', () => {
+        for (const entry of index) {
+            expect(loadBible(entry.path.replace(/^bibles\/|\.ebf1\.json$/g, '')).bible.language, entry.path).toBe(entry.language);
         }
     });
 });

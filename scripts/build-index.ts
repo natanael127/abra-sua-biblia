@@ -15,9 +15,6 @@ export const SETTINGS_FILE = join(ROOT_DIR, 'settings.json');
 const BIBLE_DIRECTORIES = ['bibles'];
 const BIBLE_FILE_SUFFIX = '.ebf1.json';
 
-/** Slugs que não podem identificar Bíblias, porque são caminhos usados pelo site. */
-export const RESERVED_SLUGS: ReadonlySet<string> = new Set(['upload', 'assets']);
-
 /** Quantidade de livros por tipo de Bíblia. */
 const BIBLE_TYPE_BOOKS = {
     catholic: 73, // 46 AT + 27 NT (inclui deuterocanônicos)
@@ -28,6 +25,9 @@ export type BibleType = keyof typeof BIBLE_TYPE_BOOKS | 'other';
 
 export interface IndexEntry {
     name: string;
+    /** Idioma ISO 639-3 da Bíblia, ex.: "por". */
+    language: string;
+    /** Identificador da Bíblia dentro do idioma, ex.: "ave-maria". */
     slug: string;
     /** Caminho relativo a DATA_DIR, ex.: "bibles/por_ave_maria.ebf1.json". */
     path: string;
@@ -36,14 +36,14 @@ export interface IndexEntry {
 }
 
 export interface Settings {
-    /** Slug da Bíblia aberta na primeira visita, ex.: "ave-maria". */
+    /** Idioma e slug da Bíblia aberta na primeira visita, ex.: "por/ave-maria". */
     defaultBible: string;
 }
 
 export function readSettings(file = SETTINGS_FILE): Settings {
     const settings = JSON.parse(readFileSync(file, 'utf8')) as Partial<Settings>;
     if (typeof settings.defaultBible !== 'string' || !settings.defaultBible) {
-        throw new Error(`${file}: "defaultBible" deve ser o slug de uma Bíblia, ex.: "ave-maria"`);
+        throw new Error(`${file}: "defaultBible" deve ser o idioma e o slug de uma Bíblia, ex.: "por/ave-maria"`);
     }
     return { defaultBible: settings.defaultBible };
 }
@@ -55,9 +55,15 @@ export function getBibleType(numBooks: number): BibleType {
     return 'other';
 }
 
+/** Idioma ISO 639-3 no início do nome do arquivo: "por_ave_maria" -> "por"; indefinido sem o prefixo. */
+export function getBibleLanguage(bibleId: string): string | undefined {
+    return /^([a-z]{3})_/i.exec(bibleId)?.[1]?.toLowerCase();
+}
+
 /**
- * Identificador da Bíblia na URL (ex.: /ave-maria/jo/3,16), a partir do nome
- * do arquivo sem o prefixo de idioma ISO 639-3: "por_ave_maria" -> "ave-maria".
+ * Identificador da Bíblia na URL, depois do idioma (ex.: /por/ave-maria/jo/3,16),
+ * a partir do nome do arquivo sem o prefixo de idioma ISO 639-3:
+ * "por_ave_maria" -> "ave-maria".
  */
 export function getBibleSlug(bibleId: string): string {
     return bibleId
@@ -88,9 +94,14 @@ export function buildIndex(dataDir = DATA_DIR, settings: Settings = readSettings
                 throw new Error(`${path}: JSON inválido`, { cause: error });
             }
             const bibleId = file.slice(0, -BIBLE_FILE_SUFFIX.length);
+            const language = getBibleLanguage(bibleId);
+            if (!language) {
+                throw new Error(`${path}: o nome do arquivo deve começar pelo idioma ISO 639-3, ex.: "por_${bibleId}"`);
+            }
             const name = typeof data.bible?.name === 'string' && data.bible.name ? data.bible.name : bibleId;
             entries.push({
                 name,
+                language,
                 slug: getBibleSlug(bibleId),
                 path,
                 type: getBibleType(data.bible?.books?.length ?? 0),
@@ -98,22 +109,23 @@ export function buildIndex(dataDir = DATA_DIR, settings: Settings = readSettings
         }
     }
 
-    // O nome aparece na lista de traduções e o slug identifica a Bíblia na URL
+    // O nome aparece na lista de traduções e idioma/slug identificam a Bíblia na URL
     const names = new Set<string>();
-    const slugs = new Set<string>();
+    const keys = new Set<string>();
     for (const entry of entries) {
+        const key = `${entry.language}/${entry.slug}`;
         if (names.has(entry.name)) throw new Error(`${entry.path}: nome repetido "${entry.name}"`);
-        if (!entry.slug || RESERVED_SLUGS.has(entry.slug) || slugs.has(entry.slug)) {
-            throw new Error(`${entry.path}: slug inválido ou repetido "${entry.slug}"`);
+        if (!entry.slug || keys.has(key)) {
+            throw new Error(`${entry.path}: slug inválido ou repetido "${key}"`);
         }
         names.add(entry.name);
-        slugs.add(entry.slug);
+        keys.add(key);
     }
 
-    const defaultEntry = entries.find((entry) => entry.slug === settings.defaultBible);
+    const defaultEntry = entries.find((entry) => `${entry.language}/${entry.slug}` === settings.defaultBible);
     if (!defaultEntry) {
         throw new Error(
-            `settings.json: a Bíblia padrão "${settings.defaultBible}" não existe. Slugs: ${[...slugs].join(', ')}`,
+            `settings.json: a Bíblia padrão "${settings.defaultBible}" não existe. Bíblias: ${[...keys].join(', ')}`,
         );
     }
     defaultEntry.default = true;
