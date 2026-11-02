@@ -6,7 +6,7 @@ Feito em TypeScript com [Vite](https://vite.dev), publicado na [Vercel](https://
 
 ## Desenvolvimento
 
-Requer Node.js 22.12 ou superior.
+Requer Node.js 24.
 
 ```bash
 npm install
