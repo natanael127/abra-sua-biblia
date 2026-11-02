@@ -1,7 +1,7 @@
 /**
  * Busca textual nos versículos, sem diferenciar maiúsculas nem acentos.
  *
- * A busca por relevância usa um índice do MiniSearch, montado em blocos de
+ * A busca usa um índice do MiniSearch, montado em blocos de
  * ~10 ms para não travar a página (leva alguns segundos numa Bíblia completa). Enquanto o
  * índice não fica pronto, vale a busca por trecho, na ordem da Bíblia.
  */
@@ -25,11 +25,14 @@ export interface SearchResult {
     terms?: string[];
 }
 
+/** Ordem dos resultados: por relevância ou na ordem da Bíblia (livros, capítulos e versículos). */
+export type SearchOrder = 'relevance' | 'book';
+
 export interface SearchResponse {
     results: SearchResult[];
     /** Total de versículos encontrados (pode passar do limite de resultados). */
     total: number;
-    /** true: ordenados por relevância; false: busca por trecho, na ordem da Bíblia. */
+    /** true: ordenados por relevância; false: na ordem da Bíblia (busca por livro ou por trecho). */
     ranked: boolean;
 }
 
@@ -149,15 +152,21 @@ export function isSearchIndexReady(ebf: EbfDocument): boolean {
  * Busca versículos. Com o índice pronto, todos os termos precisam aparecer
  * (o último vale como prefixo, para buscar enquanto digita; palavras com 4
  * letras ou mais toleram um erro de digitação) e os resultados vêm por
- * relevância, com a frase exata primeiro. Sem o índice, busca o trecho exato,
- * na ordem da Bíblia.
+ * relevância, com a frase exata primeiro, ou, em `order: 'book'`, na ordem da
+ * Bíblia (nesse caso, os primeiros `maxResults` da Bíblia, não os mais
+ * relevantes). Sem o índice, busca o trecho exato, na ordem da Bíblia.
  */
-export function searchVerses(ebf: EbfDocument, query: string, maxResults = MAX_SEARCH_RESULTS): SearchResponse {
+export function searchVerses(
+    ebf: EbfDocument,
+    query: string,
+    maxResults = MAX_SEARCH_RESULTS,
+    order: SearchOrder = 'relevance',
+): SearchResponse {
     const trimmed = query.trim();
     if (trimmed.length < MIN_QUERY_LENGTH) return { results: [], total: 0, ranked: false };
 
     return isSearchIndexReady(ebf) && current
-        ? rankedSearch(getVerses(ebf), current.miniSearch, trimmed, maxResults)
+        ? rankedSearch(getVerses(ebf), current.miniSearch, trimmed, maxResults, order)
         : phraseSearch(getVerses(ebf), trimmed, maxResults);
 }
 
@@ -172,6 +181,7 @@ function rankedSearch(
     miniSearch: MiniSearch<number>,
     query: string,
     maxResults: number,
+    order: SearchOrder,
 ): SearchResponse {
     const phrase = foldText(query);
     const hits = miniSearch
@@ -186,13 +196,18 @@ function rankedSearch(
             return { hit, verse, phrase: verse ? foldedText(verse).includes(phrase) : false };
         });
 
-    // Frase exata primeiro; depois, por relevância
-    hits.sort((a, b) => Number(b.phrase) - Number(a.phrase) || b.hit.score - a.hit.score);
+    if (order === 'book') {
+        // Os ids são as posições na Bíblia, já em ordem de livros, capítulos e versículos
+        hits.sort((a, b) => Number(a.hit.id) - Number(b.hit.id));
+    } else {
+        // Frase exata primeiro; depois, por relevância
+        hits.sort((a, b) => Number(b.phrase) - Number(a.phrase) || b.hit.score - a.hit.score);
+    }
 
     const results = hits.slice(0, maxResults).flatMap(({ hit, verse }) =>
         verse ? [{ ...verse.result, terms: hit.terms }] : [],
     );
-    return { results, total: hits.length, ranked: true };
+    return { results, total: hits.length, ranked: order === 'relevance' };
 }
 
 /**

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { EbfDocument } from '../../src/core/ebf';
+import { type EbfDocument, getBookAbbreviation } from '../../src/core/ebf';
 import {
     foldText,
     highlightMatches,
@@ -82,6 +82,33 @@ describe('searchVerses com o índice pronto (busca por relevância)', () => {
         expect(response.results[0]?.terms).toEqual(['luz']);
     });
 
+    it('em ordem por livro, lista os versículos na ordem da Bíblia, com os mesmos termos', async () => {
+        const bible = smallBible();
+        await prepareSearchIndex(bible);
+
+        const response = searchVerses(bible, 'luz', undefined, 'book');
+        expect(refs(response)).toEqual(['Gn 1,1', 'Gn 1,2', 'Joã 1,1']);
+        expect(response.total).toBe(3);
+        expect(response.ranked).toBe(false);
+        expect(response.results[0]?.terms).toEqual(['luz']);
+    });
+
+    it('em ordem por livro, a relevância não interfere na ordem', async () => {
+        const bible: EbfDocument = {
+            bible: {
+                name: 'Teste',
+                books: [
+                    { names: ['Primeiro'], abbreviation: 'P', chapters: [{ verses: ['Um versículo bem longo que fala da luz só uma vez, no meio de muitas outras palavras.'] }] },
+                    { names: ['Segundo'], abbreviation: 'S', chapters: [{ verses: ['Luz!', 'Luz, luz.'] }] },
+                ],
+            },
+        };
+        await prepareSearchIndex(bible);
+
+        expect(refs(searchVerses(bible, 'luz'))[0]).not.toBe('P 1,1');
+        expect(refs(searchVerses(bible, 'luz', undefined, 'book'))).toEqual(['P 1,1', 'S 1,1', 'S 1,2']);
+    });
+
     it('exige todos os termos, em qualquer ordem', async () => {
         const bible = smallBible();
         await prepareSearchIndex(bible);
@@ -156,6 +183,17 @@ describe('searchVerses com o índice pronto (busca por relevância)', () => {
             const many = searchVerses(bible, 'senhor');
             expect(many.results).toHaveLength(200);
             expect(many.total).toBeGreaterThan(200);
+
+            // Por livro: os 200 primeiros da Bíblia, em ordem crescente de posição
+            const byBook = searchVerses(bible, 'senhor', undefined, 'book');
+            expect(byBook.results).toHaveLength(200);
+            expect(byBook.total).toBe(many.total);
+            expect(byBook.ranked).toBe(false);
+            const books = bible.bible.books.map(getBookAbbreviation);
+            const positions = byBook.results.map(
+                (r) => books.indexOf(r.bookAbbr) * 1e6 + r.chapter * 1e3 + r.verse,
+            );
+            expect(positions).toEqual([...positions].sort((a, b) => a - b));
         });
     });
 });
