@@ -7,9 +7,9 @@ import { minify } from 'html-minifier-terser';
 import { type Plugin } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import { defineConfig } from 'vitest/config';
-import { writeIndex } from './scripts/build-index';
-import { describePageVersion, uncommittedChanges } from './scripts/build-version';
-import { escapeHtml } from './src/core/text';
+import { writeIndex } from './scripts/build-index.ts';
+import { describePageVersion, uncommittedChanges } from './scripts/build-version.ts';
+import { escapeHtml } from './src/core/text.ts';
 
 /** Troca %PAGE_VERSION% no index.html pela versão (no build e no servidor de desenvolvimento). */
 function injectVersion(): Plugin {
