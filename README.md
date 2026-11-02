@@ -32,6 +32,27 @@ npm run test:e2e   # testes de ponta a ponta (Playwright) sobre o build de produ
 
 Na primeira execução dos testes E2E, instale o navegador com `npx playwright install chromium`.
 
+## Dependências e `npm audit`
+
+Nenhuma dependência de produção tem vulnerabilidade conhecida (`npm audit --omit=dev`). O que
+o `npm audit` ainda lista está só nas ferramentas de build e não vai para o site.
+
+O `package.json` força duas versões (`overrides`) por causa de dependências transitivas:
+
+- `glob` ^14.0.3: o `workbox-build` 7.4.1 (a última 7.x) usa o `glob` 11, deprecado e vulnerável;
+- `minimatch` ^11.0.4: corrige o DoS por padrões de glob (GHSA-g3hv-75wg-m249) em `eslint`,
+  `typescript-eslint` e no `workbox-build`.
+
+Se uma atualização do `eslint`, do `typescript-eslint` ou do `workbox-build` passar a exigir
+outra versão deles, remova o override e rode `npm run check` e `npm run build`.
+
+Risco aceito: `deepmerge` 4.3.1 (poluição de protótipo em `mergeObject()`, severidade baixa,
+GHSA-gcqx-w48m-w2h4), usado pelo `@rollup/plugin-node-resolve` dentro do `workbox-build` e do
+`vite-plugin-pwa`. Não há versão corrigida (a 4.3.1 é a última), e ele só mescla as opções do
+build, que são nossas. É por isso que o `npm audit` ainda mostra 4 vulnerabilidades baixas
+(`deepmerge` e os três pacotes que dependem dele). Reavalie quando o `workbox-build` trocar de
+dependência.
+
 ## Estrutura
 
 ```
