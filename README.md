@@ -1,100 +1,108 @@
 # Abra sua Bíblia!
 
-Site para ler a Bíblia na tradução de sua preferência: https://www.abrasuabiblia.com.br
+A website to read the Bible in the translation of your choice: https://www.abrasuabiblia.com.br
 
-Feito em TypeScript com [Vite](https://vite.dev), publicado na [Vercel](https://vercel.com).
+Built with TypeScript and [Vite](https://vite.dev), deployed on [Vercel](https://vercel.com).
 
-## Desenvolvimento
+## Language policy
 
-Requer Node.js 24.
+All source code and documentation in this project (comments, identifiers, tests, README and any
+other docs) must be written in **English**. The only exception is the user interface: the texts
+the site shows to its users stay in **Brazilian Portuguese**, as do the Bible data and the test
+fixtures that depend on them.
+
+## Development
+
+Requires Node.js 24.
 
 ```bash
 npm install
-npm run dev        # servidor de desenvolvimento
-npm run build      # build de produção em dist/
-npm run preview    # serve o build de produção (necessário para testar o service worker)
+npm run dev        # development server
+npm run build      # production build into dist/
+npm run preview    # serves the production build (needed to test the service worker)
 ```
 
-Para reproduzir o ambiente da Vercel localmente (usa o `vercel.json`):
+To reproduce the Vercel environment locally (uses `vercel.json`):
 
 ```bash
 npm i -g vercel
-vercel dev         # desenvolvimento
-vercel build       # build idêntico ao de produção, em .vercel/output
+vercel dev         # development
+vercel build       # build identical to production, into .vercel/output
 ```
 
-## Testes
+## Tests
 
 ```bash
-npm run check      # typecheck + lint + testes unitários
-npm run test:e2e   # testes de ponta a ponta (Playwright) sobre o build de produção
+npm run check      # typecheck + lint + unit tests
+npm run test:e2e   # end-to-end tests (Playwright) against the production build
 ```
 
-Na primeira execução dos testes E2E, instale o navegador com `npx playwright install chromium`.
+On the first run of the E2E tests, install the browser with `npx playwright install chromium`.
 
-## Dependências e `npm audit`
+## Dependencies and `npm audit`
 
-Nenhuma dependência de produção tem vulnerabilidade conhecida (`npm audit --omit=dev`). O que
-o `npm audit` ainda lista está só nas ferramentas de build e não vai para o site.
+No production dependency has a known vulnerability (`npm audit --omit=dev`). What `npm audit`
+still lists is only in the build tooling and does not ship to the site.
 
-O `package.json` força duas versões (`overrides`) por causa de dependências transitivas:
+`package.json` pins two versions (`overrides`) because of transitive dependencies:
 
-- `glob` ^14.0.3: o `workbox-build` 7.4.1 (a última 7.x) usa o `glob` 11, deprecado e vulnerável;
-- `minimatch` ^11.0.4: corrige o DoS por padrões de glob (GHSA-g3hv-75wg-m249) em `eslint`,
-  `typescript-eslint` e no `workbox-build`.
+- `glob` ^14.0.3: `workbox-build` 7.4.1 (the latest 7.x) uses `glob` 11, which is deprecated and
+  vulnerable;
+- `minimatch` ^11.0.4: fixes the glob-pattern DoS (GHSA-g3hv-75wg-m249) in `eslint`,
+  `typescript-eslint` and `workbox-build`.
 
-Se uma atualização do `eslint`, do `typescript-eslint` ou do `workbox-build` passar a exigir
-outra versão deles, remova o override e rode `npm run check` e `npm run build`.
+If an update of `eslint`, `typescript-eslint` or `workbox-build` starts requiring a different
+version of either, remove the override and run `npm run check` and `npm run build`.
 
-Risco aceito: `deepmerge` 4.3.1 (poluição de protótipo em `mergeObject()`, severidade baixa,
-GHSA-gcqx-w48m-w2h4), usado pelo `@rollup/plugin-node-resolve` dentro do `workbox-build` e do
-`vite-plugin-pwa`. Não há versão corrigida (a 4.3.1 é a última), e ele só mescla as opções do
-build, que são nossas. É por isso que o `npm audit` ainda mostra 4 vulnerabilidades baixas
-(`deepmerge` e os três pacotes que dependem dele). Reavalie quando o `workbox-build` trocar de
-dependência.
+Accepted risk: `deepmerge` 4.3.1 (prototype pollution in `mergeObject()`, low severity,
+GHSA-gcqx-w48m-w2h4), used by `@rollup/plugin-node-resolve` inside `workbox-build` and
+`vite-plugin-pwa`. There is no fixed version (4.3.1 is the latest), and it only merges the build
+options, which are ours. That is why `npm audit` still shows 4 low-severity vulnerabilities
+(`deepmerge` and the three packages that depend on it). Reassess when `workbox-build` switches
+dependencies.
 
-## Estrutura
+## Structure
 
 ```
-index.html              página (ponto de entrada do Vite)
-settings.json           configuração do site (Bíblia padrão)
+index.html              page (Vite entry point)
+settings.json           site configuration (default Bible)
 src/
-  core/                 lógica pura: formato EBF1, referências, renderização, busca, XML
-  data/                 carregamento do índice e das Bíblias
-  router/               roteador da SPA (History API), independente das telas
-  screens/              telas; reader/ é a de leitura (/{bíblia}/{livro}/{trecho})
-  ui/                   tema, modais, mensagens, preferências
+  core/                 pure logic: EBF1 format, references, rendering, search, XML
+  data/                 loading of the index and of the Bibles
+  router/               SPA router (History API), independent of the screens
+  screens/              screens; reader/ is the reading one (/{bible}/{book}/{passage})
+  ui/                   theme, modals, messages, preferences
   sw/                   service worker (Workbox)
-  app.ts                registro das telas e das rotas
-public/                 copiado sem alteração para o build
-  assets/data/          Bíblias (*.ebf1.json) e o index.json gerado no build
+  app.ts                registration of the screens and routes
+public/                 copied unchanged into the build
+  assets/data/          Bibles (*.ebf1.json) and the index.json generated at build time
   assets/icons/
   manifest.json
-scripts/                build-index.ts (gera o index.json) e check-dist.mjs
-tests/                  testes unitários (Vitest)
-e2e/                    testes de ponta a ponta (Playwright)
+scripts/                build-index.ts (generates index.json) and check-dist.mjs
+tests/                  unit tests (Vitest)
+e2e/                    end-to-end tests (Playwright)
 ```
 
-## Bíblias
+## Bibles
 
-As Bíblias ficam em `public/assets/data/bibles` no formato
-[Easy Bible Format (EBF1)](https://github.com/natanael127/easy-bible-format) e são publicadas
-exatamente como estão no repositório, para que possam ser baixadas e usadas em outros projetos:
+The Bibles live in `public/assets/data/bibles` in the
+[Easy Bible Format (EBF1)](https://github.com/natanael127/easy-bible-format) and are published
+exactly as they are in the repository, so that they can be downloaded and used in other projects:
 
-- os testes validam todas elas contra o schema oficial (`ebf1-schema.json`), que vem do
-  repositório do formato como dependência npm fixada num commit (`easy-bible-format` no
-  `package.json`). Para atualizar o schema, troque o hash do commit e rode `npm install`;
-- `scripts/check-dist.mjs` roda ao fim de cada build e falha se algum arquivo publicado diferir
-  da origem.
+- the tests validate all of them against the official schema (`ebf1-schema.json`), which comes
+  from the format's repository as an npm dependency pinned to a commit (`easy-bible-format` in
+  `package.json`). To update the schema, change the commit hash and run `npm install`;
+- `scripts/check-dist.mjs` runs at the end of every build and fails if any published file differs
+  from its source.
 
-Para adicionar uma Bíblia, basta colocar o arquivo `.ebf1.json` em `public/assets/data/bibles`.
-O índice (`public/assets/data/index.json`, fora do git) é gerado por `scripts/build-index.ts` a
-cada `npm run build` e `npm run dev`: nome, tipo (católica/evangélica pela quantidade de livros)
-o idioma (ISO 639-3) e o slug da URL, tirados do nome do arquivo (`por_ave_maria.ebf1.json` →
-`/por/ave-maria`, que abre em `/por/ave-maria/jo/3,16`). O nome do arquivo precisa começar pelo
-idioma. O build falha se houver nome repetido ou slug repetido no mesmo idioma.
+To add a Bible, just drop the `.ebf1.json` file into `public/assets/data/bibles`.
+The index (`public/assets/data/index.json`, not in git) is generated by `scripts/build-index.ts`
+on every `npm run build` and `npm run dev`: name, type (Catholic/Protestant, by the number of
+books), language (ISO 639-3) and URL slug, all taken from the file name (`por_ave_maria.ebf1.json`
+→ `/por/ave-maria`, which opens at `/por/ave-maria/jo/3,16`). The file name must start with the
+language. The build fails if a name is repeated or if a slug is repeated within the same language.
 
-A Bíblia aberta na primeira visita fica no `settings.json`, por idioma e slug:
+The Bible opened on the first visit is set in `settings.json`, by language and slug:
 
 ```json
 {

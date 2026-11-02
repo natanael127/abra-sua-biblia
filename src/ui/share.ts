@@ -6,28 +6,28 @@ export interface ShareData {
 }
 
 /**
- * - `shared`: enviado pela folha de compartilhamento do sistema;
- * - `cancelled`: o usuário fechou a folha sem compartilhar;
- * - `copied`: sem a Web Share API (ou se ela recusar), o link foi copiado.
+ * - `shared`: sent through the system share sheet;
+ * - `cancelled`: the user closed the sheet without sharing;
+ * - `copied`: without the Web Share API (or if it refuses), the link was copied.
  */
 export type ShareResult = 'shared' | 'cancelled' | 'copied';
 
 /**
- * Compartilha pela Web Share API (celulares e alguns navegadores de desktop)
- * e, sem ela, copia o link. Rejeita só se nem a cópia funcionar.
+ * Shares through the Web Share API (phones and some desktop browsers) and,
+ * without it, copies the link. Rejects only if even copying fails.
  */
 export async function shareLink({ title, url }: ShareData): Promise<ShareResult> {
     if ('share' in navigator) {
         try {
-            // O texto acompanha o link nos apps que ignoram o título (ex.: WhatsApp)
+            // The text goes along with the link in apps that ignore the title (e.g. WhatsApp)
             await navigator.share({ title, text: title, url });
             return 'shared';
         } catch (error) {
             if (error instanceof DOMException && error.name === 'AbortError') {
                 return 'cancelled';
             }
-            // Recusado (sem permissão, dados não suportados): copia o link
-            console.warn('Web Share API indisponível, copiando o link:', error);
+            // Refused (no permission, unsupported data): copy the link
+            console.warn('Web Share API unavailable, copying the link:', error);
         }
     }
     await copyTextToClipboard(url);

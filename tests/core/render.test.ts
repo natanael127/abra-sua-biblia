@@ -32,44 +32,44 @@ const options = (overrides: Partial<DisplayOptions> = {}): DisplayOptions => ({
 });
 
 describe('renderReference', () => {
-    it('sem Bíblia carregada', () => {
+    it('with no Bible loaded', () => {
         expect(renderReference('Gn 1', null, options(), '')).toEqual({
             error: true,
             html: '<span class="error">Nenhum arquivo de Bíblia foi carregado.</span>',
         });
     });
 
-    it('referência inválida mostra as instruções', () => {
+    it('invalid reference shows the instructions', () => {
         expect(renderReference('Gn', ebf, options(), '<p>ajuda</p>')).toEqual({ error: true, html: '<p>ajuda</p>' });
     });
 
-    it('escapa o nome do livro digitado na mensagem de erro (evita XSS por link compartilhado)', () => {
+    it('escapes the typed book name in the error message (prevents XSS via shared link)', () => {
         const result = renderReference('<img/src=x/onerror=alert(1)> 1', ebf, options(), '');
         expect(result.error).toBe(true);
         expect(result.html).not.toContain('<img');
         expect(result.html).toContain('&lt;img/src=x/onerror=alert(1)&gt;');
     });
 
-    it('capítulo inexistente', () => {
+    it('nonexistent chapter', () => {
         expect(renderReference('Gn 2', ebf, options(), '').html).toBe(
             '<span class="error">Capítulo 2 não encontrado em Gênesis.</span>',
         );
     });
 
-    it('cabeçalho com título do capítulo e nome da Bíblia escapados', () => {
+    it('header with escaped chapter title and Bible name', () => {
         expect(renderReference('Gn 1,1', ebf, options(), '').html).toContain(
             '<div class="reference">Gênesis 1: A criação (Teste &lt;b&gt;)</div>',
         );
     });
 
-    it('aceita versículos em texto simples e escapa o conteúdo', () => {
+    it('accepts plain-text verses and escapes the content', () => {
         const html = renderReference('Gn 1,2-4', ebf, options({ sectionTitles: false }), '').html;
         expect(html).toContain('<sup>2</sup> Versículo em texto simples, &quot;citado&quot;.');
         expect(html).toContain('<sup>4</sup> Disse &lt;Deus&gt;: “Haja luz”.');
         expect(html).not.toContain('<sup>3</sup>');
     });
 
-    it('com aspas, troca as aspas internas por simples e envolve o trecho', () => {
+    it('with quotes, replaces inner quotes with single quotes and wraps the passage', () => {
         const html = renderReference(
             'Gn 1,2.4',
             ebf,
@@ -82,19 +82,19 @@ describe('renderReference', () => {
         );
     });
 
-    it('título de seção antes do número do versículo', () => {
+    it('section title before the verse number', () => {
         expect(renderReference('Gn 1,1', ebf, options(), '').html).toContain(
             '<span class="section-title">Origem</span><sup>1</sup> No princípio.',
         );
     });
 
-    it('citação compactada no final', () => {
+    it('compacted citation at the end', () => {
         expect(renderReference('Gn 1,1-2.4', ebf, options(), '').html).toContain(
             '<span class="verse-reference">(Gn 1,1-2.4)</span>',
         );
     });
 
-    it('arquivo corrompido não derruba a página', () => {
+    it('corrupted file does not crash the page', () => {
         const corrupted = { bible: { name: 'x', books: [{ names: ['A'], abbreviation: 'A', chapters: [{}] }] } };
         const result = renderReference('A 1', corrupted as unknown as EbfDocument, options(), '');
         expect(result).toEqual({

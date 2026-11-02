@@ -1,7 +1,7 @@
 /**
- * Rewrite da SPA na Vercel: as telas (/por/ave-maria/jo/3,16, /planos...) recebem
- * o index.html. Arquivos publicados e caminhos internos do Vite (usados pelo
- * `vercel dev`, em que o rewrite vale antes do servidor do Vite) ficam de fora.
+ * SPA rewrite on Vercel: the screens (/por/ave-maria/jo/3,16, /planos...) are served
+ * index.html. Published files and Vite's internal paths (used by
+ * `vercel dev`, where the rewrite applies before the Vite server) are excluded.
  */
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -16,8 +16,8 @@ const config = JSON.parse(readFileSync(join(ROOT_DIR, 'vercel.json'), 'utf8')) a
 const spaRewrite = config.rewrites.find((rewrite) => rewrite.destination === '/index.html');
 const isRewritten = (path: string) => new RegExp(`^${spaRewrite?.source ?? '$^'}$`).test(path);
 
-describe('rewrite da SPA (vercel.json)', () => {
-    it('entrega a página em todas as telas', () => {
+describe('SPA rewrite (vercel.json)', () => {
+    it('serves the page on every screen', () => {
         for (const path of [
             '/',
             '/por',
@@ -33,7 +33,7 @@ describe('rewrite da SPA (vercel.json)', () => {
         }
     });
 
-    it('não captura arquivos nem caminhos internos do Vite', () => {
+    it('does not capture files or Vite internal paths', () => {
         for (const path of [
             '/manifest.json',
             '/service-worker.js',

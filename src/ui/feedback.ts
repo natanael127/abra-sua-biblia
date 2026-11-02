@@ -7,7 +7,7 @@ const MESSAGE_DURATION_MS = 3000;
 
 let notyf: Notyf | undefined;
 
-/** Criado na primeira mensagem: o Notyf insere seus contêineres no <body>. */
+/** Created on the first message: Notyf inserts its containers into the <body>. */
 function getNotyf(): Notyf {
     notyf ??= new Notyf({
         duration: MESSAGE_DURATION_MS,
@@ -25,24 +25,24 @@ function getNotyf(): Notyf {
     return notyf;
 }
 
-/** Mostra uma mensagem curta na parte de baixo da tela, uma de cada vez, anunciada aos leitores de tela. */
+/** Shows a short message at the bottom of the screen, one at a time, announced to screen readers. */
 export function showTemporaryMessage(message: string): void {
     const toasts = getNotyf();
     toasts.dismissAll();
-    // O Notyf insere a mensagem como HTML
+    // Notyf inserts the message as HTML
     toasts.open({ type: 'info', message: escapeHtml(message) });
 }
 
 /**
- * Copia o texto para a área de transferência: Clipboard API e, se ela não
- * existir ou recusar (fora de contexto seguro, sem permissão), o
- * execCommand('copy'), para navegadores antigos.
+ * Copies the text to the clipboard: Clipboard API and, if it is missing or
+ * refuses (outside a secure context, no permission), execCommand('copy'),
+ * for old browsers.
  */
 export const copyTextToClipboard = (text: string): Promise<void> => clipboardCopy(text);
 
 /**
- * Converte o trecho exibido em texto puro: <br> e o fim de cada <span>
- * (títulos de seção e citação) viram quebras de linha.
+ * Converts the displayed passage to plain text: <br> and the end of each <span>
+ * (section titles and citation) become line breaks.
  */
 export function toPlainText(element: HTMLElement): string {
     const clone = element.cloneNode(true) as HTMLElement;

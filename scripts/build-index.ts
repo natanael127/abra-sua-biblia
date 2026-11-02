@@ -1,49 +1,49 @@
 /**
- * Gera o public/assets/data/index.json a partir das Bíblias (*.ebf1.json) e
- * do settings.json. Executado pelo Vite ao iniciar (dev e build); o arquivo
- * gerado não é versionado.
+ * Generates public/assets/data/index.json from the Bibles (*.ebf1.json) and
+ * settings.json. Run by Vite on startup (dev and build); the generated file
+ * is not versioned.
  */
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
 export const ROOT_DIR = resolve(import.meta.dirname, '..');
-/** Pasta de dados publicada pelo site (onde ficam o index.json e as Bíblias). */
+/** Data folder published by the site (holds index.json and the Bibles). */
 export const DATA_DIR = join(ROOT_DIR, 'public/assets/data');
 export const SETTINGS_FILE = join(ROOT_DIR, 'settings.json');
 
-/** Pastas, relativas a DATA_DIR, com as Bíblias. */
+/** Folders, relative to DATA_DIR, that hold the Bibles. */
 const BIBLE_DIRECTORIES = ['bibles'];
 const BIBLE_FILE_SUFFIX = '.ebf1.json';
 
-/** Quantidade de livros por tipo de Bíblia. */
+/** Number of books per Bible type. */
 const BIBLE_TYPE_BOOKS = {
-    catholic: 73, // 46 AT + 27 NT (inclui deuterocanônicos)
-    protestant: 66, // 39 AT + 27 NT
+    catholic: 73, // 46 OT + 27 NT (includes deuterocanonical books)
+    protestant: 66, // 39 OT + 27 NT
 } as const;
 
 export type BibleType = keyof typeof BIBLE_TYPE_BOOKS | 'other';
 
 export interface IndexEntry {
     name: string;
-    /** Idioma ISO 639-3 da Bíblia, ex.: "por". */
+    /** Bible language (ISO 639-3), e.g. "por". */
     language: string;
-    /** Identificador da Bíblia dentro do idioma, ex.: "ave-maria". */
+    /** Bible identifier within its language, e.g. "ave-maria". */
     slug: string;
-    /** Caminho relativo a DATA_DIR, ex.: "bibles/por_ave_maria.ebf1.json". */
+    /** Path relative to DATA_DIR, e.g. "bibles/por_ave_maria.ebf1.json". */
     path: string;
     type: BibleType;
     default?: true;
 }
 
 export interface Settings {
-    /** Idioma e slug da Bíblia aberta na primeira visita, ex.: "por/ave-maria". */
+    /** Language and slug of the Bible opened on the first visit, e.g. "por/ave-maria". */
     defaultBible: string;
 }
 
 export function readSettings(file = SETTINGS_FILE): Settings {
     const settings = JSON.parse(readFileSync(file, 'utf8')) as Partial<Settings>;
     if (typeof settings.defaultBible !== 'string' || !settings.defaultBible) {
-        throw new Error(`${file}: "defaultBible" deve ser o idioma e o slug de uma Bíblia, ex.: "por/ave-maria"`);
+        throw new Error(`${file}: "defaultBible" must be the language and slug of a Bible, e.g.: "por/ave-maria"`);
     }
     return { defaultBible: settings.defaultBible };
 }
@@ -55,14 +55,14 @@ export function getBibleType(numBooks: number): BibleType {
     return 'other';
 }
 
-/** Idioma ISO 639-3 no início do nome do arquivo: "por_ave_maria" -> "por"; indefinido sem o prefixo. */
+/** ISO 639-3 language at the start of the file name: "por_ave_maria" -> "por"; undefined without the prefix. */
 export function getBibleLanguage(bibleId: string): string | undefined {
     return /^([a-z]{3})_/i.exec(bibleId)?.[1]?.toLowerCase();
 }
 
 /**
- * Identificador da Bíblia na URL, depois do idioma (ex.: /por/ave-maria/jo/3,16),
- * a partir do nome do arquivo sem o prefixo de idioma ISO 639-3:
+ * Bible identifier in the URL, after the language (e.g. /por/ave-maria/jo/3,16),
+ * derived from the file name without the ISO 639-3 language prefix:
  * "por_ave_maria" -> "ave-maria".
  */
 export function getBibleSlug(bibleId: string): string {
@@ -77,7 +77,7 @@ interface BibleFile {
     bible?: { name?: unknown; books?: unknown[] };
 }
 
-/** Monta o índice; lança erro com a causa se algo impedir um índice válido. */
+/** Builds the index; throws an error with the cause if anything prevents a valid index. */
 export function buildIndex(dataDir = DATA_DIR, settings: Settings = readSettings()): IndexEntry[] {
     const entries: IndexEntry[] = [];
 
@@ -91,12 +91,12 @@ export function buildIndex(dataDir = DATA_DIR, settings: Settings = readSettings
             try {
                 data = JSON.parse(readFileSync(join(dataDir, path), 'utf8')) as BibleFile;
             } catch (error) {
-                throw new Error(`${path}: JSON inválido`, { cause: error });
+                throw new Error(`${path}: invalid JSON`, { cause: error });
             }
             const bibleId = file.slice(0, -BIBLE_FILE_SUFFIX.length);
             const language = getBibleLanguage(bibleId);
             if (!language) {
-                throw new Error(`${path}: o nome do arquivo deve começar pelo idioma ISO 639-3, ex.: "por_${bibleId}"`);
+                throw new Error(`${path}: the file name must start with the ISO 639-3 language, e.g.: "por_${bibleId}"`);
             }
             const name = typeof data.bible?.name === 'string' && data.bible.name ? data.bible.name : bibleId;
             entries.push({
@@ -109,14 +109,14 @@ export function buildIndex(dataDir = DATA_DIR, settings: Settings = readSettings
         }
     }
 
-    // O nome aparece na lista de traduções e idioma/slug identificam a Bíblia na URL
+    // The name appears in the translation list, and language/slug identify the Bible in the URL
     const names = new Set<string>();
     const keys = new Set<string>();
     for (const entry of entries) {
         const key = `${entry.language}/${entry.slug}`;
-        if (names.has(entry.name)) throw new Error(`${entry.path}: nome repetido "${entry.name}"`);
+        if (names.has(entry.name)) throw new Error(`${entry.path}: duplicate name "${entry.name}"`);
         if (!entry.slug || keys.has(key)) {
-            throw new Error(`${entry.path}: slug inválido ou repetido "${key}"`);
+            throw new Error(`${entry.path}: invalid or duplicate slug "${key}"`);
         }
         names.add(entry.name);
         keys.add(key);
@@ -125,7 +125,7 @@ export function buildIndex(dataDir = DATA_DIR, settings: Settings = readSettings
     const defaultEntry = entries.find((entry) => `${entry.language}/${entry.slug}` === settings.defaultBible);
     if (!defaultEntry) {
         throw new Error(
-            `settings.json: a Bíblia padrão "${settings.defaultBible}" não existe. Bíblias: ${[...keys].join(', ')}`,
+            `settings.json: the default Bible "${settings.defaultBible}" does not exist. Bibles: ${[...keys].join(', ')}`,
         );
     }
     defaultEntry.default = true;
@@ -133,7 +133,7 @@ export function buildIndex(dataDir = DATA_DIR, settings: Settings = readSettings
     return entries;
 }
 
-/** Gera e grava o index.json; devolve o índice gerado. */
+/** Generates and writes index.json; returns the generated index. */
 export function writeIndex(dataDir = DATA_DIR, settings: Settings = readSettings()): IndexEntry[] {
     const entries = buildIndex(dataDir, settings);
     writeFileSync(join(dataDir, 'index.json'), `${JSON.stringify(entries, null, 4)}\n`);

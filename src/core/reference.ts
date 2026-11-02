@@ -1,23 +1,23 @@
 export interface ParsedReference {
     book: string;
     chapter: number;
-    /** Índices dos versículos (base 0), ordenados e sem repetição. */
+    /** Verse indexes (0-based), sorted and without duplicates. */
     verses: number[];
-    /** A referência termina em "N-": todos os versículos a partir de N. */
+    /** The reference ends in "N-": all verses from N onwards. */
     allAfterLast: boolean;
-    /** A referência não especifica versículos: capítulo inteiro. */
+    /** The reference does not specify verses: the whole chapter. */
     allVerses: boolean;
 }
 
 /**
- * Interpreta referências no formato "Livro capítulo[,versículos]", em que
- * versículos são números ou intervalos separados por ponto. Ex.: "Mt 5,3-12.21-".
+ * Parses references in the format "Book chapter[,verses]", where verses are
+ * numbers or ranges separated by dots. E.g.: "Mt 5,3-12.21-".
  */
 export function parseReference(reference: string): ParsedReference | null {
     const [book = '', ...rest] = reference.split(' ');
     const others = rest.join(' ');
 
-    // Padrão básico: Capítulo[,Versículo(s)]
+    // Basic pattern: Chapter[,Verse(s)]
     const match = /^(\d+)(?:,(.+))?$/.exec(others);
     if (!match) {
         return null;
@@ -26,7 +26,7 @@ export function parseReference(reference: string): ParsedReference | null {
     const chapter = match[1] ?? '';
     const verseRef = match[2];
 
-    // Versículos (pode conter múltiplas referências separadas por ponto)
+    // Verses (may contain multiple references separated by dots)
     const verseSegments = verseRef ? verseRef.split('.') : [];
     const allVerses = !verseRef;
 
@@ -35,7 +35,7 @@ export function parseReference(reference: string): ParsedReference | null {
     for (const segment of verseSegments) {
         if (allAfterLast) break;
 
-        // Verificar se é um intervalo (ex: 5-7) ou um único versículo
+        // Check whether it is a range (e.g. 5-7) or a single verse
         if (segment.includes('-')) {
             const [startText = '', endText = ''] = segment.split('-');
             const start = parseInt(startText.trim());
@@ -71,8 +71,8 @@ export function parseReference(reference: string): ParsedReference | null {
 }
 
 /**
- * Ajusta os índices dos versículos ao tamanho real do capítulo: descarta os
- * inexistentes e expande "capítulo inteiro" e "a partir de N".
+ * Fits the verse indexes to the actual size of the chapter: drops the ones
+ * that do not exist and expands "whole chapter" and "from N onwards".
  */
 export function resolveVerseIndexes(parsedReference: ParsedReference, numOfVerses: number): number[] {
     if (parsedReference.allVerses) {
@@ -92,8 +92,8 @@ export function resolveVerseIndexes(parsedReference: ParsedReference, numOfVerse
 }
 
 /**
- * Compacta índices de versículos (base 0) na notação de referência.
- * Ex.: [0, 1, 2, 4] -> ",1-3.5". Lista vazia gera texto vazio.
+ * Compacts verse indexes (0-based) into reference notation.
+ * E.g.: [0, 1, 2, 4] -> ",1-3.5". An empty list yields an empty string.
  */
 export function formatVerseRanges(versesList: readonly number[]): string {
     const first = versesList[0];

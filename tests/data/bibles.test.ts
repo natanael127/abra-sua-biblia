@@ -1,7 +1,7 @@
 /**
- * As Bíblias publicadas são arquivos EBF1 para uso livre fora deste site.
- * Estes testes garantem que seguem o schema oficial do formato e continuam
- * coerentes com o índice (gerado no build por scripts/build-index.ts).
+ * The published Bibles are EBF1 files meant for free use outside this site.
+ * These tests ensure they follow the format's official schema and stay
+ * consistent with the index (generated at build time by scripts/build-index.ts).
  */
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
@@ -19,26 +19,26 @@ const index = buildIndex();
 const BOOKS_BY_TYPE: Record<string, number> = { catholic: 73, protestant: 66 };
 const validateSchema = new Ajv({ allErrors: true }).compile(ebf1Schema);
 
-describe('Bíblias publicadas', () => {
+describe('published Bibles', () => {
     const files = listBibleFiles();
 
-    it('existe pelo menos uma Bíblia', () => {
+    it('at least one Bible exists', () => {
         expect(files.length).toBeGreaterThan(0);
     });
 
     describe.each(files)('%s', (file) => {
         const id = file.replace(/\.ebf1\.json$/, '');
 
-        it('segue o schema oficial do EBF1', () => {
+        it('follows the official EBF1 schema', () => {
             validateSchema(loadBible(id));
             expect(validateSchema.errors ?? []).toEqual([]);
         });
 
-        it('é aceita pelo leitor do site', () => {
+        it('is accepted by the site reader', () => {
             expect(validateEbf(loadBible(id))).toEqual([]);
         });
 
-        it('consta no index.json com nome e tipo coerentes', () => {
+        it('is listed in index.json with consistent name and type', () => {
             const bible = loadBible(id).bible;
             const entry = index.find((e) => e.path === `bibles/${file}`);
             expect(entry).toBeDefined();
@@ -49,12 +49,12 @@ describe('Bíblias publicadas', () => {
             }
         });
 
-        it('tem abreviações únicas por livro', () => {
+        it('has unique abbreviations per book', () => {
             const abbreviations = loadBible(id).bible.books.map((b) => b.abbreviation?.toLowerCase());
             expect(new Set(abbreviations).size).toBe(abbreviations.length);
         });
 
-        it('todo livro tem URL que volta ao mesmo livro', () => {
+        it('every book has a URL that resolves back to the same book', () => {
             const entry = index.find((e) => e.path === `bibles/${file}`)!;
             for (const book of loadBible(id).bible.books) {
                 const abbreviation = getBookAbbreviation(book);
@@ -69,19 +69,19 @@ describe('Bíblias publicadas', () => {
     });
 });
 
-describe('índice das Bíblias publicadas', () => {
-    it('aponta apenas para arquivos existentes', () => {
+describe('index of the published Bibles', () => {
+    it('points only to existing files', () => {
         for (const entry of index) {
             expect(existsSync(join(DATA_DIR, entry.path)), entry.path).toBe(true);
         }
     });
 
-    it('tem nomes únicos', () => {
+    it('has unique names', () => {
         const names = index.map((e) => e.name.toLowerCase());
         expect(new Set(names).size).toBe(names.length);
     });
 
-    it('tem idioma e slug legíveis na URL, únicos juntos', () => {
+    it('has language and slug that are URL-friendly and unique together', () => {
         const keys = index.map((e) => `${e.language}/${e.slug}`);
         expect(new Set(keys).size).toBe(keys.length);
         for (const entry of index) {
@@ -90,7 +90,7 @@ describe('índice das Bíblias publicadas', () => {
         }
     });
 
-    it('tem o idioma de cada Bíblia igual ao do arquivo', () => {
+    it('has each Bible language equal to the file', () => {
         for (const entry of index) {
             expect(loadBible(entry.path.replace(/^bibles\/|\.ebf1\.json$/g, '')).bible.language, entry.path).toBe(entry.language);
         }

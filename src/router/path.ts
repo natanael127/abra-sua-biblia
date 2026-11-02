@@ -1,7 +1,7 @@
-/** Parâmetros extraídos do caminho; os opcionais ausentes ficam indefinidos. */
+/** Parameters extracted from the path; missing optional ones are undefined. */
 export type PathParams = Record<string, string | undefined>;
 
-/** Segmento de padrão: literal ("planos"), parâmetro (":bible") ou parâmetro opcional (":book?"). */
+/** Pattern segment: literal ("planos"), parameter (":bible") or optional parameter (":book?"). */
 interface Segment {
     name: string;
     param: boolean;
@@ -18,15 +18,15 @@ function compile(pattern: string): Segment[] {
     });
     const firstOptional = segments.findIndex((segment) => segment.optional);
     if (firstOptional !== -1 && segments.slice(firstOptional).some((segment) => !segment.optional)) {
-        throw new Error(`Padrão de rota inválido: "${pattern}" (opcionais só no fim)`);
+        throw new Error(`Invalid route pattern: "${pattern}" (optional segments only at the end)`);
     }
     return segments;
 }
 
 /**
- * Compara um caminho com um padrão como "/:bible?/:book?/:passage?".
- * Literais são comparados sem diferenciar maiúsculas; os parâmetros são
- * devolvidos já decodificados. Retorna null se o caminho não corresponder.
+ * Matches a path against a pattern such as "/:bible?/:book?/:passage?".
+ * Literals are compared case-insensitively; parameters are returned already
+ * decoded. Returns null if the path does not match.
  */
 export function matchPath(pattern: string, path: string): PathParams | null {
     const segments = compile(pattern);
@@ -57,12 +57,12 @@ export function matchPath(pattern: string, path: string): PathParams | null {
     return params;
 }
 
-/** Codifica um segmento do caminho, mantendo legíveis os caracteres seguros da notação bíblica. */
+/** Encodes a path segment, keeping the safe characters of Bible notation readable. */
 export function encodePathSegment(value: string): string {
     return encodeURIComponent(value).replace(/%2C/gi, ',');
 }
 
-/** Monta um caminho a partir de segmentos; os vazios ou ausentes são omitidos. */
+/** Builds a path from segments; empty or missing ones are omitted. */
 export function buildPath(...segments: (string | undefined)[]): string {
     return `/${segments
         .filter((segment): segment is string => !!segment)

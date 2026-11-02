@@ -1,9 +1,9 @@
 /**
- * Busca textual nos versículos, sem diferenciar maiúsculas nem acentos.
+ * Full-text search over the verses, ignoring case and accents.
  *
- * A busca usa um índice do MiniSearch, montado em blocos de
- * ~10 ms para não travar a página (leva alguns segundos numa Bíblia completa). Enquanto o
- * índice não fica pronto, vale a busca por trecho, na ordem da Bíblia.
+ * The search uses a MiniSearch index, built in slices of ~10 ms so the page
+ * does not freeze (it takes a few seconds for a full Bible). Until the index
+ * is ready, a phrase search is used instead, in Bible order.
  */
 import MiniSearch from 'minisearch';
 import { type EbfDocument, getBookAbbreviation, getBookName, getVerseText } from './ebf';
@@ -12,7 +12,7 @@ import { escapeHtml } from './text';
 export const MIN_QUERY_LENGTH = 3;
 export const MAX_SEARCH_RESULTS = 200;
 
-/** Tempo máximo de cada bloco da indexação antes de devolver o controle à página. */
+/** Maximum time of each indexing slice before control is handed back to the page. */
 const INDEX_SLICE_MS = 10;
 
 export interface SearchResult {
@@ -21,41 +21,41 @@ export interface SearchResult {
     chapter: number;
     verse: number;
     text: string;
-    /** Palavras encontradas (normalizadas), para o destaque; só na busca por relevância. */
+    /** Matched words (normalized), for highlighting; only in relevance search. */
     terms?: string[];
 }
 
-/** Ordem dos resultados: por relevância ou na ordem da Bíblia (livros, capítulos e versículos). */
+/** Result order: by relevance or in Bible order (books, chapters and verses). */
 export type SearchOrder = 'relevance' | 'book';
 
 export interface SearchResponse {
     results: SearchResult[];
-    /** Total de versículos encontrados (pode passar do limite de resultados). */
+    /** Total number of verses found (may exceed the results limit). */
     total: number;
-    /** true: ordenados por relevância; false: na ordem da Bíblia (busca por livro ou por trecho). */
+    /** true: sorted by relevance; false: in Bible order (book order or phrase search). */
     ranked: boolean;
 }
 
 const COMBINING_MARKS = /\p{M}/gu;
-/** Palavras: o inverso do separador padrão do MiniSearch (espaços e pontuação). */
+/** Words: the inverse of MiniSearch's default separator (spaces and punctuation). */
 const WORD = /[^\n\r\p{Z}\p{P}]+/gu;
-/** Separador que une palavras numa mesma marcação: só espaços e hífens. */
+/** Separator that joins words into a single highlight: only spaces and hyphens. */
 const JOINABLE_GAP = /^[\s\p{Z}\p{Pd}]+$/u;
 
-/** Forma usada na comparação: sem acentos/cedilha e em minúsculas ("Coração" -> "coracao"). */
+/** Form used for comparison: without accents/cedilla and lowercase ("Coração" -> "coracao"). */
 export function foldText(text: string): string {
     return text.normalize('NFD').replace(COMBINING_MARKS, '').toLowerCase();
 }
 
 interface IndexedVerse {
-    /** Texto normalizado, calculado sob demanda (ver foldedText). */
+    /** Normalized text, computed on demand (see foldedText). */
     folded?: string;
     result: SearchResult;
 }
 
 const foldedText = (verse: IndexedVerse): string => (verse.folded ??= foldText(verse.result.text));
 
-/** Versículos da Bíblia, listados uma vez por Bíblia carregada. */
+/** Verses of the Bible, listed once per loaded Bible. */
 const versesCache = new WeakMap<EbfDocument, IndexedVerse[]>();
 
 function getVerses(ebf: EbfDocument): IndexedVerse[] {
@@ -86,7 +86,7 @@ interface RankedIndex {
     whenReady: Promise<void>;
 }
 
-/** Só a Bíblia em uso tem índice (cerca de 100 MB numa Bíblia completa). */
+/** Only the Bible in use has an index (about 100 MB for a full Bible). */
 let current: RankedIndex | null = null;
 
 interface Scheduler {
@@ -94,9 +94,9 @@ interface Scheduler {
 }
 
 /**
- * Devolve o controle à página. Com scheduler.postTask, a indexação roda em
- * prioridade baixa, depois de interações e timers (digitação, mensagens);
- * sem ele, um setTimeout reveza com as demais tarefas.
+ * Hands control back to the page. With scheduler.postTask, indexing runs at
+ * low priority, after interactions and timers (typing, messages); without it,
+ * a setTimeout takes turns with the other tasks.
  */
 const yieldToPage = (): Promise<void> => {
     const scheduler = (globalThis as { scheduler?: Scheduler }).scheduler;
@@ -109,14 +109,14 @@ const yieldToPage = (): Promise<void> => {
 };
 
 /**
- * Começa a montar, em blocos, o índice de relevância da Bíblia, descartando o
- * da anterior. A promessa resolve quando o índice fica pronto ou é descartado.
+ * Starts building, in slices, the relevance index of the Bible, discarding
+ * the previous one. The promise resolves when the index is ready or discarded.
  */
 export function prepareSearchIndex(ebf: EbfDocument): Promise<void> {
     if (current?.ebf === ebf) return current.whenReady;
 
     const verses = getVerses(ebf);
-    // Documentos são as posições em `verses`; o texto é indexado já normalizado
+    // Documents are positions in `verses`; the text is indexed already normalized
     const miniSearch = new MiniSearch<number>({
         fields: ['text'],
         extractField: (position, field) => {
@@ -131,7 +131,7 @@ export function prepareSearchIndex(ebf: EbfDocument): Promise<void> {
         let position = 0;
         while (position < verses.length) {
             await yieldToPage();
-            // Outra Bíblia foi escolhida: abandona este índice
+            // Another Bible was chosen: abandon this index
             if (current !== index) return;
             const deadline = performance.now() + INDEX_SLICE_MS;
             do {
@@ -143,18 +143,18 @@ export function prepareSearchIndex(ebf: EbfDocument): Promise<void> {
     return index.whenReady;
 }
 
-/** O índice de relevância da Bíblia está pronto. */
+/** The relevance index of the Bible is ready. */
 export function isSearchIndexReady(ebf: EbfDocument): boolean {
     return current?.ebf === ebf && current.ready;
 }
 
 /**
- * Busca versículos. Com o índice pronto, todos os termos precisam aparecer
- * (o último vale como prefixo, para buscar enquanto digita; palavras com 4
- * letras ou mais toleram um erro de digitação) e os resultados vêm por
- * relevância, com a frase exata primeiro, ou, em `order: 'book'`, na ordem da
- * Bíblia (nesse caso, os primeiros `maxResults` da Bíblia, não os mais
- * relevantes). Sem o índice, busca o trecho exato, na ordem da Bíblia.
+ * Searches verses. With the index ready, all terms must appear (the last one
+ * counts as a prefix, to search while typing; words with 4 letters or more
+ * tolerate one typo) and results come by relevance, with the exact phrase
+ * first, or, with `order: 'book'`, in Bible order (in which case they are the
+ * first `maxResults` of the Bible, not the most relevant ones). Without the
+ * index, searches for the exact phrase, in Bible order.
  */
 export function searchVerses(
     ebf: EbfDocument,
@@ -197,10 +197,10 @@ function rankedSearch(
         });
 
     if (order === 'book') {
-        // Os ids são as posições na Bíblia, já em ordem de livros, capítulos e versículos
+        // The ids are positions in the Bible, already in book, chapter and verse order
         hits.sort((a, b) => Number(a.hit.id) - Number(b.hit.id));
     } else {
-        // Frase exata primeiro; depois, por relevância
+        // Exact phrase first; then by relevance
         hits.sort((a, b) => Number(b.phrase) - Number(a.phrase) || b.hit.score - a.hit.score);
     }
 
@@ -211,10 +211,10 @@ function rankedSearch(
 }
 
 /**
- * Escapa o texto para HTML e envolve em <mark> as palavras encontradas pela
- * busca por relevância. Palavras vizinhas (separadas só por espaço ou hífen)
- * formam uma só marcação; palavras curtas ("os", "de") só são marcadas
- * quando vizinhas de outra marcada.
+ * Escapes the text for HTML and wraps in <mark> the words found by the
+ * relevance search. Neighboring words (separated only by space or hyphen)
+ * form a single highlight; short words ("os", "de") are only highlighted when
+ * next to another highlighted word.
  */
 export function highlightTerms(text: string, terms: readonly string[]): string {
     const wanted = new Set(terms);
@@ -222,7 +222,7 @@ export function highlightTerms(text: string, terms: readonly string[]): string {
         const folded = foldText(match[0]);
         return { start: match.index, end: match.index + match[0].length, folded, hit: wanted.has(folded) };
     });
-    /** A palavra i e a seguinte estão separadas só por espaços ou hífens. */
+    /** Word i and the next one are separated only by spaces or hyphens. */
     const joinsNext = (i: number): boolean => {
         const next = words[i + 1];
         return !!next && JOINABLE_GAP.test(text.slice(words[i]?.end, next.start));
@@ -249,8 +249,9 @@ export function highlightTerms(text: string, terms: readonly string[]): string {
 }
 
 /**
- * Normaliza o texto caractere a caractere, guardando para cada posição do
- * resultado a posição de origem. map[folded.length] é o fim do texto original.
+ * Normalizes the text character by character, keeping for each position of
+ * the result its source position. map[folded.length] is the end of the
+ * original text.
  */
 function foldWithMap(text: string): { folded: string; map: number[] } {
     let folded = '';
@@ -267,8 +268,9 @@ function foldWithMap(text: string): { folded: string; map: number[] } {
 }
 
 /**
- * Escapa o texto para HTML e envolve em <mark> as ocorrências do trecho
- * buscado, com os mesmos critérios da busca por trecho (sem acentos e maiúsculas).
+ * Escapes the text for HTML and wraps in <mark> the occurrences of the
+ * searched phrase, with the same criteria as the phrase search (ignoring
+ * accents and case).
  */
 export function highlightMatches(text: string, query: string): string {
     const needle = foldText(query);

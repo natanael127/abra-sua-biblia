@@ -95,7 +95,7 @@ const OSIS_TO_USFM: Readonly<Record<string, string>> = {
     AddDan: 'DAG',
 };
 
-/** Texto dos nós de texto e de elemento do versículo (ignora o CDATA solto no versículo). */
+/** Text of the verse's text and element nodes (ignores stray CDATA in the verse). */
 function getVerseContent(verseElem: XmlElement): string {
     return verseElem.children
         .filter((node) => node.type !== 'cdata')

@@ -6,7 +6,7 @@ export function isUsfx(xmlDoc: XmlElement): boolean {
     return descendants(xmlDoc, 'usfx').length > 0 || descendants(xmlDoc, 'book').some((el) => el.attributes.id);
 }
 
-/** Elementos <p> que seguem o capítulo, até o próximo <c> ou o fim do livro. */
+/** <p> elements following the chapter, up to the next <c> or the end of the book. */
 function getFollowingParagraphs(chapterElement: XmlElement): XmlElement[] {
     const paragraphs: XmlElement[] = [];
     for (const node of nextSiblings(chapterElement)) {
@@ -19,12 +19,12 @@ function getFollowingParagraphs(chapterElement: XmlElement): XmlElement[] {
     return paragraphs;
 }
 
-/** Texto após o marcador <v>, até <ve/> ou o próximo <v>, sem as notas de rodapé (<f>). */
+/** Text after the <v> marker, up to <ve/> or the next <v>, without footnotes (<f>). */
 function getVerseContent(verseElement: XmlElement): string {
     let text = '';
     for (const node of nextSiblings(verseElement)) {
         if (node.type === 'element' && (node.name === 've' || node.name === 'v')) break;
-        // Texto solto e elementos, exceto notas; o CDATA solto fica de fora, como antes
+        // Loose text and elements, except notes; stray CDATA is left out, as before
         if (node.type === 'text' || (node.type === 'element' && node.name !== 'f')) {
             text += textContent(node);
         }
@@ -35,7 +35,7 @@ function getVerseContent(verseElement: XmlElement): string {
 function convertBook(bookElement: XmlElement): EbfBook {
     const bookId = bookElement.attributes.id ?? '';
 
-    // Nomes vêm dos elementos <toc>; o nível 3 é a abreviação
+    // Names come from the <toc> elements; level 3 is the abbreviation
     const names: string[] = [];
     let abbreviation = bookId;
     for (const tocElement of descendants(bookElement, 'toc')) {

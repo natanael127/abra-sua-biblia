@@ -1,10 +1,10 @@
 /**
- * Leitura de XML com o fast-xml-parser, igual no navegador e no Node.
+ * XML reading with fast-xml-parser, identical in the browser and in Node.
  *
- * O resultado é uma árvore simples, com a ordem original dos nós (o OSIS e o
- * USFX misturam texto e elementos) e referência ao pai, para percorrer os
- * irmãos. O texto segue as regras do DOM: entidades decodificadas, CDATA
- * separado do texto comum e comentários descartados.
+ * The result is a simple tree, keeping the original order of the nodes (OSIS
+ * and USFX mix text and elements) and a reference to the parent, to walk the
+ * siblings. Text follows the DOM rules: entities decoded, CDATA kept apart
+ * from regular text and comments discarded.
  */
 import { XMLParser, XMLValidator } from 'fast-xml-parser';
 
@@ -17,7 +17,7 @@ export interface XmlElement {
 }
 
 export interface XmlText {
-    /** `cdata`: conteúdo de <![CDATA[...]]>. */
+    /** `cdata`: content of <![CDATA[...]]>. */
     type: 'text' | 'cdata';
     value: string;
     parent: XmlElement;
@@ -25,7 +25,7 @@ export interface XmlText {
 
 export type XmlNode = XmlElement | XmlText;
 
-/** Nó como o fast-xml-parser o devolve com preserveOrder. */
+/** Node as fast-xml-parser returns it with preserveOrder. */
 type RawNode = Record<string, unknown>;
 
 const TEXT = '#text';
@@ -39,7 +39,7 @@ const parser = new XMLParser({
     parseTagValue: false,
     parseAttributeValue: false,
     trimValues: false,
-    // As entidades são decodificadas por decodeEntities, numa única passada
+    // Entities are decoded by decodeEntities, in a single pass
     processEntities: false,
     cdataPropName: CDATA,
     ignoreDeclaration: true,
@@ -48,7 +48,7 @@ const parser = new XMLParser({
 
 const XML_ENTITIES: Readonly<Record<string, string>> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" };
 
-/** Decodifica as entidades do XML e as referências numéricas (&#233; &#xE9;). */
+/** Decodes XML entities and numeric references (&#233; &#xE9;). */
 export function decodeEntities(text: string): string {
     return text.replace(/&(#x[0-9a-f]+|#[0-9]+|[a-z]+);/gi, (entity: string, name: string) => {
         if (name.startsWith('#')) {
@@ -67,7 +67,7 @@ function toNodes(raw: readonly RawNode[], parent: XmlElement): XmlNode[] {
             if (key === TEXT) {
                 nodes.push({ type: 'text', value: decodeEntities(String(value)), parent });
             } else if (key === CDATA) {
-                // O conteúdo do CDATA é literal: não decodifica entidades
+                // CDATA content is literal: entities are not decoded
                 const content = (value as { [TEXT]?: string }[]).map((text) => text[TEXT] ?? '').join('');
                 nodes.push({ type: 'cdata', value: content, parent });
             } else {
@@ -86,15 +86,15 @@ function toNodes(raw: readonly RawNode[], parent: XmlElement): XmlNode[] {
     return nodes;
 }
 
-/** Interpreta o XML; lança erro se for inválido. Devolve a raiz do documento ("#document"). */
+/** Parses the XML; throws if it is invalid. Returns the document root ("#document"). */
 export function parseXml(xmlContent: string): XmlElement {
-    // O substituto recomendado (fast-xml-validator) soma ~40 KB gzip ao bundle;
-    // este validador compartilha o código do parser e não custa nada a mais.
+    // The recommended replacement (fast-xml-validator) adds ~40 KB gzip to the
+    // bundle; this validator shares code with the parser and costs nothing extra.
     // eslint-disable-next-line @typescript-eslint/no-deprecated
     const validation = XMLValidator.validate(xmlContent);
     if (validation !== true) {
         const { msg, line, col } = validation.err;
-        throw new Error(`XML parsing error: ${msg} (linha ${line}, coluna ${col})`);
+        throw new Error(`XML parsing error: ${msg} (line ${line}, column ${col})`);
     }
 
     const document: XmlElement = { type: 'element', name: '#document', attributes: {}, children: [], parent: null };
@@ -102,7 +102,7 @@ export function parseXml(xmlContent: string): XmlElement {
     return document;
 }
 
-/** Elementos descendentes com o nome, na ordem do documento (como getElementsByTagName). */
+/** Descendant elements with the given name, in document order (like getElementsByTagName). */
 export function descendants(root: XmlElement, name: string): XmlElement[] {
     const found: XmlElement[] = [];
     const visit = (element: XmlElement) => {
@@ -117,12 +117,12 @@ export function descendants(root: XmlElement, name: string): XmlElement[] {
     return found;
 }
 
-/** Texto de um nó e de todos os descendentes, inclusive CDATA (como textContent). */
+/** Text of a node and all its descendants, including CDATA (like textContent). */
 export function textContent(node: XmlNode): string {
     return node.type === 'element' ? node.children.map(textContent).join('') : node.value;
 }
 
-/** Irmãos seguintes do nó, em ordem (como nextSibling). */
+/** Following siblings of the node, in order (like nextSibling). */
 export function* nextSiblings(node: XmlNode): Generator<XmlNode> {
     const siblings = node.parent?.children ?? [];
     for (let i = siblings.indexOf(node) + 1; i < siblings.length; i++) {

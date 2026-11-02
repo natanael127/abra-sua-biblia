@@ -21,7 +21,7 @@ afterEach(() => {
 });
 
 describe('shareLink', () => {
-    it('usa a Web Share API, com o título também como texto', async () => {
+    it('uses the Web Share API, with the title also as text', async () => {
         const share = vi.fn(() => Promise.resolve());
         setNavigator('share', share);
         const writeText = mockClipboard();
@@ -31,24 +31,24 @@ describe('shareLink', () => {
         expect(writeText).not.toHaveBeenCalled();
     });
 
-    it('não copia nada se o usuário fechar a folha de compartilhamento', async () => {
-        setNavigator('share', () => Promise.reject(new DOMException('cancelado', 'AbortError')));
+    it('copies nothing if the user closes the share sheet', async () => {
+        setNavigator('share', () => Promise.reject(new DOMException('cancelled', 'AbortError')));
         const writeText = mockClipboard();
 
         await expect(shareLink(data)).resolves.toBe('cancelled');
         expect(writeText).not.toHaveBeenCalled();
     });
 
-    it('se a Web Share API recusar, copia o link', async () => {
+    it('if the Web Share API refuses, copies the link', async () => {
         vi.spyOn(console, 'warn').mockImplementation(() => {});
-        setNavigator('share', () => Promise.reject(new DOMException('sem permissão', 'NotAllowedError')));
+        setNavigator('share', () => Promise.reject(new DOMException('no permission', 'NotAllowedError')));
         const writeText = mockClipboard();
 
         await expect(shareLink(data)).resolves.toBe('copied');
         expect(writeText).toHaveBeenCalledWith(data.url);
     });
 
-    it('sem a Web Share API, copia o link', async () => {
+    it('without the Web Share API, copies the link', async () => {
         expect('share' in navigator).toBe(false);
         const writeText = mockClipboard();
 
@@ -56,7 +56,7 @@ describe('shareLink', () => {
         expect(writeText).toHaveBeenCalledWith(data.url);
     });
 
-    it('rejeita se nem a cópia funcionar', async () => {
+    it('rejects if even copying fails', async () => {
         Object.defineProperty(document, 'execCommand', { value: () => false, configurable: true });
         await expect(shareLink(data)).rejects.toThrow();
     });

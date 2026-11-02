@@ -9,30 +9,30 @@ describe('showTemporaryMessage', () => {
         vi.useRealTimers();
     });
 
-    it('mostra a mensagem como texto, sem interpretar HTML', () => {
+    it('shows the message as text, without interpreting HTML', () => {
         showTemporaryMessage('<img src=x onerror=alert(1)> copiado');
         const [toast] = toasts();
         expect(toast?.textContent).toBe('<img src=x onerror=alert(1)> copiado');
         expect(toast?.querySelector('img')).toBeNull();
     });
 
-    it('mostra uma mensagem de cada vez', () => {
+    it('shows one message at a time', () => {
         showTemporaryMessage('Primeira');
         showTemporaryMessage('Segunda');
         const visible = toasts().filter((toast) => !toast.classList.contains('notyf__toast--disappear'));
         expect(visible.map((toast) => toast.textContent)).toEqual(['Segunda']);
     });
 
-    it('anuncia a mensagem aos leitores de tela', () => {
+    it('announces the message to screen readers', () => {
         vi.useFakeTimers();
         showTemporaryMessage('Link copiado');
-        // O Notyf espera 100 ms antes de anunciar, por compatibilidade com leitores de tela
+        // Notyf waits 100 ms before announcing, for screen reader compatibility
         vi.advanceTimersByTime(100);
         const announcer = document.querySelector('[aria-live]');
         expect(announcer?.textContent).toContain('Link copiado');
     });
 
-    it('some depois de 3 segundos', () => {
+    it('disappears after 3 seconds', () => {
         vi.useFakeTimers();
         showTemporaryMessage('Texto copiado');
         const toast = toasts().at(-1);
@@ -56,7 +56,7 @@ describe('copyTextToClipboard', () => {
         setClipboard(undefined);
     });
 
-    it('usa a Clipboard API quando disponível', async () => {
+    it('uses the Clipboard API when available', async () => {
         const writeText = vi.fn(() => Promise.resolve());
         setClipboard({ writeText });
         const execCommand = setExecCommand(true);
@@ -65,7 +65,7 @@ describe('copyTextToClipboard', () => {
         expect(execCommand).not.toHaveBeenCalled();
     });
 
-    it('sem a Clipboard API, copia com execCommand e remove o elemento temporário', async () => {
+    it('without the Clipboard API, copies with execCommand and removes the temporary element', async () => {
         const execCommand = setExecCommand(true);
         const children = document.body.childElementCount;
         await copyTextToClipboard('texto');
@@ -73,14 +73,14 @@ describe('copyTextToClipboard', () => {
         expect(document.body.childElementCount).toBe(children);
     });
 
-    it('se a Clipboard API recusar, tenta o execCommand', async () => {
-        setClipboard({ writeText: () => Promise.reject(new Error('sem permissão')) });
+    it('if the Clipboard API refuses, tries execCommand', async () => {
+        setClipboard({ writeText: () => Promise.reject(new Error('no permission')) });
         const execCommand = setExecCommand(true);
         await copyTextToClipboard('texto');
         expect(execCommand).toHaveBeenCalledWith('copy');
     });
 
-    it('falha se nenhum dos dois conseguir copiar', async () => {
+    it('fails if neither can copy', async () => {
         setExecCommand(false);
         await expect(copyTextToClipboard('texto')).rejects.toThrow();
     });

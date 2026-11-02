@@ -25,7 +25,7 @@ function fakeScreen(): FakeScreen {
     return screen;
 }
 
-/** Espera o evento popstate disparado por history.back()/forward() no jsdom. */
+/** Waits for the popstate event fired by history.back()/forward() in jsdom. */
 const waitPopstate = () =>
     new Promise<void>((resolve) => {
         window.addEventListener(
@@ -61,21 +61,21 @@ beforeEach(() => {
 
 afterEach(() => {
     document.body.replaceChildren();
-    // Cada teste cria um roteador; os anteriores param de ouvir os eventos
+    // Each test creates a router; the previous ones stop listening to events
     for (const router of routers.splice(0)) {
         router.stop();
     }
 });
 
 describe('createRouter', () => {
-    it('exibe a tela da URL inicial e esconde as demais', () => {
+    it('shows the screen of the initial URL and hides the others', () => {
         start('/ave-maria/jo/3,16');
         expect(reader.shown).toEqual([{ bible: 'ave-maria', book: 'jo', passage: '3,16' }]);
         expect(reader.root.hidden).toBe(false);
         expect(plans.root.hidden).toBe(true);
     });
 
-    it('a primeira rota correspondente vence', () => {
+    it('the first matching route wins', () => {
         start('/planos');
         expect(plans.shown).toEqual([{}]);
         expect(reader.shown).toEqual([]);
@@ -83,7 +83,7 @@ describe('createRouter', () => {
         expect(reader.root.hidden).toBe(true);
     });
 
-    it('navigate cria uma entrada no histórico e troca de tela', () => {
+    it('navigate creates a history entry and switches screens', () => {
         const router = start('/ave-maria/jo/3');
         const length = history.length;
 
@@ -95,7 +95,7 @@ describe('createRouter', () => {
         expect(reader.root.hidden).toBe(true);
     });
 
-    it('navigate com replace substitui a entrada atual', () => {
+    it('navigate with replace replaces the current entry', () => {
         const router = start('/ave-maria/jo/3');
         const length = history.length;
         router.navigate('/cnbb/jo/3', { replace: true });
@@ -104,7 +104,7 @@ describe('createRouter', () => {
         expect(reader.shown.at(-1)).toEqual({ bible: 'cnbb', book: 'jo', passage: '3' });
     });
 
-    it('updateUrl registra a URL sem exibir a tela de novo', () => {
+    it('updateUrl records the URL without showing the screen again', () => {
         const router = start('/ave-maria/jo/3');
         const length = history.length;
 
@@ -115,20 +115,20 @@ describe('createRouter', () => {
         expect(reader.shown).toHaveLength(1);
     });
 
-    it('updateUrl ignora o caminho atual, mesmo com outra codificação', () => {
+    it('updateUrl ignores the current path, even with a different encoding', () => {
         const router = start('/cnbb/%C3%AAx/20');
         const length = history.length;
         expect(router.updateUrl('/cnbb/êx/20')).toBe(false);
         expect(history.length).toBe(length);
     });
 
-    it('updateUrl descarta a query e o fragmento da URL atual', () => {
+    it('updateUrl discards the query and fragment of the current URL', () => {
         const router = start('/ave-maria?x=1#y');
         expect(router.updateUrl('/ave-maria', { replace: true })).toBe(true);
         expect(location.href).toBe(`${location.origin}/ave-maria`);
     });
 
-    it('Voltar e Avançar exibem a tela da URL', async () => {
+    it('Back and Forward show the screen of the URL', async () => {
         const router = start('/ave-maria/jo/3');
         router.updateUrl('/ave-maria/jo/4');
         router.navigate('/planos');
@@ -145,7 +145,7 @@ describe('createRouter', () => {
         expect(plans.shown).toHaveLength(2);
     });
 
-    it('caminho sem rota vai para o início, substituindo a entrada', () => {
+    it('path with no route goes to the start, replacing the entry', () => {
         const length = history.length;
         start('/a/b/c/d');
         expect(location.pathname).toBe('/');
@@ -153,13 +153,13 @@ describe('createRouter', () => {
         expect(reader.shown).toEqual([{}]);
     });
 
-    it('aceita tratamento próprio para caminho sem rota', () => {
+    it('accepts custom handling for a path with no route', () => {
         const notFound = vi.fn();
         start('/a/b/c/d', { notFound });
         expect(notFound).toHaveBeenCalledWith('/a/b/c/d', expect.anything());
     });
 
-    describe('links internos', () => {
+    describe('internal links', () => {
         function click(href: string, init: MouseEventInit = {}, attributes: Record<string, string> = {}) {
             const link = document.createElement('a');
             link.href = href;
@@ -168,7 +168,7 @@ describe('createRouter', () => {
             link.appendChild(child);
             document.body.appendChild(link);
             const event = new MouseEvent('click', { bubbles: true, cancelable: true, button: 0, ...init });
-            // Registra a decisão do roteador e impede o jsdom de seguir o link
+            // Records the router's decision and keeps jsdom from following the link
             let handledByRouter = false;
             window.addEventListener(
                 'click',
@@ -182,7 +182,7 @@ describe('createRouter', () => {
             return handledByRouter;
         }
 
-        it('navegam pela SPA sem recarregar a página', () => {
+        it('navigate within the SPA without reloading the page', () => {
             start('/ave-maria/jo/3');
             const handled = click('/planos');
             expect(handled).toBe(true);
@@ -190,7 +190,7 @@ describe('createRouter', () => {
             expect(plans.shown).toHaveLength(1);
         });
 
-        it('ficam com o navegador quando não são navegação interna', () => {
+        it('are left to the browser when they are not internal navigation', () => {
             start('/planos');
             const cases: [string, MouseEventInit?, Record<string, string>?][] = [
                 ['https://example.com/planos'],

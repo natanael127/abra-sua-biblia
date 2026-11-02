@@ -1,4 +1,4 @@
-/* Variáveis de tema - Claro (padrão) */
+/* Theme variables - Light (default) */
 :root {
     --bg-primary: #ffffff;
     --bg-secondary: #f9f9f9;
@@ -24,7 +24,7 @@
     --shadow-color: rgba(0, 0, 0, 0.2);
 }
 
-/* Variáveis de tema - Escuro */
+/* Theme variables - Dark */
 [data-theme="dark"] {
     --bg-primary: #1a1a2e;
     --bg-secondary: #16213e;
@@ -486,7 +486,7 @@ button:hover {
     }
 }
 
-/* Ícone de compartilhar (SVG): mesmo tamanho e cor do texto dos botões, nos dois temas */
+/* Share icon (SVG): same size and color as the button text, in both themes */
 .share-icon {
     width: 1em;
     height: 1em;
@@ -498,7 +498,7 @@ button:hover {
     stroke-linejoin: round;
 }
 
-/* Mensagem temporária (Notyf): mesmas cores e fonte do restante da página */
+/* Temporary message (Notyf): same colors and font as the rest of the page */
 .temporary-message {
     border-radius: 4px;
     font-size: 16px;
@@ -520,7 +520,7 @@ button:hover {
     display: flex;
 }
 
-/* Botão de tema */
+/* Theme button */
 .theme-button {
     padding: 8px 12px;
     background-color: var(--button-bg);
@@ -690,7 +690,7 @@ a:visited {
     font-size: 14px;
 }
 
-/* Versão do build (git describe), no fim da seção Sobre */
+/* Build version (git describe), at the end of the About section */
 .build-version {
     font-style: italic;
     font-size: 0.85em;

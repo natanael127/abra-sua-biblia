@@ -1,14 +1,14 @@
 /**
- * Tela de leitura: escolha da tradução, referência e exibição do trecho.
+ * Reader screen: translation choice, reference and passage display.
  *
- * A URL reflete o trecho exibido (/{idioma}/{bíblia}/{livro}/{trecho}). Navegações
- * externas (carga da página, Voltar/Avançar) chegam por `show`; as ações do
- * usuário na tela atualizam a URL:
- * - ações pontuais (livro, capítulo, histórico, busca, tradução) criam uma
- *   entrada no histórico do navegador;
- * - a digitação cria uma entrada na primeira alteração e atualiza essa mesma
- *   entrada nas seguintes, até a edição terminar (Enter, sair do campo ou
- *   outra navegação).
+ * The URL reflects the displayed passage (/{language}/{bible}/{book}/{passage}).
+ * External navigations (page load, Back/Forward) arrive through `show`; the
+ * user's actions on the screen update the URL:
+ * - one-off actions (book, chapter, history, search, translation) create an
+ *   entry in the browser history;
+ * - typing creates an entry on the first change and updates that same entry
+ *   on the following ones, until the edit ends (Enter, leaving the field or
+ *   another navigation).
  */
 import { debounce } from 'es-toolkit';
 import {
@@ -35,7 +35,7 @@ import * as storage from '../../ui/storage';
 import { parseLegacyLink, parseReaderParams, readerPath, referenceFromPath, UPLOAD_KEY } from './url';
 
 const APP_TITLE = 'Abra sua Bíblia!';
-/** Pausa na digitação da referência antes de exibir o trecho. */
+/** Pause in typing the reference before the passage is displayed. */
 const TYPING_DEBOUNCE_MS = 500;
 
 const BIBLE_TYPE_LABELS: Record<string, string> = {
@@ -45,7 +45,7 @@ const BIBLE_TYPE_LABELS: Record<string, string> = {
 };
 const BIBLE_TYPE_ORDER = ['catholic', 'protestant', 'other'];
 
-/** Botões de formatação: id do botão -> opção de exibição. */
+/** Formatting buttons: button id -> display option. */
 const FORMAT_BUTTONS: Record<string, keyof DisplayOptions> = {
     'display-quotes': 'quotes',
     'display-verse-numbers': 'verseNumbers',
@@ -55,7 +55,7 @@ const FORMAT_BUTTONS: Record<string, keyof DisplayOptions> = {
     'display-section-titles': 'sectionTitles',
 };
 
-/** Botões que só fazem sentido quando há um trecho exibido. */
+/** Buttons that only make sense when a passage is displayed. */
 const RESULT_BUTTONS = [
     'prev-chapter-button',
     'copy-button',
@@ -68,10 +68,10 @@ const RESULT_BUTTONS = [
 ];
 
 /**
- * Como registrar o trecho exibido no histórico do navegador:
- * - `commit`: nova entrada (ação pontual do usuário);
- * - `edit`: digitação; nova entrada só na primeira alteração da edição;
- * - `replace`: corrige a entrada atual (ex.: URL canônica após a carga).
+ * How to record the displayed passage in the browser history:
+ * - `commit`: new entry (one-off user action);
+ * - `edit`: typing; new entry only on the first change of the edit;
+ * - `replace`: fixes the current entry (e.g. canonical URL after loading).
  */
 type UrlMode = 'commit' | 'edit' | 'replace';
 
@@ -80,17 +80,17 @@ const state = {
     instructionsHtml: '',
     displayOptions: storage.getSavedDisplayOptions(),
     bibles: [] as BibleIndexEntry[],
-    /** Identificador da Bíblia selecionada ("por/ave-maria", ou UPLOAD_KEY); vazio até a primeira navegação. */
+    /** Identifier of the selected Bible ("por/ave-maria", or UPLOAD_KEY); empty until the first navigation. */
     bibleKey: '',
-    /** Carga em andamento (ou concluída) da Bíblia selecionada. */
+    /** Load in progress (or finished) of the selected Bible. */
     bibleLoad: Promise.resolve(true),
-    /** Bíblia enviada pelo usuário, mantida para Voltar/Avançar entre traduções. */
+    /** Bible uploaded by the user, kept for Back/Forward between translations. */
     uploadedEbf: null as EbfDocument | null,
-    /** Identifica a carga de Bíblia mais recente, para descartar respostas atrasadas. */
+    /** Identifies the most recent Bible load, to discard late responses. */
     loadToken: 0,
-    /** Identifica a navegação mais recente, para descartar as interrompidas. */
+    /** Identifies the most recent navigation, to discard interrupted ones. */
     navToken: 0,
-    /** Há uma edição da referência em curso (ver UrlMode `edit`). */
+    /** A reference edit is in progress (see UrlMode `edit`). */
     editing: false,
 };
 
@@ -100,9 +100,8 @@ const referenceInput = () => byId('reference', HTMLInputElement);
 const bibleSelect = () => byId('bible-select', HTMLSelectElement);
 
 /**
- * Encontra a Bíblia pelo identificador (idioma/slug) ou pelo nome, sem
- * diferenciar maiúsculas (links e preferências salvas por versões anteriores
- * usam o nome).
+ * Finds the Bible by identifier (language/slug) or by name, case-insensitively
+ * (links and preferences saved by previous versions use the name).
  */
 function findBibleEntry(id: string | null | undefined): BibleIndexEntry | undefined {
     const wanted = id?.toLowerCase();
@@ -112,12 +111,12 @@ function findBibleEntry(id: string | null | undefined): BibleIndexEntry | undefi
 const defaultBibleEntry = (): BibleIndexEntry | undefined =>
     state.bibles.find((bible) => bible.default) ?? state.bibles[0];
 
-/** Bíblia de um idioma: a padrão, se for dele, ou a primeira do índice. */
+/** Bible of a language: the default one, if it belongs to it, or the first in the index. */
 const languageBibleEntry = (language: string | undefined): BibleIndexEntry | undefined =>
     state.bibles.find((bible) => bible.language === language && bible.default) ??
     state.bibles.find((bible) => bible.language === language);
 
-/** Troca o livro da referência pela abreviação da Bíblia carregada ("mateus 5" -> "Mt 5"). */
+/** Replaces the reference's book with the loaded Bible's abbreviation ("mateus 5" -> "Mt 5"). */
 function canonicalReference(reference: string): string {
     const parsed = parseReference(reference);
     const book = parsed && state.ebf ? findBook(state.ebf, parsed.book) : undefined;
@@ -126,9 +125,9 @@ function canonicalReference(reference: string): string {
 }
 
 /**
- * Caminho do estado atual. Referência inválida fica fora da URL; sem Bíblia
- * carregada (falha na carga, upload ainda não feito), não dá para validar e a
- * referência é mantida, para não perder o trecho pedido.
+ * Path of the current state. An invalid reference is left out of the URL;
+ * with no Bible loaded (load failure, upload not done yet) it cannot be
+ * validated, so the reference is kept, so as not to lose the requested passage.
  */
 function currentPath(reference: string, valid: boolean): string {
     return readerPath(state.bibleKey, valid || !state.ebf ? canonicalReference(reference) : null);
@@ -186,7 +185,7 @@ function goToReference(reference: string): void {
 function setBible(ebf: EbfDocument | null): void {
     state.ebf = ebf;
     populateBooks(ebf?.bible.books ?? []);
-    // Índice da busca por relevância, montado em segundo plano
+    // Relevance search index, built in the background
     if (ebf) {
         void prepareSearchIndex(ebf);
     }
@@ -247,8 +246,8 @@ function updateUploadVisibility(): void {
 }
 
 /**
- * Seleciona e carrega a Bíblia. Resolve false se outra seleção a substituiu
- * antes de terminar de carregar.
+ * Selects and loads the Bible. Resolves false if another selection replaced it
+ * before it finished loading.
  */
 function selectBible(key: string): Promise<boolean> {
     bibleSelect().value = key;
@@ -303,7 +302,7 @@ async function handleFileUpload(file: File | undefined): Promise<void> {
         downloadButton.disabled = false;
         downloadButton.dataset.filename = file.name;
     } catch (error) {
-        console.error('Erro ao ler o arquivo da Bíblia:', error);
+        console.error('Error reading the Bible file:', error);
         downloadButton.disabled = true;
         delete downloadButton.dataset.filename;
         showTemporaryMessage('Arquivo de Bíblia inválido');
@@ -316,7 +315,7 @@ async function handleFileUpload(file: File | undefined): Promise<void> {
     }
 }
 
-/** Baixa a Bíblia carregada por upload, convertida para EBF1. */
+/** Downloads the Bible loaded by upload, converted to EBF1. */
 function downloadEbfFile(): void {
     if (!state.uploadedEbf) return;
 
@@ -358,7 +357,7 @@ function copyResult(): void {
             showTemporaryMessage('Texto copiado');
         },
         (error: unknown) => {
-            console.error('Erro ao copiar texto:', error);
+            console.error('Error copying text:', error);
             showTemporaryMessage('Erro ao copiar texto');
         },
     );
@@ -384,13 +383,13 @@ function shareCurrentReference(): void {
             }
         },
         (error: unknown) => {
-            console.error('Erro ao compartilhar:', error);
+            console.error('Error sharing:', error);
             showTemporaryMessage('Erro ao copiar link');
         },
     );
 }
 
-/** Mostra os botões flutuantes quando os botões originais saem da tela. */
+/** Shows the floating buttons when the original buttons leave the screen. */
 function updateFloatingButtons(): void {
     const rect = byId('static-action-buttons').getBoundingClientRect();
     const isVisible =
@@ -447,7 +446,7 @@ function setupActionButtons(): void {
         button.addEventListener('click', () => {
             actions[button.id]?.();
 
-            // Feedback visual comum para todos os botões de ação
+            // Visual feedback shared by all action buttons
             button.classList.add('success');
             setTimeout(() => {
                 button.classList.remove('success');
@@ -471,7 +470,7 @@ function setupExpandableSections(): void {
 
 function setupReferenceInput(): void {
     const input = referenceInput();
-    // Disparado ao sair do campo depois de alterá-lo: encerra a edição
+    // Fired when leaving the field after changing it: ends the edit
     input.addEventListener('change', () => {
         storage.saveReference(input.value);
         state.editing = false;
@@ -482,7 +481,7 @@ function setupReferenceInput(): void {
     input.addEventListener('input', showWhileTyping);
     input.addEventListener('keydown', (event) => {
         if (event.key === 'Enter') {
-            // Exibe já, sem esperar a pausa na digitação
+            // Display right away, without waiting for the typing pause
             showWhileTyping.cancel();
             showReference('edit');
             state.editing = false;
@@ -491,9 +490,9 @@ function setupReferenceInput(): void {
 }
 
 /**
- * Exibe o estado da URL. Sem Bíblia na URL ("/"), restaura a última leitura
- * (ou a Bíblia padrão do índice); links antigos (/?bible=&quote=) valem como
- * na versão anterior. A URL é então corrigida para a canônica.
+ * Displays the URL state. With no Bible in the URL ("/"), restores the last
+ * reading (or the index's default Bible); old links (/?bible=&quote=) work as
+ * in the previous version. The URL is then corrected to the canonical one.
  */
 async function show(params: PathParams, biblesReady: Promise<void>): Promise<void> {
     const token = ++state.navToken;
@@ -537,7 +536,7 @@ async function show(params: PathParams, biblesReady: Promise<void>): Promise<voi
     showReference('replace');
 }
 
-/** Cria a tela de leitura; `router` dá acesso ao roteador que a exibe. */
+/** Creates the reader screen; `router` gives access to the router that displays it. */
 export function createReaderScreen(router: () => Router): Screen {
     getRouter = router;
     state.instructionsHtml = byId('result').innerHTML;
@@ -559,7 +558,7 @@ export function createReaderScreen(router: () => Router): Screen {
     const biblesReady = getAvailableBibles().then((biblesList) => {
         state.bibles = biblesList;
         if (biblesList.length === 0) {
-            console.error('Nenhuma Bíblia disponível para carregar.');
+            console.error('No Bible available to load.');
         }
         populateBiblesSelect(biblesList);
     });

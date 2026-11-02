@@ -1,6 +1,6 @@
 /**
- * Versão da página, exibida no fim da seção Sobre: hash curto do commit e a
- * data do commit em UTC, ex.: "593816c 2026-10-27 17:02:41".
+ * Page version, shown at the end of the About section: short commit hash and
+ * commit date in UTC, e.g.: "593816c 2026-10-27 17:02:41".
  */
 import { execSync } from 'node:child_process';
 
@@ -8,13 +8,13 @@ const git = (args: string, cwd?: string): string =>
     execSync(`git ${args}`, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
 
 /**
- * Hash curto (7 caracteres) do commit.
+ * Short commit hash (7 characters).
  *
- * No servidor da Vercel, vem do commit sincronizado com o git, sem "-dirty":
- * lá não há alterações locais, mas a própria Vercel modifica o vercel.json
- * durante o build e o git acusaria alterações. Nos builds locais, indica
- * "-dirty" quando há alterações não commitadas. As tags são ignoradas para
- * o resultado ser igual nos dois casos (a Vercel clona sem elas).
+ * On the Vercel server, it comes from the commit synced with git, without "-dirty":
+ * there are no local changes there, but Vercel itself modifies vercel.json
+ * during the build, so git would report changes. In local builds, it appends
+ * "-dirty" when there are uncommitted changes. Tags are ignored so the
+ * result is the same in both cases (Vercel clones without them).
  */
 export function describeVersion(env = process.env, cwd?: string): string {
     const vercelCommit = env.VERCEL_GIT_COMMIT_SHA;
@@ -28,13 +28,13 @@ export function describeVersion(env = process.env, cwd?: string): string {
     }
 }
 
-/** Data em UTC no formato "YYYY-MM-DD hh:mm:ss". */
+/** Date in UTC in the format "YYYY-MM-DD hh:mm:ss". */
 export const formatUtc = (date: Date): string => date.toISOString().slice(0, 19).replace('T', ' ');
 
 /**
- * Data do commit (committer date) em UTC. Na Vercel, o build é feito num
- * clone do repositório e o commit do deploy está nele. Sem o .git (ex.:
- * `vercel deploy` a partir de uma pasta local), não há como saber a data.
+ * Commit date (committer date) in UTC. On Vercel, the build runs in a clone
+ * of the repository and the deploy commit is in it. Without .git (e.g.
+ * `vercel deploy` from a local folder), there is no way to know the date.
  */
 export function describeCommitDate(env = process.env, cwd?: string): string | undefined {
     const commit = env.VERCEL_GIT_COMMIT_SHA ?? 'HEAD';
@@ -46,10 +46,10 @@ export function describeCommitDate(env = process.env, cwd?: string): string | un
     }
 }
 
-/** Texto exibido na página: hash e, quando disponível, a data do commit. */
+/** Text shown on the page: hash and, when available, the commit date. */
 export function describePageVersion(env = process.env, cwd?: string): string {
     return [describeVersion(env, cwd), describeCommitDate(env, cwd)].filter(Boolean).join(' ');
 }
 
-/** Alterações não commitadas, para o log do build local. */
+/** Uncommitted changes, for the local build log. */
 export const uncommittedChanges = (cwd?: string): string => git('status --porcelain', cwd);

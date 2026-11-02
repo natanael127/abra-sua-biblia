@@ -1,16 +1,16 @@
 /**
- * Easy Bible Format, versão 1 (EBF1).
+ * Easy Bible Format, version 1 (EBF1).
  * https://github.com/natanael127/easy-bible-format
  *
- * As Bíblias em public/assets/data/bibles seguem este formato e são publicadas
- * sem nenhuma transformação, para que possam ser baixadas e usadas em outros
- * projetos. A conformidade delas com o schema oficial (ebf1-schema.json do
- * pacote easy-bible-format, fixado num commit) é verificada nos testes.
+ * The Bibles in public/assets/data/bibles follow this format and are published
+ * without any transformation, so they can be downloaded and used in other
+ * projects. Their conformance to the official schema (ebf1-schema.json from the
+ * easy-bible-format package, pinned to a commit) is checked in the tests.
  *
- * Os tipos abaixo descrevem o que o site consegue ler, de forma mais tolerante
- * que o schema (abreviação, usfm_id e idioma opcionais, versículo só como
- * texto), porque também cobrem a saída dos conversores de XML. Os arquivos
- * JSON enviados pelo usuário precisam seguir o schema (validateEbf).
+ * The types below describe what the site is able to read, more leniently than
+ * the schema (optional abbreviation, usfm_id and language, verse as plain
+ * text), because they also cover the output of the XML converters. JSON files
+ * uploaded by the user must follow the schema (validateEbf).
  */
 import validateEbf1Schema from 'virtual:ebf1-validator';
 
@@ -27,7 +27,7 @@ export interface EbfVerseObject {
     references?: EbfCrossReference[];
 }
 
-/** Um versículo pode ser um objeto ou apenas o texto. */
+/** A verse can be an object or just its text. */
 export type EbfVerse = EbfVerseObject | string;
 
 export interface EbfChapter {
@@ -62,12 +62,12 @@ export function getVerseTitle(verse: EbfVerse | undefined): string | undefined {
     return typeof verse === 'object' ? verse.title : undefined;
 }
 
-/** Nome principal do livro, com alternativas para arquivos incompletos. */
+/** Main name of the book, with fallbacks for incomplete files. */
 export function getBookName(book: EbfBook): string {
     return book.names[0] ?? book.abbreviation ?? book.usfm_id ?? '';
 }
 
-/** Abreviação usada nas referências, com alternativas para arquivos incompletos. */
+/** Abbreviation used in references, with fallbacks for incomplete files. */
 export function getBookAbbreviation(book: EbfBook): string {
     return book.abbreviation || getBookName(book).substring(0, 3);
 }
@@ -87,13 +87,13 @@ export function getNumOfChapters(ebf: EbfDocument, bookString: string): number {
 }
 
 /**
- * Valida o documento contra o schema oficial do EBF1 (usado no upload de
- * arquivos JSON). Retorna a lista de problemas encontrados (vazia quando o
- * documento é válido), cada um com o caminho do campo.
+ * Validates the document against the official EBF1 schema (used when uploading
+ * JSON files). Returns the list of problems found (empty when the document is
+ * valid), each one with the path of the field.
  */
 export function validateEbf(data: unknown): string[] {
     if (validateEbf1Schema(data)) return [];
-    return (validateEbf1Schema.errors ?? []).map((error) => `${error.instancePath || '/'}: ${error.message ?? 'inválido'}`);
+    return (validateEbf1Schema.errors ?? []).map((error) => `${error.instancePath || '/'}: ${error.message ?? 'invalid'}`);
 }
 
 export function isEbfDocument(data: unknown): data is EbfDocument {

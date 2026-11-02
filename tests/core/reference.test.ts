@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { formatVerseRanges, parseReference, resolveVerseIndexes } from '../../src/core/reference';
 
 describe('parseReference', () => {
-    it('capítulo inteiro', () => {
+    it('whole chapter', () => {
         expect(parseReference('Mt 5')).toEqual({
             book: 'Mt',
             chapter: 5,
@@ -12,43 +12,43 @@ describe('parseReference', () => {
         });
     });
 
-    it('versículo único, com índice base 0', () => {
+    it('single verse, with 0-based index', () => {
         expect(parseReference('Jo 3,16')?.verses).toEqual([15]);
     });
 
-    it('intervalos e versículos combinados, ordenados e sem repetição', () => {
+    it('combined ranges and verses, sorted and without duplicates', () => {
         expect(parseReference('Mt 5,7.3-5.4')?.verses).toEqual([2, 3, 4, 6]);
     });
 
-    it('"N-" marca todos os versículos a partir de N e ignora o restante', () => {
+    it('"N-" marks all verses from N onwards and ignores the rest', () => {
         const parsed = parseReference('Mt 5,3-.10');
         expect(parsed?.verses).toEqual([2]);
         expect(parsed?.allAfterLast).toBe(true);
     });
 
-    it('aceita espaços em volta dos números dos versículos', () => {
+    it('accepts spaces around the verse numbers', () => {
         expect(parseReference('Mt 5, 3 - 5 ')?.verses).toEqual([2, 3, 4]);
     });
 
-    it.each(['', 'Jo', 'Jo 3:16', 'Jo três', ' Jo 3', 'Jo  3'])('rejeita "%s"', (reference) => {
+    it.each(['', 'Jo', 'Jo 3:16', 'Jo três', ' Jo 3', 'Jo  3'])('rejects "%s"', (reference) => {
         expect(parseReference(reference)).toBeNull();
     });
 });
 
 describe('resolveVerseIndexes', () => {
-    it('capítulo inteiro', () => {
+    it('whole chapter', () => {
         expect(resolveVerseIndexes(parseReference('Sl 117')!, 2)).toEqual([0, 1]);
     });
 
-    it('descarta versículos fora do capítulo', () => {
+    it('drops verses outside the chapter', () => {
         expect(resolveVerseIndexes(parseReference('Sl 117,0.2-5')!, 2)).toEqual([1]);
     });
 
-    it('expande "a partir de N" até o fim do capítulo', () => {
+    it('expands "from N onwards" to the end of the chapter', () => {
         expect(resolveVerseIndexes(parseReference('Mt 5,1.3-')!, 5)).toEqual([0, 2, 3, 4]);
     });
 
-    it('não altera a referência interpretada', () => {
+    it('does not change the parsed reference', () => {
         const parsed = parseReference('Mt 5,3-')!;
         resolveVerseIndexes(parsed, 10);
         expect(parsed.verses).toEqual([2]);

@@ -1,7 +1,7 @@
 import type { SearchOrder } from '../core/search';
 import { DEFAULT_DISPLAY_OPTIONS, type DisplayOptions } from '../core/render';
 
-/** Chaves do localStorage; mantidas iguais às da versão anterior para preservar as preferências. */
+/** localStorage keys; kept identical to the previous version's to preserve preferences. */
 const KEYS = {
     bible: 'selectedBible',
     reference: 'lastReference',

@@ -11,8 +11,8 @@ const THEME_TITLES: Record<Theme, string> = {
     auto: 'Tema: Automático',
 };
 
-// O index.html aplica o tema salvo antes da renderização, para evitar o
-// "flash" do tema errado; esta lógica precisa continuar equivalente àquela.
+// index.html applies the saved theme before rendering, to avoid a "flash" of
+// the wrong theme; this logic must stay equivalent to that one.
 const darkQuery = (): MediaQueryList => window.matchMedia('(prefers-color-scheme: dark)');
 
 const isTheme = (value: string | null): value is Theme => THEME_ORDER.includes(value as Theme);
@@ -43,7 +43,7 @@ export function initializeTheme(): void {
     const saved = getSavedTheme();
     applyTheme(isTheme(saved) ? saved : 'auto');
 
-    // Acompanha o tema do sistema no modo automático
+    // Follow the system theme in automatic mode
     darkQuery().addEventListener('change', () => {
         if (currentTheme === 'auto') {
             applyTheme('auto');

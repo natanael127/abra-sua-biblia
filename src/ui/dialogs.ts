@@ -13,7 +13,7 @@ import {
 import { getModalContent, getOrCreateModal } from './modal';
 import { getSearchOrder, saveSearchOrder } from './storage';
 
-/** Chamado quando o usuário escolhe uma referência num dos modais. */
+/** Called when the user picks a reference in one of the modals. */
 export type SelectReference = (reference: string) => void;
 
 export function showHistoryModal(history: readonly string[], onSelect: SelectReference): void {
@@ -92,7 +92,7 @@ export function showFileHelpModal(): void {
 
 const TEXT_SEARCH_ID = 'text-search-modal';
 
-/** Definido ao criar o modal de busca (há um só). */
+/** Set when the search modal is created (there is only one). */
 let onSearchOpened: (() => void) | undefined;
 
 function createTextSearchModal(getBible: () => EbfDocument | null, onSelect: SelectReference): HTMLDialogElement {
@@ -113,13 +113,13 @@ function createTextSearchModal(getBible: () => EbfDocument | null, onSelect: Sel
     const countEl = document.createElement('div');
     countEl.className = 'text-search-count';
 
-    // Estado do índice (data-ranked: busca por relevância pronta) e escolha da ordem dos resultados
+    // Index state (data-ranked: relevance search ready) and choice of result order
     const optionsRow = document.createElement('div');
     optionsRow.className = 'text-search-options';
     const statusEl = document.createElement('div');
     statusEl.className = 'text-search-status';
 
-    // Controle segmentado com as duas ordens à vista
+    // Segmented control showing both orders at once
     const orderGroup = document.createElement('div');
     orderGroup.className = 'text-search-order';
     orderGroup.setAttribute('role', 'radiogroup');
@@ -242,14 +242,14 @@ function createTextSearchModal(getBible: () => EbfDocument | null, onSelect: Sel
         items[selectedIndex]?.scrollIntoView({ block: 'nearest' });
     };
 
-    /** Mostra o estado do índice e, quando ele fica pronto, refaz a busca aberta por relevância. */
+    /** Shows the index state and, once it is ready, redoes the open search by relevance. */
     onSearchOpened = () => {
         const bible = getBible();
         showStatus(bible);
         if (!bible || isSearchIndexReady(bible)) return;
         void prepareSearchIndex(bible).then(() => {
             if (!modal.open || getBible() !== bible) return;
-            // Mantém selecionado o versículo que o usuário escolhia com as setas
+            // Keep selected the verse the user was choosing with the arrow keys
             const selected = resultItems()[selectedIndex]?.dataset.reference;
             performSearch(searchInput.value.trim());
             if (selected) {
@@ -269,7 +269,7 @@ function createTextSearchModal(getBible: () => EbfDocument | null, onSelect: Sel
             chooseOrder(value);
         });
     }
-    // Setas alternam entre as opções, como num grupo de radio
+    // Arrow keys switch between the options, as in a radio group
     orderGroup.addEventListener('keydown', (event) => {
         if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) return;
         event.preventDefault();
@@ -318,6 +318,6 @@ export function showTextSearchModal(getBible: () => EbfDocument | null, onSelect
     modal.showModal();
     modal.querySelector<HTMLInputElement>('.text-search-input')?.focus();
 
-    // O índice já começou a ser montado na carga da Bíblia; ao ficar pronto, refaz a busca
+    // The index started being built when the Bible loaded; once ready, redo the search
     onSearchOpened?.();
 }

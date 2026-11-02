@@ -4,5 +4,5 @@ import { startApp } from './app';
 
 startApp();
 
-// O service worker se atualiza sozinho; a nova versão vale a partir da próxima carga
+// The service worker updates itself; the new version takes effect on the next load
 registerSW({ immediate: true });

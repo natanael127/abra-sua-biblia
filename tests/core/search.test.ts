@@ -27,20 +27,20 @@ const ebf: EbfDocument = {
     },
 };
 
-/** Bíblia nova a cada chamada: o índice é guardado por documento. */
+/** A new Bible on every call: the index is kept per document. */
 const smallBible = (): EbfDocument => structuredClone(ebf);
 
 const refs = (response: { results: { bookAbbr: string; chapter: number; verse: number }[] }) =>
     response.results.map((r) => `${r.bookAbbr} ${r.chapter},${r.verse}`);
 
 describe('foldText', () => {
-    it('remove acentos e cedilha e ignora maiúsculas', () => {
+    it('removes accents and cedilla and ignores case', () => {
         expect(foldText('Coração, ÁGUA, pão, Senhor, ü')).toBe('coracao, agua, pao, senhor, u');
     });
 });
 
-describe('searchVerses antes de o índice ficar pronto (busca por trecho)', () => {
-    it('encontra sem diferenciar maiúsculas, na ordem da Bíblia', () => {
+describe('searchVerses before the index is ready (phrase search)', () => {
+    it('finds ignoring case, in Bible order', () => {
         expect(searchVerses(smallBible(), 'luz')).toEqual({
             results: [
                 { bookAbbr: 'Gn', bookName: 'Gênesis', chapter: 1, verse: 1, text: 'Haja LUZ.' },
@@ -52,23 +52,23 @@ describe('searchVerses antes de o índice ficar pronto (busca por trecho)', () =
         });
     });
 
-    it.each(['coracao', 'CORAÇÃO', 'coraçao', 'puros de coracão'])('ignora acentos: "%s"', (query) => {
+    it.each(['coracao', 'CORAÇÃO', 'coraçao', 'puros de coracão'])('ignores accents: "%s"', (query) => {
         expect(searchVerses(smallBible(), query).results.map((r) => r.text)).toEqual(['Felizes os puros de coração.']);
     });
 
-    it('exige ao menos 3 caracteres', () => {
+    it('requires at least 3 characters', () => {
         expect(searchVerses(smallBible(), ' lu ')).toEqual({ results: [], total: 0, ranked: false });
     });
 
-    it('limita a quantidade de resultados, informando o total', () => {
+    it('limits the number of results, reporting the total', () => {
         const response = searchVerses(smallBible(), 'luz', 2);
         expect(response.results).toHaveLength(2);
         expect(response.total).toBe(3);
     });
 });
 
-describe('searchVerses com o índice pronto (busca por relevância)', () => {
-    it('monta o índice e passa a ordenar por relevância', async () => {
+describe('searchVerses with the index ready (relevance search)', () => {
+    it('builds the index and starts sorting by relevance', async () => {
         const bible = smallBible();
         expect(isSearchIndexReady(bible)).toBe(false);
         await prepareSearchIndex(bible);
@@ -77,12 +77,12 @@ describe('searchVerses com o índice pronto (busca por relevância)', () => {
         const response = searchVerses(bible, 'luz');
         expect(response.ranked).toBe(true);
         expect(response.total).toBe(3);
-        // Versículo mais curto pesa mais (BM25)
+        // A shorter verse weighs more (BM25)
         expect(refs(response)[0]).toBe('Gn 1,1');
         expect(response.results[0]?.terms).toEqual(['luz']);
     });
 
-    it('em ordem por livro, lista os versículos na ordem da Bíblia, com os mesmos termos', async () => {
+    it('in book order, lists the verses in Bible order, with the same terms', async () => {
         const bible = smallBible();
         await prepareSearchIndex(bible);
 
@@ -93,7 +93,7 @@ describe('searchVerses com o índice pronto (busca por relevância)', () => {
         expect(response.results[0]?.terms).toEqual(['luz']);
     });
 
-    it('em ordem por livro, a relevância não interfere na ordem', async () => {
+    it('in book order, relevance does not affect the order', async () => {
         const bible: EbfDocument = {
             bible: {
                 name: 'Teste',
@@ -109,32 +109,32 @@ describe('searchVerses com o índice pronto (busca por relevância)', () => {
         expect(refs(searchVerses(bible, 'luz', undefined, 'book'))).toEqual(['P 1,1', 'S 1,1', 'S 1,2']);
     });
 
-    it('exige todos os termos, em qualquer ordem', async () => {
+    it('requires all terms, in any order', async () => {
         const bible = smallBible();
         await prepareSearchIndex(bible);
         expect(refs(searchVerses(bible, 'trevas luz'))).toEqual(['Joã 1,1']);
         expect(searchVerses(bible, 'luz coração').total).toBe(0);
     });
 
-    it('a última palavra vale como prefixo (busca enquanto digita)', async () => {
+    it('the last word counts as a prefix (search while typing)', async () => {
         const bible = smallBible();
         await prepareSearchIndex(bible);
         expect(refs(searchVerses(bible, 'puros de cora'))).toEqual(['Joã 1,2']);
-        // Só a última: "pur" no meio da busca não é prefixo
+        // Only the last one: "pur" in the middle of the query is not a prefix
         expect(searchVerses(bible, 'pur de coração').total).toBe(0);
     });
 
-    it('tolera um erro de digitação em palavras com 4 letras ou mais', async () => {
+    it('tolerates one typo in words with 4 letters or more', async () => {
         const bible = smallBible();
         await prepareSearchIndex(bible);
-        // Uma letra trocada ou faltando (distância de edição 1)
+        // One letter swapped or missing (edit distance 1)
         expect(refs(searchVerses(bible, 'trevaz brilha'))).toEqual(['Joã 1,1']);
         expect(refs(searchVerses(bible, 'brilha nas trvas'))).toEqual(['Joã 1,1']);
-        // Palavras curtas não: "lus" não encontra "luz"
+        // Not for short words: "lus" does not find "luz"
         expect(searchVerses(bible, 'lus trevas').total).toBe(0);
     });
 
-    it('a frase exata vem antes, mesmo com pontuação menor', async () => {
+    it('the exact phrase comes first, even with a lower score', async () => {
         const bible: EbfDocument = {
             bible: {
                 name: 'Frase',
@@ -158,7 +158,7 @@ describe('searchVerses com o índice pronto (busca por relevância)', () => {
         expect(refs(searchVerses(bible, 'bem-aventurados os mansos'))).toEqual(['Lv 1,2', 'Lv 1,1']);
     });
 
-    it('trocar de Bíblia abandona o índice da anterior', async () => {
+    it('switching Bibles abandons the previous index', async () => {
         const first = loadBible('por_cnbb');
         const second = smallBible();
         const firstReady = prepareSearchIndex(first);
@@ -171,10 +171,10 @@ describe('searchVerses com o índice pronto (busca por relevância)', () => {
         expect(isSearchIndexReady(second)).toBe(true);
     });
 
-    describe('numa Bíblia completa', () => {
+    describe('on a full Bible', () => {
         const bible = loadBible('por_ave_maria');
 
-        it('indexa em blocos e encontra por relevância', { timeout: 60_000 }, async () => {
+        it('indexes in slices and finds by relevance', { timeout: 60_000 }, async () => {
             await prepareSearchIndex(bible);
             expect(refs(searchVerses(bible, 'bem-aventurados os puros de coracao'))[0]).toBe('Mt 5,8');
             expect(refs(searchVerses(bible, 'Deus amou o mundo'))[0]).toBe('Jo 3,16');
@@ -184,7 +184,7 @@ describe('searchVerses com o índice pronto (busca por relevância)', () => {
             expect(many.results).toHaveLength(200);
             expect(many.total).toBeGreaterThan(200);
 
-            // Por livro: os 200 primeiros da Bíblia, em ordem crescente de posição
+            // By book: the first 200 of the Bible, in ascending order of position
             const byBook = searchVerses(bible, 'senhor', undefined, 'book');
             expect(byBook.results).toHaveLength(200);
             expect(byBook.total).toBe(many.total);
@@ -199,19 +199,19 @@ describe('searchVerses com o índice pronto (busca por relevância)', () => {
 });
 
 describe('highlightTerms', () => {
-    it('marca as palavras encontradas, preservando acentos e maiúsculas', () => {
+    it('highlights the found words, preserving accents and case', () => {
         expect(highlightTerms('Felizes os puros de Coração!', ['puros', 'coracao'])).toBe(
             'Felizes os <mark>puros</mark> de <mark>Coração</mark>!',
         );
     });
 
-    it('junta palavras vizinhas e marca palavras curtas só entre elas', () => {
+    it('joins neighboring words and highlights short words only between them', () => {
         expect(
             highlightTerms('Bem-aventurados os mansos, os pobres', ['bem', 'aventurados', 'os', 'mansos', 'de']),
         ).toBe('<mark>Bem-aventurados os mansos</mark>, os pobres');
     });
 
-    it('funciona com acentos compostos (NFD) e escapa o HTML', () => {
+    it('works with decomposed accents (NFD) and escapes HTML', () => {
         const decomposed = 'coração'.normalize('NFD');
         expect(highlightTerms(`<b> ${decomposed}`, ['coracao'])).toBe(`&lt;b&gt; <mark>${decomposed}</mark>`);
         expect(highlightTerms('<b>x</b>', ['zzz'])).toBe('&lt;b&gt;x&lt;/b&gt;');
@@ -219,28 +219,28 @@ describe('highlightTerms', () => {
 });
 
 describe('highlightMatches', () => {
-    it('marca as ocorrências preservando o texto original', () => {
+    it('highlights the occurrences preserving the original text', () => {
         expect(highlightMatches('Haja LUZ e luz', 'luz')).toBe('Haja <mark>LUZ</mark> e <mark>luz</mark>');
     });
 
-    it('marca o texto acentuado quando a busca não tem acento', () => {
+    it('highlights accented text when the query has no accent', () => {
         expect(highlightMatches('Puros de coração, ó coração!', 'coracao')).toBe(
             'Puros de <mark>coração</mark>, ó <mark>coração</mark>!',
         );
     });
 
-    it('funciona com acentos compostos (NFD) no texto', () => {
+    it('works with decomposed accents (NFD) in the text', () => {
         const decomposed = 'coração'.normalize('NFD');
         expect(highlightMatches(`o ${decomposed}`, 'coracao')).toBe(`o <mark>${decomposed}</mark>`);
     });
 
-    it('escapa o HTML do texto e da busca', () => {
+    it('escapes the HTML of the text and of the query', () => {
         expect(highlightMatches('a (b) <c> a.b & d', '<c>')).toBe('a (b) <mark>&lt;c&gt;</mark> a.b &amp; d');
         expect(highlightMatches('a (b) <c> a.b', '(b)')).toBe('a <mark>(b)</mark> &lt;c&gt; a.b');
         expect(highlightMatches('a (b) <c> a.b', 'a.b')).toBe('a (b) &lt;c&gt; <mark>a.b</mark>');
     });
 
-    it('sem ocorrências, apenas escapa', () => {
+    it('with no occurrences, only escapes', () => {
         expect(highlightMatches('<b>x</b>', 'zzz')).toBe('&lt;b&gt;x&lt;/b&gt;');
     });
 });

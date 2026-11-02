@@ -9,7 +9,7 @@
     <div type="book" osisID="Gen">
       <chapter osisID="Gen.1">
         <verse osisID="Gen.1.1">No princípio, Deus criou os céus e a terra.</verse>
-        <verse osisID="Gen.1.2">A terra estava <transChange type="added">informe</transChange> e vazia;<!-- comentário --> as trevas cobriam o abismo.</verse>
+        <verse osisID="Gen.1.2">A terra estava <transChange type="added">informe</transChange> e vazia;<!-- comment --> as trevas cobriam o abismo.</verse>
       </chapter>
       <chapter osisID="Gen.2">
         <verse osisID="Gen.2.1">Assim foram acabados os céus e a terra.</verse>

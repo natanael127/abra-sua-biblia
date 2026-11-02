@@ -1,14 +1,14 @@
 export interface ModalOptions {
     id: string;
     title: string;
-    /** HTML estático do conteúdo (nunca dados vindos do usuário). */
+    /** Static HTML of the content (never user-provided data). */
     contentHtml?: string;
     className?: string;
 }
 
 /**
- * Retorna o modal com o id informado, criando-o na primeira chamada.
- * Usa <dialog>, que já trata a tecla Esc, o foco e o fundo escurecido.
+ * Returns the modal with the given id, creating it on the first call.
+ * Uses <dialog>, which already handles the Esc key, focus and the dimmed backdrop.
  */
 export function getOrCreateModal(options: ModalOptions): HTMLDialogElement {
     const existing = document.getElementById(options.id);
@@ -45,7 +45,7 @@ export function getOrCreateModal(options: ModalOptions): HTMLDialogElement {
     header.append(title, closeButton);
     modal.append(header, content);
 
-    // Clique fora da caixa (no fundo escurecido) fecha o modal
+    // A click outside the box (on the dimmed backdrop) closes the modal
     modal.addEventListener('click', (event) => {
         if (event.target === modal) {
             modal.close();
@@ -59,7 +59,7 @@ export function getOrCreateModal(options: ModalOptions): HTMLDialogElement {
 export function getModalContent(modal: HTMLDialogElement): HTMLElement {
     const content = modal.querySelector<HTMLElement>('.help-content');
     if (!content) {
-        throw new Error(`Modal #${modal.id} sem conteúdo`);
+        throw new Error(`Modal #${modal.id} has no content`);
     }
     return content;
 }

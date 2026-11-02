@@ -1,55 +1,55 @@
 /**
- * Roteador da SPA: liga a URL (History API) às telas da aplicação.
+ * SPA router: connects the URL (History API) to the application screens.
  *
- * Cada rota associa um padrão de caminho a uma tela. A URL é a fonte da
- * verdade nas navegações externas (carga da página, Voltar/Avançar, links
- * internos): o roteador encontra a rota, exibe a tela dela e esconde as
- * demais. Quando a própria tela muda de estado (ex.: o usuário digita uma
- * referência), ela só registra a nova URL com `updateUrl`, sem ser
- * exibida de novo.
+ * Each route associates a path pattern with a screen. The URL is the source of
+ * truth for external navigations (page load, Back/Forward, internal links):
+ * the router finds the route, shows its screen and hides the others. When the
+ * screen itself changes state (e.g. the user types a reference), it only
+ * records the new URL with `updateUrl`, without being shown again.
  */
 import { matchPath, type PathParams } from './path';
 
 export interface Screen {
-    /** Elemento raiz da tela; só o da tela ativa fica visível. */
+    /** Root element of the screen; only the active screen's root is visible. */
     readonly root: HTMLElement;
-    /** Exibe a tela para os parâmetros da URL; chamado a cada navegação para uma rota dela. */
+    /** Shows the screen for the URL parameters; called on every navigation to one of its routes. */
     show(params: PathParams): void | Promise<void>;
-    /** Chamado quando a navegação sai desta tela para outra. */
+    /** Called when navigation leaves this screen for another one. */
     hide?(): void;
 }
 
 export interface Route {
-    /** Ex.: "/planos" ou "/:language?/:bible?/:book?/:passage?". A primeira rota correspondente vence. */
+    /** E.g.: "/planos" or "/:language?/:bible?/:book?/:passage?". The first matching route wins. */
     pattern: string;
     screen: Screen;
 }
 
 export interface NavigateOptions {
-    /** Substitui a entrada atual do histórico em vez de criar outra. */
+    /** Replaces the current history entry instead of creating a new one. */
     replace?: boolean;
 }
 
 export interface Router {
-    /** Exibe a tela da URL atual e passa a tratar Voltar/Avançar e links internos. */
+    /** Shows the screen of the current URL and starts handling Back/Forward and internal links. */
     start(): void;
-    /** Deixa de tratar Voltar/Avançar e links internos. */
+    /** Stops handling Back/Forward and internal links. */
     stop(): void;
-    /** Vai para outro caminho e exibe a tela correspondente. */
+    /** Goes to another path and shows the matching screen. */
     navigate(path: string, options?: NavigateOptions): void;
     /**
-     * Registra no histórico o estado atual da tela, sem exibi-la de novo.
-     * Retorna false (sem alterar o histórico) se o caminho já é o atual.
+     * Records the screen's current state in the history, without showing it
+     * again. Returns false (leaving the history untouched) if the path is
+     * already the current one.
      */
     updateUrl(path: string, options?: NavigateOptions): boolean;
 }
 
 export interface RouterOptions {
-    /** Caminho sem rota correspondente; o padrão é ir para "/" substituindo a entrada. */
+    /** Path with no matching route; by default, goes to "/" replacing the entry. */
     notFound?: (path: string, router: Router) => void;
 }
 
-/** Normaliza o caminho como o navegador (codificação, barras) para poder comparar. */
+/** Normalizes the path like the browser does (encoding, slashes) so paths can be compared. */
 const normalize = (path: string): string => new URL(path, window.location.origin).pathname;
 
 export function createRouter(routes: readonly Route[], options: RouterOptions = {}): Router {
@@ -95,7 +95,7 @@ export function createRouter(routes: readonly Route[], options: RouterOptions = 
         return true;
     }
 
-    /** Links internos (<a href="/...">) navegam pela SPA, sem recarregar a página. */
+    /** Internal links (<a href="/...">) navigate within the SPA, without reloading the page. */
     function onClick(event: MouseEvent): void {
         if (event.defaultPrevented || event.button !== 0) return;
         if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;

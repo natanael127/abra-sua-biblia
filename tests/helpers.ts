@@ -11,7 +11,7 @@ export const listBibleFiles = (): string[] => readdirSync(BIBLES_DIR).filter((f)
 
 const cache = new Map<string, EbfDocument>();
 
-/** Carrega uma Bíblia publicada pelo id (nome do arquivo sem ".ebf1.json"). */
+/** Loads a published Bible by id (file name without ".ebf1.json"). */
 export function loadBible(id: string): EbfDocument {
     let bible = cache.get(id);
     if (!bible) {

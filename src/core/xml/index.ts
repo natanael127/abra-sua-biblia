@@ -21,7 +21,7 @@ export function detectXmlFormat(xmlContent: string): XmlBibleFormat {
     return 'unknown';
 }
 
-/** Converte XML OSIS ou USFX para EBF1, detectando o formato automaticamente. */
+/** Converts OSIS or USFX XML to EBF1, detecting the format automatically. */
 export function convertXmlToEbf(xmlContent: string): EbfDocument {
     switch (detectXmlFormat(xmlContent)) {
         case 'osis':

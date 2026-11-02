@@ -33,7 +33,7 @@ export interface RenderResult {
     html: string;
 }
 
-/** Monta o HTML de cada versículo selecionado, com as marcações de exibição escolhidas. */
+/** Builds the HTML of each selected verse, with the chosen display markup. */
 export function formatVerseTexts(
     verseIndexes: readonly number[],
     chapterVerses: readonly EbfVerse[],
@@ -43,7 +43,7 @@ export function formatVerseTexts(
 
     let previousVerse = -1;
     verseIndexes.forEach((verseIndex, position) => {
-        // Lacuna entre versículos: marcador de omissão
+        // Gap between verses: omission marker
         if (previousVerse >= 0 && verseIndex > previousVerse + 1 && displayOpt.ellipsis) {
             verseTexts.push('[...]');
         }
@@ -100,8 +100,8 @@ const errorHtml = (message: string): RenderResult => ({
 });
 
 /**
- * Gera o HTML do trecho bíblico indicado pela referência.
- * `instructionsHtml` é exibido quando a referência não pode ser interpretada.
+ * Generates the HTML of the Bible passage indicated by the reference.
+ * `instructionsHtml` is shown when the reference cannot be parsed.
  */
 export function renderReference(
     reference: string,
@@ -116,7 +116,7 @@ export function renderReference(
     try {
         return render(reference, ebf, displayOpt, instructionsHtml);
     } catch (error) {
-        console.error('Erro ao processar o JSON da Bíblia:', error);
+        console.error('Error processing the Bible JSON:', error);
         return errorHtml('Arquivo de Bíblia inválido ou corrompido.');
     }
 }
