@@ -677,6 +677,17 @@ test.describe('URL and browser history', () => {
         await expect(page).toHaveURL('/por/ave-maria');
     });
 
+    test('citation outside the expected format redirects to the root', async ({ page }) => {
+        await open(page, 'Jo 3,16');
+        await page.goto('/ave-maria/Mt/5');
+        await expect(page).toHaveURL('/por/ave-maria/jo/3,16');
+        await expect(page.locator('.temporary-message')).toHaveCount(0);
+
+        // The redirect replaces the entry: Back does not return to the invalid URL
+        await page.goBack();
+        await expect(page).not.toHaveURL(/\/ave-maria\/Mt\/5$/);
+    });
+
     test('unknown translation opens the default Bible and warns', async ({ page }) => {
         await page.goto('/por/nao-existe/jo/3,16');
         await expect(page.locator('.temporary-message')).toHaveText('Tradução não encontrada');

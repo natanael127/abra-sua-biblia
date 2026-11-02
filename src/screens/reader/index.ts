@@ -116,6 +116,8 @@ const languageBibleEntry = (language: string | undefined): BibleIndexEntry | und
     state.bibles.find((bible) => bible.language === language && bible.default) ??
     state.bibles.find((bible) => bible.language === language);
 
+const isKnownLanguage = (language: string | undefined): boolean => state.bibles.some((bible) => bible.language === language);
+
 /** Replaces the reference's book with the loaded Bible's abbreviation ("mateus 5" -> "Mt 5"). */
 function canonicalReference(reference: string): string {
     const parsed = parseReference(reference);
@@ -492,7 +494,9 @@ function setupReferenceInput(): void {
 /**
  * Displays the URL state. With no Bible in the URL ("/"), restores the last
  * reading (or the index's default Bible); old links (/?bible=&quote=) work as
- * in the previous version. The URL is then corrected to the canonical one.
+ * in the previous version. A Bible segment under an unknown language (not the
+ * expected format) redirects to the root. The URL is then corrected to the
+ * canonical one.
  */
 async function show(params: PathParams, biblesReady: Promise<void>): Promise<void> {
     const token = ++state.navToken;
@@ -504,6 +508,11 @@ async function show(params: PathParams, biblesReady: Promise<void>): Promise<voi
     const target = parseReaderParams(params);
     let key: string | undefined;
     let reference: string;
+    if (target.bibleKey && target.bibleKey !== UPLOAD_KEY && !isKnownLanguage(target.bibleKey.split('/')[0])) {
+        // Not the /{language}/{bible}/... format (e.g. a link without the language: /ave-maria/mt/5)
+        getRouter().navigate('/', { replace: true });
+        return;
+    }
     if (target.bibleKey || target.language) {
         key = target.bibleKey;
         if (!key) {
