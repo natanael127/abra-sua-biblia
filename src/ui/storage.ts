@@ -1,3 +1,4 @@
+import type { SearchOrder } from '../core/search';
 import { DEFAULT_DISPLAY_OPTIONS, type DisplayOptions } from '../core/render';
 
 /** Chaves do localStorage; mantidas iguais às da versão anterior para preservar as preferências. */
@@ -7,6 +8,7 @@ const KEYS = {
     theme: 'selectedTheme',
     displayOptions: 'bibleDisplayOptions',
     history: 'searchHistory',
+    searchOrder: 'searchOrder',
 } as const;
 
 function readJson(key: string): unknown {
@@ -57,4 +59,12 @@ export function getSearchHistory(): string[] {
 
 export const saveSearchHistory = (history: readonly string[]): void => {
     localStorage.setItem(KEYS.history, JSON.stringify(history));
+};
+
+export function getSearchOrder(): SearchOrder {
+    return localStorage.getItem(KEYS.searchOrder) === 'book' ? 'book' : 'relevance';
+}
+
+export const saveSearchOrder = (order: SearchOrder): void => {
+    localStorage.setItem(KEYS.searchOrder, order);
 };

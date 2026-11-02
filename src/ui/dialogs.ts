@@ -7,9 +7,11 @@ import {
     MIN_QUERY_LENGTH,
     prepareSearchIndex,
     type SearchResponse,
+    type SearchOrder,
     searchVerses,
 } from '../core/search';
 import { getModalContent, getOrCreateModal } from './modal';
+import { getSearchOrder, saveSearchOrder } from './storage';
 
 /** Chamado quando o usuário escolhe uma referência num dos modais. */
 export type SelectReference = (reference: string) => void;
@@ -111,14 +113,48 @@ function createTextSearchModal(getBible: () => EbfDocument | null, onSelect: Sel
     const countEl = document.createElement('div');
     countEl.className = 'text-search-count';
 
-    // Ordem dos resultados; data-ranked indica a busca por relevância
+    // Estado do índice (data-ranked: busca por relevância pronta) e escolha da ordem dos resultados
+    const optionsRow = document.createElement('div');
+    optionsRow.className = 'text-search-options';
     const statusEl = document.createElement('div');
     statusEl.className = 'text-search-status';
+
+    // Controle segmentado com as duas ordens à vista
+    const orderGroup = document.createElement('div');
+    orderGroup.className = 'text-search-order';
+    orderGroup.setAttribute('role', 'radiogroup');
+    orderGroup.setAttribute('aria-label', 'Ordem dos resultados');
+    const orderButtons = new Map<SearchOrder, HTMLButtonElement>();
+    for (const [order, label] of [
+        ['relevance', 'Relevância'],
+        ['book', 'Por livro'],
+    ] as const) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'text-search-order-option';
+        button.setAttribute('role', 'radio');
+        button.dataset.order = order;
+        button.textContent = label;
+        orderButtons.set(order, button);
+        orderGroup.appendChild(button);
+    }
+
+    let order: SearchOrder = getSearchOrder();
+    const setOrder = (value: SearchOrder) => {
+        order = value;
+        for (const [key, button] of orderButtons) {
+            button.setAttribute('aria-checked', String(key === order));
+            button.tabIndex = key === order ? 0 : -1;
+        }
+    };
+    setOrder(order);
+    optionsRow.append(statusEl, orderGroup);
+
 
     const resultsContainer = document.createElement('div');
     resultsContainer.className = 'text-search-results';
 
-    content.append(inputRow, countEl, statusEl, resultsContainer);
+    content.append(inputRow, countEl, optionsRow, resultsContainer);
 
     let selectedIndex = -1;
 
@@ -133,7 +169,11 @@ function createTextSearchModal(getBible: () => EbfDocument | null, onSelect: Sel
     const showStatus = (bible: EbfDocument | null) => {
         const ranked = !!bible && isSearchIndexReady(bible);
         statusEl.dataset.ranked = String(ranked);
-        statusEl.textContent = ranked ? 'Por relevância' : 'Preparando a busca por relevância…';
+        statusEl.textContent = !ranked
+            ? 'Preparando a busca por relevância…'
+            : order === 'book'
+              ? 'Na ordem da Bíblia'
+              : 'Por relevância';
     };
 
     const describeCount = ({ results, total, ranked }: SearchResponse) => {
@@ -158,7 +198,7 @@ function createTextSearchModal(getBible: () => EbfDocument | null, onSelect: Sel
             return;
         }
 
-        const response = searchVerses(bible, query);
+        const response = searchVerses(bible, query, undefined, order);
         if (response.results.length === 0) {
             showMessage('Nenhum versículo encontrado');
             return;
@@ -217,6 +257,26 @@ function createTextSearchModal(getBible: () => EbfDocument | null, onSelect: Sel
             }
         });
     };
+
+    const chooseOrder = (value: SearchOrder) => {
+        if (value === order) return;
+        setOrder(value);
+        saveSearchOrder(order);
+        performSearch(searchInput.value.trim());
+    };
+    for (const [value, button] of orderButtons) {
+        button.addEventListener('click', () => {
+            chooseOrder(value);
+        });
+    }
+    // Setas alternam entre as opções, como num grupo de radio
+    orderGroup.addEventListener('keydown', (event) => {
+        if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) return;
+        event.preventDefault();
+        const next = order === 'book' ? 'relevance' : 'book';
+        chooseOrder(next);
+        orderButtons.get(next)?.focus();
+    });
 
     searchInput.addEventListener(
         'input',

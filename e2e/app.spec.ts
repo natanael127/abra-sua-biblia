@@ -159,6 +159,25 @@ test('busca textual ignora acentos e destaca o texto original', async ({ page })
     await expect(modal.locator('.text-search-result-item').first().locator('mark')).toHaveText('puros de coração');
 });
 
+test('busca textual pode listar por livro, na ordem da Bíblia', async ({ page }) => {
+    await open(page);
+    await page.locator('#text-search-button').click();
+    const modal = page.locator('#text-search-modal');
+    await waitForRankedSearch(page);
+
+    await modal.locator('.text-search-input').fill('Deus amou o mundo');
+    await expect(modal.locator('.text-search-result-citation').first()).toHaveText('João 3,16');
+
+    await modal.getByRole('radio', { name: 'Por livro' }).click();
+    await expect(modal.getByRole('radio', { name: 'Por livro' })).toBeChecked();
+    await expect(modal.locator('.text-search-status')).toHaveText('Na ordem da Bíblia');
+    const citations = await modal.locator('.text-search-result-citation').allTextContents();
+    expect(citations.length).toBeGreaterThan(1);
+    // O primeiro resultado vem de um livro que antecede João
+    expect(citations[0]).not.toBe('João 3,16');
+    expect(citations).toContain('João 3,16');
+});
+
 test('busca por relevância: frase exata primeiro, prefixo e erro de digitação', async ({ page }) => {
     await open(page);
     await page.locator('#text-search-button').click();

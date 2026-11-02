@@ -22,9 +22,12 @@ vi.mock('../../src/core/search', async (importOriginal) => {
                     resolve();
                 };
             }),
-        searchVerses: (): SearchResponse => {
+        searchVerses: (_ebf: EbfDocument, _query: string, _max?: number, order?: string): SearchResponse => {
             const verse = (v: number): SearchResult => ({ bookAbbr: 'Jo', bookName: 'João', chapter: 1, verse: v, text: `v${v}` });
             // Na ordem da Bíblia antes do índice; por relevância (ordem trocada) depois
+            if (order === 'book') {
+                return { results: [verse(1), verse(2), verse(3)].map((r) => ({ ...r, terms: [] })), total: 3, ranked: false };
+            }
             return index.ready
                 ? { results: [verse(3), verse(1), verse(2)].map((r) => ({ ...r, terms: [] })), total: 3, ranked: true }
                 : { results: [verse(1), verse(2), verse(3)], total: 3, ranked: false };
@@ -33,6 +36,7 @@ vi.mock('../../src/core/search', async (importOriginal) => {
 });
 
 const { showTextSearchModal } = await import('../../src/ui/dialogs');
+const { getSearchOrder } = await import('../../src/ui/storage');
 
 const bible = { bible: { name: 'Teste', books: [] } } as EbfDocument;
 /** O modal é criado na primeira abertura e mantém este callback. */
@@ -42,6 +46,8 @@ const input = () => modal().querySelector<HTMLInputElement>('.text-search-input'
 const status = () => modal().querySelector<HTMLElement>('.text-search-status')!;
 const citations = () => Array.from(modal().querySelectorAll('.text-search-result-citation'), (e) => e.textContent);
 const selected = () => modal().querySelector('.text-search-result-item.selected .text-search-result-citation')?.textContent;
+const orderOption = (order: string) => modal().querySelector<HTMLButtonElement>(`.text-search-order-option[data-order="${order}"]`)!;
+const checkedOrder = () => modal().querySelector('.text-search-order-option[aria-checked="true"]')?.getAttribute('data-order');
 const press = (key: string) => input().dispatchEvent(new KeyboardEvent('keydown', { key, cancelable: true }));
 
 beforeAll(() => {
@@ -58,6 +64,7 @@ beforeAll(() => {
 
 beforeEach(() => {
     index.ready = false;
+    localStorage.clear();
     onSelect.mockClear();
 });
 
@@ -112,5 +119,23 @@ describe('modal de busca textual', () => {
         showTextSearchModal(() => bible, onSelect);
         expect(status().dataset.ranked).toBe('true');
         modal().close();
+    });
+
+    it('troca para a ordem por livro, refaz a busca e lembra a escolha', async () => {
+        index.ready = true;
+        showTextSearchModal(() => bible, onSelect);
+        expect(checkedOrder()).toBe('relevance');
+        await typeQuery('luz');
+        expect(citations()).toEqual(['João 1,3', 'João 1,1', 'João 1,2']);
+
+        orderOption('book').click();
+        expect(checkedOrder()).toBe('book');
+        expect(citations()).toEqual(['João 1,1', 'João 1,2', 'João 1,3']);
+        expect(status().textContent).toBe('Na ordem da Bíblia');
+        expect(localStorage.getItem('searchOrder')).toBe('book');
+        modal().close();
+
+        // O modal é recriado só uma vez; a escolha salva vale para novas sessões
+        expect(getSearchOrder()).toBe('book');
     });
 });

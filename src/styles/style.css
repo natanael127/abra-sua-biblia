@@ -586,8 +586,51 @@ a:visited {
     color: var(--text-secondary);
 }
 
-.text-search-status {
+.text-search-options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
     padding: 0 20px 5px;
+}
+
+.text-search-order {
+    display: inline-flex;
+    margin-left: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.text-search-order-option {
+    padding: 3px 10px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    background-color: var(--bg-primary);
+    border: none;
+    border-radius: 0;
+}
+
+.text-search-order-option + .text-search-order-option {
+    border-left: 1px solid var(--border-color);
+}
+
+.text-search-order-option:hover {
+    background-color: var(--bg-accent);
+}
+
+.text-search-order-option[aria-checked='true'] {
+    background-color: var(--button-active-bg);
+    color: white;
+    font-weight: bold;
+}
+
+.text-search-order-option:focus-visible {
+    outline: 2px solid var(--button-active-bg);
+    outline-offset: -2px;
+}
+
+.text-search-status {
     font-size: 12px;
     font-style: italic;
     color: var(--text-muted);
