@@ -41,6 +41,7 @@ describe('buildPassage', () => {
     it('elements in reading order, with raw (unescaped) texts', () => {
         expect(passage('Gn 1,1-2.4')).toEqual({
             heading: 'Gênesis 1: A criação (Teste)',
+            citation: 'Gn 1,1-2.4',
             quoted: false,
             lineBreaks: true,
             elements: [
@@ -84,6 +85,12 @@ describe('buildPassage', () => {
 
     it('a verse without text is left out with its title, without an omission marker', () => {
         expect(passage('Gn 1,2-4').elements.map((element) => element.type)).toEqual(['verse', 'verse', 'citation']);
+    });
+
+    it('citation of what is displayed, not of what was typed, even without the citation element', () => {
+        const typed = passage('gênesis 1, 4.1.2', { parenthesesCitation: false });
+        expect(typed.citation).toBe('Gn 1,1-2.4');
+        expect(typed.elements.some((element) => element.type === 'citation')).toBe(false);
     });
 
     it('whole chapter: citation without verses', () => {

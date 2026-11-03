@@ -52,6 +52,12 @@ export type PassageElement =
 export interface Passage {
     /** Book and chapter, with the chapter title and the Bible name ("Gênesis 1: A criação (Ave Maria)"). */
     heading: string;
+    /**
+     * Citation of what is displayed, compacted and with the Bible's abbreviation
+     * ("Gn 1,1-2.4"), even when it is not among the elements. It can differ from
+     * the typed reference ("gênesis 1, 4.1.2" -> "Gn 1,1-2.4").
+     */
+    citation: string;
     elements: PassageElement[];
     /** The passage is wrapped in double quotes, from the first to the last verse. */
     quoted: boolean;
@@ -154,16 +160,16 @@ function build(reference: string, ebf: EbfDocument, displayOpt: DisplayOptions):
     const verseIndexes = resolveVerseIndexes(parsedRef, chapter.verses.length);
     const elements = buildVerseElements(verseIndexes, chapter.verses, displayOpt);
 
+    let citation = `${getBookAbbreviation(book)} ${parsedRef.chapter}`;
+    if (!parsedRef.allVerses) {
+        citation += formatVerseRanges(verseIndexes);
+    }
     if (displayOpt.parenthesesCitation) {
-        let citation = `${getBookAbbreviation(book)} ${parsedRef.chapter}`;
-        if (!parsedRef.allVerses) {
-            citation += formatVerseRanges(verseIndexes);
-        }
         elements.push({ type: 'citation', text: citation });
     }
 
     return {
         kind: 'passage',
-        passage: { heading, elements, quoted: displayOpt.quotes, lineBreaks: displayOpt.lineBreaks },
+        passage: { heading, citation, elements, quoted: displayOpt.quotes, lineBreaks: displayOpt.lineBreaks },
     };
 }

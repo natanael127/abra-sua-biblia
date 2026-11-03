@@ -172,9 +172,10 @@ function showReference(mode?: UrlMode): void {
     byId('result').innerHTML = result.html;
     updateFloatingButtons();
 
+    // The resulting citation, not the typed reference (they can differ)
     const bibleName = state.ebf?.bible.name;
     const appTitle = t('app.title');
-    document.title = valid && bibleName ? `${reference} (${bibleName}) - ${appTitle}` : appTitle;
+    document.title = valid && result.passage && bibleName ? `${result.passage.citation} (${bibleName}) - ${appTitle}` : appTitle;
     if (mode) {
         syncUrl(currentPath(reference, valid), mode);
     }

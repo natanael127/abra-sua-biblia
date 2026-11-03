@@ -536,6 +536,12 @@ test.describe('URL and browser history', () => {
         await expect(page).toHaveTitle('Abra sua Bíblia!');
     });
 
+    test('the title shows the resulting citation, not the typed reference', async ({ page }) => {
+        await open(page);
+        await reference(page).fill('joão 3, 18.16.17');
+        await expect(page).toHaveTitle('Jo 3,16-18 (Ave-Maria) - Abra sua Bíblia!');
+    });
+
     test('Back and Forward navigate between passages', async ({ page }) => {
         await open(page, 'Jo 3,16');
         await page.locator('#next-chapter-button').click();
