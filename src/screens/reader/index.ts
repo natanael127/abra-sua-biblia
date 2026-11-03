@@ -172,13 +172,23 @@ function showReference(mode?: UrlMode): void {
     byId('result').innerHTML = result.html;
     updateFloatingButtons();
 
-    // The resulting citation, not the typed reference (they can differ)
-    const bibleName = state.ebf?.bible.name;
+    const title = passageTitle();
     const appTitle = t('app.title');
-    document.title = valid && result.passage && bibleName ? `${result.passage.citation} (${bibleName}) - ${appTitle}` : appTitle;
+    document.title = title ? `${title} - ${appTitle}` : appTitle;
     if (mode) {
         syncUrl(currentPath(reference, valid), mode);
     }
+}
+
+/**
+ * Title of the displayed passage, for the page and for sharing: the resulting
+ * citation, not the typed reference (they can differ), and the Bible name
+ * ("Jo 3,16 (Ave-Maria)"). Null when no passage is displayed.
+ */
+function passageTitle(): string | null {
+    if (!state.passage) return null;
+    const bibleName = state.ebf?.bible.name;
+    return bibleName ? `${state.passage.citation} (${bibleName})` : state.passage.citation;
 }
 
 function goToReference(reference: string): void {
@@ -384,16 +394,16 @@ function copyResult(): void {
 
 function shareCurrentReference(): void {
     const reference = referenceInput().value.trim();
-    if (!reference) return;
+    const title = passageTitle();
+    if (!reference || !title) return;
 
     if (state.bibleKey === UPLOAD_KEY) {
         alert(t('messages.cannotShareUpload'));
         return;
     }
 
-    const bibleName = state.ebf?.bible.name;
     shareLink({
-        title: bibleName ? `${reference} (${bibleName})` : reference,
+        title,
         url: window.location.origin + currentPath(reference, true),
     }).then(
         (result) => {

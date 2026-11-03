@@ -323,6 +323,14 @@ test.describe('sharing via the Web Share API', () => {
         await expect(page.locator('.temporary-message')).toHaveCount(0);
     });
 
+    test('shares with the same title as the page: the resulting citation', async ({ page }) => {
+        await open(page);
+        await reference(page).fill('joão 3, 18.16.17');
+        await expect(page).toHaveTitle('Jo 3,16-18 (Ave-Maria) - Abra sua Bíblia!');
+        await page.locator('#share-button').click();
+        await expect.poll(() => shared(page)).toMatchObject([{ title: 'Jo 3,16-18 (Ave-Maria)', text: 'Jo 3,16-18 (Ave-Maria)' }]);
+    });
+
     test('dismissing the sheet neither copies nor shows a message', async ({ page }) => {
         await open(page, 'Jo 3,16');
         await page.evaluate(() => {
