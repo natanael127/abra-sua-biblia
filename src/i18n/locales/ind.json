@@ -33,7 +33,7 @@
         "verseNumbers": "Nomor ayat",
         "lineBreaks": "Pindah baris setelah setiap ayat",
         "ellipsis": "Simbol lanjutan pada ayat yang terpotong",
-        "parenthesesCitation": "Kutipan setelah teks",
+        "parenthesesReference": "Referensi setelah teks",
         "sectionTitles": "Judul bagian",
         "prevChapter": "Pasal sebelumnya",
         "nextChapter": "Pasal berikutnya",

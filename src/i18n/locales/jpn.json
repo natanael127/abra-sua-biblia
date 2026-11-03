@@ -33,7 +33,7 @@
         "verseNumbers": "節番号",
         "lineBreaks": "各節の後で改行",
         "ellipsis": "分割された節の継続記号",
-        "parenthesesCitation": "本文の後の出典",
+        "parenthesesReference": "本文の後の出典",
         "sectionTitles": "段落の見出し",
         "prevChapter": "前の章",
         "nextChapter": "次の章",

@@ -9,20 +9,20 @@ describe('matchPath', () => {
     });
 
     it('extracts required and optional parameters', () => {
-        const pattern = '/:bible?/:book?/:passage?';
+        const pattern = '/:bible?/:book?/:chapterVerses?';
         expect(matchPath(pattern, '/')).toEqual({});
         expect(matchPath(pattern, '/ave-maria')).toEqual({ bible: 'ave-maria' });
         expect(matchPath(pattern, '/ave-maria/mt/5,3-12.21-38')).toEqual({
             bible: 'ave-maria',
             book: 'mt',
-            passage: '5,3-12.21-38',
+            chapterVerses: '5,3-12.21-38',
         });
         expect(matchPath('/planos/:id', '/planos')).toBeNull();
         expect(matchPath('/planos/:id', '/planos/1')).toEqual({ id: '1' });
     });
 
     it('rejects paths with extra segments', () => {
-        expect(matchPath('/:bible?/:book?/:passage?', '/a/b/c/d')).toBeNull();
+        expect(matchPath('/:bible?/:book?/:chapterVerses?', '/a/b/c/d')).toBeNull();
     });
 
     it('decodes the parameters and rejects invalid encoding', () => {

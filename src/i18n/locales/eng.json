@@ -33,7 +33,7 @@
         "verseNumbers": "Verse numbers",
         "lineBreaks": "Line break after each verse",
         "ellipsis": "Continuation symbol in split verses",
-        "parenthesesCitation": "Citation after the text",
+        "parenthesesReference": "Reference after the text",
         "sectionTitles": "Section titles",
         "prevChapter": "Previous chapter",
         "nextChapter": "Next chapter",

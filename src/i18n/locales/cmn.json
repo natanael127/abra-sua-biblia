@@ -33,7 +33,7 @@
         "verseNumbers": "节号",
         "lineBreaks": "每节后换行",
         "ellipsis": "被拆分经节的续接符号",
-        "parenthesesCitation": "正文后的引用出处",
+        "parenthesesReference": "正文后的引用出处",
         "sectionTitles": "段落标题",
         "prevChapter": "上一章",
         "nextChapter": "下一章",

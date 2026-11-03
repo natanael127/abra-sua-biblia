@@ -55,7 +55,7 @@ beforeEach(() => {
     reader = fakeScreen();
     routes = [
         { pattern: '/planos', screen: plans },
-        { pattern: '/:bible?/:book?/:passage?', screen: reader },
+        { pattern: '/:bible?/:book?/:chapterVerses?', screen: reader },
     ];
 });
 
@@ -70,7 +70,7 @@ afterEach(() => {
 describe('createRouter', () => {
     it('shows the screen of the initial URL and hides the others', () => {
         start('/ave-maria/jo/3,16');
-        expect(reader.shown).toEqual([{ bible: 'ave-maria', book: 'jo', passage: '3,16' }]);
+        expect(reader.shown).toEqual([{ bible: 'ave-maria', book: 'jo', chapterVerses: '3,16' }]);
         expect(reader.root.hidden).toBe(false);
         expect(plans.root.hidden).toBe(true);
     });
@@ -101,7 +101,7 @@ describe('createRouter', () => {
         router.navigate('/cnbb/jo/3', { replace: true });
         expect(location.pathname).toBe('/cnbb/jo/3');
         expect(history.length).toBe(length);
-        expect(reader.shown.at(-1)).toEqual({ bible: 'cnbb', book: 'jo', passage: '3' });
+        expect(reader.shown.at(-1)).toEqual({ bible: 'cnbb', book: 'jo', chapterVerses: '3' });
     });
 
     it('updateUrl records the URL without showing the screen again', () => {
@@ -136,7 +136,7 @@ describe('createRouter', () => {
         history.back();
         await waitPopstate();
         expect(location.pathname).toBe('/ave-maria/jo/4');
-        expect(reader.shown.at(-1)).toEqual({ bible: 'ave-maria', book: 'jo', passage: '4' });
+        expect(reader.shown.at(-1)).toEqual({ bible: 'ave-maria', book: 'jo', chapterVerses: '4' });
         expect(reader.root.hidden).toBe(false);
         expect(plans.hidden).toBe(1);
 

@@ -1,12 +1,12 @@
 /**
- * Intermediate structure of a displayed passage, independent of the output
- * format. It is built from the input reference and the display options, and
+ * Intermediate structure of a displayed passage (the text of the verses that a
+ * Bible reference points to), independent of the output format. It is built from the input reference and the display options, and
  * then rendered separately for reading (HTML) and for copying (plain text):
  *
  *     input reference + options -> Passage -> HTML for reading
  *                                          -> plain text for copying
  *
- * Building it also yields the resulting citation of what is displayed, which
+ * Building it also yields the resulting reference of what is displayed, which
  * can differ from the input reference (see ./reference).
  *
  * The texts are raw (not HTML-escaped): escaping is up to each renderer.
@@ -29,7 +29,7 @@ export interface DisplayOptions {
     verseNumbers: boolean;
     lineBreaks: boolean;
     ellipsis: boolean;
-    parenthesesCitation: boolean;
+    parenthesesReference: boolean;
     sectionTitles: boolean;
 }
 
@@ -38,7 +38,7 @@ export const DEFAULT_DISPLAY_OPTIONS: Readonly<DisplayOptions> = {
     verseNumbers: true,
     lineBreaks: true,
     ellipsis: true,
-    parenthesesCitation: true,
+    parenthesesReference: true,
     sectionTitles: true,
 };
 
@@ -53,21 +53,21 @@ export type PassageElement =
     /** Verses left out between two selected ones. */
     | { type: 'omission'; text: string }
     /**
-     * Resulting citation after the verses ("Gn 1,1-2.4", without the parentheses):
-     * present only with the `parenthesesCitation` option.
+     * Resulting reference after the verses ("Gn 1,1-2.4", without the parentheses):
+     * present only with the `parenthesesReference` option.
      */
-    | { type: 'resulting-citation'; text: string };
+    | { type: 'resulting-reference'; text: string };
 
 export interface Passage {
     /** Book and chapter, with the chapter title and the Bible name ("Gênesis 1: A criação (Ave Maria)"). */
     heading: string;
     /**
-     * Resulting citation: the citation of what is displayed, compacted and with
-     * the Bible's abbreviation ("Gn 1,1-2.4"), always present, even when it is
+     * Resulting reference: the reference of what is displayed, compacted and
+     * with the Bible's abbreviation ("Gn 1,1-2.4"), always present, even when it is
      * not among the elements. It can differ from the input reference the
      * passage was built from ("gênesis 1, 4.1.2" -> "Gn 1,1-2.4").
      */
-    resultingCitation: string;
+    resultingReference: string;
     elements: PassageElement[];
     /** The passage is wrapped in double quotes, from the first to the last verse. */
     quoted: boolean;
@@ -172,16 +172,16 @@ function build(inputReference: string, ebf: EbfDocument, displayOpt: DisplayOpti
 
     // From the verses found, not from the input reference: book abbreviation,
     // verses sorted, compacted and limited to the chapter
-    let resultingCitation = `${getBookAbbreviation(book)} ${parsedRef.chapter}`;
+    let resultingReference = `${getBookAbbreviation(book)} ${parsedRef.chapter}`;
     if (!parsedRef.allVerses) {
-        resultingCitation += formatVerseRanges(verseIndexes);
+        resultingReference += formatVerseRanges(verseIndexes);
     }
-    if (displayOpt.parenthesesCitation) {
-        elements.push({ type: 'resulting-citation', text: resultingCitation });
+    if (displayOpt.parenthesesReference) {
+        elements.push({ type: 'resulting-reference', text: resultingReference });
     }
 
     return {
         kind: 'passage',
-        passage: { heading, resultingCitation, elements, quoted: displayOpt.quotes, lineBreaks: displayOpt.lineBreaks },
+        passage: { heading, resultingReference, elements, quoted: displayOpt.quotes, lineBreaks: displayOpt.lineBreaks },
     };
 }

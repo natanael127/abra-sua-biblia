@@ -62,7 +62,7 @@ describe('published Bibles', () => {
                 expect(parseReaderParams(params!), abbreviation).toEqual({
                     bibleKey: `${entry.language}/${entry.slug}`,
                     book: abbreviation.toLowerCase(),
-                    passage: '1,2-3',
+                    chapterVerses: '1,2-3',
                 });
             }
         });

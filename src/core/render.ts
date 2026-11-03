@@ -68,7 +68,7 @@ export function renderPassageHtml(passage: Passage): string {
             case 'omission':
                 html = escapeHtml(element.text);
                 break;
-            case 'resulting-citation':
+            case 'resulting-reference':
                 // The class keeps its old name ("verse-reference"), used by the style
                 html = `<span class="verse-reference">(${escapeHtml(element.text)})</span>`;
                 break;
@@ -106,7 +106,7 @@ export function renderPassageText(passage: Passage): string {
             case 'omission':
                 rendered = element.text;
                 break;
-            case 'resulting-citation':
+            case 'resulting-reference':
                 rendered = `(${element.text})`;
                 break;
         }
@@ -128,7 +128,7 @@ export function renderPassageText(passage: Passage): string {
 /**
  * Generates the HTML of the Bible passage asked for by the input reference.
  * `instructionsHtml` is shown when the input reference cannot be parsed. The
- * resulting citation is in `passage.resultingCitation`.
+ * resulting reference is in `passage.resultingReference`.
  */
 export function renderInputReference(
     inputReference: string,

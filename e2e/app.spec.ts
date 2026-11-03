@@ -323,7 +323,7 @@ test.describe('sharing via the Web Share API', () => {
         await expect(page.locator('.temporary-message')).toHaveCount(0);
     });
 
-    test('shares with the same title as the page: the resulting citation', async ({ page }) => {
+    test('shares with the same title as the page: the resulting reference', async ({ page }) => {
         await open(page);
         await reference(page).fill('joão 3, 18.16.17');
         await expect(page).toHaveTitle('Jo 3,16-18 (Ave-Maria) - Abra sua Bíblia!');
@@ -544,7 +544,7 @@ test.describe('URL and browser history', () => {
         await expect(page).toHaveTitle('Abra sua Bíblia!');
     });
 
-    test('the title shows the resulting citation, not the typed reference', async ({ page }) => {
+    test('the title shows the resulting reference, not the typed reference', async ({ page }) => {
         await open(page);
         await reference(page).fill('joão 3, 18.16.17');
         await expect(page).toHaveTitle('Jo 3,16-18 (Ave-Maria) - Abra sua Bíblia!');
@@ -691,7 +691,7 @@ test.describe('URL and browser history', () => {
         await expect(page).toHaveURL('/por/ave-maria');
     });
 
-    test('citation outside the expected format redirects to the root', async ({ page }) => {
+    test('a link outside the expected format redirects to the root', async ({ page }) => {
         await open(page, 'Jo 3,16');
         await page.goto('/ave-maria/Mt/5');
         await expect(page).toHaveURL('/por/ave-maria/jo/3,16');
@@ -709,7 +709,7 @@ test.describe('URL and browser history', () => {
         await expect(result(page).locator('.verse-reference')).toHaveText('(Jo 3,16)');
     });
 
-    test('failure to load the Bible keeps the passage in the URL', async ({ page }) => {
+    test('failure to load the Bible keeps the input reference in the URL', async ({ page }) => {
         await page.route('**/por_cnbb.ebf1.json', (route) => route.abort());
         await page.goto('/por/cnbb/jo/3,16');
         await expect(page.locator('.temporary-message')).toHaveText('Erro ao carregar a Bíblia');

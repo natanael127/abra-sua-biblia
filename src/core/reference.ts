@@ -1,15 +1,21 @@
 /**
- * Bible references. Two notions must not be confused:
+ * Bible references.
+ *
+ * A **Bible reference** is the address of a passage: book, chapter and verses
+ * ("Jo 3,16-18"). It is not the **passage**, which is the text it points to
+ * (see ./passage). Each passage displayed involves two references, which must
+ * not be confused:
  *
  * - **input reference**: the reference as the user wrote it (in the reference
  *   field, in a link, in the history), in a free notation: "joão 3, 18.16.17".
  *   It is what gets parsed (`parseReference`). Its canonical form only swaps
  *   the book for the Bible's abbreviation ("Jo 3, 18.16.17") and keeps the
  *   rest as typed; it is what goes into the field and the URL.
- * - **resulting citation**: the citation of what is actually displayed, built
- *   from the verses found in the chapter, compacted and in the Bible's
- *   notation: "Jo 3,16-18". It is shown after the passage, in the page title
- *   and when sharing (see `Passage.resultingCitation` in ./passage).
+ * - **resulting reference**: the reference of what is actually displayed,
+ *   built from the verses found in the chapter, compacted and in the Bible's
+ *   notation: "Jo 3,16-18". It is shown after the passage (between
+ *   parentheses, with the `parenthesesReference` option), in the page title
+ *   and when sharing (see `Passage.resultingReference` in ./passage).
  *
  * They can differ in the book (name or abbreviation), the spacing, the order
  * and repetition of verses, and verses that do not exist in the chapter
@@ -113,7 +119,7 @@ export function resolveVerseIndexes(parsedReference: ParsedReference, numOfVerse
 
 /**
  * Compacts verse indexes (0-based) into the verse part of a resulting
- * citation. E.g.: [0, 1, 2, 4] -> ",1-3.5". An empty list yields an empty
+ * reference. E.g.: [0, 1, 2, 4] -> ",1-3.5". An empty list yields an empty
  * string.
  */
 export function formatVerseRanges(versesList: readonly number[]): string {

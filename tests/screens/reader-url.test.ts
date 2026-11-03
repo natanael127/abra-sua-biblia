@@ -3,7 +3,7 @@ import { matchPath } from '../../src/router/path';
 import { parseLegacyLink, parseReaderParams, READER_PATTERN, readerPath, inputReferenceFromPath, UPLOAD_KEY } from '../../src/screens/reader/url';
 
 describe('readerPath', () => {
-    it('uses the book in lowercase and the passage in the notation of the input reference', () => {
+    it('uses the book in lowercase and chapter and verses in the notation of the input reference', () => {
         expect(readerPath('por/ave-maria', 'Mt 5,3-12.21-38')).toBe('/por/ave-maria/mt/5,3-12.21-38');
         expect(readerPath('por/ave-maria', '1Cor 13')).toBe('/por/ave-maria/1cor/13');
         expect(readerPath('por/cnbb', 'Êx 20,1-17')).toBe('/por/cnbb/%C3%AAx/20,1-17');
@@ -23,9 +23,9 @@ describe('readerPath', () => {
 describe('parseReaderParams', () => {
     const parse = (path: string) => parseReaderParams(matchPath(READER_PATTERN, path)!);
 
-    it('reads language, Bible, book and passage', () => {
-        expect(parse('/por/Ave-Maria/mt/5,3-12')).toEqual({ bibleKey: 'por/ave-maria', book: 'mt', passage: '5,3-12' });
-        expect(parse('/POR/ave-maria')).toEqual({ bibleKey: 'por/ave-maria', book: undefined, passage: undefined });
+    it('reads language, Bible, book, chapter and verses', () => {
+        expect(parse('/por/Ave-Maria/mt/5,3-12')).toEqual({ bibleKey: 'por/ave-maria', book: 'mt', chapterVerses: '5,3-12' });
+        expect(parse('/POR/ave-maria')).toEqual({ bibleKey: 'por/ave-maria', book: undefined, chapterVerses: undefined });
     });
 
     it('the language alone does not identify the Bible', () => {
@@ -33,9 +33,9 @@ describe('parseReaderParams', () => {
         expect(parse('/')).toEqual({ language: undefined });
     });
 
-    it('an upload has no language: the book and passage come right after', () => {
-        expect(parse('/upload/gen/1,1-2')).toEqual({ bibleKey: UPLOAD_KEY, book: 'gen', passage: '1,1-2' });
-        expect(parse('/upload')).toEqual({ bibleKey: UPLOAD_KEY, book: undefined, passage: undefined });
+    it('an upload has no language: the book, chapter and verses come right after', () => {
+        expect(parse('/upload/gen/1,1-2')).toEqual({ bibleKey: UPLOAD_KEY, book: 'gen', chapterVerses: '1,1-2' });
+        expect(parse('/upload')).toEqual({ bibleKey: UPLOAD_KEY, book: undefined, chapterVerses: undefined });
     });
 });
 
@@ -52,7 +52,7 @@ describe('inputReferenceFromPath', () => {
     it('a round trip through the URL preserves the input reference', () => {
         for (const inputReference of ['Mt 5,3-12.21-38', 'Jo 3', 'Sl 119,1-', 'Êx 20,1.3.5-7']) {
             const target = parseReaderParams(matchPath(READER_PATTERN, readerPath('por/ave-maria', inputReference))!);
-            expect(inputReferenceFromPath(target.book, target.passage)).toBe(inputReference.toLowerCase());
+            expect(inputReferenceFromPath(target.book, target.chapterVerses)).toBe(inputReference.toLowerCase());
         }
     });
 });

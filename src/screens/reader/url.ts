@@ -1,15 +1,15 @@
 /**
- * Reader screen URLs: /{language}/{bible}/{book}/{passage}, e.g.:
+ * Reader screen URLs: /{language}/{bible}/{book}/{chapterVerses}, e.g.:
  * /por/ave-maria/mt/5,3-12.21-38. The language is the translation's ISO 639-3
- * code; the book is the translation's abbreviation, in lowercase; the passage
- * follows the notation of the input reference, as typed (not the resulting
- * citation, see src/core/reference.ts). A Bible loaded by upload has no
- * language: /upload/{book}/{passage}.
+ * code; book and chapterVerses are the parts of the Bible reference: the book
+ * is the translation's abbreviation, in lowercase; chapterVerses follows the notation of the input reference, as typed (not the resulting
+ * reference, see src/core/reference.ts). A Bible loaded by upload has no
+ * language: /upload/{book}/{chapterVerses}.
  */
 import { buildPath, type PathParams } from '../../router/path';
 
 /** Route pattern of the reader screen. */
-export const READER_PATTERN = '/:language?/:bible?/:book?/:passage?';
+export const READER_PATTERN = '/:language?/:bible?/:book?/:chapterVerses?';
 
 /** URL identifier of the Bible loaded by upload (it cannot be shared). */
 export const UPLOAD_KEY = 'upload';
@@ -21,19 +21,20 @@ export interface ReaderTarget {
     /** Language, when it is the only part of the Bible in the URL ("/por"). */
     language?: string;
     book?: string;
-    passage?: string;
+    /** Chapter and verses of the reference, e.g.: "5,3-12". */
+    chapterVerses?: string;
 }
 
 /** Parses the READER_PATTERN parameters. */
 export function parseReaderParams(params: PathParams): ReaderTarget {
     const language = params.language?.toLowerCase();
     if (language === UPLOAD_KEY) {
-        return { bibleKey: UPLOAD_KEY, book: params.bible, passage: params.book };
+        return { bibleKey: UPLOAD_KEY, book: params.bible, chapterVerses: params.book };
     }
     if (!language || !params.bible) {
         return { language };
     }
-    return { bibleKey: `${language}/${params.bible.toLowerCase()}`, book: params.book, passage: params.passage };
+    return { bibleKey: `${language}/${params.bible.toLowerCase()}`, book: params.book, chapterVerses: params.chapterVerses };
 }
 
 /**
@@ -43,17 +44,17 @@ export function parseReaderParams(params: PathParams): ReaderTarget {
 export function readerPath(bibleKey: string, inputReference?: string | null): string {
     const bibleSegments = bibleKey.split('/');
     const [book, ...rest] = (inputReference ?? '').trim().split(' ');
-    const passage = rest.join(' ').trim();
-    if (!book || !passage) {
+    const chapterVerses = rest.join(' ').trim();
+    if (!book || !chapterVerses) {
         return buildPath(...bibleSegments);
     }
-    return buildPath(...bibleSegments, book.toLowerCase(), passage);
+    return buildPath(...bibleSegments, book.toLowerCase(), chapterVerses);
 }
 
 /** Input reference from the URL parameters; a book alone opens chapter 1. */
-export function inputReferenceFromPath(book?: string, passage?: string): string {
+export function inputReferenceFromPath(book?: string, chapterVerses?: string): string {
     if (!book) return '';
-    return `${book} ${passage ?? '1'}`;
+    return `${book} ${chapterVerses ?? '1'}`;
 }
 
 export interface LegacyLink {

@@ -33,7 +33,7 @@
         "verseNumbers": "Номера стихов",
         "lineBreaks": "Перенос строки после каждого стиха",
         "ellipsis": "Знак продолжения в разделённых стихах",
-        "parenthesesCitation": "Ссылка после текста",
+        "parenthesesReference": "Ссылка после текста",
         "sectionTitles": "Заголовки разделов",
         "prevChapter": "Предыдущая глава",
         "nextChapter": "Следующая глава",

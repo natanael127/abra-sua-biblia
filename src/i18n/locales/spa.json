@@ -33,7 +33,7 @@
         "verseNumbers": "Números de los versículos",
         "lineBreaks": "Salto de línea después de cada versículo",
         "ellipsis": "Símbolo de continuación en los versículos divididos",
-        "parenthesesCitation": "Cita después del texto",
+        "parenthesesReference": "Referencia después del texto",
         "sectionTitles": "Títulos de las secciones",
         "prevChapter": "Capítulo anterior",
         "nextChapter": "Capítulo siguiente",

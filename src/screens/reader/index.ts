@@ -2,13 +2,14 @@
  * Reader screen: translation choice, reference field and passage display.
  *
  * The reference field holds the input reference, as the user wrote it; the
- * passage displayed carries the resulting citation of what was found (see
+ * passage displayed carries the resulting reference of what was found (see
  * src/core/reference.ts). Each one has its uses:
  * - input reference (canonical: book swapped for the Bible's abbreviation):
  *   reference field, URL, last reading and search history;
- * - resulting citation: after the passage, page title and sharing.
+ * - resulting reference: after the passage, page title and sharing.
  *
- * The URL reflects the displayed passage (/{language}/{bible}/{book}/{passage}).
+ * The URL carries the input reference of the displayed passage
+ * (/{language}/{bible}/{book}/{chapterVerses}).
  * External navigations (page load, Back/Forward) arrive through `show`; the
  * user's actions on the screen update the URL:
  * - one-off actions (book, chapter, history, search, translation) create an
@@ -56,7 +57,7 @@ const FORMAT_BUTTONS: Record<string, keyof DisplayOptions> = {
     'display-verse-numbers': 'verseNumbers',
     'display-line-breaks': 'lineBreaks',
     'display-ellipsis': 'ellipsis',
-    'display-parentheses-citation': 'parenthesesCitation',
+    'display-parentheses-reference': 'parenthesesReference',
     'display-section-titles': 'sectionTitles',
 };
 
@@ -98,7 +99,7 @@ const state = {
     editing: false,
     /**
      * Passage displayed, source of the copied text and of the resulting
-     * citation; null when there is none.
+     * reference; null when there is none.
      */
     passage: null as Passage | null,
 };
@@ -131,7 +132,7 @@ const isKnownLanguage = (language: string | undefined): boolean => state.bibles.
 /**
  * Canonical form of the input reference: only the book is replaced with the
  * loaded Bible's abbreviation, the rest stays as typed ("mateus 5, 4.3" ->
- * "Mt 5, 4.3"). It is not the resulting citation ("Mt 5,3-4").
+ * "Mt 5, 4.3"). It is not the resulting reference ("Mt 5,3-4").
  */
 function canonicalInputReference(inputReference: string): string {
     const parsed = parseReference(inputReference);
@@ -202,14 +203,14 @@ function showPassage(mode?: UrlMode): void {
 
 /**
  * Title of the displayed passage, for the page and for sharing: the resulting
- * citation, not the input reference (they can differ), and the Bible name
+ * reference, not the input reference (they can differ), and the Bible name
  * ("Jo 3,16 (Ave-Maria)"). Null when no passage is displayed.
  */
 function passageTitle(): string | null {
     if (!state.passage) return null;
     const bibleName = state.ebf?.bible.name;
-    const { resultingCitation } = state.passage;
-    return bibleName ? `${resultingCitation} (${bibleName})` : resultingCitation;
+    const { resultingReference } = state.passage;
+    return bibleName ? `${resultingReference} (${bibleName})` : resultingReference;
 }
 
 /** Puts the input reference in the field and displays its passage (new history entry). */
@@ -415,7 +416,7 @@ function copyResult(): void {
 }
 
 /**
- * Shares the displayed passage: the title has the resulting citation; the link
+ * Shares the displayed passage: the title has the resulting reference; the link
  * has the canonical input reference, like the URL of the page.
  */
 function sharePassage(): void {
@@ -572,7 +573,7 @@ async function show(params: PathParams, biblesReady: Promise<void>): Promise<voi
             const languageEntry = languageBibleEntry(target.language);
             key = languageEntry && bibleKey(languageEntry);
         }
-        inputReference = inputReferenceFromPath(target.book, target.passage);
+        inputReference = inputReferenceFromPath(target.book, target.chapterVerses);
         if (key !== UPLOAD_KEY && !findBibleEntry(key)) {
             showTemporaryMessage(t('messages.translationNotFound'));
             const fallback = defaultBibleEntry();

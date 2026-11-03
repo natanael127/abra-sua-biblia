@@ -33,7 +33,7 @@
         "verseNumbers": "Numeri dei versetti",
         "lineBreaks": "A capo dopo ogni versetto",
         "ellipsis": "Simbolo di continuazione nei versetti spezzati",
-        "parenthesesCitation": "Citazione dopo il testo",
+        "parenthesesReference": "Riferimento dopo il testo",
         "sectionTitles": "Titoli delle sezioni",
         "prevChapter": "Capitolo precedente",
         "nextChapter": "Capitolo successivo",

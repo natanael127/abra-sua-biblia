@@ -74,7 +74,7 @@ describe('renderInputReference', () => {
         const html = renderInputReference(
             'Gn 1,2.4',
             ebf,
-            options({ quotes: true, verseNumbers: false, parenthesesCitation: false, lineBreaks: false, sectionTitles: false }),
+            options({ quotes: true, verseNumbers: false, parenthesesReference: false, lineBreaks: false, sectionTitles: false }),
             '',
         ).html;
         expect(html).toBe(
@@ -95,7 +95,7 @@ describe('renderInputReference', () => {
         );
     });
 
-    it('compacted citation at the end', () => {
+    it('compacted resulting reference at the end', () => {
         expect(renderInputReference('Gn 1,1-2.4', ebf, options(), '').html).toContain(
             '<span class="verse-reference">(Gn 1,1-2.4)</span>',
         );
@@ -118,7 +118,7 @@ describe('renderPassageText', () => {
         return renderPassageText(passage);
     };
 
-    it('one line per verse, superscript numbers, citation at the end, without escaping', () => {
+    it('one line per verse, superscript numbers, resulting reference at the end, without escaping', () => {
         expect(text('Gn 1,2-4', { sectionTitles: false })).toBe(
             '² Versículo em texto simples, "citado".\n⁴ Disse <Deus>: “Haja luz”.\n(Gn 1,2-4)',
         );
@@ -131,19 +131,19 @@ describe('renderPassageText', () => {
     });
 
     it('with quotes, the opening one goes after the section title', () => {
-        expect(text('Gn 1,1-2', { quotes: true, parenthesesCitation: false })).toBe(
+        expect(text('Gn 1,1-2', { quotes: true, parenthesesReference: false })).toBe(
             `Origem\n\n"¹ No princípio.\n² Versículo em texto simples, 'citado'."`,
         );
     });
 
     it('without line breaks, section titles still have a paragraph of their own', () => {
-        expect(text('Gn 1,1-4', { lineBreaks: false, parenthesesCitation: false })).toBe(
+        expect(text('Gn 1,1-4', { lineBreaks: false, parenthesesReference: false })).toBe(
             'Origem\n\n¹ No princípio. ² Versículo em texto simples, "citado".\n\nLuz\n\n⁴ Disse <Deus>: “Haja luz”.',
         );
     });
 
     it('without line breaks and with quotes', () => {
-        expect(text('Gn 1,2.4', { quotes: true, verseNumbers: false, parenthesesCitation: false, lineBreaks: false, sectionTitles: false })).toBe(
+        expect(text('Gn 1,2.4', { quotes: true, verseNumbers: false, parenthesesReference: false, lineBreaks: false, sectionTitles: false })).toBe(
             `"Versículo em texto simples, 'citado'. [...] Disse <Deus>: 'Haja luz'."`,
         );
     });

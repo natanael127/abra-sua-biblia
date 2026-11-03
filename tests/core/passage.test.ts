@@ -41,7 +41,7 @@ describe('buildPassage', () => {
     it('elements in reading order, with raw (unescaped) texts', () => {
         expect(passage('Gn 1,1-2.4')).toEqual({
             heading: 'Gênesis 1: A criação (Teste)',
-            resultingCitation: 'Gn 1,1-2.4',
+            resultingReference: 'Gn 1,1-2.4',
             quoted: false,
             lineBreaks: true,
             elements: [
@@ -50,7 +50,7 @@ describe('buildPassage', () => {
                 { type: 'verse', number: 2, text: 'Versículo "citado".' },
                 { type: 'omission', text: '[...]' },
                 { type: 'verse', number: 4, text: 'Disse <Deus>: “Haja luz”.' },
-                { type: 'resulting-citation', text: 'Gn 1,1-2.4' },
+                { type: 'resulting-reference', text: 'Gn 1,1-2.4' },
             ],
         });
     });
@@ -61,7 +61,7 @@ describe('buildPassage', () => {
                 verseNumbers: false,
                 ellipsis: false,
                 sectionTitles: false,
-                parenthesesCitation: false,
+                parenthesesReference: false,
                 lineBreaks: false,
             }),
         ).toMatchObject({
@@ -84,17 +84,17 @@ describe('buildPassage', () => {
     });
 
     it('a verse without text is left out with its title, without an omission marker', () => {
-        expect(passage('Gn 1,2-4').elements.map((element) => element.type)).toEqual(['verse', 'verse', 'resulting-citation']);
+        expect(passage('Gn 1,2-4').elements.map((element) => element.type)).toEqual(['verse', 'verse', 'resulting-reference']);
     });
 
-    it('resulting citation: of what is displayed, not the input reference, even without its element', () => {
-        const fromInput = passage('gênesis 1, 4.1.2', { parenthesesCitation: false });
-        expect(fromInput.resultingCitation).toBe('Gn 1,1-2.4');
-        expect(fromInput.elements.some((element) => element.type === 'resulting-citation')).toBe(false);
+    it('resulting reference: of what is displayed, not the input reference, even without its element', () => {
+        const fromInput = passage('gênesis 1, 4.1.2', { parenthesesReference: false });
+        expect(fromInput.resultingReference).toBe('Gn 1,1-2.4');
+        expect(fromInput.elements.some((element) => element.type === 'resulting-reference')).toBe(false);
     });
 
-    it('whole chapter: citation without verses', () => {
-        expect(passage('Gn 1').elements.at(-1)).toEqual({ type: 'resulting-citation', text: 'Gn 1' });
+    it('whole chapter: resulting reference without verses', () => {
+        expect(passage('Gn 1').elements.at(-1)).toEqual({ type: 'resulting-reference', text: 'Gn 1' });
     });
 
     it('errors and invalid input reference', () => {

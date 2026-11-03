@@ -84,18 +84,21 @@ tests/                  unit tests (Vitest)
 e2e/                    end-to-end tests (Playwright)
 ```
 
-## Input reference and resulting citation
+## Bible references and passages
 
-The code keeps apart two ways of naming a passage, which can differ:
+A **Bible reference** is the address of a passage (book, chapter and verses: `Jo 3,16-18`); the
+**passage** is the text it points to. The code keeps apart the two references involved in each
+passage displayed, which can differ:
 
 - **input reference**: what the user wrote, in the reference field or in a link, e.g.
   `joão 3, 18.16.17`. Its canonical form only swaps the book for the Bible's abbreviation
   (`Jo 3, 18.16.17`) and is what goes into the field, the URL and the search history;
-- **resulting citation**: the compacted citation of the verses actually displayed, e.g.
-  `Jo 3,16-18`. It is shown after the passage, in the page title and when sharing.
+- **resulting reference**: the compacted reference of the verses actually displayed, e.g.
+  `Jo 3,16-18`. It is shown after the passage (with the `()` option), in the page title and when
+  sharing.
 
 The passage is built (`src/core/passage.ts`) from the input reference and the display options
-into a structure independent of the output format, which carries the resulting citation and is
+into a structure independent of the output format, which carries the resulting reference and is
 then rendered (`src/core/render.ts`) as HTML for reading and as plain text for copying. See
 `src/core/reference.ts` for the details.
 

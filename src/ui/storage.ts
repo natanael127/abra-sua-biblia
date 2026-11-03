@@ -35,12 +35,21 @@ export const saveTheme = (theme: string): void => {
     localStorage.setItem(KEYS.theme, theme);
 };
 
+/** Display options saved under an older name: old name -> current name. */
+const RENAMED_DISPLAY_OPTIONS: Readonly<Record<string, keyof DisplayOptions>> = {
+    parenthesesCitation: 'parenthesesReference',
+};
+
 export function getSavedDisplayOptions(): DisplayOptions {
     const saved = readJson(KEYS.displayOptions);
     const options = { ...DEFAULT_DISPLAY_OPTIONS };
     if (typeof saved === 'object' && saved !== null) {
+        const values: Record<string, unknown> = { ...saved };
+        for (const [oldName, name] of Object.entries(RENAMED_DISPLAY_OPTIONS)) {
+            values[name] ??= values[oldName];
+        }
         for (const key of Object.keys(options) as (keyof DisplayOptions)[]) {
-            const value = (saved as Record<string, unknown>)[key];
+            const value = values[key];
             if (typeof value === 'boolean') {
                 options[key] = value;
             }

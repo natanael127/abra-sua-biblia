@@ -24,7 +24,7 @@ function compile(pattern: string): Segment[] {
 }
 
 /**
- * Matches a path against a pattern such as "/:bible?/:book?/:passage?".
+ * Matches a path against a pattern such as "/:bible?/:book?/:chapterVerses?".
  * Literals are compared case-insensitively; parameters are returned already
  * decoded. Returns null if the path does not match.
  */
