@@ -2,7 +2,8 @@
  * Reader screen URLs: /{language}/{bible}/{book}/{passage}, e.g.:
  * /por/ave-maria/mt/5,3-12.21-38. The language is the translation's ISO 639-3
  * code; the book is the translation's abbreviation, in lowercase; the passage
- * follows the notation of the typed reference. A Bible loaded by upload has no
+ * follows the notation of the input reference, as typed (not the resulting
+ * citation, see src/core/reference.ts). A Bible loaded by upload has no
  * language: /upload/{book}/{passage}.
  */
 import { buildPath, type PathParams } from '../../router/path';
@@ -35,10 +36,13 @@ export function parseReaderParams(params: PathParams): ReaderTarget {
     return { bibleKey: `${language}/${params.bible.toLowerCase()}`, book: params.book, passage: params.passage };
 }
 
-/** Path of the passage; without a valid reference, only the Bible's. `bibleKey`: "por/ave-maria" or UPLOAD_KEY. */
-export function readerPath(bibleKey: string, reference?: string | null): string {
+/**
+ * Path of the passage asked for by the (canonical) input reference; without a
+ * valid one, only the Bible's. `bibleKey`: "por/ave-maria" or UPLOAD_KEY.
+ */
+export function readerPath(bibleKey: string, inputReference?: string | null): string {
     const bibleSegments = bibleKey.split('/');
-    const [book, ...rest] = (reference ?? '').trim().split(' ');
+    const [book, ...rest] = (inputReference ?? '').trim().split(' ');
     const passage = rest.join(' ').trim();
     if (!book || !passage) {
         return buildPath(...bibleSegments);
@@ -46,8 +50,8 @@ export function readerPath(bibleKey: string, reference?: string | null): string 
     return buildPath(...bibleSegments, book.toLowerCase(), passage);
 }
 
-/** Reference from the URL parameters; a book alone opens chapter 1. */
-export function referenceFromPath(book?: string, passage?: string): string {
+/** Input reference from the URL parameters; a book alone opens chapter 1. */
+export function inputReferenceFromPath(book?: string, passage?: string): string {
     if (!book) return '';
     return `${book} ${passage ?? '1'}`;
 }
@@ -55,7 +59,8 @@ export function referenceFromPath(book?: string, passage?: string): string {
 export interface LegacyLink {
     /** Bible name, e.g. "Ave-Maria". */
     bible?: string;
-    reference?: string;
+    /** Input reference of the `quote` parameter, e.g. "Jo 3,16". */
+    inputReference?: string;
 }
 
 /**
@@ -65,7 +70,7 @@ export interface LegacyLink {
 export function parseLegacyLink(search: string): LegacyLink | null {
     const params = new URLSearchParams(search);
     const bible = params.get('bible')?.trim() || undefined;
-    const reference = params.get('quote')?.trim() || undefined;
-    if (!bible && !reference) return null;
-    return { bible, reference };
+    const inputReference = params.get('quote')?.trim() || undefined;
+    if (!bible && !inputReference) return null;
+    return { bible, inputReference };
 }

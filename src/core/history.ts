@@ -1,25 +1,25 @@
 export const MAX_HISTORY_SIZE = 10;
 
 /**
- * Adds a reference to the start of the history. While the user types, each
- * prefix ("Mt 5", "Mt 5,3", "Mt 5,3-12") replaces the previous one instead of
- * piling up entries.
+ * Adds an input reference, as typed, to the start of the history. While the
+ * user types, each prefix ("Mt 5", "Mt 5,3", "Mt 5,3-12") replaces the
+ * previous one instead of piling up entries.
  */
-export function addToHistory(history: readonly string[], reference: string, maxSize = MAX_HISTORY_SIZE): string[] {
-    if (!reference.trim()) return [...history];
+export function addToHistory(history: readonly string[], inputReference: string, maxSize = MAX_HISTORY_SIZE): string[] {
+    if (!inputReference.trim()) return [...history];
 
-    const lower = reference.toLowerCase();
+    const lower = inputReference.toLowerCase();
 
-    let output = history.filter((item) => item !== reference);
+    let output = history.filter((item) => item !== inputReference);
 
     const isStartOfExisting = output.some(
-        (item) => item.toLowerCase().startsWith(lower) && item.length > reference.length,
+        (item) => item.toLowerCase().startsWith(lower) && item.length > inputReference.length,
     );
 
-    output = output.filter((item) => !(lower.startsWith(item.toLowerCase()) && item.length < reference.length));
+    output = output.filter((item) => !(lower.startsWith(item.toLowerCase()) && item.length < inputReference.length));
 
     if (!isStartOfExisting) {
-        output.unshift(reference);
+        output.unshift(inputReference);
         output = output.slice(0, maxSize);
     }
 

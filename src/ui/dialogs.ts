@@ -14,8 +14,8 @@ import { t } from '../i18n';
 import { getModalContent, getOrCreateModal } from './modal';
 import { getSearchOrder, saveSearchOrder } from './storage';
 
-/** Called when the user picks a reference in one of the modals. */
-export type SelectReference = (reference: string) => void;
+/** Called when the user picks a passage in one of the modals, with its input reference. */
+export type SelectReference = (inputReference: string) => void;
 
 export function showHistoryModal(history: readonly string[], onSelect: SelectReference): void {
     const modal = getOrCreateModal({
@@ -225,12 +225,12 @@ function createTextSearchModal(getBible: () => EbfDocument | null, onSelect: Sel
             citeEl.className = 'text-search-result-citation';
             citeEl.textContent = `${r.bookName} ${r.chapter},${r.verse}`;
 
-            const reference = `${r.bookAbbr} ${r.chapter},${r.verse}`;
-            item.dataset.reference = reference;
+            const inputReference = `${r.bookAbbr} ${r.chapter},${r.verse}`;
+            item.dataset.inputReference = inputReference;
             item.append(textEl, citeEl);
             item.addEventListener('click', () => {
                 modal.close();
-                onSelect(reference);
+                onSelect(inputReference);
             });
             fragment.appendChild(item);
         }
@@ -256,10 +256,10 @@ function createTextSearchModal(getBible: () => EbfDocument | null, onSelect: Sel
         void prepareSearchIndex(bible).then(() => {
             if (!modal.open || getBible() !== bible) return;
             // Keep selected the verse the user was choosing with the arrow keys
-            const selected = resultItems()[selectedIndex]?.dataset.reference;
+            const selected = resultItems()[selectedIndex]?.dataset.inputReference;
             performSearch(searchInput.value.trim());
             if (selected) {
-                selectItem(resultItems().findIndex((item) => item.dataset.reference === selected));
+                selectItem(resultItems().findIndex((item) => item.dataset.inputReference === selected));
             }
         });
     };

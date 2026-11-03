@@ -1,5 +1,12 @@
 /**
- * Reader screen: translation choice, reference and passage display.
+ * Reader screen: translation choice, reference field and passage display.
+ *
+ * The reference field holds the input reference, as the user wrote it; the
+ * passage displayed carries the resulting citation of what was found (see
+ * src/core/reference.ts). Each one has its uses:
+ * - input reference (canonical: book swapped for the Bible's abbreviation):
+ *   reference field, URL, last reading and search history;
+ * - resulting citation: after the passage, page title and sharing.
  *
  * The URL reflects the displayed passage (/{language}/{bible}/{book}/{passage}).
  * External navigations (page load, Back/Forward) arrive through `show`; the
@@ -23,7 +30,7 @@ import { addToHistory } from '../../core/history';
 import { onUiLanguageChange, t } from '../../i18n';
 import { parseReference } from '../../core/reference';
 import type { DisplayOptions, Passage } from '../../core/passage';
-import { renderPassageText, renderReference } from '../../core/render';
+import { renderPassageText, renderInputReference } from '../../core/render';
 import { prepareSearchIndex } from '../../core/search';
 import { convertXmlToEbf } from '../../core/xml';
 import { type BibleIndexEntry, bibleKey, getAvailableBibles, loadBibleFromPath, parseEbfJson } from '../../data/bibles';
@@ -36,9 +43,9 @@ import { copyTextToClipboard, showTemporaryMessage } from '../../ui/feedback';
 import * as storage from '../../ui/storage';
 import { refreshThemeTitle } from '../../ui/theme';
 import { instructionsHtml } from './instructions';
-import { parseLegacyLink, parseReaderParams, readerPath, referenceFromPath, UPLOAD_KEY } from './url';
+import { parseLegacyLink, parseReaderParams, readerPath, inputReferenceFromPath, UPLOAD_KEY } from './url';
 
-/** Pause in typing the reference before the passage is displayed. */
+/** Pause in typing the input reference before the passage is displayed. */
 const TYPING_DEBOUNCE_MS = 500;
 
 const BIBLE_TYPE_ORDER = ['catholic', 'protestant', 'other'] as const;
@@ -87,15 +94,19 @@ const state = {
     loadToken: 0,
     /** Identifies the most recent navigation, to discard interrupted ones. */
     navToken: 0,
-    /** A reference edit is in progress (see UrlMode `edit`). */
+    /** An edit of the input reference is in progress (see UrlMode `edit`). */
     editing: false,
-    /** Passage displayed, source of the copied text; null when there is none. */
+    /**
+     * Passage displayed, source of the copied text and of the resulting
+     * citation; null when there is none.
+     */
     passage: null as Passage | null,
 };
 
 let getRouter: () => Router;
 
-const referenceInput = () => byId('reference', HTMLInputElement);
+/** Field where the user types the input reference. */
+const referenceField = () => byId('reference', HTMLInputElement);
 const bibleSelect = () => byId('bible-select', HTMLSelectElement);
 
 /**
@@ -117,21 +128,26 @@ const languageBibleEntry = (language: string | undefined): BibleIndexEntry | und
 
 const isKnownLanguage = (language: string | undefined): boolean => state.bibles.some((bible) => bible.language === language);
 
-/** Replaces the reference's book with the loaded Bible's abbreviation ("mateus 5" -> "Mt 5"). */
-function canonicalReference(reference: string): string {
-    const parsed = parseReference(reference);
+/**
+ * Canonical form of the input reference: only the book is replaced with the
+ * loaded Bible's abbreviation, the rest stays as typed ("mateus 5, 4.3" ->
+ * "Mt 5, 4.3"). It is not the resulting citation ("Mt 5,3-4").
+ */
+function canonicalInputReference(inputReference: string): string {
+    const parsed = parseReference(inputReference);
     const book = parsed && state.ebf ? findBook(state.ebf, parsed.book) : undefined;
-    if (!book) return reference;
-    return `${getBookAbbreviation(book)}${reference.slice(parsed?.book.length)}`;
+    if (!book) return inputReference;
+    return `${getBookAbbreviation(book)}${inputReference.slice(parsed?.book.length)}`;
 }
 
 /**
- * Path of the current state. An invalid reference is left out of the URL;
- * with no Bible loaded (load failure, upload not done yet) it cannot be
- * validated, so the reference is kept, so as not to lose the requested passage.
+ * Path of the current state, with the canonical input reference. An invalid
+ * input reference is left out of the URL; with no Bible loaded (load failure,
+ * upload not done yet) it cannot be validated, so it is kept, so as not to
+ * lose the requested passage.
  */
-function currentPath(reference: string, valid: boolean): string {
-    return readerPath(state.bibleKey, valid || !state.ebf ? canonicalReference(reference) : null);
+function currentPath(inputReference: string, valid: boolean): string {
+    return readerPath(state.bibleKey, valid || !state.ebf ? canonicalInputReference(inputReference) : null);
 }
 
 function syncUrl(path: string, mode: UrlMode): void {
@@ -154,19 +170,23 @@ function syncUrl(path: string, mode: UrlMode): void {
     }
 }
 
-function showReference(mode?: UrlMode): void {
-    const reference = referenceInput().value.trim();
-    storage.saveReference(reference);
+/**
+ * Displays the passage asked for by the input reference in the field, and
+ * updates what depends on it: buttons, history, page title and URL.
+ */
+function showPassage(mode?: UrlMode): void {
+    const inputReference = referenceField().value.trim();
+    storage.saveInputReference(inputReference);
 
-    const result = renderReference(reference, state.ebf, state.displayOptions, instructionsHtml());
-    const valid = !result.error && !!reference;
+    const result = renderInputReference(inputReference, state.ebf, state.displayOptions, instructionsHtml());
+    const valid = !result.error && !!inputReference;
     state.passage = result.passage ?? null;
 
     for (const id of RESULT_BUTTONS) {
         byId(id).classList.toggle('hidden', result.error);
     }
     if (valid) {
-        storage.saveSearchHistory(addToHistory(storage.getSearchHistory(), reference));
+        storage.saveSearchHistory(addToHistory(storage.getSearchHistory(), inputReference));
     }
 
     byId('result').innerHTML = result.html;
@@ -176,24 +196,26 @@ function showReference(mode?: UrlMode): void {
     const appTitle = t('app.title');
     document.title = title ? `${title} - ${appTitle}` : appTitle;
     if (mode) {
-        syncUrl(currentPath(reference, valid), mode);
+        syncUrl(currentPath(inputReference, valid), mode);
     }
 }
 
 /**
  * Title of the displayed passage, for the page and for sharing: the resulting
- * citation, not the typed reference (they can differ), and the Bible name
+ * citation, not the input reference (they can differ), and the Bible name
  * ("Jo 3,16 (Ave-Maria)"). Null when no passage is displayed.
  */
 function passageTitle(): string | null {
     if (!state.passage) return null;
     const bibleName = state.ebf?.bible.name;
-    return bibleName ? `${state.passage.citation} (${bibleName})` : state.passage.citation;
+    const { resultingCitation } = state.passage;
+    return bibleName ? `${resultingCitation} (${bibleName})` : resultingCitation;
 }
 
-function goToReference(reference: string): void {
-    referenceInput().value = reference;
-    showReference('commit');
+/** Puts the input reference in the field and displays its passage (new history entry). */
+function goToInputReference(inputReference: string): void {
+    referenceField().value = inputReference;
+    showPassage('commit');
 }
 
 function setBible(ebf: EbfDocument | null): void {
@@ -215,8 +237,8 @@ function populateBooks(books: readonly EbfBook[]): void {
         bookElement.textContent = getBookAbbreviation(book);
         bookElement.title = getBookName(book);
         bookElement.addEventListener('click', () => {
-            referenceInput().focus();
-            goToReference(`${getBookAbbreviation(book)} 1`);
+            referenceField().focus();
+            goToInputReference(`${getBookAbbreviation(book)} 1`);
         });
         bookList.appendChild(bookElement);
     }
@@ -240,7 +262,7 @@ function refreshTranslatedTexts(): void {
             bibleSelect().value = state.bibleKey;
         }
     }
-    showReference();
+    showPassage();
 }
 
 function populateBiblesSelect(biblesList: readonly BibleIndexEntry[]): void {
@@ -311,7 +333,7 @@ function selectBible(key: string): Promise<boolean> {
 async function onBibleSelected(): Promise<void> {
     state.navToken++;
     if (await selectBible(bibleSelect().value)) {
-        showReference('commit');
+        showPassage('commit');
     }
 }
 
@@ -341,7 +363,7 @@ async function handleFileUpload(file: File | undefined): Promise<void> {
 
     if (state.bibleKey === UPLOAD_KEY) {
         setBible(state.uploadedEbf);
-        showReference('replace');
+        showPassage('replace');
     }
 }
 
@@ -369,12 +391,12 @@ function downloadEbfFile(): void {
 }
 
 function navigateChapter(offset: -1 | 1): void {
-    const parsedRef = parseReference(referenceInput().value.trim());
+    const parsedRef = parseReference(referenceField().value.trim());
     if (!parsedRef || !state.ebf) return;
 
     const chapter = parsedRef.chapter + offset;
     if (chapter >= 1 && chapter <= getNumOfChapters(state.ebf, parsedRef.book)) {
-        goToReference(`${parsedRef.book} ${chapter}`);
+        goToInputReference(`${parsedRef.book} ${chapter}`);
     }
 }
 
@@ -392,10 +414,14 @@ function copyResult(): void {
     );
 }
 
-function shareCurrentReference(): void {
-    const reference = referenceInput().value.trim();
+/**
+ * Shares the displayed passage: the title has the resulting citation; the link
+ * has the canonical input reference, like the URL of the page.
+ */
+function sharePassage(): void {
+    const inputReference = referenceField().value.trim();
     const title = passageTitle();
-    if (!reference || !title) return;
+    if (!inputReference || !title) return;
 
     if (state.bibleKey === UPLOAD_KEY) {
         alert(t('messages.cannotShareUpload'));
@@ -404,7 +430,7 @@ function shareCurrentReference(): void {
 
     shareLink({
         title,
-        url: window.location.origin + currentPath(reference, true),
+        url: window.location.origin + currentPath(inputReference, true),
     }).then(
         (result) => {
             if (result === 'copied') {
@@ -437,7 +463,7 @@ function setupFormatButtons(): void {
         button.addEventListener('click', () => {
             state.displayOptions[option] = button.classList.toggle('active');
             storage.saveDisplayOptions(state.displayOptions);
-            showReference();
+            showPassage();
         });
     }
 }
@@ -452,18 +478,18 @@ function setupActionButtons(): void {
     const actions: Record<string, () => void> = {
         'copy-button': copyResult,
         'floating-copy-button': copyResult,
-        'share-button': shareCurrentReference,
-        'floating-share-button': shareCurrentReference,
+        'share-button': sharePassage,
+        'floating-share-button': sharePassage,
         'prev-chapter-button': previous,
         'floating-prev-chapter-button': previous,
         'next-chapter-button': next,
         'floating-next-chapter-button': next,
         'download-ebf-button': downloadEbfFile,
         'text-search-button': () => {
-            showTextSearchModal(() => state.ebf, goToReference);
+            showTextSearchModal(() => state.ebf, goToInputReference);
         },
         'history-button': () => {
-            showHistoryModal(storage.getSearchHistory(), goToReference);
+            showHistoryModal(storage.getSearchHistory(), goToInputReference);
         },
         'reference-help-button': () => {
             showReferenceHelpModal(instructionsHtml());
@@ -497,22 +523,22 @@ function setupExpandableSections(): void {
     });
 }
 
-function setupReferenceInput(): void {
-    const input = referenceInput();
+function setupReferenceField(): void {
+    const field = referenceField();
     // Fired when leaving the field after changing it: ends the edit
-    input.addEventListener('change', () => {
-        storage.saveReference(input.value);
+    field.addEventListener('change', () => {
+        storage.saveInputReference(field.value);
         state.editing = false;
     });
     const showWhileTyping = debounce(() => {
-        showReference('edit');
+        showPassage('edit');
     }, TYPING_DEBOUNCE_MS);
-    input.addEventListener('input', showWhileTyping);
-    input.addEventListener('keydown', (event) => {
+    field.addEventListener('input', showWhileTyping);
+    field.addEventListener('keydown', (event) => {
         if (event.key === 'Enter') {
             // Display right away, without waiting for the typing pause
             showWhileTyping.cancel();
-            showReference('edit');
+            showPassage('edit');
             state.editing = false;
         }
     });
@@ -534,7 +560,7 @@ async function show(params: PathParams, biblesReady: Promise<void>): Promise<voi
 
     const target = parseReaderParams(params);
     let key: string | undefined;
-    let reference: string;
+    let inputReference: string;
     if (target.bibleKey && target.bibleKey !== UPLOAD_KEY && !isKnownLanguage(target.bibleKey.split('/')[0])) {
         // Not the /{language}/{bible}/... format (e.g. a link without the language: /ave-maria/mt/5)
         getRouter().navigate('/', { replace: true });
@@ -546,7 +572,7 @@ async function show(params: PathParams, biblesReady: Promise<void>): Promise<voi
             const languageEntry = languageBibleEntry(target.language);
             key = languageEntry && bibleKey(languageEntry);
         }
-        reference = referenceFromPath(target.book, target.passage);
+        inputReference = inputReferenceFromPath(target.book, target.passage);
         if (key !== UPLOAD_KEY && !findBibleEntry(key)) {
             showTemporaryMessage(t('messages.translationNotFound'));
             const fallback = defaultBibleEntry();
@@ -560,16 +586,16 @@ async function show(params: PathParams, biblesReady: Promise<void>): Promise<voi
         }
         const entry = legacyBible ?? findBibleEntry(storage.getSavedBible()) ?? defaultBibleEntry();
         key = entry && bibleKey(entry);
-        reference = legacy?.reference ?? storage.getSavedReference() ?? '';
+        inputReference = legacy?.inputReference ?? storage.getSavedInputReference() ?? '';
     }
     if (!key) return;
 
-    referenceInput().value = reference;
+    referenceField().value = inputReference;
     const loaded = await selectBible(key);
     if (!loaded || token !== state.navToken) return;
 
-    referenceInput().value = canonicalReference(reference);
-    showReference('replace');
+    referenceField().value = canonicalInputReference(inputReference);
+    showPassage('replace');
 }
 
 /** Creates the reader screen; `router` gives access to the router that displays it. */
@@ -582,7 +608,7 @@ export function createReaderScreen(router: () => Router): Screen {
     setupExpandableSections();
     setupFormatButtons();
     setupActionButtons();
-    setupReferenceInput();
+    setupReferenceField();
 
     bibleSelect().addEventListener('change', () => void onBibleSelected());
     byId('bible-file', HTMLInputElement).addEventListener('change', (event) => {

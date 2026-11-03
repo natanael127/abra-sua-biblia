@@ -1,7 +1,13 @@
 /**
  * Intermediate structure of a displayed passage, independent of the output
- * format. It is built from the reference and the display options, and then
- * rendered separately for reading (HTML) and for copying (plain text).
+ * format. It is built from the input reference and the display options, and
+ * then rendered separately for reading (HTML) and for copying (plain text):
+ *
+ *     input reference + options -> Passage -> HTML for reading
+ *                                          -> plain text for copying
+ *
+ * Building it also yields the resulting citation of what is displayed, which
+ * can differ from the input reference (see ./reference).
  *
  * The texts are raw (not HTML-escaped): escaping is up to each renderer.
  */
@@ -46,18 +52,22 @@ export type PassageElement =
     | { type: 'verse'; text: string; number?: number }
     /** Verses left out between two selected ones. */
     | { type: 'omission'; text: string }
-    /** Compacted citation of the passage ("Gn 1,1-2.4"), without the parentheses. */
-    | { type: 'citation'; text: string };
+    /**
+     * Resulting citation after the verses ("Gn 1,1-2.4", without the parentheses):
+     * present only with the `parenthesesCitation` option.
+     */
+    | { type: 'resulting-citation'; text: string };
 
 export interface Passage {
     /** Book and chapter, with the chapter title and the Bible name ("Gênesis 1: A criação (Ave Maria)"). */
     heading: string;
     /**
-     * Citation of what is displayed, compacted and with the Bible's abbreviation
-     * ("Gn 1,1-2.4"), even when it is not among the elements. It can differ from
-     * the typed reference ("gênesis 1, 4.1.2" -> "Gn 1,1-2.4").
+     * Resulting citation: the citation of what is displayed, compacted and with
+     * the Bible's abbreviation ("Gn 1,1-2.4"), always present, even when it is
+     * not among the elements. It can differ from the input reference the
+     * passage was built from ("gênesis 1, 4.1.2" -> "Gn 1,1-2.4").
      */
-    citation: string;
+    resultingCitation: string;
     elements: PassageElement[];
     /** The passage is wrapped in double quotes, from the first to the last verse. */
     quoted: boolean;
@@ -67,13 +77,13 @@ export interface Passage {
 
 /**
  * Result of building a passage: the passage, or the HTML of an error. An
- * unparsable reference has no message of its own (the screen shows the
- * instructions).
+ * input reference that cannot be parsed has no message of its own (the screen
+ * shows the instructions).
  */
 export type PassageResult =
     | { kind: 'passage'; passage: Passage }
     | { kind: 'error'; html: string }
-    | { kind: 'invalid-reference' };
+    | { kind: 'invalid-input-reference' };
 
 const errorResult = (message: string): PassageResult => ({
     kind: 'error',
@@ -119,24 +129,24 @@ export function buildVerseElements(
     return elements;
 }
 
-/** Builds the passage indicated by the reference. */
-export function buildPassage(reference: string, ebf: EbfDocument | null, displayOpt: DisplayOptions): PassageResult {
+/** Builds the passage asked for by the input reference. */
+export function buildPassage(inputReference: string, ebf: EbfDocument | null, displayOpt: DisplayOptions): PassageResult {
     if (!ebf) {
         return errorResult(t('errors.noBibleLoaded'));
     }
 
     try {
-        return build(reference, ebf, displayOpt);
+        return build(inputReference, ebf, displayOpt);
     } catch (error) {
         console.error('Error processing the Bible JSON:', error);
         return errorResult(t('errors.invalidBible'));
     }
 }
 
-function build(reference: string, ebf: EbfDocument, displayOpt: DisplayOptions): PassageResult {
-    const parsedRef = parseReference(reference);
+function build(inputReference: string, ebf: EbfDocument, displayOpt: DisplayOptions): PassageResult {
+    const parsedRef = parseReference(inputReference);
     if (parsedRef === null) {
-        return { kind: 'invalid-reference' };
+        return { kind: 'invalid-input-reference' };
     }
 
     const book = findBook(ebf, parsedRef.book);
@@ -160,16 +170,18 @@ function build(reference: string, ebf: EbfDocument, displayOpt: DisplayOptions):
     const verseIndexes = resolveVerseIndexes(parsedRef, chapter.verses.length);
     const elements = buildVerseElements(verseIndexes, chapter.verses, displayOpt);
 
-    let citation = `${getBookAbbreviation(book)} ${parsedRef.chapter}`;
+    // From the verses found, not from the input reference: book abbreviation,
+    // verses sorted, compacted and limited to the chapter
+    let resultingCitation = `${getBookAbbreviation(book)} ${parsedRef.chapter}`;
     if (!parsedRef.allVerses) {
-        citation += formatVerseRanges(verseIndexes);
+        resultingCitation += formatVerseRanges(verseIndexes);
     }
     if (displayOpt.parenthesesCitation) {
-        elements.push({ type: 'citation', text: citation });
+        elements.push({ type: 'resulting-citation', text: resultingCitation });
     }
 
     return {
         kind: 'passage',
-        passage: { heading, citation, elements, quoted: displayOpt.quotes, lineBreaks: displayOpt.lineBreaks },
+        passage: { heading, resultingCitation, elements, quoted: displayOpt.quotes, lineBreaks: displayOpt.lineBreaks },
     };
 }

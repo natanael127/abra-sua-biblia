@@ -31,8 +31,8 @@ const options = (overrides: Partial<DisplayOptions> = {}): DisplayOptions => ({
     ...overrides,
 });
 
-const passage = (reference: string, overrides: Partial<DisplayOptions> = {}) => {
-    const result = buildPassage(reference, ebf, options(overrides));
+const passage = (inputReference: string, overrides: Partial<DisplayOptions> = {}) => {
+    const result = buildPassage(inputReference, ebf, options(overrides));
     if (result.kind !== 'passage') throw new Error(`no passage: ${result.kind}`);
     return result.passage;
 };
@@ -41,7 +41,7 @@ describe('buildPassage', () => {
     it('elements in reading order, with raw (unescaped) texts', () => {
         expect(passage('Gn 1,1-2.4')).toEqual({
             heading: 'Gênesis 1: A criação (Teste)',
-            citation: 'Gn 1,1-2.4',
+            resultingCitation: 'Gn 1,1-2.4',
             quoted: false,
             lineBreaks: true,
             elements: [
@@ -50,7 +50,7 @@ describe('buildPassage', () => {
                 { type: 'verse', number: 2, text: 'Versículo "citado".' },
                 { type: 'omission', text: '[...]' },
                 { type: 'verse', number: 4, text: 'Disse <Deus>: “Haja luz”.' },
-                { type: 'citation', text: 'Gn 1,1-2.4' },
+                { type: 'resulting-citation', text: 'Gn 1,1-2.4' },
             ],
         });
     });
@@ -84,21 +84,21 @@ describe('buildPassage', () => {
     });
 
     it('a verse without text is left out with its title, without an omission marker', () => {
-        expect(passage('Gn 1,2-4').elements.map((element) => element.type)).toEqual(['verse', 'verse', 'citation']);
+        expect(passage('Gn 1,2-4').elements.map((element) => element.type)).toEqual(['verse', 'verse', 'resulting-citation']);
     });
 
-    it('citation of what is displayed, not of what was typed, even without the citation element', () => {
-        const typed = passage('gênesis 1, 4.1.2', { parenthesesCitation: false });
-        expect(typed.citation).toBe('Gn 1,1-2.4');
-        expect(typed.elements.some((element) => element.type === 'citation')).toBe(false);
+    it('resulting citation: of what is displayed, not the input reference, even without its element', () => {
+        const fromInput = passage('gênesis 1, 4.1.2', { parenthesesCitation: false });
+        expect(fromInput.resultingCitation).toBe('Gn 1,1-2.4');
+        expect(fromInput.elements.some((element) => element.type === 'resulting-citation')).toBe(false);
     });
 
     it('whole chapter: citation without verses', () => {
-        expect(passage('Gn 1').elements.at(-1)).toEqual({ type: 'citation', text: 'Gn 1' });
+        expect(passage('Gn 1').elements.at(-1)).toEqual({ type: 'resulting-citation', text: 'Gn 1' });
     });
 
-    it('errors and invalid reference', () => {
-        expect(buildPassage('Gn', ebf, options())).toEqual({ kind: 'invalid-reference' });
+    it('errors and invalid input reference', () => {
+        expect(buildPassage('Gn', ebf, options())).toEqual({ kind: 'invalid-input-reference' });
         expect(buildPassage('Gn 2', ebf, options())).toEqual({
             kind: 'error',
             html: '<span class="error">Capítulo 2 não encontrado em Gênesis.</span>',

@@ -9,7 +9,7 @@
  */
 import { describe, expect, it } from 'vitest';
 import type { DisplayOptions } from '../../src/core/passage';
-import { renderReference } from '../../src/core/render';
+import { renderInputReference } from '../../src/core/render';
 import { formatVerseRanges, parseReference } from '../../src/core/reference';
 import { loadBible, readFixture } from '../helpers';
 
@@ -45,7 +45,7 @@ describe('parity with the legacy implementation', () => {
         for (const c of withBible) {
             const options = fixture.optionSets[c.options];
             if (!options) throw new Error(`option set ${c.options} does not exist`);
-            const result = renderReference(c.reference, loadBible(c.bible ?? ''), { ...options }, fixture.instructions);
+            const result = renderInputReference(c.reference, loadBible(c.bible ?? ''), { ...options }, fixture.instructions);
             expect(comparable(result), `${c.bible} | ${c.reference} | options ${c.options}`).toEqual(comparable(c));
         }
     });
@@ -54,7 +54,7 @@ describe('parity with the legacy implementation', () => {
         for (const c of fixture.cases.filter((c) => c.bible === null)) {
             const options = fixture.optionSets[0];
             if (!options) throw new Error('option set 0 does not exist');
-            expect(comparable(renderReference(c.reference, null, options, 'X'))).toEqual(comparable(c));
+            expect(comparable(renderInputReference(c.reference, null, options, 'X'))).toEqual(comparable(c));
         }
     });
 });

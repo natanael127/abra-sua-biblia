@@ -4,7 +4,7 @@ import { DEFAULT_DISPLAY_OPTIONS, type DisplayOptions } from '../core/passage';
 /** localStorage keys; kept identical to the previous version's to preserve preferences. */
 const KEYS = {
     bible: 'selectedBible',
-    reference: 'lastReference',
+    inputReference: 'lastReference',
     theme: 'selectedTheme',
     displayOptions: 'bibleDisplayOptions',
     history: 'searchHistory',
@@ -24,9 +24,10 @@ export const saveBible = (bibleId: string): void => {
     localStorage.setItem(KEYS.bible, bibleId);
 };
 
-export const getSavedReference = (): string | null => localStorage.getItem(KEYS.reference);
-export const saveReference = (reference: string): void => {
-    localStorage.setItem(KEYS.reference, reference);
+/** Last input reference, as it was in the reference field. */
+export const getSavedInputReference = (): string | null => localStorage.getItem(KEYS.inputReference);
+export const saveInputReference = (inputReference: string): void => {
+    localStorage.setItem(KEYS.inputReference, inputReference);
 };
 
 export const getSavedTheme = (): string | null => localStorage.getItem(KEYS.theme);
@@ -52,6 +53,7 @@ export const saveDisplayOptions = (options: DisplayOptions): void => {
     localStorage.setItem(KEYS.displayOptions, JSON.stringify(options));
 };
 
+/** History of input references, as typed (see core/history). */
 export function getSearchHistory(): string[] {
     const saved = readJson(KEYS.history);
     return Array.isArray(saved) ? saved.filter((item): item is string => typeof item === 'string') : [];

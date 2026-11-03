@@ -1,3 +1,22 @@
+/**
+ * Bible references. Two notions must not be confused:
+ *
+ * - **input reference**: the reference as the user wrote it (in the reference
+ *   field, in a link, in the history), in a free notation: "joão 3, 18.16.17".
+ *   It is what gets parsed (`parseReference`). Its canonical form only swaps
+ *   the book for the Bible's abbreviation ("Jo 3, 18.16.17") and keeps the
+ *   rest as typed; it is what goes into the field and the URL.
+ * - **resulting citation**: the citation of what is actually displayed, built
+ *   from the verses found in the chapter, compacted and in the Bible's
+ *   notation: "Jo 3,16-18". It is shown after the passage, in the page title
+ *   and when sharing (see `Passage.resultingCitation` in ./passage).
+ *
+ * They can differ in the book (name or abbreviation), the spacing, the order
+ * and repetition of verses, and verses that do not exist in the chapter
+ * ("Jo 3,16-99" -> "Jo 3,16-36").
+ */
+
+/** Input reference broken into its parts, before being fitted to the chapter. */
 export interface ParsedReference {
     book: string;
     chapter: number;
@@ -10,11 +29,12 @@ export interface ParsedReference {
 }
 
 /**
- * Parses references in the format "Book chapter[,verses]", where verses are
- * numbers or ranges separated by dots. E.g.: "Mt 5,3-12.21-".
+ * Parses an input reference in the format "Book chapter[,verses]", where verses
+ * are numbers or ranges separated by dots. E.g.: "Mt 5,3-12.21-". The book is
+ * kept as written: it is only looked up in the Bible later.
  */
-export function parseReference(reference: string): ParsedReference | null {
-    const [book = '', ...rest] = reference.split(' ');
+export function parseReference(inputReference: string): ParsedReference | null {
+    const [book = '', ...rest] = inputReference.split(' ');
     const others = rest.join(' ');
 
     // Basic pattern: Chapter[,Verse(s)]
@@ -92,8 +112,9 @@ export function resolveVerseIndexes(parsedReference: ParsedReference, numOfVerse
 }
 
 /**
- * Compacts verse indexes (0-based) into reference notation.
- * E.g.: [0, 1, 2, 4] -> ",1-3.5". An empty list yields an empty string.
+ * Compacts verse indexes (0-based) into the verse part of a resulting
+ * citation. E.g.: [0, 1, 2, 4] -> ",1-3.5". An empty list yields an empty
+ * string.
  */
 export function formatVerseRanges(versesList: readonly number[]): string {
     const first = versesList[0];

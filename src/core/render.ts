@@ -68,7 +68,8 @@ export function renderPassageHtml(passage: Passage): string {
             case 'omission':
                 html = escapeHtml(element.text);
                 break;
-            case 'citation':
+            case 'resulting-citation':
+                // The class keeps its old name ("verse-reference"), used by the style
                 html = `<span class="verse-reference">(${escapeHtml(element.text)})</span>`;
                 break;
         }
@@ -105,7 +106,7 @@ export function renderPassageText(passage: Passage): string {
             case 'omission':
                 rendered = element.text;
                 break;
-            case 'citation':
+            case 'resulting-citation':
                 rendered = `(${element.text})`;
                 break;
         }
@@ -125,18 +126,19 @@ export function renderPassageText(passage: Passage): string {
 }
 
 /**
- * Generates the HTML of the Bible passage indicated by the reference.
- * `instructionsHtml` is shown when the reference cannot be parsed.
+ * Generates the HTML of the Bible passage asked for by the input reference.
+ * `instructionsHtml` is shown when the input reference cannot be parsed. The
+ * resulting citation is in `passage.resultingCitation`.
  */
-export function renderReference(
-    reference: string,
+export function renderInputReference(
+    inputReference: string,
     ebf: EbfDocument | null,
     displayOpt: DisplayOptions,
     instructionsHtml: string,
 ): RenderResult {
-    const result = buildPassage(reference, ebf, displayOpt);
+    const result = buildPassage(inputReference, ebf, displayOpt);
     switch (result.kind) {
-        case 'invalid-reference':
+        case 'invalid-input-reference':
             return { error: true, html: instructionsHtml };
         case 'error':
             return { error: true, html: result.html };
