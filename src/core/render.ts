@@ -4,7 +4,7 @@
  */
 import type { EbfDocument } from './ebf';
 import { buildPassage, type DisplayOptions, type Passage, type PassageElement } from './passage';
-import { escapeHtml } from './text';
+import { escapeHtml, toSuperscript } from './text';
 
 export interface RenderResult {
     error: boolean;
@@ -81,32 +81,47 @@ export function renderPassageHtml(passage: Passage): string {
     return `<div class="reference">${escapeHtml(passage.heading)}</div><div class="verse-text">${content}</div>`;
 }
 
-/** Plain text of the passage, for the clipboard. */
+/**
+ * Plain text of the passage, for the clipboard: verse numbers in superscript
+ * and each section title in a paragraph of its own, separated by blank lines
+ * from what comes before and after it.
+ */
 export function renderPassageText(passage: Passage): string {
     const { open, close } = quotePositions(passage);
+    const separator = passage.lineBreaks ? '\n' : ' ';
 
-    const lines = groupLines(passage.elements, (element, index) => {
-        let text: string;
+    let text = '';
+    /** The next element starts a paragraph: no separator before it. */
+    let paragraphStart = true;
+    passage.elements.forEach((element, index) => {
+        let rendered: string;
         switch (element.type) {
             case 'title':
-                text = `${element.text}\n`;
+                rendered = element.text;
                 break;
             case 'verse':
-                text = element.number === undefined ? element.text : `${element.number} ${element.text}`;
+                rendered = element.number === undefined ? element.text : `${toSuperscript(element.number)} ${element.text}`;
                 break;
             case 'omission':
-                text = element.text;
+                rendered = element.text;
                 break;
             case 'citation':
-                text = `(${element.text})\n`;
+                rendered = `(${element.text})\n`;
                 break;
         }
-        if (index === open) text = `"${text}`;
-        if (index === close) text = `${text}"`;
-        return text;
+        if (index === open) rendered = `"${rendered}`;
+        if (index === close) rendered = `${rendered}"`;
+
+        if (element.type === 'title') {
+            text += `${text ? '\n\n' : ''}${rendered}\n\n`;
+            paragraphStart = true;
+        } else {
+            text += `${paragraphStart ? '' : separator}${rendered}`;
+            paragraphStart = false;
+        }
     });
 
-    return lines.join(passage.lineBreaks ? '\n' : ' ');
+    return text;
 }
 
 /**

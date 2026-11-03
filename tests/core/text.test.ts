@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { escapeHtml, toSingleQuotes } from '../../src/core/text';
+import { escapeHtml, toSingleQuotes, toSuperscript } from '../../src/core/text';
 
 describe('escapeHtml', () => {
     it('escapa os caracteres especiais de HTML', () => {
@@ -14,4 +14,10 @@ describe('toSingleQuotes', () => {
             expect(toSingleQuotes(`${quote}texto${quote}`)).toBe("'texto'");
         },
     );
+});
+
+describe('toSuperscript', () => {
+    it('every digit', () => {
+        expect(toSuperscript(1234567890)).toBe('¹²³⁴⁵⁶⁷⁸⁹⁰');
+    });
 });
