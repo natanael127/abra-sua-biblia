@@ -8,7 +8,7 @@ describe('escapeHtml', () => {
 });
 
 describe('toSingleQuotes', () => {
-    it.each(['"', '&quot;', '“', '”', '„', '‟', '«', '»'])(
+    it.each(['"', '“', '”', '„', '‟', '«', '»'])(
         'troca %s por aspas simples',
         (quote) => {
             expect(toSingleQuotes(`${quote}texto${quote}`)).toBe("'texto'");

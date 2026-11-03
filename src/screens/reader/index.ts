@@ -22,7 +22,8 @@ import {
 import { addToHistory } from '../../core/history';
 import { onUiLanguageChange, t } from '../../i18n';
 import { parseReference } from '../../core/reference';
-import { type DisplayOptions, renderReference } from '../../core/render';
+import type { DisplayOptions, Passage } from '../../core/passage';
+import { renderPassageText, renderReference } from '../../core/render';
 import { prepareSearchIndex } from '../../core/search';
 import { convertXmlToEbf } from '../../core/xml';
 import { type BibleIndexEntry, bibleKey, getAvailableBibles, loadBibleFromPath, parseEbfJson } from '../../data/bibles';
@@ -31,7 +32,7 @@ import type { Router, Screen } from '../../router/router';
 import { showFileHelpModal, showHistoryModal, showReferenceHelpModal, showTextSearchModal } from '../../ui/dialogs';
 import { byId } from '../../ui/dom';
 import { shareLink } from '../../ui/share';
-import { copyTextToClipboard, showTemporaryMessage, toPlainText } from '../../ui/feedback';
+import { copyTextToClipboard, showTemporaryMessage } from '../../ui/feedback';
 import * as storage from '../../ui/storage';
 import { refreshThemeTitle } from '../../ui/theme';
 import { instructionsHtml } from './instructions';
@@ -88,6 +89,8 @@ const state = {
     navToken: 0,
     /** A reference edit is in progress (see UrlMode `edit`). */
     editing: false,
+    /** Passage displayed, source of the copied text; null when there is none. */
+    passage: null as Passage | null,
 };
 
 let getRouter: () => Router;
@@ -157,6 +160,7 @@ function showReference(mode?: UrlMode): void {
 
     const result = renderReference(reference, state.ebf, state.displayOptions, instructionsHtml());
     const valid = !result.error && !!reference;
+    state.passage = result.passage ?? null;
 
     for (const id of RESULT_BUTTONS) {
         byId(id).classList.toggle('hidden', result.error);
@@ -364,10 +368,9 @@ function navigateChapter(offset: -1 | 1): void {
 }
 
 function copyResult(): void {
-    const verseText = document.querySelector<HTMLElement>('.verse-text');
-    if (!verseText) return;
+    if (!state.passage) return;
 
-    copyTextToClipboard(toPlainText(verseText)).then(
+    copyTextToClipboard(renderPassageText(state.passage)).then(
         () => {
             showTemporaryMessage(t('messages.textCopied'));
         },

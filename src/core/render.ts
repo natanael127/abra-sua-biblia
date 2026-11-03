@@ -1,104 +1,113 @@
-import {
-    type EbfDocument,
-    type EbfVerse,
-    findBook,
-    getBookAbbreviation,
-    getBookName,
-    getVerseText,
-    getVerseTitle,
-} from './ebf';
-import { t } from '../i18n';
-import { formatVerseRanges, parseReference, resolveVerseIndexes } from './reference';
-import { escapeHtml, toSingleQuotes } from './text';
-
-export interface DisplayOptions {
-    quotes: boolean;
-    verseNumbers: boolean;
-    lineBreaks: boolean;
-    ellipsis: boolean;
-    parenthesesCitation: boolean;
-    sectionTitles: boolean;
-}
-
-export const DEFAULT_DISPLAY_OPTIONS: Readonly<DisplayOptions> = {
-    quotes: false,
-    verseNumbers: true,
-    lineBreaks: true,
-    ellipsis: true,
-    parenthesesCitation: true,
-    sectionTitles: true,
-};
+/**
+ * Renderers of a passage (see ./passage): HTML for reading and plain text for
+ * copying. Each one decides the layout of its format on its own.
+ */
+import type { EbfDocument } from './ebf';
+import { buildPassage, type DisplayOptions, type Passage, type PassageElement } from './passage';
+import { escapeHtml } from './text';
 
 export interface RenderResult {
     error: boolean;
     html: string;
+    /** The passage displayed; absent on error. */
+    passage?: Passage;
 }
 
-/** Builds the HTML of each selected verse, with the chosen display markup. */
-export function formatVerseTexts(
-    verseIndexes: readonly number[],
-    chapterVerses: readonly EbfVerse[],
-    displayOpt: DisplayOptions,
-): string[] {
-    const verseTexts: string[] = [];
+/**
+ * Where the quotes that wrap the passage go: the opening one before the first
+ * verse (before its section title, if it has one), the closing one after the
+ * last verse. -1 when the passage is not quoted or has no verse.
+ */
+function quotePositions(passage: Passage): { open: number; close: number } {
+    const { elements } = passage;
+    const first = elements.findIndex((element) => element.type === 'verse');
+    if (!passage.quoted || first < 0) {
+        return { open: -1, close: -1 };
+    }
+    const close = elements.findLastIndex((element) => element.type === 'verse');
+    return { open: first > 0 && elements[first - 1]?.type === 'title' ? first - 1 : first, close };
+}
 
-    let previousVerse = -1;
-    verseIndexes.forEach((verseIndex, position) => {
-        // Gap between verses: omission marker
-        if (previousVerse >= 0 && verseIndex > previousVerse + 1 && displayOpt.ellipsis) {
-            verseTexts.push('[...]');
+/**
+ * Groups the elements into the lines (or, without line breaks, the
+ * space-separated chunks) of the passage: a section title stays with the verse
+ * it introduces.
+ */
+function groupLines(elements: readonly PassageElement[], render: (element: PassageElement, index: number) => string): string[] {
+    const lines: string[] = [];
+    let pending = '';
+    elements.forEach((element, index) => {
+        const rendered = render(element, index);
+        if (element.type === 'title') {
+            pending += rendered;
+        } else {
+            lines.push(pending + rendered);
+            pending = '';
         }
+    });
+    if (pending) lines.push(pending);
+    return lines;
+}
 
-        const verse = chapterVerses[verseIndex];
-        const rawText = getVerseText(verse);
-        const rawTitle = getVerseTitle(verse);
-        // Escape HTML to prevent injection
-        let verseText = rawText === undefined ? undefined : escapeHtml(rawText);
-        let verseTitle = rawTitle === undefined ? undefined : escapeHtml(rawTitle);
+/** HTML of the passage, for the reading area. */
+export function renderPassageHtml(passage: Passage): string {
+    const { open, close } = quotePositions(passage);
 
-        // Replace all kind of double quotes with single quotes, so they do not
-        // clash with the ones that wrap the citation. Done before building the
-        // HTML, otherwise the quotes of the tag attributes would be replaced too.
-        if (displayOpt.quotes) {
-            verseText = verseText === undefined ? undefined : toSingleQuotes(verseText);
-            verseTitle = verseTitle === undefined ? undefined : toSingleQuotes(verseTitle);
-        }
-
-        if (verseText) {
-            let formattedVerse = verseText;
-
-            if (displayOpt.verseNumbers) {
-                formattedVerse = `<sup>${verseIndex + 1}</sup> ${formattedVerse}`;
-            }
-
-            // Prepend the title to avoid a double line break
-            if (displayOpt.sectionTitles && verseTitle) {
-                formattedVerse = `<span class="section-title">${verseTitle}</span>${formattedVerse}`;
-            }
-
-            if (displayOpt.quotes) {
-                // Quote the first and last verse
-                if (position === 0) {
-                    formattedVerse = `"${formattedVerse}`;
+    const lines = groupLines(passage.elements, (element, index) => {
+        let html: string;
+        switch (element.type) {
+            case 'title':
+                html = `<span class="section-title">${escapeHtml(element.text)}</span>`;
+                break;
+            case 'verse':
+                html = escapeHtml(element.text);
+                if (element.number !== undefined) {
+                    html = `<sup>${element.number}</sup> ${html}`;
                 }
-                if (position === verseIndexes.length - 1) {
-                    formattedVerse = `${formattedVerse}"`;
-                }
-            }
-
-            verseTexts.push(formattedVerse);
+                break;
+            case 'omission':
+                html = escapeHtml(element.text);
+                break;
+            case 'citation':
+                html = `<span class="verse-reference">(${escapeHtml(element.text)})</span>`;
+                break;
         }
-
-        previousVerse = verseIndex;
+        if (index === open) html = `"${html}`;
+        if (index === close) html = `${html}"`;
+        return html;
     });
 
-    return verseTexts;
+    const content = lines.join(passage.lineBreaks ? '<br>' : ' ');
+    return `<div class="reference">${escapeHtml(passage.heading)}</div><div class="verse-text">${content}</div>`;
 }
 
-const errorHtml = (message: string): RenderResult => ({
-    error: true,
-    html: `<span class="error">${message}</span>`,
-});
+/** Plain text of the passage, for the clipboard. */
+export function renderPassageText(passage: Passage): string {
+    const { open, close } = quotePositions(passage);
+
+    const lines = groupLines(passage.elements, (element, index) => {
+        let text: string;
+        switch (element.type) {
+            case 'title':
+                text = `${element.text}\n`;
+                break;
+            case 'verse':
+                text = element.number === undefined ? element.text : `${element.number} ${element.text}`;
+                break;
+            case 'omission':
+                text = element.text;
+                break;
+            case 'citation':
+                text = `(${element.text})\n`;
+                break;
+        }
+        if (index === open) text = `"${text}`;
+        if (index === close) text = `${text}"`;
+        return text;
+    });
+
+    return lines.join(passage.lineBreaks ? '\n' : ' ');
+}
 
 /**
  * Generates the HTML of the Bible passage indicated by the reference.
@@ -110,63 +119,13 @@ export function renderReference(
     displayOpt: DisplayOptions,
     instructionsHtml: string,
 ): RenderResult {
-    if (!ebf) {
-        return errorHtml(t('errors.noBibleLoaded'));
+    const result = buildPassage(reference, ebf, displayOpt);
+    switch (result.kind) {
+        case 'invalid-reference':
+            return { error: true, html: instructionsHtml };
+        case 'error':
+            return { error: true, html: result.html };
+        case 'passage':
+            return { error: false, html: renderPassageHtml(result.passage), passage: result.passage };
     }
-
-    try {
-        return render(reference, ebf, displayOpt, instructionsHtml);
-    } catch (error) {
-        console.error('Error processing the Bible JSON:', error);
-        return errorHtml(t('errors.invalidBible'));
-    }
-}
-
-function render(
-    reference: string,
-    ebf: EbfDocument,
-    displayOpt: DisplayOptions,
-    instructionsHtml: string,
-): RenderResult {
-    const parsedRef = parseReference(reference);
-    if (parsedRef === null) {
-        return { error: true, html: instructionsHtml };
-    }
-
-    const book = findBook(ebf, parsedRef.book);
-    if (!book) {
-        return errorHtml(t('errors.bookNotFound', { book: escapeHtml(parsedRef.book) }));
-    }
-
-    const chapter = book.chapters[parsedRef.chapter - 1];
-    if (!chapter) {
-        return errorHtml(t('errors.chapterNotFound', { chapter: parsedRef.chapter, book: escapeHtml(getBookName(book)) }));
-    }
-
-    // Escape HTML to prevent injection
-    let headerText = `${escapeHtml(getBookName(book))} ${parsedRef.chapter}`;
-    if (chapter.title) {
-        headerText += `: ${escapeHtml(chapter.title)}`;
-    }
-    if (ebf.bible.name) {
-        headerText += ` (${escapeHtml(ebf.bible.name)})`;
-    }
-
-    const verseIndexes = resolveVerseIndexes(parsedRef, chapter.verses.length);
-    const verseTexts = formatVerseTexts(verseIndexes, chapter.verses, displayOpt);
-
-    if (displayOpt.parenthesesCitation) {
-        let citation = `${escapeHtml(getBookAbbreviation(book))} ${parsedRef.chapter}`;
-        if (!parsedRef.allVerses) {
-            citation += formatVerseRanges(verseIndexes);
-        }
-        verseTexts.push(`<span class="verse-reference">(${citation})</span>`);
-    }
-
-    const joinedContent = verseTexts.join(displayOpt.lineBreaks ? '<br>' : ' ');
-
-    return {
-        error: false,
-        html: `<div class="reference">${headerText}</div><div class="verse-text">${joinedContent}</div>`,
-    };
 }

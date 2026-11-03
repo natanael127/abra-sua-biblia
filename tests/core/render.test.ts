@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { EbfDocument } from '../../src/core/ebf';
-import { DEFAULT_DISPLAY_OPTIONS, type DisplayOptions, renderReference } from '../../src/core/render';
+import { DEFAULT_DISPLAY_OPTIONS, type DisplayOptions } from '../../src/core/passage';
+import { renderPassageText, renderReference } from '../../src/core/render';
 
 const ebf: EbfDocument = {
     bible: {
@@ -78,7 +79,7 @@ describe('renderReference', () => {
         ).html;
         expect(html).toBe(
             '<div class="reference">Gênesis 1: A criação (Teste &lt;b&gt;)</div>' +
-                `<div class="verse-text">"Versículo em texto simples, 'citado'. [...] Disse &lt;Deus&gt;: 'Haja luz'."</div>`,
+                `<div class="verse-text">"Versículo em texto simples, &#39;citado&#39;. [...] Disse &lt;Deus&gt;: &#39;Haja luz&#39;."</div>`,
         );
     });
 
@@ -101,5 +102,25 @@ describe('renderReference', () => {
             error: true,
             html: '<span class="error">Arquivo de Bíblia inválido ou corrompido.</span>',
         });
+    });
+});
+
+describe('renderPassageText', () => {
+    const text = (reference: string, overrides: Partial<DisplayOptions> = {}) => {
+        const { passage } = renderReference(reference, ebf, options(overrides), '');
+        if (!passage) throw new Error('no passage');
+        return renderPassageText(passage);
+    };
+
+    it('one line per verse, title on its own line, citation at the end, without escaping', () => {
+        expect(text('Gn 1,1-2.4')).toBe(
+            'Origem\n1 No princípio.\n2 Versículo em texto simples, "citado".\n[...]\n4 Disse <Deus>: “Haja luz”.\n(Gn 1,1-2.4)\n',
+        );
+    });
+
+    it('without line breaks and with quotes', () => {
+        expect(text('Gn 1,2.4', { quotes: true, verseNumbers: false, parenthesesCitation: false, lineBreaks: false })).toBe(
+            `"Versículo em texto simples, 'citado'. [...] Disse <Deus>: 'Haja luz'."`,
+        );
     });
 });

@@ -9,9 +9,8 @@ export function escapeHtml(text: string): string {
 
 // Double quotes in every shape the translations use, written as escapes because
 // they are easy to confuse on screen: straight ("), curly (“ ”), low („ ‟) and
-// angular (« »). The escaped form is the one escapeHtml produces from a straight
-// quote, so it has to be matched before the character class.
-const DOUBLE_QUOTES = /&quot;|["“”„‟«»]/g;
+// angular (« »).
+const DOUBLE_QUOTES = /["“”„‟«»]/g;
 
 export function toSingleQuotes(text: string): string {
     return text.replace(DOUBLE_QUOTES, "'");

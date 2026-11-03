@@ -40,17 +40,3 @@ export function showTemporaryMessage(message: string): void {
  */
 export const copyTextToClipboard = (text: string): Promise<void> => clipboardCopy(text);
 
-/**
- * Converts the displayed passage to plain text: <br> and the end of each <span>
- * (section titles and citation) become line breaks.
- */
-export function toPlainText(element: HTMLElement): string {
-    const clone = element.cloneNode(true) as HTMLElement;
-    clone.querySelectorAll('br').forEach((br) => {
-        br.replaceWith('\n');
-    });
-    clone.querySelectorAll('span').forEach((span) => {
-        span.after('\n');
-    });
-    return clone.textContent;
-}

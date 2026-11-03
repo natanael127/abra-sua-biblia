@@ -8,7 +8,7 @@
  * behavior changes must update the fixture explicitly.
  */
 import { describe, expect, it } from 'vitest';
-import type { DisplayOptions } from '../../src/core/render';
+import type { DisplayOptions } from '../../src/core/passage';
 import { renderReference } from '../../src/core/render';
 import { formatVerseRanges, parseReference } from '../../src/core/reference';
 import { loadBible, readFixture } from '../helpers';
@@ -22,6 +22,14 @@ interface LegacyFixture {
 }
 
 const fixture = JSON.parse(readFixture('legacy-render.json')) as LegacyFixture;
+
+/**
+ * The legacy code wrote the single quotes it put in place of double quotes
+ * unescaped; now every single quote in the text is escaped (same display).
+ */
+const sameDisplay = (html: string) => html.replaceAll('&#39;', "'");
+
+const comparable = (result: { error: boolean; html: string }) => ({ error: result.error, html: sameDisplay(result.html) });
 
 describe('parity with the legacy implementation', () => {
     it.each(fixture.parse)('parseReference($reference)', ({ reference, parsed }) => {
@@ -38,7 +46,7 @@ describe('parity with the legacy implementation', () => {
             const options = fixture.optionSets[c.options];
             if (!options) throw new Error(`option set ${c.options} does not exist`);
             const result = renderReference(c.reference, loadBible(c.bible ?? ''), { ...options }, fixture.instructions);
-            expect(result, `${c.bible} | ${c.reference} | options ${c.options}`).toEqual({ error: c.error, html: c.html });
+            expect(comparable(result), `${c.bible} | ${c.reference} | options ${c.options}`).toEqual(comparable(c));
         }
     });
 
@@ -46,7 +54,7 @@ describe('parity with the legacy implementation', () => {
         for (const c of fixture.cases.filter((c) => c.bible === null)) {
             const options = fixture.optionSets[0];
             if (!options) throw new Error('option set 0 does not exist');
-            expect(renderReference(c.reference, null, options, 'X')).toEqual({ error: c.error, html: c.html });
+            expect(comparable(renderReference(c.reference, null, options, 'X'))).toEqual(comparable(c));
         }
     });
 });
