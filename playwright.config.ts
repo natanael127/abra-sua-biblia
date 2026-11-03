@@ -13,6 +13,8 @@ export default defineConfig({
     reporter: process.env.CI ? 'github' : 'list',
     use: {
         baseURL: `http://localhost:${PORT}`,
+        // The tests check texts in Portuguese; the ones about the interface language set their own
+        locale: 'pt-BR',
         trace: 'retain-on-failure',
     },
     projects: [

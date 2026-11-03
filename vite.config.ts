@@ -7,7 +7,7 @@ import { minify } from 'html-minifier-terser';
 import { type Plugin } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import { defineConfig } from 'vitest/config';
-import { writeIndex } from './scripts/build-index.ts';
+import { readSettings, writeIndex } from './scripts/build-index.ts';
 import { describePageVersion, uncommittedChanges } from './scripts/build-version.ts';
 import { escapeHtml } from './src/core/text.ts';
 
@@ -99,6 +99,10 @@ function minifyStaticFiles(): Plugin {
 }
 
 export default defineConfig({
+    define: {
+        // Interface language when the user has not chosen one and the browser's has no translation (settings.json)
+        __DEFAULT_UI_LANGUAGE__: JSON.stringify(readSettings().defaultLanguage),
+    },
     build: {
         rolldownOptions: {
             // A single JS file: also bundles what is imported on demand
@@ -121,11 +125,12 @@ export default defineConfig({
             includeManifestIcons: false,
             injectManifest: {
                 // The Bibles (JSON) are kept out of the precache: they are downloaded on demand
-                globPatterns: ['**/*.{js,css,html,ico,png}'],
+                globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
             },
         }),
     ],
     test: {
         include: ['tests/**/*.test.ts'],
+        setupFiles: ['tests/setup.ts'],
     },
 });

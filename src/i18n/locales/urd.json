@@ -1,0 +1,129 @@
+{
+    "app": {
+        "title": "اپنی بائبل کھولیں!",
+        "description": "اپنی پسند کے ترجمے میں بائبل پڑھیں"
+    },
+    "language": {
+        "label": "انٹرفیس کی زبان"
+    },
+    "reader": {
+        "chooseTranslation": "اپنا ترجمہ منتخب کریں:",
+        "upload": "فائل اپ لوڈ کریں...",
+        "bibleTypes": {
+            "catholic": "کیتھولک",
+            "protestant": "پروٹسٹنٹ",
+            "other": "دیگر"
+        },
+        "books": "کتابیں",
+        "booksCount": "کتابیں ({{count}})",
+        "referencePlaceholder": "مثال: Mt 5,3-12.21-38"
+    },
+    "buttons": {
+        "theme": {
+            "light": "تھیم: ہلکا",
+            "dark": "تھیم: گہرا",
+            "auto": "تھیم: خودکار"
+        },
+        "downloadEbf": "تیار شدہ EBF فائل ڈاؤن لوڈ کریں",
+        "fileHelp": "اپ لوڈ کے بارے میں مدد",
+        "textSearch": "متن کی تلاش",
+        "history": "تلاش کی تاریخ",
+        "referenceHelp": "مدد",
+        "quotes": "متن میں واوین",
+        "verseNumbers": "آیات کے نمبر",
+        "lineBreaks": "ہر آیت کے بعد نئی سطر",
+        "ellipsis": "تقسیم شدہ آیات میں تسلسل کی علامت",
+        "parenthesesCitation": "متن کے بعد حوالہ",
+        "sectionTitles": "حصوں کے عنوانات",
+        "prevChapter": "پچھلا باب",
+        "nextChapter": "اگلا باب",
+        "copy": "متن کاپی کریں",
+        "share": "شیئر کریں",
+        "close": "بند کریں"
+    },
+    "help": {
+        "intro": "بائبل کا حوالہ درج ذیل میں سے کسی ایک صورت میں لکھیں:",
+        "chapter": {
+            "format": "کتاب باب",
+            "description": "پورا باب دکھاتا ہے",
+            "example": "(مثال: <code>Mt 5</code> سے متی کا پورا باب 5 دکھایا جائے گا)"
+        },
+        "verse": {
+            "format": "کتاب باب,آیت",
+            "description": "کوئی ایک مخصوص آیت دکھاتا ہے",
+            "example": "(مثال: <code>Mt 5,13</code> سے متی، باب 5، آیت 13 دکھائی جائے گی)"
+        },
+        "from": {
+            "format": "کتاب باب,آیت-",
+            "description": "کسی مخصوص آیت سے آگے دکھاتا ہے",
+            "example": "(مثال: <code>Mt 5,3-</code> سے متی، باب 5، آیت 3 سے آگے دکھایا جائے گا)"
+        },
+        "range": {
+            "format": "کتاب باب,آغاز-اختتام",
+            "description": "آیات کا ایک سلسلہ دکھاتا ہے",
+            "example": "(مثال: <code>Mt 5,3-12</code> سے متی، باب 5، آیات 3 سے 12 دکھائی جائیں گی)"
+        },
+        "combined": {
+            "format": "کتاب باب,ملی جلی آیات",
+            "description": "غیر متواتر آیات یا سلسلوں کو الگ کرنے کے لیے نقطہ (.) استعمال کریں",
+            "example": "(مثال: <code>Mt 5,3-12.21-38</code> سے متی، باب 5، آیات 3 سے 12 اور آیات 21 سے 38 دکھائی جائیں گی)"
+        }
+    },
+    "about": {
+        "title": "تعارف",
+        "developedBy": "تیار کنندہ:",
+        "translationsAveMariaCnbb": "Ave-Maria اور CNBB کے تراجم:",
+        "translationsAaAcfNvi": "AA، ACF اور NVI کے تراجم:",
+        "translationPadreMatosSoares": "فادر ماتوس سواریس کا ترجمہ:",
+        "version": "صفحے کا ورژن:"
+    },
+    "messages": {
+        "bibleLoadError": "بائبل لوڈ کرنے میں خرابی",
+        "unsupportedFormat": "فائل کا فارمیٹ تعاون یافتہ نہیں ہے",
+        "invalidFile": "بائبل کی فائل غلط ہے",
+        "textCopied": "متن کاپی ہو گیا",
+        "copyError": "متن کاپی کرنے میں خرابی",
+        "linkCopied": "لنک کاپی ہو گیا",
+        "linkCopyError": "لنک کاپی کرنے میں خرابی",
+        "translationNotFound": "ترجمہ نہیں ملا",
+        "cannotShareUpload": "ہاتھ سے لوڈ کی گئی بائبل کے حوالے شیئر نہیں کیے جا سکتے۔"
+    },
+    "errors": {
+        "noBibleLoaded": "کوئی بائبل فائل لوڈ نہیں کی گئی۔",
+        "invalidBible": "بائبل کی فائل غلط یا خراب ہے۔",
+        "bookNotFound": "کتاب \"{{book}}\" نہیں ملی۔",
+        "chapterNotFound": "{{book}} میں باب {{chapter}} نہیں ملا۔"
+    },
+    "modals": {
+        "history": {
+            "title": "تلاش کی تاریخ",
+            "empty": "حالیہ کوئی تلاش نہیں"
+        },
+        "referenceHelp": {
+            "title": "بائبل کا حوالہ"
+        },
+        "fileHelp": {
+            "title": "فائل اپ لوڈ",
+            "formats": "تعاون یافتہ فارمیٹس:",
+            "repositories": "بائبل کے ذخیرے:",
+            "convertedBibles": "EBF میں تبدیل شدہ بائبلیں",
+            "osisBibles": "OSIS فارمیٹ کی بائبلیں"
+        },
+        "textSearch": {
+            "title": "متن کی تلاش",
+            "placeholder": "کم از کم {{min}} حروف لکھیں...",
+            "orderLabel": "نتائج کی ترتیب",
+            "relevance": "مطابقت",
+            "byBook": "کتاب کے مطابق",
+            "preparing": "مطابقت کے لحاظ سے تلاش تیار ہو رہی ہے…",
+            "bibleOrder": "بائبل کی ترتیب میں",
+            "byRelevance": "مطابقت کے لحاظ سے",
+            "mostRelevant": "{{total}} میں سے سب سے زیادہ متعلقہ {{shown}}",
+            "firstResults": "{{total}} میں سے پہلے {{shown}}",
+            "results_one": "{{count}} نتیجہ",
+            "results_other": "{{count}} نتائج",
+            "noBible": "کوئی بائبل لوڈ نہیں ہے",
+            "noResults": "کوئی آیت نہیں ملی"
+        }
+    }
+}

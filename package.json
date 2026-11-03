@@ -43,6 +43,8 @@
         "clipboard-copy": "^4.0.1",
         "es-toolkit": "^1.53.0",
         "fast-xml-parser": "^5.11.2",
+        "flag-icons": "^7.6.0",
+        "i18next": "^26.7.1",
         "iso-639-3": "^3.0.1",
         "minisearch": "^7.2.0",
         "notyf": "^3.10.0"

@@ -1,0 +1,129 @@
+{
+    "app": {
+        "title": "Abra sua Bíblia!",
+        "description": "Leia a Bíblia usando a tradução de sua preferência"
+    },
+    "language": {
+        "label": "Idioma da interface"
+    },
+    "reader": {
+        "chooseTranslation": "Escolha sua tradução:",
+        "upload": "Fazer upload...",
+        "bibleTypes": {
+            "catholic": "Católicas",
+            "protestant": "Evangélicas",
+            "other": "Outras"
+        },
+        "books": "Livros",
+        "booksCount": "Livros ({{count}})",
+        "referencePlaceholder": "Ex: Mt 5,3-12.21-38"
+    },
+    "buttons": {
+        "theme": {
+            "light": "Tema: Claro",
+            "dark": "Tema: Escuro",
+            "auto": "Tema: Automático"
+        },
+        "downloadEbf": "Baixar arquivo EBF gerado",
+        "fileHelp": "Ajuda sobre upload",
+        "textSearch": "Busca textual",
+        "history": "Histórico de buscas",
+        "referenceHelp": "Ajuda",
+        "quotes": "Aspas no texto",
+        "verseNumbers": "Números dos versículos",
+        "lineBreaks": "Quebra de linha após cada versículo",
+        "ellipsis": "Símbolo de continuação nos versículos quebrados",
+        "parenthesesCitation": "Citação após o texto",
+        "sectionTitles": "Títulos das seções",
+        "prevChapter": "Capítulo anterior",
+        "nextChapter": "Próximo capítulo",
+        "copy": "Copiar texto",
+        "share": "Compartilhar",
+        "close": "Fechar"
+    },
+    "help": {
+        "intro": "Digite a referência bíblica em um dos seguintes formatos:",
+        "chapter": {
+            "format": "Livro capítulo",
+            "description": "Mostra o capítulo completo",
+            "example": "(ex: <code>Mt 5</code> para mostrar Mateus capítulo 5 inteiro)"
+        },
+        "verse": {
+            "format": "Livro capítulo,versículo",
+            "description": "Mostra um versículo específico",
+            "example": "(ex: <code>Mt 5,13</code> para Mateus capítulo 5, versículo 13)"
+        },
+        "from": {
+            "format": "Livro capítulo,versículo-",
+            "description": "Mostra a partir de um versículo específico",
+            "example": "(ex: <code>Mt 5,3-</code> para Mateus capítulo 5, versículos 3 em diante)"
+        },
+        "range": {
+            "format": "Livro capítulo,início-fim",
+            "description": "Mostra um intervalo de versículos",
+            "example": "(ex: <code>Mt 5,3-12</code> para Mateus capítulo 5, versículos 3 a 12)"
+        },
+        "combined": {
+            "format": "Livro capítulo,versículos combinados",
+            "description": "Use ponto para separar versículos ou intervalos não consecutivos",
+            "example": "(ex: <code>Mt 5,3-12.21-38</code> para Mateus capítulo 5, versículos de 3 a 12, mais os versículos de 21 a 38)"
+        }
+    },
+    "about": {
+        "title": "Sobre",
+        "developedBy": "Desenvolvido por:",
+        "translationsAveMariaCnbb": "Traduções Ave-Maria e CNBB:",
+        "translationsAaAcfNvi": "Traduções AA, ACF e NVI:",
+        "translationPadreMatosSoares": "Tradução do Padre Matos Soares:",
+        "version": "Versão da página:"
+    },
+    "messages": {
+        "bibleLoadError": "Erro ao carregar a Bíblia",
+        "unsupportedFormat": "Formato de arquivo não suportado",
+        "invalidFile": "Arquivo de Bíblia inválido",
+        "textCopied": "Texto copiado",
+        "copyError": "Erro ao copiar texto",
+        "linkCopied": "Link copiado",
+        "linkCopyError": "Erro ao copiar link",
+        "translationNotFound": "Tradução não encontrada",
+        "cannotShareUpload": "Não é possível compartilhar referências de Bíblias carregadas manualmente."
+    },
+    "errors": {
+        "noBibleLoaded": "Nenhum arquivo de Bíblia foi carregado.",
+        "invalidBible": "Arquivo de Bíblia inválido ou corrompido.",
+        "bookNotFound": "Livro \"{{book}}\" não encontrado.",
+        "chapterNotFound": "Capítulo {{chapter}} não encontrado em {{book}}."
+    },
+    "modals": {
+        "history": {
+            "title": "Histórico de buscas",
+            "empty": "Nenhuma busca recente"
+        },
+        "referenceHelp": {
+            "title": "Referência bíblica"
+        },
+        "fileHelp": {
+            "title": "Upload de arquivos",
+            "formats": "Formatos suportados:",
+            "repositories": "Repositórios de Bíblias:",
+            "convertedBibles": "Bíblias convertidas para EBF",
+            "osisBibles": "Bíblias no formato OSIS"
+        },
+        "textSearch": {
+            "title": "Busca textual",
+            "placeholder": "Digite pelo menos {{min}} caracteres...",
+            "orderLabel": "Ordem dos resultados",
+            "relevance": "Relevância",
+            "byBook": "Por livro",
+            "preparing": "Preparando a busca por relevância…",
+            "bibleOrder": "Na ordem da Bíblia",
+            "byRelevance": "Por relevância",
+            "mostRelevant": "{{shown}} mais relevantes de {{total}}",
+            "firstResults": "Primeiros {{shown}} de {{total}}",
+            "results_one": "{{count}} resultado",
+            "results_other": "{{count}} resultados",
+            "noBible": "Nenhuma Bíblia carregada",
+            "noResults": "Nenhum versículo encontrado"
+        }
+    }
+}

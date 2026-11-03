@@ -1,0 +1,128 @@
+{
+    "app": {
+        "title": "Buka Alkitabmu!",
+        "description": "Baca Alkitab dalam terjemahan pilihanmu"
+    },
+    "language": {
+        "label": "Bahasa antarmuka"
+    },
+    "reader": {
+        "chooseTranslation": "Pilih terjemahanmu:",
+        "upload": "Unggah berkas...",
+        "bibleTypes": {
+            "catholic": "Katolik",
+            "protestant": "Protestan",
+            "other": "Lainnya"
+        },
+        "books": "Kitab",
+        "booksCount": "Kitab ({{count}})",
+        "referencePlaceholder": "Mis.: Mt 5,3-12.21-38"
+    },
+    "buttons": {
+        "theme": {
+            "light": "Tema: Terang",
+            "dark": "Tema: Gelap",
+            "auto": "Tema: Otomatis"
+        },
+        "downloadEbf": "Unduh berkas EBF yang dihasilkan",
+        "fileHelp": "Bantuan unggah berkas",
+        "textSearch": "Pencarian teks",
+        "history": "Riwayat pencarian",
+        "referenceHelp": "Bantuan",
+        "quotes": "Tanda kutip pada teks",
+        "verseNumbers": "Nomor ayat",
+        "lineBreaks": "Pindah baris setelah setiap ayat",
+        "ellipsis": "Simbol lanjutan pada ayat yang terpotong",
+        "parenthesesCitation": "Kutipan setelah teks",
+        "sectionTitles": "Judul bagian",
+        "prevChapter": "Pasal sebelumnya",
+        "nextChapter": "Pasal berikutnya",
+        "copy": "Salin teks",
+        "share": "Bagikan",
+        "close": "Tutup"
+    },
+    "help": {
+        "intro": "Ketik rujukan Alkitab dalam salah satu format berikut:",
+        "chapter": {
+            "format": "Kitab pasal",
+            "description": "Menampilkan satu pasal penuh",
+            "example": "(mis.: <code>Mt 5</code> untuk menampilkan seluruh Matius pasal 5)"
+        },
+        "verse": {
+            "format": "Kitab pasal,ayat",
+            "description": "Menampilkan satu ayat tertentu",
+            "example": "(mis.: <code>Mt 5,13</code> untuk Matius pasal 5, ayat 13)"
+        },
+        "from": {
+            "format": "Kitab pasal,ayat-",
+            "description": "Menampilkan mulai dari ayat tertentu",
+            "example": "(mis.: <code>Mt 5,3-</code> untuk Matius pasal 5, mulai dari ayat 3)"
+        },
+        "range": {
+            "format": "Kitab pasal,awal-akhir",
+            "description": "Menampilkan rentang ayat",
+            "example": "(mis.: <code>Mt 5,3-12</code> untuk Matius pasal 5, ayat 3 sampai 12)"
+        },
+        "combined": {
+            "format": "Kitab pasal,gabungan ayat",
+            "description": "Gunakan titik untuk memisahkan ayat atau rentang yang tidak berurutan",
+            "example": "(mis.: <code>Mt 5,3-12.21-38</code> untuk Matius pasal 5, ayat 3 sampai 12, ditambah ayat 21 sampai 38)"
+        }
+    },
+    "about": {
+        "title": "Tentang",
+        "developedBy": "Dikembangkan oleh:",
+        "translationsAveMariaCnbb": "Terjemahan Ave-Maria dan CNBB:",
+        "translationsAaAcfNvi": "Terjemahan AA, ACF, dan NVI:",
+        "translationPadreMatosSoares": "Terjemahan Pastor Matos Soares:",
+        "version": "Versi halaman:"
+    },
+    "messages": {
+        "bibleLoadError": "Gagal memuat Alkitab",
+        "unsupportedFormat": "Format berkas tidak didukung",
+        "invalidFile": "Berkas Alkitab tidak valid",
+        "textCopied": "Teks disalin",
+        "copyError": "Gagal menyalin teks",
+        "linkCopied": "Tautan disalin",
+        "linkCopyError": "Gagal menyalin tautan",
+        "translationNotFound": "Terjemahan tidak ditemukan",
+        "cannotShareUpload": "Rujukan dari Alkitab yang dimuat secara manual tidak dapat dibagikan."
+    },
+    "errors": {
+        "noBibleLoaded": "Belum ada berkas Alkitab yang dimuat.",
+        "invalidBible": "Berkas Alkitab tidak valid atau rusak.",
+        "bookNotFound": "Kitab \"{{book}}\" tidak ditemukan.",
+        "chapterNotFound": "Pasal {{chapter}} tidak ditemukan di {{book}}."
+    },
+    "modals": {
+        "history": {
+            "title": "Riwayat pencarian",
+            "empty": "Tidak ada pencarian terbaru"
+        },
+        "referenceHelp": {
+            "title": "Rujukan Alkitab"
+        },
+        "fileHelp": {
+            "title": "Unggah berkas",
+            "formats": "Format yang didukung:",
+            "repositories": "Repositori Alkitab:",
+            "convertedBibles": "Alkitab yang dikonversi ke EBF",
+            "osisBibles": "Alkitab dalam format OSIS"
+        },
+        "textSearch": {
+            "title": "Pencarian teks",
+            "placeholder": "Ketik minimal {{min}} karakter...",
+            "orderLabel": "Urutan hasil",
+            "relevance": "Relevansi",
+            "byBook": "Per kitab",
+            "preparing": "Menyiapkan pencarian berdasarkan relevansi…",
+            "bibleOrder": "Sesuai urutan Alkitab",
+            "byRelevance": "Berdasarkan relevansi",
+            "mostRelevant": "{{shown}} paling relevan dari {{total}}",
+            "firstResults": "{{shown}} pertama dari {{total}}",
+            "results_other": "{{count}} hasil",
+            "noBible": "Belum ada Alkitab yang dimuat",
+            "noResults": "Tidak ada ayat yang ditemukan"
+        }
+    }
+}

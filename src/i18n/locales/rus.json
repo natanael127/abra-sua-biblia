@@ -1,0 +1,131 @@
+{
+    "app": {
+        "title": "Откройте свою Библию!",
+        "description": "Читайте Библию в том переводе, который вам нравится"
+    },
+    "language": {
+        "label": "Язык интерфейса"
+    },
+    "reader": {
+        "chooseTranslation": "Выберите перевод:",
+        "upload": "Загрузить файл...",
+        "bibleTypes": {
+            "catholic": "Католические",
+            "protestant": "Протестантские",
+            "other": "Другие"
+        },
+        "books": "Книги",
+        "booksCount": "Книги ({{count}})",
+        "referencePlaceholder": "Напр.: Mt 5,3-12.21-38"
+    },
+    "buttons": {
+        "theme": {
+            "light": "Тема: светлая",
+            "dark": "Тема: тёмная",
+            "auto": "Тема: автоматически"
+        },
+        "downloadEbf": "Скачать созданный файл EBF",
+        "fileHelp": "Справка по загрузке",
+        "textSearch": "Поиск по тексту",
+        "history": "История поиска",
+        "referenceHelp": "Справка",
+        "quotes": "Кавычки в тексте",
+        "verseNumbers": "Номера стихов",
+        "lineBreaks": "Перенос строки после каждого стиха",
+        "ellipsis": "Знак продолжения в разделённых стихах",
+        "parenthesesCitation": "Ссылка после текста",
+        "sectionTitles": "Заголовки разделов",
+        "prevChapter": "Предыдущая глава",
+        "nextChapter": "Следующая глава",
+        "copy": "Копировать текст",
+        "share": "Поделиться",
+        "close": "Закрыть"
+    },
+    "help": {
+        "intro": "Введите библейскую ссылку в одном из следующих форматов:",
+        "chapter": {
+            "format": "Книга глава",
+            "description": "Показывает главу целиком",
+            "example": "(напр.: <code>Mt 5</code> — показать всю 5-ю главу от Матфея)"
+        },
+        "verse": {
+            "format": "Книга глава,стих",
+            "description": "Показывает один стих",
+            "example": "(напр.: <code>Mt 5,13</code> — от Матфея, глава 5, стих 13)"
+        },
+        "from": {
+            "format": "Книга глава,стих-",
+            "description": "Показывает начиная с указанного стиха",
+            "example": "(напр.: <code>Mt 5,3-</code> — от Матфея, глава 5, начиная со стиха 3)"
+        },
+        "range": {
+            "format": "Книга глава,начало-конец",
+            "description": "Показывает диапазон стихов",
+            "example": "(напр.: <code>Mt 5,3-12</code> — от Матфея, глава 5, стихи с 3 по 12)"
+        },
+        "combined": {
+            "format": "Книга глава,несколько стихов",
+            "description": "Разделяйте точкой стихи или диапазоны, не идущие подряд",
+            "example": "(напр.: <code>Mt 5,3-12.21-38</code> — от Матфея, глава 5, стихи с 3 по 12 и с 21 по 38)"
+        }
+    },
+    "about": {
+        "title": "О проекте",
+        "developedBy": "Разработчик:",
+        "translationsAveMariaCnbb": "Переводы Ave-Maria и CNBB:",
+        "translationsAaAcfNvi": "Переводы AA, ACF и NVI:",
+        "translationPadreMatosSoares": "Перевод отца Матуса Соареса:",
+        "version": "Версия страницы:"
+    },
+    "messages": {
+        "bibleLoadError": "Ошибка при загрузке Библии",
+        "unsupportedFormat": "Неподдерживаемый формат файла",
+        "invalidFile": "Недопустимый файл Библии",
+        "textCopied": "Текст скопирован",
+        "copyError": "Ошибка при копировании текста",
+        "linkCopied": "Ссылка скопирована",
+        "linkCopyError": "Ошибка при копировании ссылки",
+        "translationNotFound": "Перевод не найден",
+        "cannotShareUpload": "Нельзя поделиться ссылками на места из вручную загруженных Библий."
+    },
+    "errors": {
+        "noBibleLoaded": "Файл Библии не загружен.",
+        "invalidBible": "Файл Библии недопустим или повреждён.",
+        "bookNotFound": "Книга «{{book}}» не найдена.",
+        "chapterNotFound": "Глава {{chapter}} не найдена в книге {{book}}."
+    },
+    "modals": {
+        "history": {
+            "title": "История поиска",
+            "empty": "Нет недавних запросов"
+        },
+        "referenceHelp": {
+            "title": "Библейская ссылка"
+        },
+        "fileHelp": {
+            "title": "Загрузка файлов",
+            "formats": "Поддерживаемые форматы:",
+            "repositories": "Хранилища Библий:",
+            "convertedBibles": "Библии, преобразованные в EBF",
+            "osisBibles": "Библии в формате OSIS"
+        },
+        "textSearch": {
+            "title": "Поиск по тексту",
+            "placeholder": "Введите не менее {{min}} символов...",
+            "orderLabel": "Порядок результатов",
+            "relevance": "Релевантность",
+            "byBook": "По книгам",
+            "preparing": "Подготовка поиска по релевантности…",
+            "bibleOrder": "В порядке Библии",
+            "byRelevance": "По релевантности",
+            "mostRelevant": "{{shown}} самых релевантных из {{total}}",
+            "firstResults": "Первые {{shown}} из {{total}}",
+            "results_one": "{{count}} результат",
+            "results_few": "{{count}} результата",
+            "results_many": "{{count}} результатов",
+            "results_other": "{{count}} результата",
+            "noBible": "Библия не загружена",
+            "noResults": "Стихи не найдены"
+        }
+    }
+}

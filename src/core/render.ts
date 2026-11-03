@@ -7,6 +7,7 @@ import {
     getVerseText,
     getVerseTitle,
 } from './ebf';
+import { t } from '../i18n';
 import { formatVerseRanges, parseReference, resolveVerseIndexes } from './reference';
 import { escapeHtml, toSingleQuotes } from './text';
 
@@ -110,14 +111,14 @@ export function renderReference(
     instructionsHtml: string,
 ): RenderResult {
     if (!ebf) {
-        return errorHtml('Nenhum arquivo de Bíblia foi carregado.');
+        return errorHtml(t('errors.noBibleLoaded'));
     }
 
     try {
         return render(reference, ebf, displayOpt, instructionsHtml);
     } catch (error) {
         console.error('Error processing the Bible JSON:', error);
-        return errorHtml('Arquivo de Bíblia inválido ou corrompido.');
+        return errorHtml(t('errors.invalidBible'));
     }
 }
 
@@ -134,12 +135,12 @@ function render(
 
     const book = findBook(ebf, parsedRef.book);
     if (!book) {
-        return errorHtml(`Livro "${escapeHtml(parsedRef.book)}" não encontrado.`);
+        return errorHtml(t('errors.bookNotFound', { book: escapeHtml(parsedRef.book) }));
     }
 
     const chapter = book.chapters[parsedRef.chapter - 1];
     if (!chapter) {
-        return errorHtml(`Capítulo ${parsedRef.chapter} não encontrado em ${escapeHtml(getBookName(book))}.`);
+        return errorHtml(t('errors.chapterNotFound', { chapter: parsedRef.chapter, book: escapeHtml(getBookName(book)) }));
     }
 
     // Escape HTML to prevent injection

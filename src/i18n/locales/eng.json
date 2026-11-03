@@ -1,0 +1,129 @@
+{
+    "app": {
+        "title": "Open Your Bible!",
+        "description": "Read the Bible in the translation of your choice"
+    },
+    "language": {
+        "label": "Interface language"
+    },
+    "reader": {
+        "chooseTranslation": "Choose your translation:",
+        "upload": "Upload...",
+        "bibleTypes": {
+            "catholic": "Catholic",
+            "protestant": "Protestant",
+            "other": "Other"
+        },
+        "books": "Books",
+        "booksCount": "Books ({{count}})",
+        "referencePlaceholder": "E.g.: Mt 5,3-12.21-38"
+    },
+    "buttons": {
+        "theme": {
+            "light": "Theme: Light",
+            "dark": "Theme: Dark",
+            "auto": "Theme: Automatic"
+        },
+        "downloadEbf": "Download the generated EBF file",
+        "fileHelp": "Help with uploading",
+        "textSearch": "Text search",
+        "history": "Search history",
+        "referenceHelp": "Help",
+        "quotes": "Quotation marks in the text",
+        "verseNumbers": "Verse numbers",
+        "lineBreaks": "Line break after each verse",
+        "ellipsis": "Continuation symbol in split verses",
+        "parenthesesCitation": "Citation after the text",
+        "sectionTitles": "Section titles",
+        "prevChapter": "Previous chapter",
+        "nextChapter": "Next chapter",
+        "copy": "Copy text",
+        "share": "Share",
+        "close": "Close"
+    },
+    "help": {
+        "intro": "Type the Bible reference in one of the following formats:",
+        "chapter": {
+            "format": "Book chapter",
+            "description": "Shows the whole chapter",
+            "example": "(e.g. <code>Mt 5</code> to show Matthew chapter 5 in full)"
+        },
+        "verse": {
+            "format": "Book chapter,verse",
+            "description": "Shows a specific verse",
+            "example": "(e.g. <code>Mt 5,13</code> for Matthew chapter 5, verse 13)"
+        },
+        "from": {
+            "format": "Book chapter,verse-",
+            "description": "Shows everything from a specific verse onward",
+            "example": "(e.g. <code>Mt 5,3-</code> for Matthew chapter 5, from verse 3 onward)"
+        },
+        "range": {
+            "format": "Book chapter,start-end",
+            "description": "Shows a range of verses",
+            "example": "(e.g. <code>Mt 5,3-12</code> for Matthew chapter 5, verses 3 to 12)"
+        },
+        "combined": {
+            "format": "Book chapter,combined verses",
+            "description": "Use a period to separate verses or ranges that are not consecutive",
+            "example": "(e.g. <code>Mt 5,3-12.21-38</code> for Matthew chapter 5, verses 3 to 12, plus verses 21 to 38)"
+        }
+    },
+    "about": {
+        "title": "About",
+        "developedBy": "Developed by:",
+        "translationsAveMariaCnbb": "Ave-Maria and CNBB translations:",
+        "translationsAaAcfNvi": "AA, ACF and NVI translations:",
+        "translationPadreMatosSoares": "Father Matos Soares translation:",
+        "version": "Page version:"
+    },
+    "messages": {
+        "bibleLoadError": "Error loading the Bible",
+        "unsupportedFormat": "Unsupported file format",
+        "invalidFile": "Invalid Bible file",
+        "textCopied": "Text copied",
+        "copyError": "Error copying the text",
+        "linkCopied": "Link copied",
+        "linkCopyError": "Error copying the link",
+        "translationNotFound": "Translation not found",
+        "cannotShareUpload": "References from manually uploaded Bibles cannot be shared."
+    },
+    "errors": {
+        "noBibleLoaded": "No Bible file has been loaded.",
+        "invalidBible": "Invalid or corrupted Bible file.",
+        "bookNotFound": "Book \"{{book}}\" not found.",
+        "chapterNotFound": "Chapter {{chapter}} not found in {{book}}."
+    },
+    "modals": {
+        "history": {
+            "title": "Search history",
+            "empty": "No recent searches"
+        },
+        "referenceHelp": {
+            "title": "Bible reference"
+        },
+        "fileHelp": {
+            "title": "File upload",
+            "formats": "Supported formats:",
+            "repositories": "Bible repositories:",
+            "convertedBibles": "Bibles converted to EBF",
+            "osisBibles": "Bibles in OSIS format"
+        },
+        "textSearch": {
+            "title": "Text search",
+            "placeholder": "Type at least {{min}} characters...",
+            "orderLabel": "Order of the results",
+            "relevance": "Relevance",
+            "byBook": "By book",
+            "preparing": "Preparing the relevance search…",
+            "bibleOrder": "In Bible order",
+            "byRelevance": "By relevance",
+            "mostRelevant": "{{shown}} most relevant of {{total}}",
+            "firstResults": "First {{shown}} of {{total}}",
+            "results_one": "{{count}} result",
+            "results_other": "{{count}} results",
+            "noBible": "No Bible loaded",
+            "noResults": "No verses found"
+        }
+    }
+}

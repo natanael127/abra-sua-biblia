@@ -1,3 +1,13 @@
+import { onUiLanguageChange, t } from '../i18n';
+
+// The modals are created on demand with texts already translated: after a language change they are discarded
+// (none is open then, the language is changed on the page) and recreated in the new language when needed.
+onUiLanguageChange(() => {
+    document.querySelectorAll('dialog.app-modal').forEach((modal) => {
+        modal.remove();
+    });
+});
+
 export interface ModalOptions {
     id: string;
     title: string;
@@ -32,7 +42,7 @@ export function getOrCreateModal(options: ModalOptions): HTMLDialogElement {
 
     const closeButton = document.createElement('button');
     closeButton.className = 'close-modal';
-    closeButton.title = 'Fechar';
+    closeButton.title = t('buttons.close');
     closeButton.textContent = '×';
     closeButton.addEventListener('click', () => {
         modal.close();

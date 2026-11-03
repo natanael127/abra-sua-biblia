@@ -1,0 +1,130 @@
+{
+    "app": {
+        "title": "Apri la tua Bibbia!",
+        "description": "Leggi la Bibbia nella traduzione che preferisci"
+    },
+    "language": {
+        "label": "Lingua dell'interfaccia"
+    },
+    "reader": {
+        "chooseTranslation": "Scegli la tua traduzione:",
+        "upload": "Carica un file...",
+        "bibleTypes": {
+            "catholic": "Cattoliche",
+            "protestant": "Protestanti",
+            "other": "Altre"
+        },
+        "books": "Libri",
+        "booksCount": "Libri ({{count}})",
+        "referencePlaceholder": "Es.: Mt 5,3-12.21-38"
+    },
+    "buttons": {
+        "theme": {
+            "light": "Tema: Chiaro",
+            "dark": "Tema: Scuro",
+            "auto": "Tema: Automatico"
+        },
+        "downloadEbf": "Scarica il file EBF generato",
+        "fileHelp": "Aiuto sul caricamento",
+        "textSearch": "Ricerca testuale",
+        "history": "Cronologia delle ricerche",
+        "referenceHelp": "Aiuto",
+        "quotes": "Virgolette nel testo",
+        "verseNumbers": "Numeri dei versetti",
+        "lineBreaks": "A capo dopo ogni versetto",
+        "ellipsis": "Simbolo di continuazione nei versetti spezzati",
+        "parenthesesCitation": "Citazione dopo il testo",
+        "sectionTitles": "Titoli delle sezioni",
+        "prevChapter": "Capitolo precedente",
+        "nextChapter": "Capitolo successivo",
+        "copy": "Copia il testo",
+        "share": "Condividi",
+        "close": "Chiudi"
+    },
+    "help": {
+        "intro": "Digita il riferimento biblico in uno dei seguenti formati:",
+        "chapter": {
+            "format": "Libro capitolo",
+            "description": "Mostra il capitolo completo",
+            "example": "(es.: <code>Mt 5</code> per mostrare l'intero capitolo 5 di Matteo)"
+        },
+        "verse": {
+            "format": "Libro capitolo,versetto",
+            "description": "Mostra un versetto specifico",
+            "example": "(es.: <code>Mt 5,13</code> per Matteo, capitolo 5, versetto 13)"
+        },
+        "from": {
+            "format": "Libro capitolo,versetto-",
+            "description": "Mostra a partire da un versetto specifico",
+            "example": "(es.: <code>Mt 5,3-</code> per Matteo, capitolo 5, dal versetto 3 in poi)"
+        },
+        "range": {
+            "format": "Libro capitolo,inizio-fine",
+            "description": "Mostra un intervallo di versetti",
+            "example": "(es.: <code>Mt 5,3-12</code> per Matteo, capitolo 5, versetti da 3 a 12)"
+        },
+        "combined": {
+            "format": "Libro capitolo,versetti combinati",
+            "description": "Usa il punto per separare versetti o intervalli non consecutivi",
+            "example": "(es.: <code>Mt 5,3-12.21-38</code> per Matteo, capitolo 5, versetti da 3 a 12, più i versetti da 21 a 38)"
+        }
+    },
+    "about": {
+        "title": "Informazioni",
+        "developedBy": "Sviluppato da:",
+        "translationsAveMariaCnbb": "Traduzioni Ave-Maria e CNBB:",
+        "translationsAaAcfNvi": "Traduzioni AA, ACF e NVI:",
+        "translationPadreMatosSoares": "Traduzione di Padre Matos Soares:",
+        "version": "Versione della pagina:"
+    },
+    "messages": {
+        "bibleLoadError": "Errore nel caricamento della Bibbia",
+        "unsupportedFormat": "Formato di file non supportato",
+        "invalidFile": "File della Bibbia non valido",
+        "textCopied": "Testo copiato",
+        "copyError": "Errore nella copia del testo",
+        "linkCopied": "Link copiato",
+        "linkCopyError": "Errore nella copia del link",
+        "translationNotFound": "Traduzione non trovata",
+        "cannotShareUpload": "Non è possibile condividere i riferimenti di Bibbie caricate manualmente."
+    },
+    "errors": {
+        "noBibleLoaded": "Nessun file della Bibbia è stato caricato.",
+        "invalidBible": "File della Bibbia non valido o danneggiato.",
+        "bookNotFound": "Libro \"{{book}}\" non trovato.",
+        "chapterNotFound": "Capitolo {{chapter}} non trovato in {{book}}."
+    },
+    "modals": {
+        "history": {
+            "title": "Cronologia delle ricerche",
+            "empty": "Nessuna ricerca recente"
+        },
+        "referenceHelp": {
+            "title": "Riferimento biblico"
+        },
+        "fileHelp": {
+            "title": "Caricamento di file",
+            "formats": "Formati supportati:",
+            "repositories": "Archivi di Bibbie:",
+            "convertedBibles": "Bibbie convertite in EBF",
+            "osisBibles": "Bibbie in formato OSIS"
+        },
+        "textSearch": {
+            "title": "Ricerca testuale",
+            "placeholder": "Digita almeno {{min}} caratteri...",
+            "orderLabel": "Ordine dei risultati",
+            "relevance": "Rilevanza",
+            "byBook": "Per libro",
+            "preparing": "Preparazione della ricerca per rilevanza…",
+            "bibleOrder": "Nell'ordine della Bibbia",
+            "byRelevance": "Per rilevanza",
+            "mostRelevant": "{{shown}} più rilevanti su {{total}}",
+            "firstResults": "Primi {{shown}} su {{total}}",
+            "results_one": "{{count}} risultato",
+            "results_many": "{{count}} di risultati",
+            "results_other": "{{count}} risultati",
+            "noBible": "Nessuna Bibbia caricata",
+            "noResults": "Nessun versetto trovato"
+        }
+    }
+}

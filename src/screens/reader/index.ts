@@ -20,6 +20,7 @@ import {
     getNumOfChapters,
 } from '../../core/ebf';
 import { addToHistory } from '../../core/history';
+import { onUiLanguageChange, t } from '../../i18n';
 import { parseReference } from '../../core/reference';
 import { type DisplayOptions, renderReference } from '../../core/render';
 import { prepareSearchIndex } from '../../core/search';
@@ -32,18 +33,14 @@ import { byId } from '../../ui/dom';
 import { shareLink } from '../../ui/share';
 import { copyTextToClipboard, showTemporaryMessage, toPlainText } from '../../ui/feedback';
 import * as storage from '../../ui/storage';
+import { refreshThemeTitle } from '../../ui/theme';
+import { instructionsHtml } from './instructions';
 import { parseLegacyLink, parseReaderParams, readerPath, referenceFromPath, UPLOAD_KEY } from './url';
 
-const APP_TITLE = 'Abra sua Bíblia!';
 /** Pause in typing the reference before the passage is displayed. */
 const TYPING_DEBOUNCE_MS = 500;
 
-const BIBLE_TYPE_LABELS: Record<string, string> = {
-    catholic: 'Católicas',
-    protestant: 'Evangélicas',
-    other: 'Outras',
-};
-const BIBLE_TYPE_ORDER = ['catholic', 'protestant', 'other'];
+const BIBLE_TYPE_ORDER = ['catholic', 'protestant', 'other'] as const;
 
 /** Formatting buttons: button id -> display option. */
 const FORMAT_BUTTONS: Record<string, keyof DisplayOptions> = {
@@ -77,7 +74,6 @@ type UrlMode = 'commit' | 'edit' | 'replace';
 
 const state = {
     ebf: null as EbfDocument | null,
-    instructionsHtml: '',
     displayOptions: storage.getSavedDisplayOptions(),
     bibles: [] as BibleIndexEntry[],
     /** Identifier of the selected Bible ("por/ave-maria", or UPLOAD_KEY); empty until the first navigation. */
@@ -159,7 +155,7 @@ function showReference(mode?: UrlMode): void {
     const reference = referenceInput().value.trim();
     storage.saveReference(reference);
 
-    const result = renderReference(reference, state.ebf, state.displayOptions, state.instructionsHtml);
+    const result = renderReference(reference, state.ebf, state.displayOptions, instructionsHtml());
     const valid = !result.error && !!reference;
 
     for (const id of RESULT_BUTTONS) {
@@ -173,7 +169,8 @@ function showReference(mode?: UrlMode): void {
     updateFloatingButtons();
 
     const bibleName = state.ebf?.bible.name;
-    document.title = valid && bibleName ? `${reference} (${bibleName}) - ${APP_TITLE}` : APP_TITLE;
+    const appTitle = t('app.title');
+    document.title = valid && bibleName ? `${reference} (${bibleName}) - ${appTitle}` : appTitle;
     if (mode) {
         syncUrl(currentPath(reference, valid), mode);
     }
@@ -209,10 +206,26 @@ function populateBooks(books: readonly EbfBook[]): void {
         bookList.appendChild(bookElement);
     }
 
-    const header = document.querySelector('.book-section .expandable-header');
-    if (header) {
-        header.innerHTML = `Livros (${books.length})<span class="expand-icon">▼</span>`;
+    updateBooksTitle();
+}
+
+/** "Books (73)" once a Bible is loaded; just "Books" before that. */
+function updateBooksTitle(): void {
+    const count = state.ebf?.bible.books.length ?? 0;
+    byId('book-section-title').textContent = count > 0 ? t('reader.booksCount', { count }) : t('reader.books');
+}
+
+/** Texts that are built by the code and not translated by the page's attributes. */
+function refreshTranslatedTexts(): void {
+    refreshThemeTitle();
+    updateBooksTitle();
+    if (state.bibles.length > 0) {
+        populateBiblesSelect(state.bibles);
+        if (state.bibleKey) {
+            bibleSelect().value = state.bibleKey;
+        }
     }
+    showReference();
 }
 
 function populateBiblesSelect(biblesList: readonly BibleIndexEntry[]): void {
@@ -224,7 +237,7 @@ function populateBiblesSelect(biblesList: readonly BibleIndexEntry[]): void {
         if (bibles.length === 0) continue;
 
         const optgroup = document.createElement('optgroup');
-        optgroup.label = BIBLE_TYPE_LABELS[type] ?? type;
+        optgroup.label = t(`reader.bibleTypes.${type}`);
         for (const bible of bibles) {
             const option = document.createElement('option');
             option.value = bibleKey(bible);
@@ -236,7 +249,7 @@ function populateBiblesSelect(biblesList: readonly BibleIndexEntry[]): void {
 
     const uploadOption = document.createElement('option');
     uploadOption.value = UPLOAD_KEY;
-    uploadOption.textContent = 'Fazer upload...';
+    uploadOption.textContent = t('reader.upload');
     select.appendChild(uploadOption);
 }
 
@@ -272,7 +285,7 @@ function selectBible(key: string): Promise<boolean> {
     state.bibleLoad = (entry ? loadBibleFromPath(entry.path) : Promise.resolve(null)).then((ebf) => {
         if (token !== state.loadToken) return false;
         if (!ebf) {
-            showTemporaryMessage('Erro ao carregar a Bíblia');
+            showTemporaryMessage(t('messages.bibleLoadError'));
         }
         setBible(ebf);
         return true;
@@ -293,7 +306,7 @@ async function handleFileUpload(file: File | undefined): Promise<void> {
     const isJson = file.type === 'application/json' || file.name.endsWith('.json');
     const isXml = file.type === 'application/xml' || file.name.endsWith('.xml') || file.name.endsWith('.osis');
     if (!isJson && !isXml) {
-        showTemporaryMessage('Formato de arquivo não suportado');
+        showTemporaryMessage(t('messages.unsupportedFormat'));
         return;
     }
 
@@ -307,7 +320,7 @@ async function handleFileUpload(file: File | undefined): Promise<void> {
         console.error('Error reading the Bible file:', error);
         downloadButton.disabled = true;
         delete downloadButton.dataset.filename;
-        showTemporaryMessage('Arquivo de Bíblia inválido');
+        showTemporaryMessage(t('messages.invalidFile'));
         return;
     }
 
@@ -356,11 +369,11 @@ function copyResult(): void {
 
     copyTextToClipboard(toPlainText(verseText)).then(
         () => {
-            showTemporaryMessage('Texto copiado');
+            showTemporaryMessage(t('messages.textCopied'));
         },
         (error: unknown) => {
             console.error('Error copying text:', error);
-            showTemporaryMessage('Erro ao copiar texto');
+            showTemporaryMessage(t('messages.copyError'));
         },
     );
 }
@@ -370,7 +383,7 @@ function shareCurrentReference(): void {
     if (!reference) return;
 
     if (state.bibleKey === UPLOAD_KEY) {
-        alert('Não é possível compartilhar referências de Bíblias carregadas manualmente.');
+        alert(t('messages.cannotShareUpload'));
         return;
     }
 
@@ -381,12 +394,12 @@ function shareCurrentReference(): void {
     }).then(
         (result) => {
             if (result === 'copied') {
-                showTemporaryMessage('Link copiado');
+                showTemporaryMessage(t('messages.linkCopied'));
             }
         },
         (error: unknown) => {
             console.error('Error sharing:', error);
-            showTemporaryMessage('Erro ao copiar link');
+            showTemporaryMessage(t('messages.linkCopyError'));
         },
     );
 }
@@ -439,7 +452,7 @@ function setupActionButtons(): void {
             showHistoryModal(storage.getSearchHistory(), goToReference);
         },
         'reference-help-button': () => {
-            showReferenceHelpModal(state.instructionsHtml);
+            showReferenceHelpModal(instructionsHtml());
         },
         'file-help-button': showFileHelpModal,
     };
@@ -521,7 +534,7 @@ async function show(params: PathParams, biblesReady: Promise<void>): Promise<voi
         }
         reference = referenceFromPath(target.book, target.passage);
         if (key !== UPLOAD_KEY && !findBibleEntry(key)) {
-            showTemporaryMessage('Tradução não encontrada');
+            showTemporaryMessage(t('messages.translationNotFound'));
             const fallback = defaultBibleEntry();
             key = fallback && bibleKey(fallback);
         }
@@ -529,7 +542,7 @@ async function show(params: PathParams, biblesReady: Promise<void>): Promise<voi
         const legacy = parseLegacyLink(window.location.search);
         const legacyBible = legacy?.bible ? findBibleEntry(legacy.bible) : undefined;
         if (legacy?.bible && !legacyBible) {
-            showTemporaryMessage('Tradução não encontrada');
+            showTemporaryMessage(t('messages.translationNotFound'));
         }
         const entry = legacyBible ?? findBibleEntry(storage.getSavedBible()) ?? defaultBibleEntry();
         key = entry && bibleKey(entry);
@@ -548,8 +561,9 @@ async function show(params: PathParams, biblesReady: Promise<void>): Promise<voi
 /** Creates the reader screen; `router` gives access to the router that displays it. */
 export function createReaderScreen(router: () => Router): Screen {
     getRouter = router;
-    state.instructionsHtml = byId('result').innerHTML;
     updateUploadVisibility();
+    updateBooksTitle();
+    onUiLanguageChange(refreshTranslatedTexts);
 
     setupExpandableSections();
     setupFormatButtons();

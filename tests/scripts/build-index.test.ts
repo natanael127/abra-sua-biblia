@@ -147,12 +147,22 @@ describe('writeIndex', () => {
 
 describe('readSettings', () => {
     it('reads the project settings.json', () => {
-        expect(readSettings(SETTINGS_FILE)).toEqual({ defaultBible: 'por/ave-maria' });
+        expect(readSettings(SETTINGS_FILE)).toEqual({ defaultBible: 'por/ave-maria', defaultLanguage: 'por' });
     });
 
     it('requires the default Bible slug', () => {
         const file = join(dataDir, 'settings.json');
         writeFileSync(file, '{}');
         expect(() => readSettings(file)).toThrow('"defaultBible" must be the language and slug of a Bible');
+    });
+
+    it('requires the default interface language to be a supported one', () => {
+        const file = join(dataDir, 'settings.json');
+        writeFileSync(file, '{"defaultBible": "por/ave-maria"}');
+        expect(() => readSettings(file)).toThrow('"defaultLanguage" must be the ISO 639-3 code of an interface language');
+        writeFileSync(file, '{"defaultBible": "por/ave-maria", "defaultLanguage": "xxx"}');
+        expect(() => readSettings(file)).toThrow('"defaultLanguage" must be the ISO 639-3 code of an interface language');
+        writeFileSync(file, '{"defaultBible": "por/ave-maria", "defaultLanguage": "eng"}');
+        expect(readSettings(file).defaultLanguage).toBe('eng');
     });
 });

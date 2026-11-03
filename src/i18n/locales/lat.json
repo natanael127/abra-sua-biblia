@@ -1,0 +1,129 @@
+{
+    "app": {
+        "title": "Aperi Bibliam tuam!",
+        "description": "Lege Bibliam in versione quam mavis"
+    },
+    "language": {
+        "label": "Lingua interfaciei"
+    },
+    "reader": {
+        "chooseTranslation": "Elige versionem tuam:",
+        "upload": "Imponere fasciculum...",
+        "bibleTypes": {
+            "catholic": "Catholicae",
+            "protestant": "Protestanticae",
+            "other": "Aliae"
+        },
+        "books": "Libri",
+        "booksCount": "Libri ({{count}})",
+        "referencePlaceholder": "Exempli gratia: Mt 5,3-12.21-38"
+    },
+    "buttons": {
+        "theme": {
+            "light": "Thema: Clarum",
+            "dark": "Thema: Obscurum",
+            "auto": "Thema: Automaticum"
+        },
+        "downloadEbf": "Deponere fasciculum EBF confectum",
+        "fileHelp": "Auxilium de impositione",
+        "textSearch": "Quaestio textualis",
+        "history": "Historia quaestionum",
+        "referenceHelp": "Auxilium",
+        "quotes": "Signa citationis in textu",
+        "verseNumbers": "Numeri versuum",
+        "lineBreaks": "Nova linea post singulos versus",
+        "ellipsis": "Signum continuationis in versibus divisis",
+        "parenthesesCitation": "Citatio post textum",
+        "sectionTitles": "Tituli sectionum",
+        "prevChapter": "Caput praecedens",
+        "nextChapter": "Caput sequens",
+        "copy": "Describere textum",
+        "share": "Communicare",
+        "close": "Claudere"
+    },
+    "help": {
+        "intro": "Scribe locum biblicum in una ex his formis:",
+        "chapter": {
+            "format": "Liber caput",
+            "description": "Ostendit totum caput",
+            "example": "(exempli gratia: <code>Mt 5</code> ut totum caput quintum Matthaei ostendatur)"
+        },
+        "verse": {
+            "format": "Liber caput,versus",
+            "description": "Ostendit unum versum certum",
+            "example": "(exempli gratia: <code>Mt 5,13</code> pro Matthaeo, capite 5, versu 13)"
+        },
+        "from": {
+            "format": "Liber caput,versus-",
+            "description": "Ostendit a certo versu usque ad finem",
+            "example": "(exempli gratia: <code>Mt 5,3-</code> pro Matthaeo, capite 5, a versu 3 usque ad finem)"
+        },
+        "range": {
+            "format": "Liber caput,initium-finis",
+            "description": "Ostendit seriem versuum",
+            "example": "(exempli gratia: <code>Mt 5,3-12</code> pro Matthaeo, capite 5, versibus 3 ad 12)"
+        },
+        "combined": {
+            "format": "Liber caput,versus coniuncti",
+            "description": "Utere puncto ad versus vel series non continuas separandas",
+            "example": "(exempli gratia: <code>Mt 5,3-12.21-38</code> pro Matthaeo, capite 5, versibus 3 ad 12, et versibus 21 ad 38)"
+        }
+    },
+    "about": {
+        "title": "De hoc situ",
+        "developedBy": "Elaboravit:",
+        "translationsAveMariaCnbb": "Versiones Ave-Maria et CNBB:",
+        "translationsAaAcfNvi": "Versiones AA, ACF et NVI:",
+        "translationPadreMatosSoares": "Versio Patris Matos Soares:",
+        "version": "Forma paginae:"
+    },
+    "messages": {
+        "bibleLoadError": "Error in Biblia imponenda",
+        "unsupportedFormat": "Forma fasciculi non sustinetur",
+        "invalidFile": "Fasciculus Bibliae invalidus",
+        "textCopied": "Textus descriptus est",
+        "copyError": "Error in textu describendo",
+        "linkCopied": "Nexus descriptus est",
+        "linkCopyError": "Error in nexu describendo",
+        "translationNotFound": "Versio non inventa est",
+        "cannotShareUpload": "Loci Bibliarum manu impositarum communicari non possunt."
+    },
+    "errors": {
+        "noBibleLoaded": "Nullus fasciculus Bibliae impositus est.",
+        "invalidBible": "Fasciculus Bibliae invalidus vel corruptus est.",
+        "bookNotFound": "Liber \"{{book}}\" non inventus est.",
+        "chapterNotFound": "Caput {{chapter}} in {{book}} non inventum est."
+    },
+    "modals": {
+        "history": {
+            "title": "Historia quaestionum",
+            "empty": "Nullae quaestiones recentes"
+        },
+        "referenceHelp": {
+            "title": "Locus biblicus"
+        },
+        "fileHelp": {
+            "title": "Impositio fasciculorum",
+            "formats": "Formae quae sustinentur:",
+            "repositories": "Repositoria Bibliarum:",
+            "convertedBibles": "Bibliae in EBF conversae",
+            "osisBibles": "Bibliae in forma OSIS"
+        },
+        "textSearch": {
+            "title": "Quaestio textualis",
+            "placeholder": "Scribe saltem {{min}} litteras...",
+            "orderLabel": "Ordo eventuum",
+            "relevance": "Pertinentia",
+            "byBook": "Secundum libros",
+            "preparing": "Quaestio secundum pertinentiam paratur…",
+            "bibleOrder": "Secundum ordinem Bibliae",
+            "byRelevance": "Secundum pertinentiam",
+            "mostRelevant": "{{shown}} maxime pertinentes ex {{total}}",
+            "firstResults": "Primi {{shown}} ex {{total}}",
+            "results_one": "{{count}} eventus",
+            "results_other": "{{count}} eventus",
+            "noBible": "Nulla Biblia imposita est",
+            "noResults": "Nulli versus inventi sunt"
+        }
+    }
+}

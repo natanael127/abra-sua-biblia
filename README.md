@@ -7,9 +7,9 @@ Built with TypeScript and [Vite](https://vite.dev), deployed on [Vercel](https:/
 ## Language policy
 
 All source code and documentation in this project (comments, identifiers, tests, README and any
-other docs) must be written in **English**. The only exception is the user interface: the texts
-the site shows to its users stay in **Brazilian Portuguese**, as do the Bible data and the test
-fixtures that depend on them.
+other docs) must be written in **English**. The exceptions are the translations of the user
+interface (`src/i18n/locales/`, see [Interface languages](#interface-languages)), the Bible data and
+the test fixtures that depend on them, which are in Portuguese.
 
 ## Development
 
@@ -65,13 +65,14 @@ dependencies.
 
 ```
 index.html              page (Vite entry point)
-settings.json           site configuration (default Bible)
+settings.json           site configuration (default Bible and default interface language)
 src/
   core/                 pure logic: EBF1 format, references, rendering, search, XML
   data/                 loading of the index and of the Bibles
   router/               SPA router (History API), independent of the screens
   screens/              screens; reader/ is the reading one (/{bible}/{book}/{passage})
-  ui/                   theme, modals, messages, preferences
+  ui/                   theme, language combobox, modals, messages, preferences
+  i18n/                 interface languages: i18next setup, detection, flags and locales/*.json
   sw/                   service worker (Workbox)
   app.ts                registration of the screens and routes
 public/                 copied unchanged into the build
@@ -82,6 +83,39 @@ scripts/                build-index.ts (generates index.json) and check-dist.mjs
 tests/                  unit tests (Vitest)
 e2e/                    end-to-end tests (Playwright)
 ```
+
+## Interface languages
+
+The texts of the interface are translated into 17 languages (the Bible translations are a separate
+matter: any language can be read with any interface language). They use
+[i18next](https://www.i18next.com), with one file per language in `src/i18n/locales/`, named by the
+ISO 639-3 code (`por.json`, `eng.json`, `cmn.json`...). Portuguese is the reference: its keys type
+`t()` and `tests/i18n` fail if another language lacks a key, has an empty text, changes the
+placeholders (`{{count}}`) or lacks a plural form that its language uses.
+
+The language shown is, in order of priority:
+
+1. the one the user chose in the combobox, saved in `localStorage` (`uiLanguage`);
+2. the first language of the browser (`navigator.languages`) that has a translation;
+3. the default language of `settings.json` (`defaultLanguage`, below).
+
+Texts are marked in `index.html` with `data-i18n` (text), `data-i18n-html`, `data-i18n-title`,
+`data-i18n-placeholder`, `data-i18n-aria-label` and `data-i18n-content` (attributes); the ones built
+by the code use `t('some.key')`. The modals are recreated in the new language when the language
+changes. Arabic and Urdu are right to left: the page receives `dir="rtl"` and is mirrored, while the
+Bible text keeps its own direction (`dir="auto"`).
+
+To add a language:
+
+1. add it to `UI_LANGUAGES` in `src/i18n/languages.ts` (ISO 639-3 code, BCP 47 tag, native name and
+   direction) and keep the list alphabetical by code, which is the order of the combobox;
+2. create `src/i18n/locales/<code>.json` with the same keys as `por.json`, and import it in
+   `src/i18n/index.ts`;
+3. add its flag in `src/i18n/flags.ts` (from [flag-icons](https://github.com/lipis/flag-icons)).
+
+`npm run check` tells what is missing. The page title, `<meta>` tags for link previews and
+`manifest.json` are static, in Portuguese; only `<title>` and the `description` change with the
+language.
 
 ## Bibles
 
@@ -102,10 +136,15 @@ books), language (ISO 639-3) and URL slug, all taken from the file name (`por_av
 → `/por/ave-maria`, which opens at `/por/ave-maria/jo/3,16`). The file name must start with the
 language. The build fails if a name is repeated or if a slug is repeated within the same language.
 
-The Bible opened on the first visit is set in `settings.json`, by language and slug:
+The Bible opened on the first visit is set in `settings.json`, by language and slug (`defaultBible`).
+
+The interface language used when the user has not chosen one and the browser's has no translation
+is also set in `settings.json`, by the ISO 639-3 code of one of the interface languages. The build
+fails if it is not one of them:
 
 ```json
 {
-    "defaultBible": "por/ave-maria"
+    "defaultBible": "por/ave-maria",
+    "defaultLanguage": "por"
 }
 ```

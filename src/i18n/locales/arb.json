@@ -1,0 +1,133 @@
+{
+    "app": {
+        "title": "افتح كتابك المقدّس!",
+        "description": "اقرأ الكتاب المقدّس بالترجمة التي تفضّلها"
+    },
+    "language": {
+        "label": "لغة الواجهة"
+    },
+    "reader": {
+        "chooseTranslation": "اختر ترجمتك:",
+        "upload": "رفع ملف...",
+        "bibleTypes": {
+            "catholic": "كاثوليكية",
+            "protestant": "بروتستانتية",
+            "other": "أخرى"
+        },
+        "books": "الأسفار",
+        "booksCount": "الأسفار ({{count}})",
+        "referencePlaceholder": "مثال: Mt 5,3-12.21-38"
+    },
+    "buttons": {
+        "theme": {
+            "light": "المظهر: فاتح",
+            "dark": "المظهر: داكن",
+            "auto": "المظهر: تلقائي"
+        },
+        "downloadEbf": "تنزيل ملف EBF الذي تم إنشاؤه",
+        "fileHelp": "مساعدة حول الرفع",
+        "textSearch": "بحث نصي",
+        "history": "سجلّ البحث",
+        "referenceHelp": "مساعدة",
+        "quotes": "علامات الاقتباس في النص",
+        "verseNumbers": "أرقام الآيات",
+        "lineBreaks": "سطر جديد بعد كل آية",
+        "ellipsis": "رمز الاستمرار في الآيات المجزّأة",
+        "parenthesesCitation": "المرجع بعد النص",
+        "sectionTitles": "عناوين الأقسام",
+        "prevChapter": "الإصحاح السابق",
+        "nextChapter": "الإصحاح التالي",
+        "copy": "نسخ النص",
+        "share": "مشاركة",
+        "close": "إغلاق"
+    },
+    "help": {
+        "intro": "اكتب المرجع الكتابي بإحدى الصيغ التالية:",
+        "chapter": {
+            "format": "السفر إصحاح",
+            "description": "يعرض الإصحاح كاملاً",
+            "example": "(مثال: <code>Mt 5</code> لعرض الإصحاح الخامس من إنجيل متّى كاملاً)"
+        },
+        "verse": {
+            "format": "السفر إصحاح,آية",
+            "description": "يعرض آية محددة",
+            "example": "(مثال: <code>Mt 5,13</code> لإنجيل متّى، الإصحاح 5، الآية 13)"
+        },
+        "from": {
+            "format": "السفر إصحاح,آية-",
+            "description": "يعرض ابتداءً من آية محددة",
+            "example": "(مثال: <code>Mt 5,3-</code> لإنجيل متّى، الإصحاح 5، ابتداءً من الآية 3)"
+        },
+        "range": {
+            "format": "السفر إصحاح,بداية-نهاية",
+            "description": "يعرض نطاقاً من الآيات",
+            "example": "(مثال: <code>Mt 5,3-12</code> لإنجيل متّى، الإصحاح 5، الآيات من 3 إلى 12)"
+        },
+        "combined": {
+            "format": "السفر إصحاح,آيات مجمّعة",
+            "description": "استخدم النقطة للفصل بين الآيات أو النطاقات غير المتتالية",
+            "example": "(مثال: <code>Mt 5,3-12.21-38</code> لإنجيل متّى، الإصحاح 5، الآيات من 3 إلى 12، إضافةً إلى الآيات من 21 إلى 38)"
+        }
+    },
+    "about": {
+        "title": "حول الموقع",
+        "developedBy": "تطوير:",
+        "translationsAveMariaCnbb": "ترجمتا Ave-Maria وCNBB:",
+        "translationsAaAcfNvi": "ترجمات AA وACF وNVI:",
+        "translationPadreMatosSoares": "ترجمة الأب ماتوس سواريس:",
+        "version": "إصدار الصفحة:"
+    },
+    "messages": {
+        "bibleLoadError": "حدث خطأ أثناء تحميل الكتاب المقدّس",
+        "unsupportedFormat": "صيغة الملف غير مدعومة",
+        "invalidFile": "ملف الكتاب المقدّس غير صالح",
+        "textCopied": "تم نسخ النص",
+        "copyError": "حدث خطأ أثناء نسخ النص",
+        "linkCopied": "تم نسخ الرابط",
+        "linkCopyError": "حدث خطأ أثناء نسخ الرابط",
+        "translationNotFound": "الترجمة غير موجودة",
+        "cannotShareUpload": "لا يمكن مشاركة مراجع الكتب المقدّسة التي حُمّلت يدوياً."
+    },
+    "errors": {
+        "noBibleLoaded": "لم يتم تحميل أي ملف للكتاب المقدّس.",
+        "invalidBible": "ملف الكتاب المقدّس غير صالح أو تالف.",
+        "bookNotFound": "السفر \"{{book}}\" غير موجود.",
+        "chapterNotFound": "الإصحاح {{chapter}} غير موجود في {{book}}."
+    },
+    "modals": {
+        "history": {
+            "title": "سجلّ البحث",
+            "empty": "لا توجد عمليات بحث حديثة"
+        },
+        "referenceHelp": {
+            "title": "المرجع الكتابي"
+        },
+        "fileHelp": {
+            "title": "رفع الملفات",
+            "formats": "الصيغ المدعومة:",
+            "repositories": "مستودعات الكتب المقدّسة:",
+            "convertedBibles": "كتب مقدّسة محوّلة إلى EBF",
+            "osisBibles": "كتب مقدّسة بصيغة OSIS"
+        },
+        "textSearch": {
+            "title": "بحث نصي",
+            "placeholder": "اكتب {{min}} أحرف على الأقل...",
+            "orderLabel": "ترتيب النتائج",
+            "relevance": "الصلة",
+            "byBook": "حسب السفر",
+            "preparing": "جارٍ تجهيز البحث حسب الصلة…",
+            "bibleOrder": "بحسب ترتيب الكتاب المقدّس",
+            "byRelevance": "حسب الصلة",
+            "mostRelevant": "أكثر {{shown}} نتائج صلة من أصل {{total}}",
+            "firstResults": "أول {{shown}} من أصل {{total}}",
+            "results_zero": "لا توجد نتائج",
+            "results_one": "نتيجة واحدة",
+            "results_two": "نتيجتان",
+            "results_few": "{{count}} نتائج",
+            "results_many": "{{count}} نتيجة",
+            "results_other": "{{count}} نتيجة",
+            "noBible": "لم يتم تحميل أي كتاب مقدّس",
+            "noResults": "لم يتم العثور على آيات"
+        }
+    }
+}

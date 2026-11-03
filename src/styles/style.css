@@ -90,6 +90,8 @@ body {
 }
 .main-content {
     flex: 1;
+    /* Never wider than the screen, whatever the width of its contents (e.g. the translation select) */
+    min-width: 0;
 }
 .container {
     display: flex;
@@ -216,7 +218,7 @@ button:hover {
 
 .bible-selection span {
     white-space: nowrap;
-    margin-right: 10px;
+    margin-inline-end: 10px;
 }
 
 .bible-option {
@@ -239,8 +241,12 @@ button:hover {
 }
 
 #bible-select {
-    width: auto;
+    /* Takes the room left by the other controls instead of the width of its longest option,
+       otherwise on a phone the page gets wider than the screen */
+    width: 0;
     flex: 1;
+    min-width: 0;
+    text-overflow: ellipsis;
     padding: 10px;
     border: 1px solid var(--border-accent);
     border-radius: 4px;
@@ -596,7 +602,7 @@ a:visited {
 
 .text-search-order {
     display: inline-flex;
-    margin-left: auto;
+    margin-inline-start: auto;
     border: 1px solid var(--border-color);
     border-radius: 6px;
     overflow: hidden;
@@ -612,7 +618,7 @@ a:visited {
 }
 
 .text-search-order-option + .text-search-order-option {
-    border-left: 1px solid var(--border-color);
+    border-inline-start: 1px solid var(--border-color);
 }
 
 .text-search-order-option:hover {
@@ -694,4 +700,98 @@ a:visited {
 .build-version {
     font-style: italic;
     font-size: 0.85em;
+}
+
+/* Interface language combobox: flag + ISO 639-3 code */
+.language-select {
+    position: relative;
+    flex: none;
+}
+
+.language-button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px;
+    border: 1px solid var(--border-accent);
+    border-radius: 4px;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.language-button:hover {
+    background-color: var(--bg-accent);
+}
+
+.language-button::after {
+    content: '▾';
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.language-button:focus-visible {
+    outline: none;
+    border-color: var(--success-color);
+}
+
+.language-flag {
+    display: block;
+    width: 24px;
+    height: 18px;
+    border-radius: 2px;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+    object-fit: cover;
+}
+
+.bible-selection .language-code {
+    margin: 0;
+}
+
+.language-listbox {
+    position: absolute;
+    inset-block-start: 100%;
+    inset-inline-start: 0;
+    z-index: 20;
+    min-width: 100%;
+    max-height: min(60vh, 360px);
+    margin: 4px 0 0;
+    padding: 4px 0;
+    overflow-y: auto;
+    list-style: none;
+    border: 1px solid var(--border-accent);
+    border-radius: 4px;
+    background-color: var(--bg-primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.language-listbox[hidden] {
+    display: none;
+}
+
+.language-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+.language-option:hover,
+.language-option.active {
+    background-color: var(--bg-accent-hover);
+}
+
+.language-option[aria-selected='true'] {
+    font-weight: bold;
+}
+
+/* Right-to-left languages: the arrows that mean "previous" and "next" point the other way */
+[dir='rtl'] #prev-chapter-button,
+[dir='rtl'] #next-chapter-button,
+[dir='rtl'] #floating-prev-chapter-button,
+[dir='rtl'] #floating-next-chapter-button {
+    transform: scaleX(-1);
 }

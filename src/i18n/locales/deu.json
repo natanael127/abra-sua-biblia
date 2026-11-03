@@ -1,0 +1,129 @@
+{
+    "app": {
+        "title": "Schlag deine Bibel auf!",
+        "description": "Lies die Bibel in der Übersetzung deiner Wahl"
+    },
+    "language": {
+        "label": "Sprache der Oberfläche"
+    },
+    "reader": {
+        "chooseTranslation": "Wähle deine Übersetzung:",
+        "upload": "Datei hochladen...",
+        "bibleTypes": {
+            "catholic": "Katholische",
+            "protestant": "Evangelische",
+            "other": "Andere"
+        },
+        "books": "Bücher",
+        "booksCount": "Bücher ({{count}})",
+        "referencePlaceholder": "z. B.: Mt 5,3-12.21-38"
+    },
+    "buttons": {
+        "theme": {
+            "light": "Design: Hell",
+            "dark": "Design: Dunkel",
+            "auto": "Design: Automatisch"
+        },
+        "downloadEbf": "Erzeugte EBF-Datei herunterladen",
+        "fileHelp": "Hilfe zum Hochladen",
+        "textSearch": "Textsuche",
+        "history": "Suchverlauf",
+        "referenceHelp": "Hilfe",
+        "quotes": "Anführungszeichen im Text",
+        "verseNumbers": "Versnummern",
+        "lineBreaks": "Zeilenumbruch nach jedem Vers",
+        "ellipsis": "Fortsetzungszeichen bei geteilten Versen",
+        "parenthesesCitation": "Quellenangabe nach dem Text",
+        "sectionTitles": "Abschnittsüberschriften",
+        "prevChapter": "Vorheriges Kapitel",
+        "nextChapter": "Nächstes Kapitel",
+        "copy": "Text kopieren",
+        "share": "Teilen",
+        "close": "Schließen"
+    },
+    "help": {
+        "intro": "Gib die Bibelstelle in einem der folgenden Formate ein:",
+        "chapter": {
+            "format": "Buch Kapitel",
+            "description": "Zeigt das ganze Kapitel",
+            "example": "(z. B. <code>Mt 5</code>, um das ganze 5. Kapitel des Matthäus anzuzeigen)"
+        },
+        "verse": {
+            "format": "Buch Kapitel,Vers",
+            "description": "Zeigt einen bestimmten Vers",
+            "example": "(z. B. <code>Mt 5,13</code> für Matthäus, Kapitel 5, Vers 13)"
+        },
+        "from": {
+            "format": "Buch Kapitel,Vers-",
+            "description": "Zeigt ab einem bestimmten Vers",
+            "example": "(z. B. <code>Mt 5,3-</code> für Matthäus, Kapitel 5, ab Vers 3)"
+        },
+        "range": {
+            "format": "Buch Kapitel,Anfang-Ende",
+            "description": "Zeigt einen Versbereich",
+            "example": "(z. B. <code>Mt 5,3-12</code> für Matthäus, Kapitel 5, Verse 3 bis 12)"
+        },
+        "combined": {
+            "format": "Buch Kapitel,kombinierte Verse",
+            "description": "Trenne Verse oder Bereiche, die nicht aufeinanderfolgen, mit einem Punkt",
+            "example": "(z. B. <code>Mt 5,3-12.21-38</code> für Matthäus, Kapitel 5, Verse 3 bis 12 sowie die Verse 21 bis 38)"
+        }
+    },
+    "about": {
+        "title": "Über",
+        "developedBy": "Entwickelt von:",
+        "translationsAveMariaCnbb": "Übersetzungen Ave-Maria und CNBB:",
+        "translationsAaAcfNvi": "Übersetzungen AA, ACF und NVI:",
+        "translationPadreMatosSoares": "Übersetzung von Pater Matos Soares:",
+        "version": "Version der Seite:"
+    },
+    "messages": {
+        "bibleLoadError": "Fehler beim Laden der Bibel",
+        "unsupportedFormat": "Dateiformat nicht unterstützt",
+        "invalidFile": "Ungültige Bibeldatei",
+        "textCopied": "Text kopiert",
+        "copyError": "Fehler beim Kopieren des Textes",
+        "linkCopied": "Link kopiert",
+        "linkCopyError": "Fehler beim Kopieren des Links",
+        "translationNotFound": "Übersetzung nicht gefunden",
+        "cannotShareUpload": "Stellen aus manuell geladenen Bibeln können nicht geteilt werden."
+    },
+    "errors": {
+        "noBibleLoaded": "Es wurde keine Bibeldatei geladen.",
+        "invalidBible": "Bibeldatei ungültig oder beschädigt.",
+        "bookNotFound": "Buch „{{book}}“ nicht gefunden.",
+        "chapterNotFound": "Kapitel {{chapter}} in {{book}} nicht gefunden."
+    },
+    "modals": {
+        "history": {
+            "title": "Suchverlauf",
+            "empty": "Keine letzten Suchen"
+        },
+        "referenceHelp": {
+            "title": "Bibelstelle"
+        },
+        "fileHelp": {
+            "title": "Datei hochladen",
+            "formats": "Unterstützte Formate:",
+            "repositories": "Bibel-Sammlungen:",
+            "convertedBibles": "In EBF konvertierte Bibeln",
+            "osisBibles": "Bibeln im OSIS-Format"
+        },
+        "textSearch": {
+            "title": "Textsuche",
+            "placeholder": "Gib mindestens {{min}} Zeichen ein...",
+            "orderLabel": "Reihenfolge der Ergebnisse",
+            "relevance": "Relevanz",
+            "byBook": "Nach Buch",
+            "preparing": "Die Relevanzsuche wird vorbereitet…",
+            "bibleOrder": "In der Reihenfolge der Bibel",
+            "byRelevance": "Nach Relevanz",
+            "mostRelevant": "Die {{shown}} relevantesten von {{total}}",
+            "firstResults": "Die ersten {{shown}} von {{total}}",
+            "results_one": "{{count}} Ergebnis",
+            "results_other": "{{count}} Ergebnisse",
+            "noBible": "Keine Bibel geladen",
+            "noResults": "Keine Verse gefunden"
+        }
+    }
+}

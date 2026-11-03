@@ -757,3 +757,132 @@ test.describe('URL and browser history', () => {
         }
     });
 });
+
+test.describe('interface language', () => {
+    const languageButton = (page: Page) => page.locator('#language-button');
+    const languageOption = (page: Page, code: string) => page.locator(`#language-option-${code}`);
+
+    test.describe('browser in English', () => {
+        test.use({ locale: 'en-US' });
+
+        test('without a saved choice, follows the browser language', async ({ page }) => {
+            await open(page);
+            await expect(languageButton(page)).toContainText('eng');
+            await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+            await expect(page.locator('.page-title')).toHaveText('Choose your translation:');
+            await expect(page).toHaveTitle('Jo 3,16 (Ave-Maria) - Open Your Bible!');
+            await reference(page).fill('Mt');
+            await expect(result(page)).toContainText('Type the Bible reference');
+        });
+
+        test('the saved choice wins over the browser language', async ({ page }) => {
+            await page.addInitScript(() => {
+                localStorage.setItem('uiLanguage', 'ita');
+            });
+            await open(page);
+            await expect(languageButton(page)).toContainText('ita');
+            await expect(page.locator('.page-title')).toHaveText('Scegli la tua traduzione:');
+        });
+    });
+
+    test.describe('browser in a language with no translation', () => {
+        test.use({ locale: 'ko-KR' });
+
+        test('uses the default language of settings.json', async ({ page }) => {
+            await open(page);
+            await expect(languageButton(page)).toContainText('por');
+            await expect(page.locator('.page-title')).toHaveText('Escolha sua tradução:');
+        });
+    });
+
+    test('lists the 17 languages with flag and code, and translates the page when one is chosen', async ({ page }) => {
+        await open(page);
+        await expect(languageButton(page)).toContainText('por');
+        await languageButton(page).click();
+        await expect(page.locator('.language-option')).toHaveCount(17);
+        await expect(page.locator('.language-option img')).toHaveCount(17);
+        await expect(languageOption(page, 'por')).toHaveAttribute('aria-selected', 'true');
+
+        await languageOption(page, 'deu').click();
+        await expect(page.locator('#language-listbox')).toBeHidden();
+        await expect(languageButton(page)).toContainText('deu');
+        await expect(page.locator('html')).toHaveAttribute('lang', 'de');
+        await expect(page.locator('.page-title')).toHaveText('Wähle deine Übersetzung:');
+        await expect(page.locator('.book-section .expandable-header')).toContainText('Bücher (73)');
+        await expect(page.locator('#bible-select optgroup').first()).toHaveAttribute('label', 'Katholische');
+        // The reading is not disturbed
+        await expect(page.locator('#bible-select')).toHaveValue('por/ave-maria');
+        await expect(result(page).locator('.verse-text')).toContainText('Deus amou o mundo');
+
+        await page.reload();
+        await expect(languageButton(page)).toContainText('deu');
+        await expect(page.locator('.page-title')).toHaveText('Wähle deine Übersetzung:');
+    });
+
+    test('translates modals and messages, also after a change of language', async ({ page }) => {
+        await open(page);
+        await page.locator('#history-button').click();
+        await expect(page.locator('#history-modal .app-modal-title')).toHaveText('Histórico de buscas');
+        await page.locator('#history-modal .close-modal').click();
+
+        await languageButton(page).click();
+        await languageOption(page, 'eng').click();
+        await page.locator('#history-button').click();
+        await expect(page.locator('#history-modal .app-modal-title')).toHaveText('Search history');
+        await page.locator('#history-modal .close-modal').click();
+
+        await reference(page).fill('Xx 1');
+        await expect(result(page)).toContainText('Book "Xx" not found.');
+    });
+
+    test('works with the keyboard', async ({ page }) => {
+        await open(page);
+        await languageButton(page).focus();
+        await page.keyboard.press('ArrowDown');
+        await expect(languageButton(page)).toHaveAttribute('aria-expanded', 'true');
+        await page.keyboard.type('fr');
+        await page.keyboard.press('Enter');
+        await expect(languageButton(page)).toContainText('fra');
+        await expect(languageButton(page)).toHaveAttribute('aria-expanded', 'false');
+
+        await page.keyboard.press('Enter');
+        await expect(languageButton(page)).toHaveAttribute('aria-expanded', 'true');
+        await page.keyboard.press('Escape');
+        await expect(languageButton(page)).toHaveAttribute('aria-expanded', 'false');
+        await expect(languageButton(page)).toContainText('fra');
+    });
+
+    test('Arabic and Urdu mirror the page; the Bible text keeps its own direction', async ({ page }) => {
+        await open(page);
+        await languageButton(page).click();
+        await languageOption(page, 'arb').click();
+        await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+        await expect(page.locator('html')).toHaveAttribute('lang', 'ar');
+        await expect(result(page).locator('.verse-text')).toContainText('Deus amou o mundo');
+        await expect(result(page)).toHaveAttribute('dir', 'auto');
+
+        await languageButton(page).click();
+        await languageOption(page, 'eng').click();
+        await expect(page.locator('html')).toHaveAttribute('dir', 'ltr');
+    });
+
+    test('the translation row fits on the screen, with the language to the left of the translation', async ({ page }) => {
+        await open(page);
+        const viewport = page.viewportSize();
+        const language = await languageButton(page).boundingBox();
+        const select = await page.locator('#bible-select').boundingBox();
+        const theme = await page.locator('#theme-button').boundingBox();
+        expect(language && select && theme).toBeTruthy();
+        if (!language || !select || !theme || !viewport) return;
+        expect(language.x + language.width).toBeLessThanOrEqual(select.x);
+        expect(select.x + select.width).toBeLessThanOrEqual(theme.x + 1);
+        expect(theme.x + theme.width).toBeLessThanOrEqual(viewport.width);
+        // Same line
+        expect(Math.abs(language.y - select.y)).toBeLessThan(4);
+
+        // The open list is within the screen too
+        await languageButton(page).click();
+        const list = await page.locator('#language-listbox').boundingBox();
+        expect(list && list.x >= 0 && list.x + list.width <= viewport.width).toBe(true);
+    });
+});

@@ -5,6 +5,7 @@
  */
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
+import { findUiLanguage } from '../src/i18n/languages.ts';
 
 export const ROOT_DIR = resolve(import.meta.dirname, '..');
 /** Data folder published by the site (holds index.json and the Bibles). */
@@ -38,6 +39,8 @@ export interface IndexEntry {
 export interface Settings {
     /** Language and slug of the Bible opened on the first visit, e.g. "por/ave-maria". */
     defaultBible: string;
+    /** ISO 639-3 code of the interface language used when the user has not chosen one and the browser's has no translation, e.g. "por". */
+    defaultLanguage: string;
 }
 
 export function readSettings(file = SETTINGS_FILE): Settings {
@@ -45,7 +48,12 @@ export function readSettings(file = SETTINGS_FILE): Settings {
     if (typeof settings.defaultBible !== 'string' || !settings.defaultBible) {
         throw new Error(`${file}: "defaultBible" must be the language and slug of a Bible, e.g.: "por/ave-maria"`);
     }
-    return { defaultBible: settings.defaultBible };
+    if (!findUiLanguage(settings.defaultLanguage)) {
+        throw new Error(
+            `${file}: "defaultLanguage" must be the ISO 639-3 code of an interface language, e.g.: "por"`,
+        );
+    }
+    return { defaultBible: settings.defaultBible, defaultLanguage: settings.defaultLanguage as string };
 }
 
 export function getBibleType(numBooks: number): BibleType {
@@ -78,7 +86,7 @@ interface BibleFile {
 }
 
 /** Builds the index; throws an error with the cause if anything prevents a valid index. */
-export function buildIndex(dataDir = DATA_DIR, settings: Settings = readSettings()): IndexEntry[] {
+export function buildIndex(dataDir = DATA_DIR, settings: Pick<Settings, 'defaultBible'> = readSettings()): IndexEntry[] {
     const entries: IndexEntry[] = [];
 
     for (const directory of BIBLE_DIRECTORIES) {
@@ -134,7 +142,7 @@ export function buildIndex(dataDir = DATA_DIR, settings: Settings = readSettings
 }
 
 /** Generates and writes index.json; returns the generated index. */
-export function writeIndex(dataDir = DATA_DIR, settings: Settings = readSettings()): IndexEntry[] {
+export function writeIndex(dataDir = DATA_DIR, settings: Pick<Settings, 'defaultBible'> = readSettings()): IndexEntry[] {
     const entries = buildIndex(dataDir, settings);
     writeFileSync(join(dataDir, 'index.json'), `${JSON.stringify(entries, null, 4)}\n`);
     return entries;

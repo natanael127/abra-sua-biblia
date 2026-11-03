@@ -1,0 +1,129 @@
+{
+    "app": {
+        "title": "আপনার বাইবেল খুলুন!",
+        "description": "আপনার পছন্দের অনুবাদে বাইবেল পড়ুন"
+    },
+    "language": {
+        "label": "ইন্টারফেসের ভাষা"
+    },
+    "reader": {
+        "chooseTranslation": "আপনার অনুবাদ বেছে নিন:",
+        "upload": "ফাইল আপলোড করুন...",
+        "bibleTypes": {
+            "catholic": "ক্যাথলিক",
+            "protestant": "প্রোটেস্ট্যান্ট",
+            "other": "অন্যান্য"
+        },
+        "books": "পুস্তক",
+        "booksCount": "পুস্তক ({{count}})",
+        "referencePlaceholder": "যেমন: Mt 5,3-12.21-38"
+    },
+    "buttons": {
+        "theme": {
+            "light": "থিম: হালকা",
+            "dark": "থিম: গাঢ়",
+            "auto": "থিম: স্বয়ংক্রিয়"
+        },
+        "downloadEbf": "তৈরি হওয়া EBF ফাইল ডাউনলোড করুন",
+        "fileHelp": "আপলোড সম্পর্কে সাহায্য",
+        "textSearch": "পাঠ্য অনুসন্ধান",
+        "history": "অনুসন্ধানের ইতিহাস",
+        "referenceHelp": "সাহায্য",
+        "quotes": "পাঠ্যে উদ্ধৃতি চিহ্ন",
+        "verseNumbers": "পদের সংখ্যা",
+        "lineBreaks": "প্রতিটি পদের পর নতুন লাইন",
+        "ellipsis": "ভাগ হওয়া পদে ধারাবাহিকতার চিহ্ন",
+        "parenthesesCitation": "পাঠ্যের পরে সূত্র",
+        "sectionTitles": "অংশের শিরোনাম",
+        "prevChapter": "আগের অধ্যায়",
+        "nextChapter": "পরের অধ্যায়",
+        "copy": "পাঠ্য কপি করুন",
+        "share": "শেয়ার করুন",
+        "close": "বন্ধ করুন"
+    },
+    "help": {
+        "intro": "নিচের যেকোনো একটি ফরম্যাটে বাইবেলের সূত্র লিখুন:",
+        "chapter": {
+            "format": "পুস্তক অধ্যায়",
+            "description": "পুরো অধ্যায় দেখায়",
+            "example": "(যেমন: <code>Mt 5</code> লিখলে মথির ৫ম অধ্যায় পুরোটা দেখাবে)"
+        },
+        "verse": {
+            "format": "পুস্তক অধ্যায়,পদ",
+            "description": "একটি নির্দিষ্ট পদ দেখায়",
+            "example": "(যেমন: <code>Mt 5,13</code> মানে মথি, অধ্যায় ৫, পদ ১৩)"
+        },
+        "from": {
+            "format": "পুস্তক অধ্যায়,পদ-",
+            "description": "একটি নির্দিষ্ট পদ থেকে শুরু করে দেখায়",
+            "example": "(যেমন: <code>Mt 5,3-</code> মানে মথি, অধ্যায় ৫, ৩ নম্বর পদ থেকে শেষ পর্যন্ত)"
+        },
+        "range": {
+            "format": "পুস্তক অধ্যায়,শুরু-শেষ",
+            "description": "পদের একটি পরিসর দেখায়",
+            "example": "(যেমন: <code>Mt 5,3-12</code> মানে মথি, অধ্যায় ৫, পদ ৩ থেকে ১২)"
+        },
+        "combined": {
+            "format": "পুস্তক অধ্যায়,মিলিত পদ",
+            "description": "ধারাবাহিক নয় এমন পদ বা পরিসর আলাদা করতে বিন্দু (.) ব্যবহার করুন",
+            "example": "(যেমন: <code>Mt 5,3-12.21-38</code> মানে মথি, অধ্যায় ৫, পদ ৩ থেকে ১২ এবং পদ ২১ থেকে ৩৮)"
+        }
+    },
+    "about": {
+        "title": "সম্পর্কে",
+        "developedBy": "তৈরি করেছেন:",
+        "translationsAveMariaCnbb": "Ave-Maria ও CNBB অনুবাদ:",
+        "translationsAaAcfNvi": "AA, ACF ও NVI অনুবাদ:",
+        "translationPadreMatosSoares": "ফাদার মাতোস সোয়ারেসের অনুবাদ:",
+        "version": "পৃষ্ঠার সংস্করণ:"
+    },
+    "messages": {
+        "bibleLoadError": "বাইবেল লোড করতে ত্রুটি হয়েছে",
+        "unsupportedFormat": "ফাইলের ফরম্যাট সমর্থিত নয়",
+        "invalidFile": "বাইবেলের ফাইলটি অবৈধ",
+        "textCopied": "পাঠ্য কপি হয়েছে",
+        "copyError": "পাঠ্য কপি করতে ত্রুটি হয়েছে",
+        "linkCopied": "লিংক কপি হয়েছে",
+        "linkCopyError": "লিংক কপি করতে ত্রুটি হয়েছে",
+        "translationNotFound": "অনুবাদ পাওয়া যায়নি",
+        "cannotShareUpload": "হাতে লোড করা বাইবেলের সূত্র শেয়ার করা যায় না।"
+    },
+    "errors": {
+        "noBibleLoaded": "কোনো বাইবেল ফাইল লোড করা হয়নি।",
+        "invalidBible": "বাইবেল ফাইলটি অবৈধ বা নষ্ট।",
+        "bookNotFound": "\"{{book}}\" পুস্তকটি পাওয়া যায়নি।",
+        "chapterNotFound": "{{book}}-এ {{chapter}} অধ্যায় পাওয়া যায়নি।"
+    },
+    "modals": {
+        "history": {
+            "title": "অনুসন্ধানের ইতিহাস",
+            "empty": "সাম্প্রতিক কোনো অনুসন্ধান নেই"
+        },
+        "referenceHelp": {
+            "title": "বাইবেলের সূত্র"
+        },
+        "fileHelp": {
+            "title": "ফাইল আপলোড",
+            "formats": "সমর্থিত ফরম্যাট:",
+            "repositories": "বাইবেলের সংগ্রহ:",
+            "convertedBibles": "EBF-এ রূপান্তরিত বাইবেল",
+            "osisBibles": "OSIS ফরম্যাটের বাইবেল"
+        },
+        "textSearch": {
+            "title": "পাঠ্য অনুসন্ধান",
+            "placeholder": "কমপক্ষে {{min}}টি অক্ষর লিখুন...",
+            "orderLabel": "ফলাফলের ক্রম",
+            "relevance": "প্রাসঙ্গিকতা",
+            "byBook": "পুস্তক অনুসারে",
+            "preparing": "প্রাসঙ্গিকতা অনুযায়ী অনুসন্ধান প্রস্তুত হচ্ছে…",
+            "bibleOrder": "বাইবেলের ক্রমে",
+            "byRelevance": "প্রাসঙ্গিকতা অনুসারে",
+            "mostRelevant": "{{total}}টির মধ্যে সবচেয়ে প্রাসঙ্গিক {{shown}}টি",
+            "firstResults": "{{total}}টির মধ্যে প্রথম {{shown}}টি",
+            "results_one": "{{count}}টি ফলাফল",
+            "results_other": "{{count}}টি ফলাফল",
+            "noBible": "কোনো বাইবেল লোড করা নেই",
+            "noResults": "কোনো পদ পাওয়া যায়নি"
+        }
+    }
+}

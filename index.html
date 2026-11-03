@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abra sua Bíblia!</title>
+    <title data-i18n="app.title">Abra sua Bíblia!</title>
     <link rel="shortcut icon" href="/assets/icons/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/assets/icons/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" href="/assets/icons/icon-192x192.png">
@@ -11,8 +11,8 @@
     <meta name="theme-color" content="#4a6da7">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Abra sua Bíblia">
-    <meta name="description" content="Leia a Bíblia usando a tradução de sua preferência">
+    <meta name="apple-mobile-web-app-title" content="Abra sua Bíblia" data-i18n-content="app.title">
+    <meta name="description" content="Leia a Bíblia usando a tradução de sua preferência" data-i18n-content="app.description">
     
     <!-- Open Graph / WhatsApp / Facebook -->
     <meta property="og:type" content="website">
@@ -49,9 +49,16 @@
         <div class="container">
             <div class="preloaded-bibles">
                 <div class="bible-selection">
-                    <h3 class="page-title">Escolha sua tradução:</h3>
+                    <h3 class="page-title" data-i18n="reader.chooseTranslation">Escolha sua tradução:</h3>
                 </div>
                 <div class="bible-selection">
+                    <div id="language-select" class="language-select">
+                        <button type="button" id="language-button" class="language-button" role="combobox"
+                                aria-haspopup="listbox" aria-expanded="false" aria-controls="language-listbox"
+                                data-i18n-aria-label="language.label" data-i18n-title="language.label"></button>
+                        <ul id="language-listbox" class="language-listbox" role="listbox" hidden
+                            data-i18n-aria-label="language.label"></ul>
+                    </div>
                     <select id="bible-select">
                     </select>
                     <button id="theme-button" class="theme-button" title="Tema: Automático">
@@ -62,16 +69,16 @@
 
             <div class="file-input-container">
                 <input type="file" id="bible-file">
-                <button id="download-ebf-button" class="action-button" title="Baixar arquivo EBF gerado" disabled>
+                <button id="download-ebf-button" class="action-button" title="Baixar arquivo EBF gerado" data-i18n-title="buttons.downloadEbf" disabled>
                     <span class="download-icon">&#x23EC;</span>
                 </button>
-                <button id="file-help-button" class="action-button" title="Ajuda sobre upload">
+                <button id="file-help-button" class="action-button" title="Ajuda sobre upload" data-i18n-title="buttons.fileHelp">
                     <span class="help-icon">&#x2753;</span>
                 </button>
             </div>
 
             <div class="expandable-section book-section">
-                <h3 class="expandable-header">Livros<span class="expand-icon">▼</span></h3>
+                <h3 class="expandable-header"><span id="book-section-title">Livros</span><span class="expand-icon">▼</span></h3>
                 <div class="expandable-content">
                     <div id="book-list" class="book-list">
                         <!-- The book list is filled in dynamically -->
@@ -80,95 +87,65 @@
             </div>
 
             <div class="search-box">
-                <input type="text" id="reference" placeholder="Ex: Mt 5,3-12.21-38">
-                <button id="text-search-button" class="action-button" title="Busca textual">
+                <input type="text" id="reference" placeholder="Ex: Mt 5,3-12.21-38" data-i18n-placeholder="reader.referencePlaceholder" dir="auto">
+                <button id="text-search-button" class="action-button" title="Busca textual" data-i18n-title="buttons.textSearch">
                     <span class="search-icon">&#x1F50E;</span>
                 </button>
-                <button id="history-button" class="action-button" title="Histórico de buscas">
+                <button id="history-button" class="action-button" title="Histórico de buscas" data-i18n-title="buttons.history">
                     <span class="history-icon">&#x23F3;</span>
                 </button>
-                <button id="reference-help-button" class="action-button" title="Ajuda">
+                <button id="reference-help-button" class="action-button" title="Ajuda" data-i18n-title="buttons.referenceHelp">
                     <span class="help-icon">&#x2753;</span>
                 </button>
             </div>
             
             <div class="buttons-block" id="formatting-buttons">
-                <button id="display-quotes" class="format-button" title="Aspas no texto">" "</button>
-                <button id="display-verse-numbers" class="format-button" title="Números dos versículos">123</button>
-                <button id="display-line-breaks" class="format-button" title="Quebra de linha após cada versículo">&#8626;</button>
-                <button id="display-ellipsis" class="format-button" title="Símbolo de continuação nos versículos quebrados">[...]</button>
-                <button id="display-parentheses-citation" class="format-button" title="Citação após o texto">()</button>
-                <button id="display-section-titles" class="format-button" title="Títulos das seções">T</button>
+                <button id="display-quotes" class="format-button" title="Aspas no texto" data-i18n-title="buttons.quotes">" "</button>
+                <button id="display-verse-numbers" class="format-button" title="Números dos versículos" data-i18n-title="buttons.verseNumbers">123</button>
+                <button id="display-line-breaks" class="format-button" title="Quebra de linha após cada versículo" data-i18n-title="buttons.lineBreaks">&#8626;</button>
+                <button id="display-ellipsis" class="format-button" title="Símbolo de continuação nos versículos quebrados" data-i18n-title="buttons.ellipsis">[...]</button>
+                <button id="display-parentheses-citation" class="format-button" title="Citação após o texto" data-i18n-title="buttons.parenthesesCitation">()</button>
+                <button id="display-section-titles" class="format-button" title="Títulos das seções" data-i18n-title="buttons.sectionTitles">T</button>
             </div>
 
             <div class="buttons-block" id="static-action-buttons">
-                <button id="prev-chapter-button" class="action-button" title="Capítulo anterior">&#9664;</button>
-                <button id="copy-button" class="action-button" title="Copiar texto">&#128203;</button>
-                <button id="share-button" class="action-button" title="Compartilhar" aria-label="Compartilhar"><svg class="share-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg></button>
-                <button id="next-chapter-button" class="action-button" title="Próximo capítulo">&#9654;</button>
+                <button id="prev-chapter-button" class="action-button" title="Capítulo anterior" data-i18n-title="buttons.prevChapter">&#9664;</button>
+                <button id="copy-button" class="action-button" title="Copiar texto" data-i18n-title="buttons.copy">&#128203;</button>
+                <button id="share-button" class="action-button" title="Compartilhar" aria-label="Compartilhar" data-i18n-title="buttons.share" data-i18n-aria-label="buttons.share"><svg class="share-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg></button>
+                <button id="next-chapter-button" class="action-button" title="Próximo capítulo" data-i18n-title="buttons.nextChapter">&#9654;</button>
             </div>
 
             <div class="result-container">
-                <div class="result" id="result">
-                    <span class="help-content">
-                        Digite a referência bíblica em um dos seguintes formatos:
-                        <ul>
-                            <li>
-                                <strong>Livro capítulo</strong><br>
-                                Mostra o capítulo completo<br>
-                                (ex: <code>Mt 5</code> para mostrar Mateus capítulo 5 inteiro)
-                            </li>
-                            <li>
-                                <strong>Livro capítulo,versículo</strong><br>
-                                Mostra um versículo específico<br>
-                                (ex: <code>Mt 5,13</code> para Mateus capítulo 5, versículo 13)
-                            </li>
-                            <li>
-                                <strong>Livro capítulo,versículo-</strong><br>
-                                Mostra a partir de um versículo específico<br>
-                                (ex: <code>Mt 5,3-</code> para Mateus capítulo 5, versículos 3 em diante)
-                            </li>
-                            <li>
-                                <strong>Livro capítulo,início-fim</strong><br>
-                                Mostra um intervalo de versículos<br>
-                                (ex: <code>Mt 5,3-12</code> para Mateus capítulo 5, versículos 3 a 12)
-                            </li>
-                            <li>
-                                <strong>Livro capítulo,versículos combinados</strong><br>
-                                Use ponto para separar versículos ou intervalos não consecutivos<br>
-                                (ex: <code>Mt 5,3-12.21-38</code> para Mateus capítulo 5, versículos de 3 a 12, mais os versículos de 21 a 38)
-                            </li>
-                        </ul>
-                    </span>
+                <div class="result" id="result" dir="auto">
                 </div>
                 
                 <!-- Floating navigation buttons -->
                 <div class="buttons-block" id="floating-action-buttons">
-                    <button id="floating-prev-chapter-button" class="action-button" title="Capítulo anterior">&#9664;</button>
-                    <button id="floating-copy-button" class="action-button" title="Copiar texto">&#128203;</button>
-                    <button id="floating-share-button" class="action-button" title="Compartilhar" aria-label="Compartilhar"><svg class="share-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg></button>
-                    <button id="floating-next-chapter-button" class="action-button" title="Próximo capítulo">&#9654;</button>
+                    <button id="floating-prev-chapter-button" class="action-button" title="Capítulo anterior" data-i18n-title="buttons.prevChapter">&#9664;</button>
+                    <button id="floating-copy-button" class="action-button" title="Copiar texto" data-i18n-title="buttons.copy">&#128203;</button>
+                    <button id="floating-share-button" class="action-button" title="Compartilhar" aria-label="Compartilhar" data-i18n-title="buttons.share" data-i18n-aria-label="buttons.share"><svg class="share-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg></button>
+                    <button id="floating-next-chapter-button" class="action-button" title="Próximo capítulo" data-i18n-title="buttons.nextChapter">&#9654;</button>
                 </div>
             </div>
             
             <div id="about-footer" class="expandable-section about-section">
-                <h3 class="expandable-header">Sobre<span class="expand-icon">▼</span></h3>
+                <h3 class="expandable-header"><span data-i18n="about.title">Sobre</span><span class="expand-icon">▼</span></h3>
                 <div class="expandable-content">
                 <ul>
                     <li>
-                        Desenvolvido por:<br>
+                        <span data-i18n="about.developedBy">Desenvolvido por:</span><br>
                         <a href="https://github.com/natanael127" target="_blank" rel="noopener noreferrer">Natanael de Souza Figueiredo</a>
                     </li>
                     <li>
-                        Traduções Ave-Maria e CNBB:<br>
+                        <span data-i18n="about.translationsAveMariaCnbb">Traduções Ave-Maria e CNBB:</span><br>
                         <a href="https://yourmenial.blogspot.com/" target="_blank" rel="noopener noreferrer">Gustavo Monteiro Gonçalves</a>
                     </li>
                     <li>
-                        Traduções AA, ACF e NVI:<br>
+                        <span data-i18n="about.translationsAaAcfNvi">Traduções AA, ACF e NVI:</span><br>
                         <a href="https://github.com/thiagobodruk/bible" target="_blank" rel="noopener noreferrer">Thiago Bodruk</a>
                     </li>
                     <li>
-                        Tradução do Padre Matos Soares:<br>
+                        <span data-i18n="about.translationPadreMatosSoares">Tradução do Padre Matos Soares:</span><br>
                         <a href="https://catolicoabencoai.app.br/" target="_blank" rel="noopener noreferrer">Hans Mateus Boron</a>
                     </li>
                 </ul>
@@ -176,7 +153,7 @@
                     <a href="mailto:contato@abrasuabiblia.com.br" target="_blank" rel="noopener noreferrer">contato@abrasuabiblia.com.br</a>
                 </p>
                 <!-- Filled in at build time with the commit hash and date (scripts/build-version.ts) -->
-                <p id="build-version" class="build-version">Versão da página: %PAGE_VERSION%</p>
+                <p id="build-version" class="build-version"><span data-i18n="about.version">Versão da página:</span> %PAGE_VERSION%</p>
                 </div>
             </div>
         </div>

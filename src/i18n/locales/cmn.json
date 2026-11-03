@@ -1,0 +1,128 @@
+{
+    "app": {
+        "title": "打开你的圣经！",
+        "description": "用你喜欢的译本阅读圣经"
+    },
+    "language": {
+        "label": "界面语言"
+    },
+    "reader": {
+        "chooseTranslation": "选择译本：",
+        "upload": "上传文件…",
+        "bibleTypes": {
+            "catholic": "天主教",
+            "protestant": "新教",
+            "other": "其他"
+        },
+        "books": "书卷",
+        "booksCount": "书卷（{{count}}）",
+        "referencePlaceholder": "例如：Mt 5,3-12.21-38"
+    },
+    "buttons": {
+        "theme": {
+            "light": "主题：浅色",
+            "dark": "主题：深色",
+            "auto": "主题：自动"
+        },
+        "downloadEbf": "下载生成的 EBF 文件",
+        "fileHelp": "上传帮助",
+        "textSearch": "文本搜索",
+        "history": "搜索历史",
+        "referenceHelp": "帮助",
+        "quotes": "正文中的引号",
+        "verseNumbers": "节号",
+        "lineBreaks": "每节后换行",
+        "ellipsis": "被拆分经节的续接符号",
+        "parenthesesCitation": "正文后的引用出处",
+        "sectionTitles": "段落标题",
+        "prevChapter": "上一章",
+        "nextChapter": "下一章",
+        "copy": "复制文本",
+        "share": "分享",
+        "close": "关闭"
+    },
+    "help": {
+        "intro": "请按以下任一格式输入经文引用：",
+        "chapter": {
+            "format": "书卷 章",
+            "description": "显示整章",
+            "example": "（例：<code>Mt 5</code> 显示马太福音第 5 章全章）"
+        },
+        "verse": {
+            "format": "书卷 章,节",
+            "description": "显示指定的一节",
+            "example": "（例：<code>Mt 5,13</code> 表示马太福音第 5 章第 13 节）"
+        },
+        "from": {
+            "format": "书卷 章,节-",
+            "description": "从指定的一节开始显示",
+            "example": "（例：<code>Mt 5,3-</code> 表示马太福音第 5 章从第 3 节起）"
+        },
+        "range": {
+            "format": "书卷 章,起-止",
+            "description": "显示一段经节范围",
+            "example": "（例：<code>Mt 5,3-12</code> 表示马太福音第 5 章第 3 至 12 节）"
+        },
+        "combined": {
+            "format": "书卷 章,组合经节",
+            "description": "不连续的经节或范围用句点分隔",
+            "example": "（例：<code>Mt 5,3-12.21-38</code> 表示马太福音第 5 章第 3 至 12 节，以及第 21 至 38 节）"
+        }
+    },
+    "about": {
+        "title": "关于",
+        "developedBy": "开发者：",
+        "translationsAveMariaCnbb": "Ave-Maria 与 CNBB 译本：",
+        "translationsAaAcfNvi": "AA、ACF 与 NVI 译本：",
+        "translationPadreMatosSoares": "马托斯·苏亚雷斯神父译本：",
+        "version": "页面版本："
+    },
+    "messages": {
+        "bibleLoadError": "加载圣经时出错",
+        "unsupportedFormat": "不支持的文件格式",
+        "invalidFile": "无效的圣经文件",
+        "textCopied": "文本已复制",
+        "copyError": "复制文本时出错",
+        "linkCopied": "链接已复制",
+        "linkCopyError": "复制链接时出错",
+        "translationNotFound": "未找到该译本",
+        "cannotShareUpload": "无法分享手动加载的圣经中的经文引用。"
+    },
+    "errors": {
+        "noBibleLoaded": "尚未加载任何圣经文件。",
+        "invalidBible": "圣经文件无效或已损坏。",
+        "bookNotFound": "未找到书卷“{{book}}”。",
+        "chapterNotFound": "在{{book}}中未找到第 {{chapter}} 章。"
+    },
+    "modals": {
+        "history": {
+            "title": "搜索历史",
+            "empty": "没有最近的搜索"
+        },
+        "referenceHelp": {
+            "title": "经文引用"
+        },
+        "fileHelp": {
+            "title": "文件上传",
+            "formats": "支持的格式：",
+            "repositories": "圣经资源库：",
+            "convertedBibles": "已转换为 EBF 的圣经",
+            "osisBibles": "OSIS 格式的圣经"
+        },
+        "textSearch": {
+            "title": "文本搜索",
+            "placeholder": "请至少输入 {{min}} 个字符…",
+            "orderLabel": "结果排序",
+            "relevance": "相关度",
+            "byBook": "按书卷",
+            "preparing": "正在准备按相关度搜索…",
+            "bibleOrder": "按圣经顺序",
+            "byRelevance": "按相关度",
+            "mostRelevant": "共 {{total}} 条，显示最相关的 {{shown}} 条",
+            "firstResults": "共 {{total}} 条，显示前 {{shown}} 条",
+            "results_other": "{{count}} 条结果",
+            "noBible": "尚未加载圣经",
+            "noResults": "未找到经节"
+        }
+    }
+}

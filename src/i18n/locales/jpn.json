@@ -1,0 +1,128 @@
+{
+    "app": {
+        "title": "聖書を開こう！",
+        "description": "お好みの翻訳で聖書を読めます"
+    },
+    "language": {
+        "label": "表示言語"
+    },
+    "reader": {
+        "chooseTranslation": "翻訳を選んでください：",
+        "upload": "アップロード…",
+        "bibleTypes": {
+            "catholic": "カトリック",
+            "protestant": "プロテスタント",
+            "other": "その他"
+        },
+        "books": "書",
+        "booksCount": "書（{{count}}）",
+        "referencePlaceholder": "例：Mt 5,3-12.21-38"
+    },
+    "buttons": {
+        "theme": {
+            "light": "テーマ：ライト",
+            "dark": "テーマ：ダーク",
+            "auto": "テーマ：自動"
+        },
+        "downloadEbf": "生成された EBF ファイルをダウンロード",
+        "fileHelp": "アップロードのヘルプ",
+        "textSearch": "テキスト検索",
+        "history": "検索履歴",
+        "referenceHelp": "ヘルプ",
+        "quotes": "本文の引用符",
+        "verseNumbers": "節番号",
+        "lineBreaks": "各節の後で改行",
+        "ellipsis": "分割された節の継続記号",
+        "parenthesesCitation": "本文の後の出典",
+        "sectionTitles": "段落の見出し",
+        "prevChapter": "前の章",
+        "nextChapter": "次の章",
+        "copy": "テキストをコピー",
+        "share": "共有",
+        "close": "閉じる"
+    },
+    "help": {
+        "intro": "次のいずれかの形式で聖句の参照を入力してください：",
+        "chapter": {
+            "format": "書 章",
+            "description": "章全体を表示します",
+            "example": "（例：<code>Mt 5</code> でマタイによる福音書 5 章全体を表示）"
+        },
+        "verse": {
+            "format": "書 章,節",
+            "description": "特定の節を表示します",
+            "example": "（例：<code>Mt 5,13</code> はマタイ 5 章 13 節）"
+        },
+        "from": {
+            "format": "書 章,節-",
+            "description": "特定の節から先を表示します",
+            "example": "（例：<code>Mt 5,3-</code> はマタイ 5 章 3 節以降）"
+        },
+        "range": {
+            "format": "書 章,開始-終了",
+            "description": "節の範囲を表示します",
+            "example": "（例：<code>Mt 5,3-12</code> はマタイ 5 章 3 節から 12 節）"
+        },
+        "combined": {
+            "format": "書 章,節の組み合わせ",
+            "description": "連続しない節や範囲はピリオドで区切ります",
+            "example": "（例：<code>Mt 5,3-12.21-38</code> はマタイ 5 章 3 節から 12 節と、21 節から 38 節）"
+        }
+    },
+    "about": {
+        "title": "このサイトについて",
+        "developedBy": "開発者：",
+        "translationsAveMariaCnbb": "Ave-Maria 訳と CNBB 訳：",
+        "translationsAaAcfNvi": "AA 訳、ACF 訳、NVI 訳：",
+        "translationPadreMatosSoares": "マトス・ソアレス神父訳：",
+        "version": "ページのバージョン："
+    },
+    "messages": {
+        "bibleLoadError": "聖書の読み込み中にエラーが発生しました",
+        "unsupportedFormat": "サポートされていないファイル形式です",
+        "invalidFile": "無効な聖書ファイルです",
+        "textCopied": "テキストをコピーしました",
+        "copyError": "テキストのコピー中にエラーが発生しました",
+        "linkCopied": "リンクをコピーしました",
+        "linkCopyError": "リンクのコピー中にエラーが発生しました",
+        "translationNotFound": "翻訳が見つかりません",
+        "cannotShareUpload": "手動で読み込んだ聖書の聖句は共有できません。"
+    },
+    "errors": {
+        "noBibleLoaded": "聖書ファイルが読み込まれていません。",
+        "invalidBible": "聖書ファイルが無効または破損しています。",
+        "bookNotFound": "書「{{book}}」が見つかりません。",
+        "chapterNotFound": "{{book}}に {{chapter}} 章が見つかりません。"
+    },
+    "modals": {
+        "history": {
+            "title": "検索履歴",
+            "empty": "最近の検索はありません"
+        },
+        "referenceHelp": {
+            "title": "聖句の参照"
+        },
+        "fileHelp": {
+            "title": "ファイルのアップロード",
+            "formats": "対応フォーマット：",
+            "repositories": "聖書のリポジトリ：",
+            "convertedBibles": "EBF に変換された聖書",
+            "osisBibles": "OSIS 形式の聖書"
+        },
+        "textSearch": {
+            "title": "テキスト検索",
+            "placeholder": "{{min}} 文字以上入力してください…",
+            "orderLabel": "結果の順序",
+            "relevance": "関連度",
+            "byBook": "書の順",
+            "preparing": "関連度検索を準備しています…",
+            "bibleOrder": "聖書の順序",
+            "byRelevance": "関連度順",
+            "mostRelevant": "{{total}} 件中、関連度の高い {{shown}} 件",
+            "firstResults": "{{total}} 件中、最初の {{shown}} 件",
+            "results_other": "{{count}} 件の結果",
+            "noBible": "聖書が読み込まれていません",
+            "noResults": "該当する節が見つかりません"
+        }
+    }
+}

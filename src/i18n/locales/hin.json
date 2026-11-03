@@ -1,0 +1,129 @@
+{
+    "app": {
+        "title": "अपनी बाइबल खोलें!",
+        "description": "अपनी पसंद के अनुवाद में बाइबल पढ़ें"
+    },
+    "language": {
+        "label": "इंटरफ़ेस की भाषा"
+    },
+    "reader": {
+        "chooseTranslation": "अपना अनुवाद चुनें:",
+        "upload": "फ़ाइल अपलोड करें...",
+        "bibleTypes": {
+            "catholic": "कैथोलिक",
+            "protestant": "प्रोटेस्टेंट",
+            "other": "अन्य"
+        },
+        "books": "पुस्तकें",
+        "booksCount": "पुस्तकें ({{count}})",
+        "referencePlaceholder": "उदा.: Mt 5,3-12.21-38"
+    },
+    "buttons": {
+        "theme": {
+            "light": "थीम: हल्का",
+            "dark": "थीम: गहरा",
+            "auto": "थीम: स्वचालित"
+        },
+        "downloadEbf": "बनाई गई EBF फ़ाइल डाउनलोड करें",
+        "fileHelp": "अपलोड के बारे में सहायता",
+        "textSearch": "पाठ खोज",
+        "history": "खोज इतिहास",
+        "referenceHelp": "सहायता",
+        "quotes": "पाठ में उद्धरण चिह्न",
+        "verseNumbers": "पदों की संख्या",
+        "lineBreaks": "हर पद के बाद नई पंक्ति",
+        "ellipsis": "बँटे हुए पदों में निरंतरता का चिह्न",
+        "parenthesesCitation": "पाठ के बाद संदर्भ",
+        "sectionTitles": "खंडों के शीर्षक",
+        "prevChapter": "पिछला अध्याय",
+        "nextChapter": "अगला अध्याय",
+        "copy": "पाठ कॉपी करें",
+        "share": "साझा करें",
+        "close": "बंद करें"
+    },
+    "help": {
+        "intro": "बाइबल का संदर्भ इनमें से किसी एक प्रारूप में लिखें:",
+        "chapter": {
+            "format": "पुस्तक अध्याय",
+            "description": "पूरा अध्याय दिखाता है",
+            "example": "(उदा.: <code>Mt 5</code> से मत्ती का पूरा अध्याय 5 दिखेगा)"
+        },
+        "verse": {
+            "format": "पुस्तक अध्याय,पद",
+            "description": "कोई एक विशेष पद दिखाता है",
+            "example": "(उदा.: <code>Mt 5,13</code> से मत्ती अध्याय 5, पद 13 दिखेगा)"
+        },
+        "from": {
+            "format": "पुस्तक अध्याय,पद-",
+            "description": "किसी विशेष पद से आगे दिखाता है",
+            "example": "(उदा.: <code>Mt 5,3-</code> से मत्ती अध्याय 5, पद 3 से आगे दिखेगा)"
+        },
+        "range": {
+            "format": "पुस्तक अध्याय,आरंभ-अंत",
+            "description": "पदों की एक श्रेणी दिखाता है",
+            "example": "(उदा.: <code>Mt 5,3-12</code> से मत्ती अध्याय 5, पद 3 से 12 दिखेंगे)"
+        },
+        "combined": {
+            "format": "पुस्तक अध्याय,मिले-जुले पद",
+            "description": "क्रमागत न हों ऐसे पदों या श्रेणियों को अलग करने के लिए बिंदु (.) लगाएँ",
+            "example": "(उदा.: <code>Mt 5,3-12.21-38</code> से मत्ती अध्याय 5, पद 3 से 12 और पद 21 से 38 दिखेंगे)"
+        }
+    },
+    "about": {
+        "title": "परिचय",
+        "developedBy": "विकासकर्ता:",
+        "translationsAveMariaCnbb": "Ave-Maria और CNBB अनुवाद:",
+        "translationsAaAcfNvi": "AA, ACF और NVI अनुवाद:",
+        "translationPadreMatosSoares": "फ़ादर मातोस सोअरेस का अनुवाद:",
+        "version": "पृष्ठ का संस्करण:"
+    },
+    "messages": {
+        "bibleLoadError": "बाइबल लोड करने में त्रुटि",
+        "unsupportedFormat": "फ़ाइल प्रारूप समर्थित नहीं है",
+        "invalidFile": "अमान्य बाइबल फ़ाइल",
+        "textCopied": "पाठ कॉपी हो गया",
+        "copyError": "पाठ कॉपी करने में त्रुटि",
+        "linkCopied": "लिंक कॉपी हो गया",
+        "linkCopyError": "लिंक कॉपी करने में त्रुटि",
+        "translationNotFound": "अनुवाद नहीं मिला",
+        "cannotShareUpload": "हाथ से लोड की गई बाइबल के संदर्भ साझा नहीं किए जा सकते।"
+    },
+    "errors": {
+        "noBibleLoaded": "कोई बाइबल फ़ाइल लोड नहीं की गई है।",
+        "invalidBible": "बाइबल फ़ाइल अमान्य या क्षतिग्रस्त है।",
+        "bookNotFound": "पुस्तक \"{{book}}\" नहीं मिली।",
+        "chapterNotFound": "{{book}} में अध्याय {{chapter}} नहीं मिला।"
+    },
+    "modals": {
+        "history": {
+            "title": "खोज इतिहास",
+            "empty": "कोई हाल की खोज नहीं"
+        },
+        "referenceHelp": {
+            "title": "बाइबल संदर्भ"
+        },
+        "fileHelp": {
+            "title": "फ़ाइल अपलोड",
+            "formats": "समर्थित प्रारूप:",
+            "repositories": "बाइबल संग्रह:",
+            "convertedBibles": "EBF में बदली गई बाइबल",
+            "osisBibles": "OSIS प्रारूप की बाइबल"
+        },
+        "textSearch": {
+            "title": "पाठ खोज",
+            "placeholder": "कम से कम {{min}} अक्षर लिखें...",
+            "orderLabel": "परिणामों का क्रम",
+            "relevance": "प्रासंगिकता",
+            "byBook": "पुस्तक के अनुसार",
+            "preparing": "प्रासंगिकता के अनुसार खोज तैयार की जा रही है…",
+            "bibleOrder": "बाइबल के क्रम में",
+            "byRelevance": "प्रासंगिकता के अनुसार",
+            "mostRelevant": "{{total}} में से सबसे प्रासंगिक {{shown}}",
+            "firstResults": "{{total}} में से पहले {{shown}}",
+            "results_one": "{{count}} परिणाम",
+            "results_other": "{{count}} परिणाम",
+            "noBible": "कोई बाइबल लोड नहीं है",
+            "noResults": "कोई पद नहीं मिला"
+        }
+    }
+}

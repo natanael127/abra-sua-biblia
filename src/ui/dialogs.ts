@@ -10,6 +10,7 @@ import {
     type SearchOrder,
     searchVerses,
 } from '../core/search';
+import { t } from '../i18n';
 import { getModalContent, getOrCreateModal } from './modal';
 import { getSearchOrder, saveSearchOrder } from './storage';
 
@@ -19,7 +20,7 @@ export type SelectReference = (reference: string) => void;
 export function showHistoryModal(history: readonly string[], onSelect: SelectReference): void {
     const modal = getOrCreateModal({
         id: 'history-modal',
-        title: 'Histórico de buscas',
+        title: t('modals.history.title'),
         contentHtml: '<ul class="history-list"></ul>',
     });
 
@@ -30,7 +31,7 @@ export function showHistoryModal(history: readonly string[], onSelect: SelectRef
     if (history.length === 0) {
         const emptyItem = document.createElement('li');
         emptyItem.className = 'history-list-item';
-        emptyItem.textContent = 'Nenhuma busca recente';
+        emptyItem.textContent = t('modals.history.empty');
         historyList.appendChild(emptyItem);
     }
 
@@ -51,43 +52,45 @@ export function showHistoryModal(history: readonly string[], onSelect: SelectRef
 export function showReferenceHelpModal(instructionsHtml: string): void {
     getOrCreateModal({
         id: 'reference-help-modal',
-        title: 'Referência bíblica',
+        title: t('modals.referenceHelp.title'),
         contentHtml: instructionsHtml,
     }).showModal();
 }
 
-const FILE_HELP_HTML = `
-    <strong>Formatos suportados:</strong>
+const link = (href: string, text: string) =>
+    `<a href="${href}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+
+/** Built on each opening, so that it follows the interface language. */
+const fileHelpHtml = () => `
+    <strong>${t('modals.fileHelp.formats')}</strong>
     <ul>
         <li>
             <strong>EBF/JSON</strong><br>
-            <a href="https://github.com/natanael127/easy-bible-format" target="_blank" rel="noopener noreferrer">Easy Bible Format</a>
+            ${link('https://github.com/natanael127/easy-bible-format', 'Easy Bible Format')}
         </li>
         <li>
             <strong>OSIS/XML</strong><br>
-            <a href="https://crosswire.org/osis/" target="_blank" rel="noopener noreferrer">Open Scripture Information Standard</a>
+            ${link('https://crosswire.org/osis/', 'Open Scripture Information Standard')}
         </li>
         <li>
             <strong>USFX/XML</strong><br>
-            <a href="https://ebible.org/usfx/" target="_blank" rel="noopener noreferrer">Unified Scripture Format XML</a>
+            ${link('https://ebible.org/usfx/', 'Unified Scripture Format XML')}
         </li>
     </ul>
-    <strong>Repositórios de Bíblias:</strong>
+    <strong>${t('modals.fileHelp.repositories')}</strong>
     <ul>
-        <li>
-            <a href="https://ebible.org/find/" target="_blank" rel="noopener noreferrer">eBible</a>
-        </li>
-        <li>
-            <a href="https://github.com/natanael127/ebf-converted-bibles" target="_blank" rel="noopener noreferrer">Bíblias convertidas para EBF</a>
-        </li>
-        <li>
-            <a href="https://github.com/gratis-bible/bible" target="_blank" rel="noopener noreferrer">Bíblias no formato OSIS</a>
-        </li>
+        <li>${link('https://ebible.org/find/', 'eBible')}</li>
+        <li>${link('https://github.com/natanael127/ebf-converted-bibles', t('modals.fileHelp.convertedBibles'))}</li>
+        <li>${link('https://github.com/gratis-bible/bible', t('modals.fileHelp.osisBibles'))}</li>
     </ul>
 `;
 
 export function showFileHelpModal(): void {
-    getOrCreateModal({ id: 'file-help-modal', title: 'Upload de arquivos', contentHtml: FILE_HELP_HTML }).showModal();
+    getOrCreateModal({
+        id: 'file-help-modal',
+        title: t('modals.fileHelp.title'),
+        contentHtml: fileHelpHtml(),
+    }).showModal();
 }
 
 const TEXT_SEARCH_ID = 'text-search-modal';
@@ -96,7 +99,7 @@ const TEXT_SEARCH_ID = 'text-search-modal';
 let onSearchOpened: (() => void) | undefined;
 
 function createTextSearchModal(getBible: () => EbfDocument | null, onSelect: SelectReference): HTMLDialogElement {
-    const modal = getOrCreateModal({ id: TEXT_SEARCH_ID, title: 'Busca textual', className: 'text-search-modal' });
+    const modal = getOrCreateModal({ id: TEXT_SEARCH_ID, title: t('modals.textSearch.title'), className: 'text-search-modal' });
 
     const content = getModalContent(modal);
     content.style.padding = '0';
@@ -107,7 +110,7 @@ function createTextSearchModal(getBible: () => EbfDocument | null, onSelect: Sel
     const searchInput = document.createElement('input');
     searchInput.type = 'text';
     searchInput.className = 'text-search-input';
-    searchInput.placeholder = `Digite pelo menos ${MIN_QUERY_LENGTH} caracteres...`;
+    searchInput.placeholder = t('modals.textSearch.placeholder', { min: MIN_QUERY_LENGTH });
     inputRow.appendChild(searchInput);
 
     const countEl = document.createElement('div');
@@ -123,11 +126,11 @@ function createTextSearchModal(getBible: () => EbfDocument | null, onSelect: Sel
     const orderGroup = document.createElement('div');
     orderGroup.className = 'text-search-order';
     orderGroup.setAttribute('role', 'radiogroup');
-    orderGroup.setAttribute('aria-label', 'Ordem dos resultados');
+    orderGroup.setAttribute('aria-label', t('modals.textSearch.orderLabel'));
     const orderButtons = new Map<SearchOrder, HTMLButtonElement>();
     for (const [order, label] of [
-        ['relevance', 'Relevância'],
-        ['book', 'Por livro'],
+        ['relevance', t('modals.textSearch.relevance')],
+        ['book', t('modals.textSearch.byBook')],
     ] as const) {
         const button = document.createElement('button');
         button.type = 'button';
@@ -170,17 +173,20 @@ function createTextSearchModal(getBible: () => EbfDocument | null, onSelect: Sel
         const ranked = !!bible && isSearchIndexReady(bible);
         statusEl.dataset.ranked = String(ranked);
         statusEl.textContent = !ranked
-            ? 'Preparando a busca por relevância…'
+            ? t('modals.textSearch.preparing')
             : order === 'book'
-              ? 'Na ordem da Bíblia'
-              : 'Por relevância';
+              ? t('modals.textSearch.bibleOrder')
+              : t('modals.textSearch.byRelevance');
     };
 
     const describeCount = ({ results, total, ranked }: SearchResponse) => {
         if (total > results.length) {
-            return ranked ? `${results.length} mais relevantes de ${total}` : `Primeiros ${results.length} de ${total}`;
+            return t(ranked ? 'modals.textSearch.mostRelevant' : 'modals.textSearch.firstResults', {
+                shown: results.length,
+                total,
+            });
         }
-        return `${total} resultado${total > 1 ? 's' : ''}`;
+        return t('modals.textSearch.results', { count: total });
     };
 
     const performSearch = (query: string) => {
@@ -189,7 +195,7 @@ function createTextSearchModal(getBible: () => EbfDocument | null, onSelect: Sel
         showStatus(bible);
 
         if (!bible) {
-            showMessage('Nenhuma Bíblia carregada');
+            showMessage(t('modals.textSearch.noBible'));
             return;
         }
         if (query.length < MIN_QUERY_LENGTH) {
@@ -200,7 +206,7 @@ function createTextSearchModal(getBible: () => EbfDocument | null, onSelect: Sel
 
         const response = searchVerses(bible, query, undefined, order);
         if (response.results.length === 0) {
-            showMessage('Nenhum versículo encontrado');
+            showMessage(t('modals.textSearch.noResults'));
             return;
         }
 
