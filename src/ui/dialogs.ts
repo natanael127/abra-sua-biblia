@@ -221,13 +221,13 @@ function createTextSearchModal(getBible: () => EbfDocument | null, onSelect: Sel
             textEl.className = 'text-search-result-text';
             textEl.innerHTML = r.terms ? highlightTerms(r.text, r.terms) : highlightMatches(r.text, query);
 
-            const citeEl = document.createElement('div');
-            citeEl.className = 'text-search-result-citation';
-            citeEl.textContent = `${r.bookName} ${r.chapter},${r.verse}`;
+            const referenceEl = document.createElement('div');
+            referenceEl.className = 'text-search-result-reference';
+            referenceEl.textContent = `${r.bookName} ${r.chapter},${r.verse}`;
 
             const inputReference = `${r.bookAbbr} ${r.chapter},${r.verse}`;
             item.dataset.inputReference = inputReference;
-            item.append(textEl, citeEl);
+            item.append(textEl, referenceEl);
             item.addEventListener('click', () => {
                 modal.close();
                 onSelect(inputReference);

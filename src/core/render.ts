@@ -69,8 +69,7 @@ export function renderPassageHtml(passage: Passage): string {
                 html = escapeHtml(element.text);
                 break;
             case 'resulting-reference':
-                // The class keeps its old name ("verse-reference"), used by the style
-                html = `<span class="verse-reference">(${escapeHtml(element.text)})</span>`;
+                html = `<span class="resulting-reference">(${escapeHtml(element.text)})</span>`;
                 break;
         }
         if (index === open) html = `"${html}`;
@@ -79,7 +78,7 @@ export function renderPassageHtml(passage: Passage): string {
     });
 
     const content = lines.join(passage.lineBreaks ? '<br>' : ' ');
-    return `<div class="reference">${escapeHtml(passage.heading)}</div><div class="verse-text">${content}</div>`;
+    return `<div class="passage-heading">${escapeHtml(passage.heading)}</div><div class="verse-text">${content}</div>`;
 }
 
 /**

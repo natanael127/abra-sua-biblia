@@ -59,7 +59,7 @@ describe('renderInputReference', () => {
 
     it('header with escaped chapter title and Bible name', () => {
         expect(renderInputReference('Gn 1,1', ebf, options(), '').html).toContain(
-            '<div class="reference">Gênesis 1: A criação (Teste &lt;b&gt;)</div>',
+            '<div class="passage-heading">Gênesis 1: A criação (Teste &lt;b&gt;)</div>',
         );
     });
 
@@ -78,7 +78,7 @@ describe('renderInputReference', () => {
             '',
         ).html;
         expect(html).toBe(
-            '<div class="reference">Gênesis 1: A criação (Teste &lt;b&gt;)</div>' +
+            '<div class="passage-heading">Gênesis 1: A criação (Teste &lt;b&gt;)</div>' +
                 `<div class="verse-text">"Versículo em texto simples, &#39;citado&#39;. [...] Disse &lt;Deus&gt;: &#39;Haja luz&#39;."</div>`,
         );
     });
@@ -97,7 +97,7 @@ describe('renderInputReference', () => {
 
     it('compacted resulting reference at the end', () => {
         expect(renderInputReference('Gn 1,1-2.4', ebf, options(), '').html).toContain(
-            '<span class="verse-reference">(Gn 1,1-2.4)</span>',
+            '<span class="resulting-reference">(Gn 1,1-2.4)</span>',
         );
     });
 

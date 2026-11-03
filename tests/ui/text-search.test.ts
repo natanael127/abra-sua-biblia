@@ -44,8 +44,8 @@ const onSelect = vi.fn();
 const modal = () => document.getElementById('text-search-modal') as HTMLDialogElement;
 const input = () => modal().querySelector<HTMLInputElement>('.text-search-input')!;
 const status = () => modal().querySelector<HTMLElement>('.text-search-status')!;
-const citations = () => Array.from(modal().querySelectorAll('.text-search-result-citation'), (e) => e.textContent);
-const selected = () => modal().querySelector('.text-search-result-item.selected .text-search-result-citation')?.textContent;
+const references = () => Array.from(modal().querySelectorAll('.text-search-result-reference'), (e) => e.textContent);
+const selected = () => modal().querySelector('.text-search-result-item.selected .text-search-result-reference')?.textContent;
 const orderOption = (order: string) => modal().querySelector<HTMLButtonElement>(`.text-search-order-option[data-order="${order}"]`)!;
 const checkedOrder = () => modal().querySelector('.text-search-order-option[aria-checked="true"]')?.getAttribute('data-order');
 const press = (key: string) => input().dispatchEvent(new KeyboardEvent('keydown', { key, cancelable: true }));
@@ -72,7 +72,7 @@ async function typeQuery(query: string) {
     input().value = query;
     input().dispatchEvent(new Event('input'));
     await vi.waitFor(() => {
-        expect(citations()).toHaveLength(3);
+        expect(references()).toHaveLength(3);
     });
 }
 
@@ -83,14 +83,14 @@ describe('text search modal', () => {
         expect(status().textContent).toBe('Preparando a busca por relevância…');
 
         await typeQuery('luz');
-        expect(citations()).toEqual(['João 1,1', 'João 1,2', 'João 1,3']);
+        expect(references()).toEqual(['João 1,1', 'João 1,2', 'João 1,3']);
 
         index.resolve();
         await vi.waitFor(() => {
             expect(status().dataset.ranked).toBe('true');
         });
         expect(status().textContent).toBe('Por relevância');
-        expect(citations()).toEqual(['João 1,3', 'João 1,1', 'João 1,2']);
+        expect(references()).toEqual(['João 1,3', 'João 1,1', 'João 1,2']);
         modal().close();
     });
 
@@ -104,7 +104,7 @@ describe('text search modal', () => {
 
         index.resolve();
         await vi.waitFor(() => {
-            expect(citations()[0]).toBe('João 1,3');
+            expect(references()[0]).toBe('João 1,3');
         });
         // Same verse, now in the 3rd position
         expect(selected()).toBe('João 1,2');
@@ -126,11 +126,11 @@ describe('text search modal', () => {
         showTextSearchModal(() => bible, onSelect);
         expect(checkedOrder()).toBe('relevance');
         await typeQuery('luz');
-        expect(citations()).toEqual(['João 1,3', 'João 1,1', 'João 1,2']);
+        expect(references()).toEqual(['João 1,3', 'João 1,1', 'João 1,2']);
 
         orderOption('book').click();
         expect(checkedOrder()).toBe('book');
-        expect(citations()).toEqual(['João 1,1', 'João 1,2', 'João 1,3']);
+        expect(references()).toEqual(['João 1,1', 'João 1,2', 'João 1,3']);
         expect(status().textContent).toBe('Na ordem da Bíblia');
         expect(localStorage.getItem('searchOrder')).toBe('book');
         modal().close();

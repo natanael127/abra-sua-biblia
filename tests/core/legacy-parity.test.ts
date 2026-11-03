@@ -16,8 +16,8 @@ import { loadBible, readFixture } from '../helpers';
 interface LegacyFixture {
     instructions: string;
     optionSets: DisplayOptions[];
-    cases: { bible: string | null; reference: string; options: number; error: boolean; html: string }[];
-    parse: { reference: string; parsed: unknown }[];
+    cases: { bible: string | null; inputReference: string; options: number; error: boolean; html: string }[];
+    parse: { inputReference: string; parsed: unknown }[];
     effective: { verses: number[]; output: string }[];
 }
 
@@ -32,8 +32,8 @@ const sameDisplay = (html: string) => html.replaceAll('&#39;', "'");
 const comparable = (result: { error: boolean; html: string }) => ({ error: result.error, html: sameDisplay(result.html) });
 
 describe('parity with the legacy implementation', () => {
-    it.each(fixture.parse)('parseReference($reference)', ({ reference, parsed }) => {
-        expect(parseReference(reference)).toEqual(parsed);
+    it.each(fixture.parse)('parseReference($inputReference)', ({ inputReference, parsed }) => {
+        expect(parseReference(inputReference)).toEqual(parsed);
     });
 
     it.each(fixture.effective)('formatVerseRanges($verses)', ({ verses, output }) => {
@@ -45,8 +45,8 @@ describe('parity with the legacy implementation', () => {
         for (const c of withBible) {
             const options = fixture.optionSets[c.options];
             if (!options) throw new Error(`option set ${c.options} does not exist`);
-            const result = renderInputReference(c.reference, loadBible(c.bible ?? ''), { ...options }, fixture.instructions);
-            expect(comparable(result), `${c.bible} | ${c.reference} | options ${c.options}`).toEqual(comparable(c));
+            const result = renderInputReference(c.inputReference, loadBible(c.bible ?? ''), { ...options }, fixture.instructions);
+            expect(comparable(result), `${c.bible} | ${c.inputReference} | options ${c.options}`).toEqual(comparable(c));
         }
     });
 
@@ -54,7 +54,7 @@ describe('parity with the legacy implementation', () => {
         for (const c of fixture.cases.filter((c) => c.bible === null)) {
             const options = fixture.optionSets[0];
             if (!options) throw new Error('option set 0 does not exist');
-            expect(comparable(renderInputReference(c.reference, null, options, 'X'))).toEqual(comparable(c));
+            expect(comparable(renderInputReference(c.inputReference, null, options, 'X'))).toEqual(comparable(c));
         }
     });
 });
