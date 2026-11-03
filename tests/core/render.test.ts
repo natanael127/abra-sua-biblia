@@ -89,6 +89,12 @@ describe('renderReference', () => {
         );
     });
 
+    it('with quotes, the opening one goes after the section title', () => {
+        expect(renderReference('Gn 1,1', ebf, options({ quotes: true }), '').html).toContain(
+            '<span class="section-title">Origem</span>"<sup>1</sup> No princípio."',
+        );
+    });
+
     it('compacted citation at the end', () => {
         expect(renderReference('Gn 1,1-2.4', ebf, options(), '').html).toContain(
             '<span class="verse-reference">(Gn 1,1-2.4)</span>',
@@ -114,13 +120,19 @@ describe('renderPassageText', () => {
 
     it('one line per verse, superscript numbers, citation at the end, without escaping', () => {
         expect(text('Gn 1,2-4', { sectionTitles: false })).toBe(
-            '² Versículo em texto simples, "citado".\n⁴ Disse <Deus>: “Haja luz”.\n(Gn 1,2-4)\n',
+            '² Versículo em texto simples, "citado".\n⁴ Disse <Deus>: “Haja luz”.\n(Gn 1,2-4)',
         );
     });
 
     it('section titles in a paragraph of their own, without a blank line at the start', () => {
         expect(text('Gn 1,1-2.4')).toBe(
-            'Origem\n\n¹ No princípio.\n² Versículo em texto simples, "citado".\n[...]\n\nLuz\n\n⁴ Disse <Deus>: “Haja luz”.\n(Gn 1,1-2.4)\n',
+            'Origem\n\n¹ No princípio.\n² Versículo em texto simples, "citado".\n[...]\n\nLuz\n\n⁴ Disse <Deus>: “Haja luz”.\n(Gn 1,1-2.4)',
+        );
+    });
+
+    it('with quotes, the opening one goes after the section title', () => {
+        expect(text('Gn 1,1-2', { quotes: true, parenthesesCitation: false })).toBe(
+            `Origem\n\n"¹ No princípio.\n² Versículo em texto simples, 'citado'."`,
         );
     });
 

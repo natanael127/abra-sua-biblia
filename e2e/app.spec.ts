@@ -261,7 +261,7 @@ test.describe('clipboard', () => {
         await page.locator('#copy-button').click();
         await expect(page.locator('.temporary-message')).toHaveText('Texto copiado');
         const copied = await page.evaluate(() => navigator.clipboard.readText());
-        expect(copied).toMatch(/^¹⁶ Com efeito, de tal modo Deus amou o mundo.*vida eterna\.\n\(Jo 3,16\)\n$/);
+        expect(copied).toMatch(/^¹⁶ Com efeito, de tal modo Deus amou o mundo.*vida eterna\.\n\(Jo 3,16\)$/);
     });
 
     test('without the Clipboard API, copies using the fallback method', async ({ page, context }) => {

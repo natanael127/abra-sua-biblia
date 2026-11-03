@@ -15,7 +15,7 @@ export interface RenderResult {
 
 /**
  * Where the quotes that wrap the passage go: the opening one before the first
- * verse (before its section title, if it has one), the closing one after the
+ * verse (after its section title, if it has one), the closing one after the
  * last verse. -1 when the passage is not quoted or has no verse.
  */
 function quotePositions(passage: Passage): { open: number; close: number } {
@@ -25,7 +25,7 @@ function quotePositions(passage: Passage): { open: number; close: number } {
         return { open: -1, close: -1 };
     }
     const close = elements.findLastIndex((element) => element.type === 'verse');
-    return { open: first > 0 && elements[first - 1]?.type === 'title' ? first - 1 : first, close };
+    return { open: first, close };
 }
 
 /**
@@ -106,7 +106,7 @@ export function renderPassageText(passage: Passage): string {
                 rendered = element.text;
                 break;
             case 'citation':
-                rendered = `(${element.text})\n`;
+                rendered = `(${element.text})`;
                 break;
         }
         if (index === open) rendered = `"${rendered}`;
