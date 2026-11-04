@@ -1,6 +1,7 @@
 {
     "bible": {
         "name": "Almeida Revisada Imprensa Bíblica",
+        "slug": "aa",
         "language": "por",
         "books": [
             {

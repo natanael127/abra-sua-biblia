@@ -63,26 +63,14 @@ export function getBibleType(numBooks: number): BibleType {
     return 'other';
 }
 
-/** ISO 639-3 language at the start of the file name: "por_ave_maria" -> "por"; undefined without the prefix. */
-export function getBibleLanguage(bibleId: string): string | undefined {
-    return /^([a-z]{3})_/i.exec(bibleId)?.[1]?.toLowerCase();
-}
-
-/**
- * Bible identifier in the URL, after the language (e.g. /por/ave-maria/jo/3,16),
- * derived from the file name without the ISO 639-3 language prefix:
- * "por_ave_maria" -> "ave-maria".
- */
-export function getBibleSlug(bibleId: string): string {
-    return bibleId
-        .toLowerCase()
-        .replace(/^[a-z]{3}_/, '')
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '');
-}
-
 interface BibleFile {
-    bible?: { name?: unknown; books?: unknown[] };
+    bible?: { name?: unknown; slug?: unknown; language?: unknown; books?: unknown[] };
+}
+
+/** Required text field of the Bible (name, slug or language); throws if it is missing or empty. */
+function requireText(path: string, field: string, value: unknown): string {
+    if (typeof value !== 'string' || !value) throw new Error(`${path}: missing "bible.${field}"`);
+    return value;
 }
 
 /** Builds the index; throws an error with the cause if anything prevents a valid index. */
@@ -101,16 +89,13 @@ export function buildIndex(dataDir = DATA_DIR, settings: Pick<Settings, 'default
             } catch (error) {
                 throw new Error(`${path}: invalid JSON`, { cause: error });
             }
-            const bibleId = file.slice(0, -BIBLE_FILE_SUFFIX.length);
-            const language = getBibleLanguage(bibleId);
-            if (!language) {
-                throw new Error(`${path}: the file name must start with the ISO 639-3 language, e.g.: "por_${bibleId}"`);
-            }
-            const name = typeof data.bible?.name === 'string' && data.bible.name ? data.bible.name : bibleId;
+            // Everything in the index comes from the content of the file, never from its name
+            const name = requireText(path, 'name', data.bible?.name);
+            const language = requireText(path, 'language', data.bible?.language);
             entries.push({
                 name,
                 language,
-                slug: getBibleSlug(bibleId),
+                slug: requireText(path, 'slug', data.bible?.slug),
                 path,
                 type: getBibleType(data.bible?.books?.length ?? 0),
             });

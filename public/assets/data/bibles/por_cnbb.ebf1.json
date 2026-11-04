@@ -1,6 +1,7 @@
 {
     "bible": {
         "name": "CNBB",
+        "slug": "cnbb",
         "language": "por",
         "books": [
             {

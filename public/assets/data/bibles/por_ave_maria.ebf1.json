@@ -1,6 +1,7 @@
 {
     "bible": {
         "name": "Ave-Maria",
+        "slug": "ave-maria",
         "language": "por",
         "books": [
             {

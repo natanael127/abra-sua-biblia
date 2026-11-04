@@ -1,6 +1,7 @@
 {
   "bible": {
-    "name": "Pe. Matos Soares",
+    "name": "Padre Matos Soares",
+    "slug": "padre-matos-soares",
     "language": "por",
     "books": [
       {

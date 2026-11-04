@@ -6,6 +6,9 @@
  * (assets/js/bibleUtils.js and bibleManager.js) on the published Bibles, with
  * dozens of references and combinations of display options. Intentional
  * behavior changes must update the fixture explicitly.
+ *
+ * The cases of por_ara were removed when the Bible was replaced by the bible.com one (which has
+ * section titles the old text lacked): the legacy code no longer exists to regenerate them.
  */
 import { describe, expect, it } from 'vitest';
 import type { DisplayOptions } from '../../src/core/passage';

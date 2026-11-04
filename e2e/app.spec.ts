@@ -106,7 +106,7 @@ test('switching translation keeps the reference', async ({ page }) => {
 
     // At the root, the saved preference applies
     await page.goto('/');
-    await expect(page.locator('#bible-select')).toHaveValue('por/pastoral');
+    await expect(page.locator('#bible-select')).toHaveValue('por/edicao-pastoral');
     await expect(reference(page)).toHaveValue('Sl 23,1');
 });
 

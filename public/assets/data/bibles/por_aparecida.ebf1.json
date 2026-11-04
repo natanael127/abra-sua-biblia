@@ -1,6 +1,7 @@
 {
     "bible": {
         "name": "Aparecida",
+        "slug": "aparecida",
         "language": "por",
         "books": [
             {

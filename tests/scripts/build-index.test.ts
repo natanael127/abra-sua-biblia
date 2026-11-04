@@ -2,22 +2,18 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'nod
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import {
-    buildIndex,
-    getBibleLanguage,
-    getBibleSlug,
-    getBibleType,
-    readSettings,
-    SETTINGS_FILE,
-    writeIndex,
-} from '../../scripts/build-index';
+import { buildIndex, getBibleType, readSettings, SETTINGS_FILE, writeIndex } from '../../scripts/build-index';
 
 let dataDir: string;
 
-/** Creates a minimal Bible with the given name and number of books. */
-function addBible(file: string, name: string | undefined, books = 1) {
+/** Creates a minimal Bible; the file name is arbitrary, since the index only reads the content. */
+function addBible(
+    file: string,
+    { name, slug, language = 'por', books = 1 }: { name?: string; slug?: string; language?: string; books?: number },
+) {
     const book = { names: ['Livro'], chapters: [{ verses: ['texto'] }] };
-    writeFileSync(join(dataDir, 'bibles', file), JSON.stringify({ bible: { name, books: Array(books).fill(book) } }));
+    const bible = { name, slug, language, books: Array(books).fill(book) };
+    writeFileSync(join(dataDir, 'bibles', file), JSON.stringify({ bible }));
 }
 
 beforeEach(() => {
@@ -27,28 +23,6 @@ beforeEach(() => {
 
 afterEach(() => {
     rmSync(dataDir, { recursive: true });
-});
-
-describe('getBibleSlug', () => {
-    it.each([
-        ['por_ave_maria', 'ave-maria'],
-        ['por_pe_matos_soares', 'pe-matos-soares'],
-        ['por_aa', 'aa'],
-        ['eng_KJV_1611', 'kjv-1611'],
-        ['minha biblia', 'minha-biblia'],
-        ['_x_', 'x'],
-    ])('%s -> %s', (id, slug) => {
-        expect(getBibleSlug(id)).toBe(slug);
-    });
-});
-
-describe('getBibleLanguage', () => {
-    it('reads the ISO 639-3 prefix from the file name', () => {
-        expect(getBibleLanguage('por_ave_maria')).toBe('por');
-        expect(getBibleLanguage('ENG_KJV')).toBe('eng');
-        expect(getBibleLanguage('minha_biblia')).toBeUndefined();
-        expect(getBibleLanguage('portugues_x')).toBeUndefined();
-    });
 });
 
 describe('getBibleType', () => {
@@ -61,71 +35,68 @@ describe('getBibleType', () => {
 
 describe('buildIndex', () => {
     it('lists the Bibles in file order, with name, language, slug, type and the default one', () => {
-        addBible('por_cnbb.ebf1.json', 'CNBB', 73);
-        addBible('por_acf.ebf1.json', 'Almeida Corrigida', 66);
-        addBible('ignorado.json', 'Not EBF1');
+        addBible('b.ebf1.json', { name: 'CNBB', slug: 'cnbb', books: 73 });
+        addBible('a.ebf1.json', { name: 'Almeida Corrigida', slug: 'acf', books: 66 });
+        addBible('ignorado.json', { name: 'Not EBF1', slug: 'x' });
         expect(buildIndex(dataDir, { defaultBible: 'por/cnbb' })).toEqual([
             {
                 name: 'Almeida Corrigida',
                 language: 'por',
                 slug: 'acf',
-                path: 'bibles/por_acf.ebf1.json',
+                path: 'bibles/a.ebf1.json',
                 type: 'protestant',
             },
             {
                 name: 'CNBB',
                 language: 'por',
                 slug: 'cnbb',
-                path: 'bibles/por_cnbb.ebf1.json',
+                path: 'bibles/b.ebf1.json',
                 type: 'catholic',
                 default: true,
             },
         ]);
     });
 
-    it('without a name in the Bible, uses the file name', () => {
-        addBible('por_teste.ebf1.json', undefined);
-        expect(buildIndex(dataDir, { defaultBible: 'por/teste' })[0]?.name).toBe('por_teste');
+    it('takes language and slug from the content, not from the file name', () => {
+        addBible('eng_kjv_1.ebf1.json', { name: 'Nova Versão', slug: 'nova-versao', language: 'por' });
+        const [entry] = buildIndex(dataDir, { defaultBible: 'por/nova-versao' });
+        expect(entry).toMatchObject({ language: 'por', slug: 'nova-versao', name: 'Nova Versão' });
+    });
+
+    it.each(['name', 'slug', 'language'] as const)('fails without "bible.%s", naming the file', (field) => {
+        addBible('por_x.ebf1.json', { name: 'X', slug: 'x', [field]: '' });
+        expect(() => buildIndex(dataDir, { defaultBible: 'por/x' })).toThrow(
+            `bibles/por_x.ebf1.json: missing "bible.${field}"`,
+        );
     });
 
     it('the same slug can exist in different languages', () => {
-        addBible('por_cnbb.ebf1.json', 'CNBB');
-        addBible('eng_cnbb.ebf1.json', 'Outra');
+        addBible('a.ebf1.json', { name: 'CNBB', slug: 'cnbb' });
+        addBible('b.ebf1.json', { name: 'Outra', slug: 'cnbb', language: 'eng' });
         const entries = buildIndex(dataDir, { defaultBible: 'eng/cnbb' });
         expect(entries.map((entry) => [entry.language, entry.slug, entry.default])).toEqual([
-            ['eng', 'cnbb', true],
             ['por', 'cnbb', undefined],
+            ['eng', 'cnbb', true],
         ]);
     });
 
     it('fails if the default Bible does not exist, listing the Bibles', () => {
-        addBible('por_cnbb.ebf1.json', 'CNBB');
+        addBible('a.ebf1.json', { name: 'CNBB', slug: 'cnbb' });
         expect(() => buildIndex(dataDir, { defaultBible: 'por/ave-maria' })).toThrow(
             'the default Bible "por/ave-maria" does not exist. Bibles: por/cnbb',
         );
         expect(() => buildIndex(dataDir, { defaultBible: 'cnbb' })).toThrow('the default Bible "cnbb" does not exist');
     });
 
-    it('fails with a slug that is duplicated within the language or empty', () => {
-        addBible('por_a_b.ebf1.json', 'A');
-        addBible('por_a-b.ebf1.json', 'B');
+    it('fails with a slug that is duplicated within the language', () => {
+        addBible('a.ebf1.json', { name: 'A', slug: 'a-b' });
+        addBible('b.ebf1.json', { name: 'B', slug: 'a-b' });
         expect(() => buildIndex(dataDir, { defaultBible: 'por/a-b' })).toThrow('invalid or duplicate slug "por/a-b"');
-
-        rmSync(join(dataDir, 'bibles/por_a-b.ebf1.json'));
-        addBible('por_.ebf1.json', 'Vazio');
-        expect(() => buildIndex(dataDir, { defaultBible: 'por/a-b' })).toThrow('invalid or duplicate slug "por/"');
-    });
-
-    it('fails if the file name does not start with the language', () => {
-        addBible('cnbb.ebf1.json', 'CNBB');
-        expect(() => buildIndex(dataDir, { defaultBible: 'por/cnbb' })).toThrow(
-            'bibles/cnbb.ebf1.json: the file name must start with the ISO 639-3 language',
-        );
     });
 
     it('fails with a duplicate name', () => {
-        addBible('por_a.ebf1.json', 'Mesma');
-        addBible('por_b.ebf1.json', 'Mesma');
+        addBible('a.ebf1.json', { name: 'Mesma', slug: 'a' });
+        addBible('b.ebf1.json', { name: 'Mesma', slug: 'b' });
         expect(() => buildIndex(dataDir, { defaultBible: 'por/a' })).toThrow('duplicate name "Mesma"');
     });
 
@@ -137,7 +108,7 @@ describe('buildIndex', () => {
 
 describe('writeIndex', () => {
     it('writes index.json with 4 spaces and a trailing newline', () => {
-        addBible('por_cnbb.ebf1.json', 'CNBB');
+        addBible('por_cnbb.ebf1.json', { name: 'CNBB', slug: 'cnbb' });
         writeIndex(dataDir, { defaultBible: 'por/cnbb' });
         const written = readFileSync(join(dataDir, 'index.json'), 'utf8');
         expect(written).toBe(`${JSON.stringify(JSON.parse(written), null, 4)}\n`);

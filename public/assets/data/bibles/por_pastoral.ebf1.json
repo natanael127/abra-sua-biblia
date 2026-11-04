@@ -1,6 +1,7 @@
 {
     "bible": {
         "name": "Edição Pastoral",
+        "slug": "edicao-pastoral",
         "language": "por",
         "books": [
             {
