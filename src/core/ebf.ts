@@ -82,6 +82,23 @@ export function findBook(ebf: EbfDocument, bookString: string): EbfBook | undefi
     );
 }
 
+/**
+ * Identifier of the book in URLs: the USFM id (uniform across translations),
+ * or the abbreviation in files without one. Case is left to the caller.
+ */
+export function getBookUrlId(book: EbfBook): string {
+    return book.usfm_id || getBookAbbreviation(book);
+}
+
+/**
+ * Finds the book of a URL: by USFM id first (an abbreviation of one book may be
+ * the USFM id of another, e.g. "Jud"), then like `findBook`.
+ */
+export function findBookByUrlId(ebf: EbfDocument, urlId: string): EbfBook | undefined {
+    const wanted = urlId.toLowerCase();
+    return ebf.bible.books.find((b) => b.usfm_id?.toLowerCase() === wanted) ?? findBook(ebf, urlId);
+}
+
 export function getNumOfChapters(ebf: EbfDocument, bookString: string): number {
     return findBook(ebf, bookString)?.chapters.length ?? 0;
 }

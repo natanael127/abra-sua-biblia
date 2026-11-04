@@ -5,7 +5,8 @@
  * passage displayed carries the resulting reference of what was found (see
  * src/core/reference.ts). Each one has its uses:
  * - input reference (canonical: book swapped for the Bible's abbreviation):
- *   reference field, URL, last reading and search history;
+ *   reference field, last reading and search history; in the URL the book is
+ *   the USFM id instead;
  * - resulting reference: after the passage, page title and sharing.
  *
  * The URL carries the input reference of the displayed passage
@@ -23,7 +24,9 @@ import {
     type EbfBook,
     type EbfDocument,
     findBook,
+    findBookByUrlId,
     getBookAbbreviation,
+    getBookUrlId,
     getBookName,
     getNumOfChapters,
 } from '../../core/ebf';
@@ -137,25 +140,38 @@ const languageBibleEntry = (language: string | undefined): BibleIndexEntry | und
 const isKnownLanguage = (language: string | undefined): boolean => state.bibles.some((bible) => bible.language === language);
 
 /**
- * Canonical form of the input reference: only the book is replaced with the
- * loaded Bible's abbreviation, the rest stays as typed ("mateus 5, 4.3" ->
- * "Mt 5, 4.3"). It is not the resulting reference ("Mt 5,3-4").
+ * Replaces the book of the input reference, found by `find`, with `format(book)`;
+ * the rest stays as typed. Unchanged if the book is not found.
  */
-function canonicalInputReference(inputReference: string): string {
+function replaceBook(
+    inputReference: string,
+    find: (ebf: EbfDocument, book: string) => EbfBook | undefined,
+    format: (book: EbfBook) => string,
+): string {
     const parsed = parseReference(inputReference);
-    const book = parsed && state.ebf ? findBook(state.ebf, parsed.book) : undefined;
+    const book = parsed && state.ebf ? find(state.ebf, parsed.book) : undefined;
     if (!book) return inputReference;
-    return `${getBookAbbreviation(book)}${inputReference.slice(parsed?.book.length)}`;
+    return `${format(book)}${inputReference.slice(parsed?.book.length)}`;
 }
 
 /**
- * Path of the current state, with the canonical input reference. An invalid
- * input reference is left out of the URL; with no Bible loaded (load failure,
- * upload not done yet) it cannot be validated, so it is kept, so as not to
- * lose the requested passage.
+ * Canonical form of the input reference: only the book is replaced with the
+ * loaded Bible's abbreviation, the rest stays as typed ("mateus 5, 4.3" ->
+ * "Mt 5, 4.3"). It is not the resulting reference ("Mt 5,3-4"). `fromUrl`: the
+ * book comes from a URL, so it is looked up by USFM id first.
+ */
+function canonicalInputReference(inputReference: string, fromUrl = false): string {
+    return replaceBook(inputReference, fromUrl ? findBookByUrlId : findBook, getBookAbbreviation);
+}
+
+/**
+ * Path of the current state: the input reference with the book as its USFM id
+ * ("Jo 3,16" -> /por/ave-maria/jhn/3,16). An invalid input reference is left
+ * out of the URL; with no Bible loaded (load failure, upload not done yet) it
+ * cannot be validated, so it is kept, so as not to lose the requested passage.
  */
 function currentPath(inputReference: string, valid: boolean): string {
-    return readerPath(state.bibleKey, valid || !state.ebf ? canonicalInputReference(inputReference) : null);
+    return readerPath(state.bibleKey, valid || !state.ebf ? replaceBook(inputReference, findBook, getBookUrlId) : null);
 }
 
 function syncUrl(path: string, mode: UrlMode): void {
@@ -576,6 +592,8 @@ async function show(params: PathParams, biblesReady: Promise<void>): Promise<voi
     const target = parseReaderParams(params);
     let key: string | undefined;
     let inputReference: string;
+    /** The book comes from the URL path (USFM id), not from a legacy link or the last reading. */
+    let bookFromPath = false;
     if (target.bibleKey && target.bibleKey !== UPLOAD_KEY && !isKnownLanguage(target.bibleKey.split('/')[0])) {
         // Not the /{language}/{bible}/... format (e.g. a link without the language: /ave-maria/mt/5)
         getRouter().navigate('/', { replace: true });
@@ -588,6 +606,7 @@ async function show(params: PathParams, biblesReady: Promise<void>): Promise<voi
             key = languageEntry && bibleKey(languageEntry);
         }
         inputReference = inputReferenceFromPath(target.book, target.chapterVerses);
+        bookFromPath = true;
         if (key !== UPLOAD_KEY && !findBibleEntry(key)) {
             showTemporaryMessage(t('messages.translationNotFound'));
             const fallback = defaultBibleEntry();
@@ -609,7 +628,7 @@ async function show(params: PathParams, biblesReady: Promise<void>): Promise<voi
     const loaded = await selectBible(key);
     if (!loaded || token !== state.navToken) return;
 
-    referenceField().value = canonicalInputReference(inputReference);
+    referenceField().value = canonicalInputReference(inputReference, bookFromPath);
     showPassage('replace');
 }
 

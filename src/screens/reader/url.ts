@@ -1,8 +1,10 @@
 /**
  * Reader screen URLs: /{language}/{bible}/{book}/{chapterVerses}, e.g.:
- * /por/ave-maria/mt/5,3-12.21-38. The language is the translation's ISO 639-3
+ * /por/ave-maria/mat/5,3-12.21-38. The language is the translation's ISO 639-3
  * code; book and chapterVerses are the parts of the Bible reference: the book
- * is the translation's abbreviation, in lowercase; chapterVerses follows the notation of the input reference, as typed (not the resulting
+ * is its USFM id (the abbreviation in files without one), in lowercase; read
+ * from a URL, it is looked up by USFM id first, then by abbreviation or name,
+ * and the URL is then corrected; chapterVerses follows the notation of the input reference, as typed (not the resulting
  * reference, see src/core/reference.ts). A Bible loaded by upload has no
  * language: /upload/{book}/{chapterVerses}.
  */

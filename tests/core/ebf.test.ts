@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest';
 import {
     type EbfDocument,
     findBook,
+    findBookByUrlId,
     getBookAbbreviation,
+    getBookUrlId,
     getBookName,
     getNumOfChapters,
     isEbfDocument,
@@ -26,6 +28,36 @@ describe('findBook', () => {
 
     it('returns undefined when it does not exist', () => {
         expect(findBook(ebf, 'Mt')).toBeUndefined();
+    });
+});
+
+describe('book in URLs', () => {
+    // An abbreviation of one book that is the USFM id of another (as "Jud" in English Bibles)
+    const collision: EbfDocument = {
+        bible: {
+            name: 'Test',
+            books: [
+                { names: ['Judges'], abbreviation: 'Jud', usfm_id: 'JDG', chapters: [] },
+                { names: ['Jude'], abbreviation: 'Jude', usfm_id: 'JUD', chapters: [] },
+                { names: ['Psalms'], abbreviation: 'Ps', chapters: [] },
+            ],
+        },
+    };
+
+    it('is identified by the USFM id, or by the abbreviation without one', () => {
+        expect(getBookUrlId(ebf.bible.books[0]!)).toBe('JHN');
+        expect(getBookUrlId(collision.bible.books[2]!)).toBe('Ps');
+    });
+
+    it('is found by USFM id first', () => {
+        expect(findBookByUrlId(collision, 'jud')?.names[0]).toBe('Jude');
+        expect(findBook(collision, 'jud')?.names[0]).toBe('Judges');
+    });
+
+    it('falls back to abbreviation and name', () => {
+        expect(findBookByUrlId(collision, 'ps')?.names[0]).toBe('Psalms');
+        expect(findBookByUrlId(ebf, 'joão')?.usfm_id).toBe('JHN');
+        expect(findBookByUrlId(ebf, 'mt')).toBeUndefined();
     });
 });
 

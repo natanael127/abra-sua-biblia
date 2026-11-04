@@ -11,8 +11,7 @@ import { describe, expect, it } from 'vitest';
 import ebf1Schema from 'easy-bible-format/ebf1-schema.json';
 import { buildIndex, readSettings } from '../../scripts/build-index';
 import { type CatalogEntry, readCatalog, sha256 } from '../../scripts/catalog';
-import { validateEbf } from '../../src/core/ebf';
-import { getBookAbbreviation } from '../../src/core/ebf';
+import { findBookByUrlId, getBookUrlId, validateEbf } from '../../src/core/ebf';
 import { matchPath } from '../../src/router/path';
 import { parseReaderParams, READER_PATTERN, readerPath } from '../../src/screens/reader/url';
 import { BIBLES_DIR, loadBible } from '../helpers';
@@ -62,15 +61,23 @@ describe('Bibles of the catalog', () => {
             expect(new Set(abbreviations).size).toBe(abbreviations.length);
         });
 
+        it('every book has a USFM id', () => {
+            const missing = loadBible(id).bible.books.filter((b) => !b.usfm_id).map((b) => b.names[0]);
+            expect(missing).toEqual([]);
+        });
+
         it('every book has a URL that resolves back to the same book', () => {
-            for (const book of loadBible(id).bible.books) {
-                const abbreviation = getBookAbbreviation(book);
-                const params = matchPath(READER_PATTERN, readerPath(`${entry.language}/${entry.slug}`, `${abbreviation} 1,2-3`));
-                expect(parseReaderParams(params!), abbreviation).toEqual({
+            const bible = loadBible(id);
+            for (const book of bible.bible.books) {
+                const urlId = getBookUrlId(book);
+                const params = matchPath(READER_PATTERN, readerPath(`${entry.language}/${entry.slug}`, `${urlId} 1,2-3`));
+                const target = parseReaderParams(params!);
+                expect(target, urlId).toEqual({
                     bibleKey: `${entry.language}/${entry.slug}`,
-                    book: abbreviation.toLowerCase(),
+                    book: urlId.toLowerCase(),
                     chapterVerses: '1,2-3',
                 });
+                expect(findBookByUrlId(bible, target.book!), urlId).toBe(book);
             }
         });
     });
