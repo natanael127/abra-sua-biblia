@@ -906,9 +906,10 @@ test.describe('interface language', () => {
         await page.locator('#bible-select').selectOption({ label: 'King James Version' });
         await expect(page.locator('#bible-select')).toHaveValue('eng/king-james-version');
         expect((await values()).filter((value) => value.startsWith('por/'))).toEqual([]);
-        // The book names are the new Bible's own
-        await reference(page).fill('John 3,16');
+        // The book in the field goes through its USFM id to the new Bible's abbreviation ("Jo" -> JHN -> "John")
+        await expect(reference(page)).toHaveValue('John 3,16');
         await expect(result(page).locator('.passage-heading')).toHaveText('John 3 (King James Version)');
+        await expect(page).toHaveURL(/\/eng\/king-james-version\/jhn\/3,16$/);
     });
 
     test('a link to a Bible of another language opens it and lists it', async ({ page }) => {
