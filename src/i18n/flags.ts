@@ -24,7 +24,7 @@ import es from './flags/es.svg?url';
 /** Flag image by ISO 639-3 code of the interface language. */
 export const FLAG_URLS: Readonly<Record<string, string>> = {
     eng: gb,
-    cmn: cn,
+    zho: cn,
     hin: hi,
     spa: es,
     arb: sa,

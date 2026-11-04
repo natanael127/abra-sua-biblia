@@ -1,16 +1,19 @@
 import { toIso6393 } from '../core/language';
 import { findUiLanguage, type UiLanguage } from './languages';
 
-/** ISO 639-3 macrolanguage codes that the browsers' tags (ISO 639-1) turn into -> the individual language used here. */
-const MACROLANGUAGE_TO_INDIVIDUAL: Readonly<Record<string, string>> = {
-    zho: 'cmn', // "zh" (Chinese) -> Mandarin
-    ara: 'arb', // "ar" (Arabic) -> Modern Standard Arabic
+/**
+ * ISO 639-3 codes a browser tag can turn into that are not the code of the UI language -> the one that serves them.
+ * "zh" becomes `zho` (Chinese), which is itself a UI language, so it needs no entry here.
+ */
+const UI_LANGUAGE_ALIASES: Readonly<Record<string, string>> = {
+    ara: 'arb', // "ar" (Arabic, a macrolanguage) -> Modern Standard Arabic
+    cmn: 'zho', // "cmn" (Mandarin, an individual language) -> Chinese
 };
 
 /** UI language of a browser language tag ("pt-BR", "zh-CN", "en"); undefined if there is no translation for it. */
 export function uiLanguageOfTag(tag: string): UiLanguage | undefined {
     const iso = toIso6393(tag);
-    return findUiLanguage(MACROLANGUAGE_TO_INDIVIDUAL[iso] ?? iso);
+    return findUiLanguage(UI_LANGUAGE_ALIASES[iso] ?? iso);
 }
 
 /**

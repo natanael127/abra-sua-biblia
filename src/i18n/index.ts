@@ -13,7 +13,6 @@ import { resolveUiLanguage } from './detect';
 import { findUiLanguage, type UiLanguage, UI_LANGUAGES } from './languages';
 import arb from './locales/arb.json';
 import ben from './locales/ben.json';
-import cmn from './locales/cmn.json';
 import deu from './locales/deu.json';
 import ell from './locales/ell.json';
 import eng from './locales/eng.json';
@@ -28,6 +27,7 @@ import por from './locales/por.json';
 import rus from './locales/rus.json';
 import spa from './locales/spa.json';
 import urd from './locales/urd.json';
+import zho from './locales/zho.json';
 
 declare module 'i18next' {
     interface CustomTypeOptions {
@@ -39,7 +39,7 @@ declare module 'i18next' {
 
 /** Translations by ISO 639-3 code. */
 export const TRANSLATIONS: Readonly<Record<string, Record<string, unknown>>> = {
-    arb, ben, cmn, deu, ell, eng, fra, grc, hin, ind, ita, jpn, lat, por, rus, spa, urd,
+    arb, ben, deu, ell, eng, fra, grc, hin, ind, ita, jpn, lat, por, rus, spa, urd, zho,
 };
 
 export { t };

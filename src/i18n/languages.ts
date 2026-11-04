@@ -17,7 +17,6 @@ export interface UiLanguage {
 export const UI_LANGUAGES: readonly UiLanguage[] = [
     { code: 'arb', tag: 'ar', nativeName: 'العربية', dir: 'rtl' },
     { code: 'ben', tag: 'bn', nativeName: 'বাংলা', dir: 'ltr' },
-    { code: 'cmn', tag: 'zh-Hans', nativeName: '中文', dir: 'ltr' },
     { code: 'deu', tag: 'de', nativeName: 'Deutsch', dir: 'ltr' },
     { code: 'ell', tag: 'el', nativeName: 'Ελληνικά', dir: 'ltr' },
     { code: 'eng', tag: 'en', nativeName: 'English', dir: 'ltr' },
@@ -32,6 +31,7 @@ export const UI_LANGUAGES: readonly UiLanguage[] = [
     { code: 'rus', tag: 'ru', nativeName: 'Русский', dir: 'ltr' },
     { code: 'spa', tag: 'es', nativeName: 'Español', dir: 'ltr' },
     { code: 'urd', tag: 'ur', nativeName: 'اردو', dir: 'rtl' },
+    { code: 'zho', tag: 'zh-Hans', nativeName: '中文', dir: 'ltr' },
 ];
 
 export const findUiLanguage = (code: string | null | undefined): UiLanguage | undefined =>

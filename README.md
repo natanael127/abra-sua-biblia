@@ -107,7 +107,7 @@ then rendered (`src/core/render.ts`) as HTML for reading and as plain text for c
 The texts of the interface are translated into 17 languages (the Bible translations are a separate
 matter: any language can be read with any interface language). They use
 [i18next](https://www.i18next.com), with one file per language in `src/i18n/locales/`, named by the
-ISO 639-3 code (`por.json`, `eng.json`, `cmn.json`...). Portuguese is the reference: its keys type
+ISO 639-3 code (`por.json`, `eng.json`, `zho.json`...). Portuguese is the reference: its keys type
 `t()` and `tests/i18n` fail if another language lacks a key, has an empty text, changes the
 placeholders (`{{count}}`) or lacks a plural form that its language uses.
 

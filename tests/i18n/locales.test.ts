@@ -83,7 +83,7 @@ describe('UI_LANGUAGES', () => {
     it('has the 17 required languages, alphabetical by code, with unique codes and tags', () => {
         const codes = UI_LANGUAGES.map((language) => language.code);
         expect(codes).toEqual([
-            'arb', 'ben', 'cmn', 'deu', 'ell', 'eng', 'fra', 'grc', 'hin', 'ind', 'ita', 'jpn', 'lat', 'por', 'rus', 'spa', 'urd',
+            'arb', 'ben', 'deu', 'ell', 'eng', 'fra', 'grc', 'hin', 'ind', 'ita', 'jpn', 'lat', 'por', 'rus', 'spa', 'urd', 'zho',
         ]);
         expect(codes).toEqual([...codes].sort());
         expect(new Set(UI_LANGUAGES.map((language) => language.tag)).size).toBe(UI_LANGUAGES.length);
