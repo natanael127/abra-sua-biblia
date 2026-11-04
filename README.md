@@ -104,8 +104,10 @@ then rendered (`src/core/render.ts`) as HTML for reading and as plain text for c
 
 ## Interface languages
 
-The texts of the interface are translated into 17 languages (the Bible translations are a separate
-matter: any language can be read with any interface language). They use
+The texts of the interface are translated into 17 languages, which are also the languages of the
+Bibles: the list of translations only offers the ones in the interface language (plus the one
+currently open, if it is of another language, since a link may open any Bible and changing the
+interface language does not disturb the reading). They use
 [i18next](https://www.i18next.com), with one file per language in `src/i18n/locales/`, named by the
 ISO 639-3 code (`por.json`, `eng.json`, `zho.json`...). Portuguese is the reference: its keys type
 `t()` and `tests/i18n` fail if another language lacks a key, has an empty text, changes the

@@ -20,6 +20,19 @@ export interface BibleIndexEntry {
 /** Identifier of the Bible in the URL and in preferences: language and slug, e.g.: "por/ave-maria". */
 export const bibleKey = (entry: BibleIndexEntry): string => `${entry.language}/${entry.slug}`;
 
+/**
+ * Bibles offered in the translation list: the ones of the language (that of the
+ * interface) and, if it is of another one, the Bible currently open, so that the
+ * list always reflects what is on the screen (e.g. a link to another language).
+ */
+export function selectableBibles(
+    bibles: readonly BibleIndexEntry[],
+    language: string,
+    currentKey: string,
+): BibleIndexEntry[] {
+    return bibles.filter((bible) => bible.language === language || bibleKey(bible) === currentKey);
+}
+
 export async function getAvailableBibles(fetchFn: typeof fetch = fetch): Promise<BibleIndexEntry[]> {
     try {
         const response = await fetchFn(`${DATA_PATH}index.json`);

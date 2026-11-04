@@ -833,6 +833,35 @@ test.describe('interface language', () => {
         await expect(page.locator('.page-title')).toHaveText('Wähle deine Übersetzung:');
     });
 
+    test('the translation list only has the Bibles of the interface language, plus the open one', async ({ page }) => {
+        const values = () => page.locator('#bible-select option').evaluateAll((options) => options.map((o) => (o as HTMLOptionElement).value));
+        await open(page);
+        expect((await values()).filter((value) => !value.startsWith('por/'))).toEqual(['upload']);
+
+        // Changing the language does not disturb the reading: the open Bible stays in the list
+        await languageButton(page).click();
+        await languageOption(page, 'eng').click();
+        const english = await values();
+        expect(english.filter((value) => value.startsWith('eng/')).length).toBeGreaterThan(5);
+        expect(english.filter((value) => value.startsWith('por/'))).toEqual(['por/ave-maria']);
+        await expect(page.locator('#bible-select')).toHaveValue('por/ave-maria');
+
+        // Choosing one of the language's Bibles takes the other language's one out of the list
+        await page.locator('#bible-select').selectOption({ label: 'King James Version' });
+        await expect(page.locator('#bible-select')).toHaveValue('eng/king-james-version');
+        expect((await values()).filter((value) => value.startsWith('por/'))).toEqual([]);
+        // The book names are the new Bible's own
+        await reference(page).fill('John 3,16');
+        await expect(result(page).locator('.passage-heading')).toHaveText('John 3 (King James Version)');
+    });
+
+    test('a link to a Bible of another language opens it and lists it', async ({ page }) => {
+        await open(page, 'John 3,16', 'eng/king-james-version');
+        const values = await page.locator('#bible-select option').evaluateAll((options) => options.map((o) => (o as HTMLOptionElement).value));
+        expect(values.filter((value) => !value.startsWith('por/'))).toEqual(['eng/king-james-version', 'upload']);
+        await expect(result(page).locator('.passage-heading')).toHaveText('John 3 (King James Version)');
+    });
+
     test('translates modals and messages, also after a change of language', async ({ page }) => {
         await open(page);
         await page.locator('#history-button').click();

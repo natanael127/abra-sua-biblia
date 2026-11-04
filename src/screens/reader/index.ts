@@ -28,13 +28,20 @@ import {
     getNumOfChapters,
 } from '../../core/ebf';
 import { addToHistory } from '../../core/history';
-import { onUiLanguageChange, t } from '../../i18n';
+import { getUiLanguage, onUiLanguageChange, t } from '../../i18n';
 import { parseReference } from '../../core/reference';
 import type { DisplayOptions, Passage } from '../../core/passage';
 import { renderPassageText, renderInputReference } from '../../core/render';
 import { prepareSearchIndex } from '../../core/search';
 import { convertXmlToEbf } from '../../core/xml';
-import { type BibleIndexEntry, bibleKey, getAvailableBibles, loadBibleFromPath, parseEbfJson } from '../../data/bibles';
+import {
+    type BibleIndexEntry,
+    bibleKey,
+    getAvailableBibles,
+    loadBibleFromPath,
+    parseEbfJson,
+    selectableBibles,
+} from '../../data/bibles';
 import type { PathParams } from '../../router/path';
 import type { Router, Screen } from '../../router/router';
 import { showFileHelpModal, showHistoryModal, showReferenceHelpModal, showTextSearchModal } from '../../ui/dialogs';
@@ -258,7 +265,7 @@ function refreshTranslatedTexts(): void {
     refreshThemeTitle();
     updateBooksTitle();
     if (state.bibles.length > 0) {
-        populateBiblesSelect(state.bibles);
+        populateBiblesSelect(state.bibleKey);
         if (state.bibleKey) {
             bibleSelect().value = state.bibleKey;
         }
@@ -266,9 +273,14 @@ function refreshTranslatedTexts(): void {
     showPassage();
 }
 
-function populateBiblesSelect(biblesList: readonly BibleIndexEntry[]): void {
+/**
+ * Fills the translation list with the Bibles of the interface language and,
+ * if it is of another one, the selected Bible (see `selectableBibles`).
+ */
+function populateBiblesSelect(selectedKey: string): void {
     const select = bibleSelect();
     select.replaceChildren();
+    const biblesList = selectableBibles(state.bibles, getUiLanguage().code, selectedKey);
 
     for (const type of BIBLE_TYPE_ORDER) {
         const bibles = biblesList.filter((bible) => (bible.type || 'other') === type);
@@ -303,6 +315,8 @@ function updateUploadVisibility(): void {
  * before it finished loading.
  */
 function selectBible(key: string): Promise<boolean> {
+    // The Bible has to be in the list to be selected, and it may be of another language than the interface's
+    populateBiblesSelect(key);
     bibleSelect().value = key;
     updateUploadVisibility();
     if (key === state.bibleKey) {
@@ -624,7 +638,7 @@ export function createReaderScreen(router: () => Router): Screen {
         if (biblesList.length === 0) {
             console.error('No Bible available to load.');
         }
-        populateBiblesSelect(biblesList);
+        populateBiblesSelect(state.bibleKey);
     });
 
     return {
