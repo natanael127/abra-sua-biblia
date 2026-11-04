@@ -619,7 +619,7 @@ test.describe('URL and browser history', () => {
         test.slow();
         await open(page, 'Sl 23,1');
         await page.locator('#bible-select').selectOption('Edição Pastoral');
-        await expect(page).toHaveURL('/por/pastoral/sl/23,1');
+        await expect(page).toHaveURL('/por/edicao-pastoral/sl/23,1');
         await expect(result(page).locator('.passage-heading')).toContainText('(Edição Pastoral)');
 
         await page.goBack();
