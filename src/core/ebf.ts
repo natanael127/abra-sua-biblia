@@ -99,32 +99,6 @@ export function findBookByUrlId(ebf: EbfDocument, urlId: string): EbfBook | unde
     return ebf.bible.books.find((b) => b.usfm_id?.toLowerCase() === wanted) ?? findBook(ebf, urlId);
 }
 
-/**
- * The same book in another Bible, written as it is there: `bookString` is looked
- * up in `from` and its book is matched in `to` by USFM id (or by URL id, for
- * files without one). The form typed is kept: a name of the book gives the name
- * in the same position in `to` (or another one), an abbreviation or USFM id gives
- * the abbreviation. Names with spaces do not fit in an input reference (the book
- * ends at the first space), so the abbreviation is used when `to` has no other.
- * Undefined when either Bible lacks the book.
- */
-export function translateBook(from: EbfDocument, to: EbfDocument, bookString: string): string | undefined {
-    const source = findBook(from, bookString);
-    const target = source && findBookByUrlId(to, getBookUrlId(source));
-    if (!target) return undefined;
-
-    const wanted = bookString.toLowerCase();
-    const nameIndex = source.names.findIndex((name) => name.toLowerCase() === wanted);
-    const typedName =
-        nameIndex >= 0 && source.abbreviation?.toLowerCase() !== wanted && source.usfm_id?.toLowerCase() !== wanted;
-    if (typedName) {
-        const fits = (name: string | undefined): name is string => !!name && !/\s/.test(name);
-        const name = fits(target.names[nameIndex]) ? target.names[nameIndex] : target.names.find(fits);
-        if (name) return name;
-    }
-    return getBookAbbreviation(target);
-}
-
 export function getNumOfChapters(ebf: EbfDocument, bookString: string): number {
     return findBook(ebf, bookString)?.chapters.length ?? 0;
 }

@@ -29,7 +29,6 @@ import {
     getBookUrlId,
     getBookName,
     getNumOfChapters,
-    translateBook,
 } from '../../core/ebf';
 import { resolveCrossReferences } from '../../core/cross-references';
 import { addToHistory } from '../../core/history';
@@ -369,24 +368,9 @@ function selectBible(key: string): Promise<boolean> {
     return state.bibleLoad;
 }
 
-/**
- * Input reference of one Bible written for another: the book goes through its
- * USFM id ("Io 3,16" in the Vulgate -> "Jo 3,16" in the Ave-Maria; a name gives
- * a name, see `translateBook`), the rest stays as typed. Unchanged if either
- * Bible lacks the book.
- */
-function translateInputReference(inputReference: string, from: EbfDocument | null, to: EbfDocument | null): string {
-    const parsed = parseReference(inputReference);
-    const book = parsed && from && to ? translateBook(from, to, parsed.book) : undefined;
-    return book && parsed ? `${book}${inputReference.slice(parsed.book.length)}` : inputReference;
-}
-
 async function onBibleSelected(): Promise<void> {
     state.navToken++;
-    const previous = state.ebf;
     if (await selectBible(bibleSelect().value)) {
-        const field = referenceField();
-        field.value = translateInputReference(field.value.trim(), previous, state.ebf);
         showPassage('commit');
     }
 }

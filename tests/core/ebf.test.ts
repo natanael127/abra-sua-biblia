@@ -8,7 +8,6 @@ import {
     getBookName,
     getNumOfChapters,
     isEbfDocument,
-    translateBook,
     validateEbf,
 } from '../../src/core/ebf';
 
@@ -67,53 +66,6 @@ describe('book names', () => {
         const [, rev] = ebf.bible.books;
         expect(getBookName(rev!)).toBe('REV');
         expect(getBookAbbreviation(rev!)).toBe('REV');
-    });
-});
-
-describe('translateBook', () => {
-    const vulgata: EbfDocument = {
-        bible: {
-            name: 'Vulgata',
-            books: [
-                { names: ['Ioannes', 'Evangelium secundum Ioannem'], abbreviation: 'Io', usfm_id: 'JHN', chapters: [] },
-                { names: ['Tobias'], abbreviation: 'Tb', usfm_id: 'TOB', chapters: [] },
-                { names: ['Psalmi'], abbreviation: 'Ps', chapters: [] },
-            ],
-        },
-    };
-    const aveMaria: EbfDocument = {
-        bible: {
-            name: 'Ave-Maria',
-            books: [
-                { names: ['Evangelho segundo João', 'João'], abbreviation: 'Jo', usfm_id: 'JHN', chapters: [] },
-                { names: ['Salmos'], abbreviation: 'Ps', chapters: [] },
-            ],
-        },
-    };
-
-    it.each(['Io', 'io', 'JHN', 'jhn'])('gives the abbreviation for "%s"', (book) => {
-        expect(translateBook(vulgata, aveMaria, book)).toBe('Jo');
-    });
-
-    it('gives a name for a name, one without spaces', () => {
-        expect(translateBook(vulgata, aveMaria, 'ioannes')).toBe('João');
-        expect(translateBook(aveMaria, vulgata, 'joão')).toBe('Ioannes');
-    });
-
-    it('falls back to the abbreviation when no name fits', () => {
-        const spaced: EbfDocument = {
-            bible: { name: 'X', books: [{ names: ['Evangelho de João'], abbreviation: 'Jo', usfm_id: 'JHN', chapters: [] }] },
-        };
-        expect(translateBook(vulgata, spaced, 'Ioannes')).toBe('Jo');
-    });
-
-    it('matches books without a USFM id by abbreviation', () => {
-        expect(translateBook(vulgata, aveMaria, 'Psalmi')).toBe('Salmos');
-    });
-
-    it('is undefined when either Bible lacks the book', () => {
-        expect(translateBook(vulgata, aveMaria, 'Tb')).toBeUndefined();
-        expect(translateBook(vulgata, aveMaria, 'Mt')).toBeUndefined();
     });
 });
 
