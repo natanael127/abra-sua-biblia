@@ -102,7 +102,10 @@ passage displayed, which can differ:
   (`Jo 3, 18.16.17`) and is what goes into the field and the search history. In the URL the book is
   its USFM id instead, in lowercase (`/por/ave-maria/jhn/3, 18.16.17`), the same in every
   translation; a book read from a URL is looked up by USFM id first, then by abbreviation or name,
-  and the URL is corrected to the USFM id;
+  and the URL is corrected to the USFM id. The book is a single word: a book whose name has spaces
+  (`1 Coríntios`) is written by its abbreviation (`1Cor`) or USFM id (`1CO`). The reference is
+  parsed with regular expressions only; anything outside the format (`Jo 3,abc`, `Jo 3,16.`,
+  numbers over 3 digits) is an invalid input reference;
 - **resulting reference**: the compacted reference of the verses actually displayed, e.g.
   `Jo 3,16-18`. It is shown after the passage (with the `()` option), in the page title and when
   sharing.

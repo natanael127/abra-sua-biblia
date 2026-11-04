@@ -34,65 +34,62 @@ export interface ParsedReference {
     allVerses: boolean;
 }
 
+/** Chapter or verse number: up to 3 digits (no chapter or verse goes beyond 176). */
+const NUMBER = String.raw`\d{1,3}`;
+
+/** One verse segment: "N", "N-M" or "N-" (from N onwards), with optional spaces around the numbers. */
+const SEGMENT = String.raw`\s*${NUMBER}\s*(?:-\s*(?:${NUMBER}\s*)?)?`;
+
+/**
+ * Whole input reference: "Book chapter[,segment.segment...]". The book is a
+ * single word, so books whose names have spaces are written by abbreviation or
+ * USFM id ("1Cor", "1CO"); exactly one space separates it from the chapter.
+ */
+const REFERENCE_PATTERN = new RegExp(String.raw`^(\S+) (${NUMBER})(?:,(${SEGMENT}(?:\.${SEGMENT})*))?$`);
+
+/** Picks the parts of each segment of an already validated verse list. */
+const SEGMENT_PARTS_PATTERN = /(\d+)\s*(?:(-)\s*(\d+)?)?/g;
+
 /**
  * Parses an input reference in the format "Book chapter[,verses]", where verses
  * are numbers or ranges separated by dots. E.g.: "Mt 5,3-12.21-". The book is
- * kept as written: it is only looked up in the Bible later.
+ * kept as written: it is only looked up in the Bible later. Returns null when
+ * the reference does not follow the format.
  */
 export function parseReference(inputReference: string): ParsedReference | null {
-    const [book = '', ...rest] = inputReference.split(' ');
-    const others = rest.join(' ');
-
-    // Basic pattern: Chapter[,Verse(s)]
-    const match = /^(\d+)(?:,(.+))?$/.exec(others);
+    const match = REFERENCE_PATTERN.exec(inputReference);
     if (!match) {
         return null;
     }
-
-    const chapter = match[1] ?? '';
-    const verseRef = match[2];
-
-    // Verses (may contain multiple references separated by dots)
-    const verseSegments = verseRef ? verseRef.split('.') : [];
-    const allVerses = !verseRef;
+    const [, book = '', chapter = '', verseList] = match;
 
     const versesList: number[] = [];
     let allAfterLast = false;
-    for (const segment of verseSegments) {
-        if (allAfterLast) break;
-
-        // Check whether it is a range (e.g. 5-7) or a single verse
-        if (segment.includes('-')) {
-            const [startText = '', endText = ''] = segment.split('-');
-            const start = parseInt(startText.trim());
-            let end = parseInt(endText.trim());
-            if (isNaN(end)) {
-                allAfterLast = true;
-                end = start;
-            }
-            if (!isNaN(start) && !isNaN(end)) {
-                for (let i = start; i <= end; i++) {
-                    if (i > 0) {
-                        versesList.push(i - 1);
-                    }
-                }
-            }
-        } else {
-            const verseNumber = parseInt(segment.trim());
-            if (!isNaN(verseNumber)) {
-                versesList.push(verseNumber - 1);
-            }
+    for (const [, startText = '', dash, endText] of (verseList ?? '').matchAll(SEGMENT_PARTS_PATTERN)) {
+        const start = Number(startText);
+        if (!dash) {
+            versesList.push(start - 1);
+            continue;
         }
+        // "N-": everything from N onwards, so the segments after it do not matter
+        if (endText === undefined) {
+            allAfterLast = true;
+        }
+        const end = endText === undefined ? start : Number(endText);
+        for (let verse = Math.max(start, 1); verse <= end; verse++) {
+            versesList.push(verse - 1);
+        }
+        if (allAfterLast) break;
     }
 
     versesList.sort((a, b) => a - b);
 
     return {
         book,
-        chapter: parseInt(chapter),
+        chapter: Number(chapter),
         verses: [...new Set(versesList)],
         allAfterLast,
-        allVerses,
+        allVerses: verseList === undefined,
     };
 }
 

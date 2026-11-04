@@ -9,6 +9,10 @@
  *
  * The cases of por_ara were removed when the Bible was replaced by the bible.com one (which has
  * section titles the old text lacked): the legacy code no longer exists to regenerate them.
+ *
+ * Malformed verse lists, which the legacy code read leniently ("Jo 3,abc", "Mt 5,-3", "Mt 5,3--5",
+ * "Mt 5,3-5-7"), are now invalid input references: their parse is null and they render the
+ * instructions.
  */
 import { describe, expect, it } from 'vitest';
 import type { DisplayOptions } from '../../src/core/passage';
