@@ -254,6 +254,25 @@ test('an open search is redone by relevance once the index is ready', async ({ p
     await expect(modal.locator('.text-search-result-reference').first()).toHaveText('Mateus 5,8');
 });
 
+test('cross-references: the balloon after the verse lists them and opens the one clicked', async ({ page }) => {
+    await open(page, 'Gn 9,3-4', 'por/almeida-revista-e-atualizada');
+    // Only Gn 9,4 has cross-references
+    await expect(result(page).locator('.cross-references-button')).toHaveCount(1);
+
+    await result(page).locator('.cross-references-button').click();
+    const modal = page.locator('#cross-references-modal');
+    await expect(modal.locator('.app-modal-title')).toHaveText('Referências cruzadas de Gn 9,4');
+    // Consecutive verses of the same chapter are grouped
+    await expect(modal.locator('.cross-reference-reference')).toHaveText(['Lv 7,26-27', 'Lv 17,10-14', 'Lv 19,26', 'Dt 12,16.23', 'Dt 15,23']);
+    await expect(modal.locator('.cross-reference-item').first()).toContainText('Não comereis sangue');
+
+    await modal.getByText('Lv 17,10-14').click();
+    await expect(modal).toBeHidden();
+    await expect(reference(page)).toHaveValue('Lv 17,10-14');
+    await expect(page).toHaveURL(/\/por\/almeida-revista-e-atualizada\/lev\/17,10-14$/);
+    await expect(page.locator('#copy-button')).toBeVisible();
+});
+
 test('modals close with Esc and with a click outside', async ({ page }) => {
     await open(page);
     const modal = page.locator('#reference-help-modal');

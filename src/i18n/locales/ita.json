@@ -16,7 +16,8 @@
         },
         "books": "Libri",
         "booksCount": "Libri ({{count}})",
-        "referencePlaceholder": "Es.: Mt 5,3-12.21-38"
+        "referencePlaceholder": "Es.: Mt 5,3-12.21-38",
+        "crossReferences": "Riferimenti incrociati di {{reference}}"
     },
     "buttons": {
         "theme": {
@@ -125,6 +126,9 @@
             "results_other": "{{count}} risultati",
             "noBible": "Nessuna Bibbia caricata",
             "noResults": "Nessun versetto trovato"
+        },
+        "crossReferences": {
+            "unavailable": "Libro assente in questa traduzione"
         }
     }
 }

@@ -16,7 +16,8 @@
         },
         "books": "書",
         "booksCount": "書（{{count}}）",
-        "referencePlaceholder": "例：Mt 5,3-12.21-38"
+        "referencePlaceholder": "例：Mt 5,3-12.21-38",
+        "crossReferences": "{{reference}} の引照"
     },
     "buttons": {
         "theme": {
@@ -123,6 +124,9 @@
             "results_other": "{{count}} 件の結果",
             "noBible": "聖書が読み込まれていません",
             "noResults": "該当する節が見つかりません"
+        },
+        "crossReferences": {
+            "unavailable": "この訳にはこの書がありません"
         }
     }
 }

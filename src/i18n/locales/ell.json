@@ -16,7 +16,8 @@
         },
         "books": "Βιβλία",
         "booksCount": "Βιβλία ({{count}})",
-        "referencePlaceholder": "Π.χ.: Mt 5,3-12.21-38"
+        "referencePlaceholder": "Π.χ.: Mt 5,3-12.21-38",
+        "crossReferences": "Παραπομπές για {{reference}}"
     },
     "buttons": {
         "theme": {
@@ -124,6 +125,9 @@
             "results_other": "{{count}} αποτελέσματα",
             "noBible": "Δεν έχει φορτωθεί καμία Βίβλος",
             "noResults": "Δεν βρέθηκαν εδάφια"
+        },
+        "crossReferences": {
+            "unavailable": "Το βιβλίο λείπει από αυτή τη μετάφραση"
         }
     }
 }

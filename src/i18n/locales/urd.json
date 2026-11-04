@@ -16,7 +16,8 @@
         },
         "books": "کتابیں",
         "booksCount": "کتابیں ({{count}})",
-        "referencePlaceholder": "مثال: Mt 5,3-12.21-38"
+        "referencePlaceholder": "مثال: Mt 5,3-12.21-38",
+        "crossReferences": "{{reference}} کے متوازی حوالہ جات"
     },
     "buttons": {
         "theme": {
@@ -124,6 +125,9 @@
             "results_other": "{{count}} نتائج",
             "noBible": "کوئی بائبل لوڈ نہیں ہے",
             "noResults": "کوئی آیت نہیں ملی"
+        },
+        "crossReferences": {
+            "unavailable": "یہ کتاب اس ترجمے میں نہیں ہے"
         }
     }
 }

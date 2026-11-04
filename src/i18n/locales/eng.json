@@ -16,7 +16,8 @@
         },
         "books": "Books",
         "booksCount": "Books ({{count}})",
-        "referencePlaceholder": "E.g.: Mt 5,3-12.21-38"
+        "referencePlaceholder": "E.g.: Mt 5,3-12.21-38",
+        "crossReferences": "Cross-references for {{reference}}"
     },
     "buttons": {
         "theme": {
@@ -124,6 +125,9 @@
             "results_other": "{{count}} results",
             "noBible": "No Bible loaded",
             "noResults": "No verses found"
+        },
+        "crossReferences": {
+            "unavailable": "Book not in this translation"
         }
     }
 }

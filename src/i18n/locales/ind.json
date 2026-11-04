@@ -16,7 +16,8 @@
         },
         "books": "Kitab",
         "booksCount": "Kitab ({{count}})",
-        "referencePlaceholder": "Mis.: Mt 5,3-12.21-38"
+        "referencePlaceholder": "Mis.: Mt 5,3-12.21-38",
+        "crossReferences": "Referensi silang untuk {{reference}}"
     },
     "buttons": {
         "theme": {
@@ -123,6 +124,9 @@
             "results_other": "{{count}} hasil",
             "noBible": "Belum ada Alkitab yang dimuat",
             "noResults": "Tidak ada ayat yang ditemukan"
+        },
+        "crossReferences": {
+            "unavailable": "Kitab tidak ada dalam terjemahan ini"
         }
     }
 }

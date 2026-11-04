@@ -16,7 +16,8 @@
         },
         "books": "书卷",
         "booksCount": "书卷（{{count}}）",
-        "referencePlaceholder": "例如：Mt 5,3-12.21-38"
+        "referencePlaceholder": "例如：Mt 5,3-12.21-38",
+        "crossReferences": "{{reference}} 的串珠经文"
     },
     "buttons": {
         "theme": {
@@ -123,6 +124,9 @@
             "results_other": "{{count}} 条结果",
             "noBible": "尚未加载圣经",
             "noResults": "未找到经节"
+        },
+        "crossReferences": {
+            "unavailable": "此译本中没有这卷书"
         }
     }
 }

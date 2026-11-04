@@ -16,7 +16,8 @@
         },
         "books": "Βίβλοι",
         "booksCount": "Βίβλοι ({{count}})",
-        "referencePlaceholder": "Οἷον: Mt 5,3-12.21-38"
+        "referencePlaceholder": "Οἷον: Mt 5,3-12.21-38",
+        "crossReferences": "Παράλληλα χωρία τοῦ {{reference}}"
     },
     "buttons": {
         "theme": {
@@ -124,6 +125,9 @@
             "results_other": "{{count}} ἀποτελέσματα",
             "noBible": "Οὐδεμία Βίβλος ἐφορτώθη",
             "noResults": "Οὐδεὶς στίχος εὑρέθη"
+        },
+        "crossReferences": {
+            "unavailable": "Τὸ βιβλίον οὐκ ἔστιν ἐν ταύτῃ τῇ μεταφράσει"
         }
     }
 }

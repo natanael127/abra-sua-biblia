@@ -1,4 +1,5 @@
 import { debounce } from 'es-toolkit';
+import type { CrossReference } from '../core/cross-references';
 import type { EbfDocument } from '../core/ebf';
 import {
     highlightMatches,
@@ -47,6 +48,54 @@ export function showHistoryModal(history: readonly string[], onSelect: SelectRef
     }
 
     modal.showModal();
+}
+
+/**
+ * Cross-references of a verse (`source`, "Jo 3,16"): each one with the text of
+ * its verses, opened on click. The ones whose book the Bible lacks are listed
+ * but cannot be opened.
+ */
+export function showCrossReferencesModal(source: string, references: readonly CrossReference[], onSelect: SelectReference): void {
+    const modal = getOrCreateModal({
+        id: 'cross-references-modal',
+        title: '',
+        className: 'cross-references-modal',
+        contentHtml: '<div class="cross-references-list"></div>',
+    });
+    const title = modal.querySelector('.app-modal-title');
+    if (title) title.textContent = t('reader.crossReferences', { reference: source });
+
+    const list = getModalContent(modal).querySelector('.cross-references-list');
+    if (!list) return;
+
+    const items = references.map(({ reference, text, available }) => {
+        const item = document.createElement(available ? 'button' : 'div');
+        item.className = 'cross-reference-item';
+
+        const referenceEl = document.createElement('div');
+        referenceEl.className = 'cross-reference-reference';
+        referenceEl.textContent = reference;
+
+        const textEl = document.createElement('div');
+        textEl.className = 'cross-reference-text';
+        textEl.dir = 'auto';
+        textEl.textContent = available ? text : t('modals.crossReferences.unavailable');
+
+        item.append(referenceEl, textEl);
+        if (available) {
+            item.addEventListener('click', () => {
+                modal.close();
+                onSelect(reference);
+            });
+        } else {
+            item.classList.add('unavailable');
+        }
+        return item;
+    });
+    list.replaceChildren(...items);
+
+    modal.showModal();
+    list.scrollTop = 0;
 }
 
 export function showReferenceHelpModal(instructionsHtml: string): void {

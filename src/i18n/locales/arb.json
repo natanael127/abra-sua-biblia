@@ -16,7 +16,8 @@
         },
         "books": "الأسفار",
         "booksCount": "الأسفار ({{count}})",
-        "referencePlaceholder": "مثال: Mt 5,3-12.21-38"
+        "referencePlaceholder": "مثال: Mt 5,3-12.21-38",
+        "crossReferences": "الشواهد المرجعية لـ {{reference}}"
     },
     "buttons": {
         "theme": {
@@ -128,6 +129,9 @@
             "results_other": "{{count}} نتيجة",
             "noBible": "لم يتم تحميل أي كتاب مقدّس",
             "noResults": "لم يتم العثور على آيات"
+        },
+        "crossReferences": {
+            "unavailable": "السفر غير موجود في هذه الترجمة"
         }
     }
 }

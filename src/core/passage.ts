@@ -12,6 +12,7 @@
  * The texts are raw (not HTML-escaped): escaping is up to each renderer.
  */
 import {
+    type EbfCrossReference,
     type EbfDocument,
     type EbfVerse,
     findBook,
@@ -48,8 +49,11 @@ export const OMISSION_TEXT = '[...]';
 export type PassageElement =
     /** Section title, shown before the verse it introduces. */
     | { type: 'title'; text: string }
-    /** Verse; `number` only when verse numbers are displayed. */
-    | { type: 'verse'; text: string; number?: number }
+    /**
+     * Verse; `number` only when verse numbers are displayed, `crossReferences`
+     * only when the verse has cross-references.
+     */
+    | { type: 'verse'; text: string; number?: number; crossReferences?: VerseCrossReferences }
     /** Verses left out between two selected ones. */
     | { type: 'omission'; text: string }
     /**
@@ -57,6 +61,13 @@ export type PassageElement =
      * present only with the `parenthesesReference` option.
      */
     | { type: 'resulting-reference'; text: string };
+
+/** Cross-references of a displayed verse, as stored in the Bible (see ./cross-references). */
+export interface VerseCrossReferences {
+    /** Reference of the verse itself, with the Bible's abbreviation ("Jo 3,16"). */
+    source: string;
+    references: readonly EbfCrossReference[];
+}
 
 export interface Passage {
     /** Book and chapter, with the chapter title and the Bible name ("Gênesis 1: A criação (Ave Maria)"). */
@@ -90,11 +101,16 @@ const errorResult = (message: string): PassageResult => ({
     html: `<span class="error">${message}</span>`,
 });
 
-/** Elements of the selected verses: titles, verses and omission markers. */
+/**
+ * Elements of the selected verses: titles, verses and omission markers.
+ * `chapterReference` is the book abbreviation and chapter ("Jo 3"), for the
+ * source of the cross-references.
+ */
 export function buildVerseElements(
     verseIndexes: readonly number[],
     chapterVerses: readonly EbfVerse[],
     displayOpt: DisplayOptions,
+    chapterReference: string,
 ): PassageElement[] {
     const elements: PassageElement[] = [];
 
@@ -119,10 +135,14 @@ export function buildVerseElements(
         if (displayOpt.sectionTitles && title) {
             elements.push({ type: 'title', text: adjustQuotes(title) });
         }
+        const references = typeof verse === 'object' ? verse.references : undefined;
         elements.push({
             type: 'verse',
             text: adjustQuotes(text),
             ...(displayOpt.verseNumbers && { number: verseIndex + 1 }),
+            ...(references?.length && {
+                crossReferences: { source: `${chapterReference},${verseIndex + 1}`, references },
+            }),
         });
     }
 
@@ -168,11 +188,12 @@ function build(inputReference: string, ebf: EbfDocument, displayOpt: DisplayOpti
     }
 
     const verseIndexes = resolveVerseIndexes(parsedRef, chapter.verses.length);
-    const elements = buildVerseElements(verseIndexes, chapter.verses, displayOpt);
+    const chapterReference = `${getBookAbbreviation(book)} ${parsedRef.chapter}`;
+    const elements = buildVerseElements(verseIndexes, chapter.verses, displayOpt, chapterReference);
 
     // From the verses found, not from the input reference: book abbreviation,
     // verses sorted, compacted and limited to the chapter
-    let resultingReference = `${getBookAbbreviation(book)} ${parsedRef.chapter}`;
+    let resultingReference = chapterReference;
     if (!parsedRef.allVerses) {
         resultingReference += formatVerseRanges(verseIndexes);
     }

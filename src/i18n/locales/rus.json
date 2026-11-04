@@ -16,7 +16,8 @@
         },
         "books": "Книги",
         "booksCount": "Книги ({{count}})",
-        "referencePlaceholder": "Напр.: Mt 5,3-12.21-38"
+        "referencePlaceholder": "Напр.: Mt 5,3-12.21-38",
+        "crossReferences": "Перекрёстные ссылки к {{reference}}"
     },
     "buttons": {
         "theme": {
@@ -126,6 +127,9 @@
             "results_other": "{{count}} результата",
             "noBible": "Библия не загружена",
             "noResults": "Стихи не найдены"
+        },
+        "crossReferences": {
+            "unavailable": "В этом переводе нет этой книги"
         }
     }
 }

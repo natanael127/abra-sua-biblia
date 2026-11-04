@@ -5,6 +5,11 @@
 import type { EbfDocument } from './ebf';
 import { buildPassage, type DisplayOptions, type Passage, type PassageElement } from './passage';
 import { escapeHtml, toSuperscript } from './text';
+import { t } from '../i18n';
+
+/** Speech balloon of the cross-references button. */
+const CROSS_REFERENCES_ICON =
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H10l-5 4v-4H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/></svg>';
 
 export interface RenderResult {
     error: boolean;
@@ -74,6 +79,11 @@ export function renderPassageHtml(passage: Passage): string {
         }
         if (index === open) html = `"${html}`;
         if (index === close) html = `${html}"`;
+        if (element.type === 'verse' && element.crossReferences) {
+            // The screen finds the cross-references by the index of the element in the passage
+            const label = escapeHtml(t('reader.crossReferences', { reference: element.crossReferences.source }));
+            html += ` <button type="button" class="cross-references-button" data-element="${index}" title="${label}" aria-label="${label}">${CROSS_REFERENCES_ICON}</button>`;
+        }
         return html;
     });
 

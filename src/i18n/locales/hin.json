@@ -16,7 +16,8 @@
         },
         "books": "पुस्तकें",
         "booksCount": "पुस्तकें ({{count}})",
-        "referencePlaceholder": "उदा.: Mt 5,3-12.21-38"
+        "referencePlaceholder": "उदा.: Mt 5,3-12.21-38",
+        "crossReferences": "{{reference}} के प्रति-संदर्भ"
     },
     "buttons": {
         "theme": {
@@ -124,6 +125,9 @@
             "results_other": "{{count}} परिणाम",
             "noBible": "कोई बाइबल लोड नहीं है",
             "noResults": "कोई पद नहीं मिला"
+        },
+        "crossReferences": {
+            "unavailable": "यह पुस्तक इस अनुवाद में नहीं है"
         }
     }
 }

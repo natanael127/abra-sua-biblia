@@ -30,6 +30,7 @@ import {
     getBookName,
     getNumOfChapters,
 } from '../../core/ebf';
+import { resolveCrossReferences } from '../../core/cross-references';
 import { addToHistory } from '../../core/history';
 import { getUiLanguage, onUiLanguageChange, t } from '../../i18n';
 import { parseReference } from '../../core/reference';
@@ -47,7 +48,13 @@ import {
 } from '../../data/bibles';
 import type { PathParams } from '../../router/path';
 import type { Router, Screen } from '../../router/router';
-import { showFileHelpModal, showHistoryModal, showReferenceHelpModal, showTextSearchModal } from '../../ui/dialogs';
+import {
+    showCrossReferencesModal,
+    showFileHelpModal,
+    showHistoryModal,
+    showReferenceHelpModal,
+    showTextSearchModal,
+} from '../../ui/dialogs';
 import { byId } from '../../ui/dom';
 import { shareLink } from '../../ui/share';
 import { copyTextToClipboard, showTemporaryMessage } from '../../ui/feedback';
@@ -541,6 +548,18 @@ function setupActionButtons(): void {
     });
 }
 
+/** The balloon after a verse opens its cross-references. */
+function setupCrossReferences(): void {
+    byId('result').addEventListener('click', (event) => {
+        const button = (event.target as Element).closest<HTMLElement>('.cross-references-button');
+        const element = state.passage?.elements[Number(button?.dataset.element)];
+        if (!state.ebf || element?.type !== 'verse' || !element.crossReferences) return;
+
+        const { source, references } = element.crossReferences;
+        showCrossReferencesModal(source, resolveCrossReferences(state.ebf, references), goToInputReference);
+    });
+}
+
 function setupExpandableSections(): void {
     document.querySelectorAll('.expandable-section').forEach((section) => {
         const header = section.querySelector('.expandable-header');
@@ -643,6 +662,7 @@ export function createReaderScreen(router: () => Router): Screen {
     setupFormatButtons();
     setupActionButtons();
     setupReferenceField();
+    setupCrossReferences();
 
     bibleSelect().addEventListener('change', () => void onBibleSelected());
     byId('bible-file', HTMLInputElement).addEventListener('change', (event) => {

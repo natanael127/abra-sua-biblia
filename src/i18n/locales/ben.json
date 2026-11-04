@@ -16,7 +16,8 @@
         },
         "books": "পুস্তক",
         "booksCount": "পুস্তক ({{count}})",
-        "referencePlaceholder": "যেমন: Mt 5,3-12.21-38"
+        "referencePlaceholder": "যেমন: Mt 5,3-12.21-38",
+        "crossReferences": "{{reference}}-এর পারস্পরিক উল্লেখ"
     },
     "buttons": {
         "theme": {
@@ -124,6 +125,9 @@
             "results_other": "{{count}}টি ফলাফল",
             "noBible": "কোনো বাইবেল লোড করা নেই",
             "noResults": "কোনো পদ পাওয়া যায়নি"
+        },
+        "crossReferences": {
+            "unavailable": "এই অনুবাদে বইটি নেই"
         }
     }
 }

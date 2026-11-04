@@ -795,3 +795,104 @@ a:visited {
 [dir='rtl'] #floating-next-chapter-button {
     transform: scaleX(-1);
 }
+
+/* Cross-references: balloon after the verse and the modal that lists them */
+.cross-references-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: super;
+    width: 1.3em;
+    height: 1.1em;
+    padding: 0;
+    margin-inline-start: 1px;
+    border: none;
+    background: none;
+    color: var(--link-color);
+    opacity: 0.55;
+    cursor: pointer;
+    font-size: 13px;
+    line-height: 1;
+    transition: opacity 0.15s, transform 0.15s;
+}
+
+.cross-references-button svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+}
+
+.cross-references-button:hover,
+.cross-references-button:focus-visible {
+    opacity: 1;
+    transform: scale(1.15);
+}
+
+.cross-references-button:focus-visible {
+    outline: 2px solid var(--button-active-bg);
+    outline-offset: 1px;
+    border-radius: 3px;
+}
+
+.cross-references-modal.app-modal {
+    max-width: 600px;
+    width: 90%;
+}
+
+.cross-references-modal .help-content {
+    padding: 0;
+}
+
+.cross-references-list {
+    max-height: 60vh;
+    overflow-y: auto;
+    padding: 15px 20px;
+}
+
+.cross-reference-item {
+    display: block;
+    width: 100%;
+    text-align: start;
+    font: inherit;
+    color: inherit;
+    padding: 10px 15px;
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    margin-bottom: 8px;
+    background-color: var(--bg-secondary);
+    cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s;
+}
+
+.cross-reference-item:last-child {
+    margin-bottom: 0;
+}
+
+button.cross-reference-item:hover,
+button.cross-reference-item:focus-visible {
+    background-color: var(--bg-accent);
+    border-color: var(--border-accent);
+    outline: none;
+}
+
+.cross-reference-item.unavailable {
+    cursor: default;
+    opacity: 0.6;
+}
+
+.cross-reference-reference {
+    font-weight: bold;
+    color: var(--link-color);
+}
+
+.cross-reference-text {
+    margin-top: 4px;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--text-primary);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    overflow: hidden;
+}

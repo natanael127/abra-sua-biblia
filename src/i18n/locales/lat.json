@@ -16,7 +16,8 @@
         },
         "books": "Libri",
         "booksCount": "Libri ({{count}})",
-        "referencePlaceholder": "Exempli gratia: Mt 5,3-12.21-38"
+        "referencePlaceholder": "Exempli gratia: Mt 5,3-12.21-38",
+        "crossReferences": "Loca parallela ad {{reference}}"
     },
     "buttons": {
         "theme": {
@@ -124,6 +125,9 @@
             "results_other": "{{count}} eventus",
             "noBible": "Nulla Biblia imposita est",
             "noResults": "Nulli versus inventi sunt"
+        },
+        "crossReferences": {
+            "unavailable": "Liber in hac versione deest"
         }
     }
 }
