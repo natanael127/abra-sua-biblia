@@ -368,11 +368,14 @@ function selectBible(key: string): Promise<boolean> {
     return state.bibleLoad;
 }
 
-async function onBibleSelected(): Promise<void> {
-    state.navToken++;
-    if (await selectBible(bibleSelect().value)) {
-        showPassage('commit');
-    }
+/**
+ * Switching translation is a navigation to the same passage in the new Bible:
+ * the book goes into the URL as its USFM id, the same in every translation, and
+ * `show` finds it there and writes it as the new Bible's abbreviation.
+ */
+function onBibleSelected(): void {
+    const inputReference = referenceField().value.trim();
+    getRouter().navigate(readerPath(bibleSelect().value, replaceBook(inputReference, findBook, getBookUrlId)));
 }
 
 async function handleFileUpload(file: File | undefined): Promise<void> {
@@ -664,7 +667,7 @@ export function createReaderScreen(router: () => Router): Screen {
     setupReferenceField();
     setupCrossReferences();
 
-    bibleSelect().addEventListener('change', () => void onBibleSelected());
+    bibleSelect().addEventListener('change', onBibleSelected);
     byId('bible-file', HTMLInputElement).addEventListener('change', (event) => {
         void handleFileUpload((event.target as HTMLInputElement).files?.[0]);
     });
