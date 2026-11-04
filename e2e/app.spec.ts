@@ -1,10 +1,27 @@
 import { execSync } from 'node:child_process';
-import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { expect, type Page, test } from '@playwright/test';
 import { readerPath } from '../src/screens/reader/url';
 
 const FIXTURES = 'tests/fixtures/xml';
+/** Local copy of the Bibles (npm run bibles:fetch, run before the E2E tests). */
+const BIBLES_COPY = '.bibles-cache';
+/** Origin of the Blob store that holds the Bibles (settings.json). */
+const BLOB_ORIGIN = new URL((JSON.parse(readFileSync('settings.json', 'utf8')) as { biblesUrl: string }).biblesUrl).origin;
+
+// The Bibles are served from the local copy instead of the Blob store: faster and independent of the
+// network. (Requests made by the service worker are not intercepted and do reach the store.)
+test.beforeEach(async ({ context }) => {
+    await context.route(`${BLOB_ORIGIN}/**`, (route) => {
+        const file = decodeURIComponent(new URL(route.request().url()).pathname.slice(1));
+        return route.fulfill({
+            path: join(BIBLES_COPY, file),
+            contentType: 'application/json',
+            headers: { 'access-control-allow-origin': '*' },
+        });
+    });
+});
 
 /** Opens the page with the given Bible and reference and waits for the Bible to load. */
 async function open(page: Page, quote = 'Jo 3,16', bible = 'por/ave-maria') {
@@ -101,7 +118,8 @@ test('switching translation keeps the reference', async ({ page }) => {
     test.slow();
     await open(page, 'Sl 23,1');
     await page.locator('#bible-select').selectOption('Edição Pastoral');
-    await expect(result(page).locator('.passage-heading')).toContainText('(Edição Pastoral)');
+    // Handing 10 MB to the page through the intercepted request takes a few seconds
+    await expect(result(page).locator('.passage-heading')).toContainText('(Edição Pastoral)', { timeout: 20_000 });
     await expect(reference(page)).toHaveValue('Sl 23,1');
 
     // At the root, the saved preference applies
@@ -443,10 +461,10 @@ test('loads the app with a single JS and a single CSS file', async ({ page }) =>
     expect(assets.filter((path) => path.endsWith('.css'))).toHaveLength(1);
 });
 
-test('makes no requests to other domains (no analytics)', async ({ page, baseURL }) => {
+test('makes no requests to other domains, except the Blob store with the Bibles (no analytics)', async ({ page, baseURL }) => {
     const external: string[] = [];
     page.on('request', (request) => {
-        if (!request.url().startsWith(baseURL!)) external.push(request.url());
+        if (!request.url().startsWith(baseURL!) && !request.url().startsWith(`${BLOB_ORIGIN}/`)) external.push(request.url());
     });
     await open(page, 'Jo 3,16');
     await reference(page).fill('Mt 5,3-12');
@@ -500,14 +518,10 @@ test('"Sobre" section ends with the build version (commit hash and date)', async
     expect(sizes.bottom).toBeLessThanOrEqual(sizes.limit);
 });
 
-test('Bibles are published unmodified', async ({ request }) => {
-    const file = 'por_pastoral.ebf1.json';
-    const response = await request.get(`/assets/data/bibles/${file}`);
-    expect(response.ok()).toBe(true);
-    expect(response.headers()['content-type']).toContain('application/json');
-
-    const sha256 = (data: Buffer) => createHash('sha256').update(data).digest('hex');
-    expect(sha256(await response.body())).toBe(sha256(readFileSync(`public/assets/data/bibles/${file}`)));
+test('the Bibles come from the Blob store, versioned by hash, and not from the site', async ({ page }) => {
+    const bibleRequest = page.waitForRequest(/\/por_ave_maria\.ebf1\.json\?v=[0-9a-f]{12}$/);
+    await open(page);
+    expect(new URL((await bibleRequest).url()).origin).toBe(BLOB_ORIGIN);
 });
 
 test('works offline after the first visit', async ({ page, context }) => {
@@ -686,6 +700,15 @@ test.describe('URL and browser history', () => {
     });
 
     test('unknown language opens the default Bible and warns', async ({ page }) => {
+        // Only the message and the redirect matter here: a Bible with a single book loads quickly, and the
+        // message (3 s) cannot expire while the page is busy loading a full one
+        const bible = JSON.parse(readFileSync(join(BIBLES_COPY, 'por_ave_maria.ebf1.json'), 'utf8')) as {
+            bible: { books: unknown[] };
+        };
+        bible.bible.books = bible.bible.books.slice(0, 1);
+        await page.route(/\/por_ave_maria\.ebf1\.json/, (route) =>
+            route.fulfill({ json: bible, headers: { 'access-control-allow-origin': '*' } }),
+        );
         await page.goto('/xxx');
         await expect(page.locator('.temporary-message')).toHaveText('Tradução não encontrada');
         await expect(page).toHaveURL('/por/ave-maria');
@@ -710,7 +733,7 @@ test.describe('URL and browser history', () => {
     });
 
     test('failure to load the Bible keeps the input reference in the URL', async ({ page }) => {
-        await page.route('**/por_cnbb.ebf1.json', (route) => route.abort());
+        await page.route(/\/por_cnbb\.ebf1\.json/, (route) => route.abort());
         await page.goto('/por/cnbb/jo/3,16');
         await expect(page.locator('.temporary-message')).toHaveText('Erro ao carregar a Bíblia');
         await expect(reference(page)).toHaveValue('jo 3,16');

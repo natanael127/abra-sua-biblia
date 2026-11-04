@@ -27,8 +27,8 @@ function injectVersion(): Plugin {
 }
 
 /**
- * Generates public/assets/data/index.json (list of Bibles) from the
- * *.ebf1.json files and settings.json, when the build and the dev server
+ * Generates public/assets/data/index.json (list of Bibles) from
+ * bibles-catalog.json and settings.json, when the build and the dev server
  * start. Fails if the index cannot be generated.
  */
 function generateBibleIndex(): Plugin {
@@ -98,10 +98,14 @@ function minifyStaticFiles(): Plugin {
     };
 }
 
+const settings = readSettings();
+
 export default defineConfig({
     define: {
         // Interface language when the user has not chosen one and the browser's has no translation (settings.json)
-        __DEFAULT_UI_LANGUAGE__: JSON.stringify(readSettings().defaultLanguage),
+        __DEFAULT_UI_LANGUAGE__: JSON.stringify(settings.defaultLanguage),
+        // Origin of the Blob store with the Bibles, which the service worker also caches (settings.json)
+        __BIBLES_ORIGIN__: JSON.stringify(new URL(settings.biblesUrl).origin),
     },
     build: {
         rolldownOptions: {
@@ -131,6 +135,8 @@ export default defineConfig({
     ],
     test: {
         include: ['tests/**/*.test.ts'],
+        // Brings the local copy of the Bibles (from the Blob store) up to date
+        globalSetup: ['tests/global-setup.ts'],
         setupFiles: ['tests/setup.ts'],
     },
 });

@@ -1,4 +1,5 @@
 {
     "defaultBible": "por/ave-maria",
-    "defaultLanguage": "por"
+    "defaultLanguage": "por",
+    "biblesUrl": "https://3vtxtcarmimcfugn.public.blob.vercel-storage.com"
 }

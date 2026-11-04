@@ -7,6 +7,7 @@
  * - Everything else (page, index.json, Bibles, manifest) is network-first:
  *   the cache is only used offline. The request with `cache: 'no-cache'` makes
  *   the server answer 304 when nothing changed, without resending the Bibles.
+ *   The Bibles are in another origin (the Blob store), which is handled the same way.
  * - Every SPA navigation (/por/ave-maria/jo/3,16, /planos...) gets the same
  *   page, kept in a single cache entry.
  */
@@ -16,6 +17,8 @@ import { NavigationRoute, registerRoute } from 'workbox-routing';
 import { NetworkFirst } from 'workbox-strategies';
 
 declare const self: ServiceWorkerGlobalScope;
+/** Origin of the Blob store that holds the Bibles, injected by vite.config.ts from settings.json. */
+declare const __BIBLES_ORIGIN__: string;
 
 /** Cache used by the service worker that predates the migration to Vite. */
 const LEGACY_CACHE = 'abra-sua-biblia-v1';
@@ -61,6 +64,7 @@ registerRoute(
 );
 
 registerRoute(
-    ({ request, url }) => request.method === 'GET' && url.origin === self.location.origin,
+    ({ request, url }) =>
+        request.method === 'GET' && (url.origin === self.location.origin || url.origin === __BIBLES_ORIGIN__),
     networkFirst,
 );

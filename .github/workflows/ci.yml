@@ -15,6 +15,12 @@ jobs:
                   node-version: 24
                   cache: npm
             - run: npm ci
+            # Local copy of the Bibles (downloaded from the Blob store by the tests)
+            - uses: actions/cache@v4
+              with:
+                  path: .bibles-cache
+                  key: bibles-${{ hashFiles('bibles-catalog.json') }}
+                  restore-keys: bibles-
             - run: npm run check
             - run: npx playwright install --with-deps chromium
             - run: npm run test:e2e

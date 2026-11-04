@@ -1,33 +1,41 @@
 /**
- * The published Bibles are EBF1 files meant for free use outside this site.
- * These tests ensure they follow the format's official schema and stay
- * consistent with the index (generated at build time by scripts/build-index.ts).
+ * The Bibles are EBF1 files meant for free use outside this site, kept in the Blob store. These
+ * tests ensure that the ones in the catalog (read from the local copy, which tests/global-setup.ts
+ * brings up to date and checks against the catalog) follow the format's official schema and stay
+ * consistent with the catalog and the index (generated at build time by scripts/build-index.ts).
  */
-import { existsSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import Ajv from 'ajv';
 import { describe, expect, it } from 'vitest';
 import ebf1Schema from 'easy-bible-format/ebf1-schema.json';
+import { buildIndex, readSettings } from '../../scripts/build-index';
+import { type CatalogEntry, readCatalog, sha256 } from '../../scripts/catalog';
 import { validateEbf } from '../../src/core/ebf';
 import { getBookAbbreviation } from '../../src/core/ebf';
-import { buildIndex } from '../../scripts/build-index';
 import { matchPath } from '../../src/router/path';
 import { parseReaderParams, READER_PATTERN, readerPath } from '../../src/screens/reader/url';
-import { DATA_DIR, listBibleFiles, loadBible } from '../helpers';
+import { BIBLES_DIR, loadBible } from '../helpers';
 
-const index = buildIndex();
+const catalog = readCatalog();
+const settings = readSettings();
+const index = buildIndex(catalog, settings);
 const BOOKS_BY_TYPE: Record<string, number> = { catholic: 73, protestant: 66 };
 const validateSchema = new Ajv({ allErrors: true }).compile(ebf1Schema);
 
-describe('published Bibles', () => {
-    const files = listBibleFiles();
-
+describe('Bibles of the catalog', () => {
     it('at least one Bible exists', () => {
-        expect(files.length).toBeGreaterThan(0);
+        expect(catalog.length).toBeGreaterThan(0);
     });
 
-    describe.each(files)('%s', (file) => {
+    describe.each(catalog.map((entry) => [entry.file, entry] as [string, CatalogEntry]))('%s', (file, entry) => {
         const id = file.replace(/\.ebf1\.json$/, '');
+
+        it('is the file registered in the catalog (size and SHA-256)', () => {
+            const content = readFileSync(join(BIBLES_DIR, file));
+            expect(content.length).toBe(entry.size);
+            expect(sha256(content)).toBe(entry.sha256);
+        });
 
         it('follows the official EBF1 schema', () => {
             validateSchema(loadBible(id));
@@ -38,12 +46,12 @@ describe('published Bibles', () => {
             expect(validateEbf(loadBible(id))).toEqual([]);
         });
 
-        it('is listed in index.json with consistent name and type', () => {
+        it('has the name, language, slug and type of the catalog', () => {
             const bible = loadBible(id).bible;
-            const entry = index.find((e) => e.path === `bibles/${file}`);
-            expect(entry).toBeDefined();
-            expect(entry?.name).toBe(bible.name);
-            const expectedBooks = entry?.type ? BOOKS_BY_TYPE[entry.type] : undefined;
+            expect(entry.name).toBe(bible.name);
+            expect(entry.language).toBe(bible.language);
+            expect(entry.slug).toBe((bible as { slug?: string }).slug);
+            const expectedBooks = BOOKS_BY_TYPE[entry.type];
             if (expectedBooks !== undefined) {
                 expect(bible.books).toHaveLength(expectedBooks);
             }
@@ -55,7 +63,6 @@ describe('published Bibles', () => {
         });
 
         it('every book has a URL that resolves back to the same book', () => {
-            const entry = index.find((e) => e.path === `bibles/${file}`)!;
             for (const book of loadBible(id).bible.books) {
                 const abbreviation = getBookAbbreviation(book);
                 const params = matchPath(READER_PATTERN, readerPath(`${entry.language}/${entry.slug}`, `${abbreviation} 1,2-3`));
@@ -69,11 +76,21 @@ describe('published Bibles', () => {
     });
 });
 
-describe('index of the published Bibles', () => {
-    it('points only to existing files', () => {
-        for (const entry of index) {
-            expect(existsSync(join(DATA_DIR, entry.path)), entry.path).toBe(true);
-        }
+describe('index of the Bibles', () => {
+    it('has one entry per Bible of the catalog, in the same order', () => {
+        expect(index.map((entry) => entry.name)).toEqual(catalog.map((entry) => entry.name));
+    });
+
+    it('points every Bible to its file in the Blob store, versioned by the hash', () => {
+        index.forEach((entry, i) => {
+            const { file, sha256: hash } = catalog[i]!;
+            expect(entry.url).toBe(`${settings.biblesUrl}/${file}?v=${hash.slice(0, 12)}`);
+        });
+    });
+
+    it('has the default Bible of settings.json', () => {
+        const defaults = index.filter((entry) => entry.default);
+        expect(defaults.map((entry) => `${entry.language}/${entry.slug}`)).toEqual([settings.defaultBible]);
     });
 
     it('has unique names', () => {
@@ -87,12 +104,6 @@ describe('index of the published Bibles', () => {
         for (const entry of index) {
             expect(entry.language).toMatch(/^[a-z]{3}$/);
             expect(entry.slug).toMatch(/^[a-z0-9]+(-[a-z0-9]+)*$/);
-        }
-    });
-
-    it('has each Bible language equal to the file', () => {
-        for (const entry of index) {
-            expect(loadBible(entry.path.replace(/^bibles\/|\.ebf1\.json$/g, '')).bible.language, entry.path).toBe(entry.language);
         }
     });
 });

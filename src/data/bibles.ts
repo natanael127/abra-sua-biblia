@@ -1,6 +1,6 @@
 import { type EbfDocument, validateEbf } from '../core/ebf';
 
-/** Public folder with the index and the EBF1 Bibles, served untransformed. */
+/** Public folder with the index of the Bibles (the Bibles themselves are in the Blob store). */
 export const DATA_PATH = '/assets/data/';
 
 export type BibleType = 'catholic' | 'protestant' | 'other';
@@ -11,8 +11,8 @@ export interface BibleIndexEntry {
     language: string;
     /** Identifier of the Bible within the language, e.g.: "ave-maria" em /por/ave-maria/jo/3,16. */
     slug: string;
-    /** Path relative to DATA_PATH, e.g.: "bibles/por_ave_maria.ebf1.json". */
-    path: string;
+    /** Absolute URL of the EBF1 file, in the Blob store, e.g.: "https://.../por_ave_maria.ebf1.json?v=0a1b2c3d4e5f". */
+    url: string;
     type?: BibleType;
     default?: boolean;
 }
@@ -46,9 +46,9 @@ export async function getAvailableBibles(fetchFn: typeof fetch = fetch): Promise
     }
 }
 
-export async function loadBibleFromPath(biblePath: string, fetchFn: typeof fetch = fetch): Promise<EbfDocument | null> {
+export async function loadBibleFromUrl(url: string, fetchFn: typeof fetch = fetch): Promise<EbfDocument | null> {
     try {
-        const response = await fetchFn(`${DATA_PATH}${biblePath}`);
+        const response = await fetchFn(url);
         if (!response.ok) {
             throw new Error(`Failed to load file: ${response.status} ${response.statusText}`);
         }

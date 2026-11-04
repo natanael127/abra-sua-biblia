@@ -13,8 +13,10 @@
         "lint": "eslint .",
         "test": "vitest run",
         "test:watch": "vitest",
-        "test:e2e": "playwright test",
-        "check": "npm run typecheck && npm run lint && npm run test"
+        "test:e2e": "npm run bibles:fetch && playwright test",
+        "check": "npm run typecheck && npm run lint && npm run test",
+        "bibles:fetch": "node scripts/fetch-bibles.ts",
+        "bibles:catalog": "node scripts/catalog.ts"
     },
     "devDependencies": {
         "@eslint/js": "^10.0.1",

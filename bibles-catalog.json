@@ -1,0 +1,830 @@
+[
+    {
+        "file": "arb_avd_13.ebf1.json",
+        "name": "الكتاب المقدس",
+        "language": "arb",
+        "slug": "new-van-dyck-bible-full-vocalization-with-helps",
+        "type": "protestant",
+        "size": 21698907,
+        "sha256": "e97d5c06730f8754183302a36269ae5fb9cdfed83b0d73d9eb5c700fc8a06793"
+    },
+    {
+        "file": "arb_cav_1981.ebf1.json",
+        "name": "الترجمة الكاثوليكيّة (اليسوعيّة)",
+        "language": "arb",
+        "slug": "catholic-arabic-version",
+        "type": "catholic",
+        "size": 9609602,
+        "sha256": "8d684bfa7f10dab3b1ad86e4111234c32472047f959bd1dc7fb6ff33a09e753b"
+    },
+    {
+        "file": "arb_gna2025_67.ebf1.json",
+        "name": "الترجمة العربية المشتركة",
+        "language": "arb",
+        "slug": "good-news-arabic-2025",
+        "type": "protestant",
+        "size": 7929943,
+        "sha256": "1b2b4f22b3000d3fc83701ea07da35c9a9efae2078bdbde17f0c27e62ad35891"
+    },
+    {
+        "file": "arb_nav_101.ebf1.json",
+        "name": "كتاب الحياة",
+        "language": "arb",
+        "slug": "new-arabic-version",
+        "type": "protestant",
+        "size": 10046230,
+        "sha256": "8a900b56142f312acc57072e7cdb068a50a18cdbae3dc170bbc2cd8f803bc9e8"
+    },
+    {
+        "file": "ben_bcv_2412.ebf1.json",
+        "name": "বাংলা সমকালীন সংস্করণ",
+        "language": "ben",
+        "slug": "bengali-contemporary-version-2019-updated-2021",
+        "type": "protestant",
+        "size": 12516770,
+        "sha256": "665f173c8adf37e0dc452d8e17d1922fdd824f295ccdbf4f5437fe94920a0fd1"
+    },
+    {
+        "file": "ben_bengalcl-bsi_1690.ebf1.json",
+        "name": "পবিএ বাইবেল CL Bible (BSI)",
+        "language": "ben",
+        "slug": "bengali-common-language-bible-bsi",
+        "type": "protestant",
+        "size": 16605697,
+        "sha256": "4cf2f375327d1aa797f83a401768fd32caae90a790caf733d70918c1afb6d434"
+    },
+    {
+        "file": "ben_berv_3150.ebf1.json",
+        "name": "পবিত্র বাইবেল",
+        "language": "ben",
+        "slug": "holy-bible-easy-to-read-version",
+        "type": "protestant",
+        "size": 13492022,
+        "sha256": "3b3f3f2b5547be2f426265356d7a8c5a253d56cf4bec3e205464f1388d3a923c"
+    },
+    {
+        "file": "ben_mbcl_95.ebf1.json",
+        "name": "Kitabul Mukkadas",
+        "language": "ben",
+        "slug": "kitabul-mukkadas",
+        "type": "protestant",
+        "size": 12195935,
+        "sha256": "56b26bcac9c706ee1d65784f1f1b6edf59083e8c037b556caf8b60ea4ab0fb24"
+    },
+    {
+        "file": "ben_rovu_1791.ebf1.json",
+        "name": "পবিত্র বাইবেল (কেরী ভার্সন)",
+        "language": "ben",
+        "slug": "revised-old-version-unicode",
+        "type": "protestant",
+        "size": 12466816,
+        "sha256": "4103c64c79a7ec2e2a9358c392562c30a79c4e58f346658c77359eb18ad3d9b3"
+    },
+    {
+        "file": "deu_delut_51.ebf1.json",
+        "name": "Lutherbibel 1912",
+        "language": "deu",
+        "slug": "lutherbibel-1912",
+        "type": "protestant",
+        "size": 6011008,
+        "sha256": "9245ed82b78d0b674ac825982559d342b0f9f844538c48b9daf0e183cb82c0d0"
+    },
+    {
+        "file": "deu_elb71_58.ebf1.json",
+        "name": "Elberfelder 1871",
+        "language": "deu",
+        "slug": "elberfelder-1871",
+        "type": "protestant",
+        "size": 6325820,
+        "sha256": "c95f7682772a2ff8904f464f018d376f43f732d7fc763e6113fea6a05162f032"
+    },
+    {
+        "file": "deu_hfa_73.ebf1.json",
+        "name": "Hoffnung für alle",
+        "language": "deu",
+        "slug": "hoffnung-fur-alle",
+        "type": "protestant",
+        "size": 6665789,
+        "sha256": "cbb7f19d87eb814f414f2396d401cb6e2e13db8a984e4f9dbd47604a8892e811"
+    },
+    {
+        "file": "ell_fpb_921.ebf1.json",
+        "name": "H Αγία Γραφή στη Δημοτική (Filos Pergamos)",
+        "language": "ell",
+        "slug": "filos-pergamos",
+        "type": "protestant",
+        "size": 9515204,
+        "sha256": "0068e34fa8b770ac9c9c937a0907949090651b76c88f30e940f28a086a2116b4"
+    },
+    {
+        "file": "ell_lmgnt_3669.ebf1.json",
+        "name": "Νεοελληνική Μετάφραση Λόγου",
+        "language": "ell",
+        "slug": "modern-greek-new-testament-lmgnt",
+        "type": "other",
+        "size": 2488424,
+        "sha256": "33e55371083ac7197e5032caa1201d24be1f569d17a0abd641700380953a8787"
+    },
+    {
+        "file": "ell_ntv_423.ebf1.json",
+        "name": "Η Καινή Διαθήκη του Κυρίου και Σωτήρος ημών Ιησού Χριστού κατά νεοελληνικήν απόδοσιν",
+        "language": "ell",
+        "slug": "the-new-testament-in-modern-greek-vellas-version",
+        "type": "other",
+        "size": 2474915,
+        "sha256": "35240a78303d79a02858f8f217a7f01f883de1669e11576817f94ef033141739"
+    },
+    {
+        "file": "ell_tgv_173.ebf1.json",
+        "name": "Η Αγία Γραφή (Παλαιά και Καινή Διαθήκη)",
+        "language": "ell",
+        "slug": "the-holy-bible-in-contemporary-greek-language",
+        "type": "protestant",
+        "size": 9639648,
+        "sha256": "a931295534cb735c37d346fdc834d0bc14043fb55bf3fac878fc3a1edbf84595"
+    },
+    {
+        "file": "ell_tgvd_346.ebf1.json",
+        "name": "Η Αγία Γραφή με τα Δευτεροκανονικά (Παλαιά και Καινή Διαθήκη)",
+        "language": "ell",
+        "slug": "the-holy-bible-in-contemporary-greek-language-with-the-dc-books",
+        "type": "other",
+        "size": 11282253,
+        "sha256": "04a851eff301596374028263d0e518a3bd28a181d723c8b755815656c464e29e"
+    },
+    {
+        "file": "eng_cpdv_42.ebf1.json",
+        "name": "Catholic Public Domain Version",
+        "language": "eng",
+        "slug": "catholic-public-domain-version",
+        "type": "catholic",
+        "size": 7133804,
+        "sha256": "6b6ac5f5efa949af56bf98781f5e3979a51dccf753051ef7e00bb2cff33195aa"
+    },
+    {
+        "file": "eng_drc1752_55.ebf1.json",
+        "name": "Douay-Rheims Challoner Revision 1752 ✠",
+        "language": "eng",
+        "slug": "douay-rheims-challoner-revision-1752",
+        "type": "catholic",
+        "size": 6864199,
+        "sha256": "945df189cdcf7d89a028c842efad60b636118782263ec48957a658e2ffb08c85"
+    },
+    {
+        "file": "eng_esv_59.ebf1.json",
+        "name": "English Standard Version 2025",
+        "language": "eng",
+        "slug": "english-standard-version-2025",
+        "type": "protestant",
+        "size": 21001186,
+        "sha256": "3a3244fc945d28014949c2ac67d8ab099dc5d7c3b69af5a67519c9d7bdbf1cd9"
+    },
+    {
+        "file": "eng_gnbdc_416.ebf1.json",
+        "name": "Good News Bible (British) with DC section 2017",
+        "language": "eng",
+        "slug": "good-news-bible-british-with-dc-section-2017",
+        "type": "other",
+        "size": 9487325,
+        "sha256": "383ecbcfbf0ad07b086996b59deac52d82623828af3eb0923e50f90e0f0aed63"
+    },
+    {
+        "file": "eng_gnbdk_431.ebf1.json",
+        "name": "Good News Bible (British) Catholic Edition 2017",
+        "language": "eng",
+        "slug": "good-news-bible-british-catholic-edition-2017",
+        "type": "catholic",
+        "size": 9082845,
+        "sha256": "86d608d5116d6b86dd737c0e23f84d6b1941d04a3d386ed4ad1a9d13b471d083"
+    },
+    {
+        "file": "eng_kjv_1.ebf1.json",
+        "name": "King James Version",
+        "language": "eng",
+        "slug": "king-james-version",
+        "type": "protestant",
+        "size": 6122178,
+        "sha256": "87b39adfd5552489554e954c19f452c8e6f444fb2e8a164b676be27c5416c709"
+    },
+    {
+        "file": "eng_nabre_463.ebf1.json",
+        "name": "New American Bible, revised edition",
+        "language": "eng",
+        "slug": "new-american-bible-revised-edition",
+        "type": "catholic",
+        "size": 6687309,
+        "sha256": "251cca254969b5a33e319b6f8cd79e375de5090068d0fd66f065d3024c09b865"
+    },
+    {
+        "file": "eng_niv11_111.ebf1.json",
+        "name": "New International Version",
+        "language": "eng",
+        "slug": "new-international-version",
+        "type": "protestant",
+        "size": 5915948,
+        "sha256": "ce3713e7569c37928a00ffae573cee9e57731f07f2d422a53709028c514eb178"
+    },
+    {
+        "file": "eng_nkjv_114.ebf1.json",
+        "name": "New King James Version",
+        "language": "eng",
+        "slug": "new-king-james-version",
+        "type": "protestant",
+        "size": 14548243,
+        "sha256": "dab7b459fc0e7397b00fa95fdf8559dde03e52c4383dc77d6ee2638c20d21b63"
+    },
+    {
+        "file": "eng_nlt_116.ebf1.json",
+        "name": "New Living Translation",
+        "language": "eng",
+        "slug": "new-living-translation",
+        "type": "protestant",
+        "size": 6103323,
+        "sha256": "c5960cf6bda8445250649702edb5e696c043a7bbf9696c9b8a40a3ee4ac00214"
+    },
+    {
+        "file": "eng_nltce_4249.ebf1.json",
+        "name": "New Living Translation Catholic Edition",
+        "language": "eng",
+        "slug": "new-living-translation-catholic-edition",
+        "type": "catholic",
+        "size": 6956894,
+        "sha256": "0b1fe4c30d37a12e602d8bf13638b8d211984ef8f2a7e2d4b2ee7d991475238c"
+    },
+    {
+        "file": "eng_nrsvci_2015.ebf1.json",
+        "name": "New Revised Standard Version Catholic Interconfessional",
+        "language": "eng",
+        "slug": "new-revised-standard-version-catholic-interconfessional",
+        "type": "other",
+        "size": 7175289,
+        "sha256": "f776ceaba7f82cde3ea4c147113c3282d5bf57724de85d3dab6b56f4359690a5"
+    },
+    {
+        "file": "eng_rsvci_3548.ebf1.json",
+        "name": "Revised Standard Version",
+        "language": "eng",
+        "slug": "revised-standard-version",
+        "type": "other",
+        "size": 10077294,
+        "sha256": "193e64e3107790cfca4715cedb3045820ef86514960ddf04dcfffa63169a561a"
+    },
+    {
+        "file": "fra_bcc1923_504.ebf1.json",
+        "name": "Bible catholique Crampon 1923",
+        "language": "fra",
+        "slug": "bible-catholique-crampon-1923",
+        "type": "catholic",
+        "size": 7080455,
+        "sha256": "24ea66a4f615d5d67bbccc35805957297db1c39605a70021897578373c7d8353"
+    },
+    {
+        "file": "fra_bds_21.ebf1.json",
+        "name": "La Bible du Semeur 2015",
+        "language": "fra",
+        "slug": "la-bible-du-semeur-2015",
+        "type": "protestant",
+        "size": 6858265,
+        "sha256": "5aa5039e5ef494ba78f2741eceab5ee9e10c9ddd5aff9b3776f4feec2761ddfb"
+    },
+    {
+        "file": "fra_bfc_63.ebf1.json",
+        "name": "Bible en français courant",
+        "language": "fra",
+        "slug": "bible-en-francais-courant",
+        "type": "other",
+        "size": 7670677,
+        "sha256": "461c2dbce507ec6829400968a6b0b078a4f10fc2debca1835a56a338232fb64c"
+    },
+    {
+        "file": "fra_lsg_93.ebf1.json",
+        "name": "La Sainte Bible par Louis Segond 1910",
+        "language": "fra",
+        "slug": "la-sainte-bible-par-louis-segond-1910",
+        "type": "protestant",
+        "size": 9723083,
+        "sha256": "fecb01f25b973d0c5cf3d0bbed0a22449202e6d857cb5fe8f985966f60eb9b4a"
+    },
+    {
+        "file": "fra_nbs_104.ebf1.json",
+        "name": "Nouvelle Bible Segond",
+        "language": "fra",
+        "slug": "nouvelle-bible-segond",
+        "type": "protestant",
+        "size": 6353638,
+        "sha256": "626a5143dcaec99be30074b33bf66e9d9a7695d992b3906d3c6f233cbe074543"
+    },
+    {
+        "file": "fra_pdv2017_133.ebf1.json",
+        "name": "Parole de Vie 2017",
+        "language": "fra",
+        "slug": "parole-de-vie-2017",
+        "type": "other",
+        "size": 7726394,
+        "sha256": "d17f7e7a2640027d3dbf142f394792264e6cad0dd5bb618c70cd3a58df82eb4e"
+    },
+    {
+        "file": "fra_s21_152.ebf1.json",
+        "name": "La Bible Segond 21",
+        "language": "fra",
+        "slug": "la-bible-segond-21",
+        "type": "protestant",
+        "size": 6356787,
+        "sha256": "406a0a135c3b3277f4294e57e265d343f7cb61ea9c95e8a39c9b002396f85c82"
+    },
+    {
+        "file": "grc_byz04_209.ebf1.json",
+        "name": "Πατριαρχικό Κείμενο (Έκδοση Αντωνιάδη, 1904)",
+        "language": "grc",
+        "slug": "patriarchal-text-antoniadis-text-1904",
+        "type": "other",
+        "size": 2174505,
+        "sha256": "59aebed577b45e8fd788ac75fc6b025fce9270602777ea1b376ffcabd8c1b4f0"
+    },
+    {
+        "file": "grc_byztxf18_3449.ebf1.json",
+        "name": "Byzantine Textform 2018",
+        "language": "grc",
+        "slug": "byzantine-textform-2018",
+        "type": "other",
+        "size": 2180749,
+        "sha256": "17111f44df45295dd3dba8ebcbe19949a6143edde788689c16c440c65302045e"
+    },
+    {
+        "file": "grc_grcbrent_2503.ebf1.json",
+        "name": "μετάφραση των εβδομήκοντα",
+        "language": "grc",
+        "slug": "brenton-greek-septuagint",
+        "type": "other",
+        "size": 7979199,
+        "sha256": "28bed66b495aba284f85d9c39102545b2fc1144d89572992ec5a7d8d894d3dee"
+    },
+    {
+        "file": "grc_nvst_4286.ebf1.json",
+        "name": "New Vellas Source Text",
+        "language": "grc",
+        "slug": "new-vellas-source-text",
+        "type": "other",
+        "size": 182900,
+        "sha256": "82337e06fb3ebdfcb3168743d995fb51dc9896e97ec4a64c1251df2a31763618"
+    },
+    {
+        "file": "grc_sblg_156.ebf1.json",
+        "name": "SBL Greek New Testament",
+        "language": "grc",
+        "slug": "sbl-greek-new-testament",
+        "type": "other",
+        "size": 2170338,
+        "sha256": "330228ac74137d953d9b8095131f8e8ce315096995be2262ebdd0728a1be745d"
+    },
+    {
+        "file": "grc_thgnt_2270.ebf1.json",
+        "name": "The Greek New Testament",
+        "language": "grc",
+        "slug": "the-greek-new-testament",
+        "type": "other",
+        "size": 2145807,
+        "sha256": "236869c43207b98b413dfd1cf8c4e21a7ab513bb4d8d62b6a55c01f20169ae3e"
+    },
+    {
+        "file": "grc_tr1624_182.ebf1.json",
+        "name": "Elzevir Textus Receptus 1624",
+        "language": "grc",
+        "slug": "elzevir-textus-receptus-1624",
+        "type": "other",
+        "size": 2016687,
+        "sha256": "b62537158b9b07259d83c1b89e69e4f429d1f3b2ef4df0b6c688ecd83422f0b5"
+    },
+    {
+        "file": "grc_tr1894_183.ebf1.json",
+        "name": "Scrivener’s Textus Receptus 1894",
+        "language": "grc",
+        "slug": "scrivener-s-textus-receptus-1894",
+        "type": "other",
+        "size": 2177439,
+        "sha256": "9407378526106658a5b1bf2cc428f42fe22b954ed7de5af8a2946be26f0c994e"
+    },
+    {
+        "file": "hin_hcv_1628.ebf1.json",
+        "name": "सरल हिन्दी बाइबल",
+        "language": "hin",
+        "slug": "hindi-contemporary-version",
+        "type": "protestant",
+        "size": 12651176,
+        "sha256": "33d14a159d7b2df57b5b57a6bedbc6be9505d1b23e8bea5064a93db741e16c77"
+    },
+    {
+        "file": "hin_hinclbsi_1682.ebf1.json",
+        "name": "पवित्र बाइबिल CL Bible (BSI)",
+        "language": "hin",
+        "slug": "hindi-cl-bible-bsi",
+        "type": "protestant",
+        "size": 17083975,
+        "sha256": "1dc63cbed9293288420d35deead295e2cecaa622bfd6f461a34c877aaff08f02"
+    },
+    {
+        "file": "hin_hinovbsi_1683.ebf1.json",
+        "name": "पवित्र बाइबिल OV (Re-edited) Bible (BSI)",
+        "language": "hin",
+        "slug": "hindi-ov-re-edited-bible-bsi",
+        "type": "protestant",
+        "size": 14105266,
+        "sha256": "2de1b3f5d5a6243b6f0de4b2a784c21f5e62572f2098c523fbb4d947e1949e1b"
+    },
+    {
+        "file": "hin_hsb_3540.ebf1.json",
+        "name": "नवीन हिंदी बाइबल",
+        "language": "hin",
+        "slug": "hindi-standard-bible",
+        "type": "other",
+        "size": 5309571,
+        "sha256": "d0f56a67dc691c661e26f17d64bd658a7e52a0115ca09acfd498ffaed7872ab6"
+    },
+    {
+        "file": "hin_irvhin_1980.ebf1.json",
+        "name": "इंडियन रिवाइज्ड वर्जन (IRV) हिंदी - 2019",
+        "language": "hin",
+        "slug": "indian-revised-version-irv-hindi-2019",
+        "type": "protestant",
+        "size": 11712148,
+        "sha256": "2f14e62f6084734ed2517bfc742ef0ca21102cb86277de6ae586e79d4f238cb8"
+    },
+    {
+        "file": "ind_bimk_27.ebf1.json",
+        "name": "Alkitab dalam Bahasa Indonesia Masa Kini",
+        "language": "ind",
+        "slug": "alkitab-dalam-bahasa-indonesia-masa-kini",
+        "type": "protestant",
+        "size": 8696214,
+        "sha256": "660bd100300bbf79e433dbdb1ff94af3ae6a0f71011e3734b894361494a33702"
+    },
+    {
+        "file": "ind_lai-tl_2861.ebf1.json",
+        "name": "Alkitab Terjemahan Lama",
+        "language": "ind",
+        "slug": "alkitab-terjemahan-lama",
+        "type": "protestant",
+        "size": 7197433,
+        "sha256": "e1cccfcd452371cc008ae5e55911c04dfa0f777114aaa4b6b71f54ac22b78b6d"
+    },
+    {
+        "file": "ind_pbtb2_2863.ebf1.json",
+        "name": "Perjanjian Baru Terjemahan Baru Edisi 2",
+        "language": "ind",
+        "slug": "perjanjian-baru-terjemahan-baru-edisi-2",
+        "type": "other",
+        "size": 2013562,
+        "sha256": "3f22cc3157f6321b68330135dfe4ed6fb90e5914179dff54db9e7f30e5693f3b"
+    },
+    {
+        "file": "ind_tb_306.ebf1.json",
+        "name": "Alkitab Terjemahan Baru",
+        "language": "ind",
+        "slug": "alkitab-terjemahan-baru",
+        "type": "protestant",
+        "size": 9030862,
+        "sha256": "0a5032554c6a5242bf138baad30f2694babc34196ef6124733aaf63fc770929e"
+    },
+    {
+        "file": "ita_db1885_54.ebf1.json",
+        "name": "Diodati Bibbia 1885",
+        "language": "ita",
+        "slug": "diodati-bibbia-1885",
+        "type": "protestant",
+        "size": 12675164,
+        "sha256": "4790985cbd0a060b025382e58c1d3b493b6f664f71e6284a956199715be61973"
+    },
+    {
+        "file": "ita_icl00d_1196.ebf1.json",
+        "name": "Traduzione Interconfessionale in Lingua Corrente",
+        "language": "ita",
+        "slug": "traduzione-interconfessionale-in-lingua-corrente",
+        "type": "other",
+        "size": 19014576,
+        "sha256": "ca2be1e402d231dcac59da34d6d17c7b7398fbdbb8c4242069f7326b98623fa0"
+    },
+    {
+        "file": "ita_irb20_3368.ebf1.json",
+        "name": "La Sacra Bibbia Versione Riveduta 2020 (R2)",
+        "language": "ita",
+        "slug": "la-sacra-bibbia-versione-riveduta-2020-r2",
+        "type": "protestant",
+        "size": 6188525,
+        "sha256": "2a31cb044632d82520bdc95bca2059dd127b69787a89060825981a8d6556aa71"
+    },
+    {
+        "file": "ita_nr2006_4833.ebf1.json",
+        "name": "La Sacra Bibbia",
+        "language": "ita",
+        "slug": "la-sacra-bibbia",
+        "type": "protestant",
+        "size": 6112977,
+        "sha256": "6da6045e535a2203ea29a00abe735fe8034ea41c32cace8e0941029b3cb36186"
+    },
+    {
+        "file": "jpn_jc_1820.ebf1.json",
+        "name": "Japanese: 聖書　口語訳",
+        "language": "jpn",
+        "slug": "the-bible-colloquial-japanese",
+        "type": "protestant",
+        "size": 7236461,
+        "sha256": "4dac8c67bdf5d26b30c59a5a5c0cacc42b144cf0b7599f3cd7de67d9f8f9330c"
+    },
+    {
+        "file": "jpn_jcb_83.ebf1.json",
+        "name": "リビングバイブル",
+        "language": "jpn",
+        "slug": "japanese-contemporary-bible",
+        "type": "protestant",
+        "size": 7209841,
+        "sha256": "da837dc80198c0b4b1ba661b91c32de79593a4e90cb550cb862b5ee64ed4a92d"
+    },
+    {
+        "file": "jpn_jniv_1819.ebf1.json",
+        "name": "Seisho Shinkyoudoyaku 聖書 新共同訳",
+        "language": "jpn",
+        "slug": "the-bible-with-deuterocanonicals-apocrypha-the-new-interconfessional-translation",
+        "type": "other",
+        "size": 8420581,
+        "sha256": "528d7baf33d4d6e18c5dab5962a05ace4e72cf9c4dbee78036991000d0f3e36d"
+    },
+    {
+        "file": "jpn_njb_4869.ebf1.json",
+        "name": "聖書 新改訳",
+        "language": "jpn",
+        "slug": "the-new-japanese-bible-shinkaiyaku",
+        "type": "protestant",
+        "size": 7296243,
+        "sha256": "5394db3b9a80c3e6a080c1fa959cb5f48725c96c0f7352c6f1139ec68ef019ec"
+    },
+    {
+        "file": "lat_vulg_823.ebf1.json",
+        "name": "Vulgata latina",
+        "language": "lat",
+        "slug": "vulgata-latina",
+        "type": "catholic",
+        "size": 6283666,
+        "sha256": "1b8cd689a0950f8a9722881dcb403e29653b2fa77b6b7f8b1d56374e967d7bee"
+    },
+    {
+        "file": "por_aa.ebf1.json",
+        "name": "Almeida Revisada Imprensa Bíblica",
+        "language": "por",
+        "slug": "aa",
+        "type": "protestant",
+        "size": 7269476,
+        "sha256": "d0a66449360965bf3d97aad6818a6bbfb0a074043113a8d3dad56ce4661797ab"
+    },
+    {
+        "file": "por_acf.ebf1.json",
+        "name": "Almeida Corrigida e Revisada Fiel",
+        "language": "por",
+        "slug": "acf",
+        "type": "protestant",
+        "size": 7277683,
+        "sha256": "67ad7a6b2da66d9532dfa93a48282974a7262265df3776afa196c3257b59f7e8"
+    },
+    {
+        "file": "por_aparecida.ebf1.json",
+        "name": "Aparecida",
+        "language": "por",
+        "slug": "aparecida",
+        "type": "catholic",
+        "size": 8968827,
+        "sha256": "a0497484c681c9d1c1ee9da5e2141996751457de51a9acd18a5536001f446bb4"
+    },
+    {
+        "file": "por_ara.ebf1.json",
+        "name": "Almeida Revista e Atualizada",
+        "language": "por",
+        "slug": "almeida-revista-e-atualizada",
+        "type": "protestant",
+        "size": 8033734,
+        "sha256": "50284c0c57b1fc7381de822ea370988a6fba1b8b7cccd12e09ead70d6d9556b6"
+    },
+    {
+        "file": "por_ave_maria.ebf1.json",
+        "name": "Ave-Maria",
+        "language": "por",
+        "slug": "ave-maria",
+        "type": "catholic",
+        "size": 8232321,
+        "sha256": "7cb8c7d1128dc033a7c7998d11907ba066f1b5bf633249fa88bdb03182712196"
+    },
+    {
+        "file": "por_cnbb.ebf1.json",
+        "name": "CNBB",
+        "language": "por",
+        "slug": "cnbb",
+        "type": "catholic",
+        "size": 8205236,
+        "sha256": "3d04c341bc7128145e844a3be0646803c2e909dc7f1b5f3a52125ac76493143e"
+    },
+    {
+        "file": "por_nvi.ebf1.json",
+        "name": "Nova Versão Internacional - Português",
+        "language": "por",
+        "slug": "nova-versao-internacional-portugues",
+        "type": "protestant",
+        "size": 6022605,
+        "sha256": "c96a6a79a0fe05bb5c74cc85278ee03aacd9e9104b5efc4914b8e5b47d1d1dde"
+    },
+    {
+        "file": "por_pastoral.ebf1.json",
+        "name": "Edição Pastoral",
+        "language": "por",
+        "slug": "edicao-pastoral",
+        "type": "catholic",
+        "size": 9833595,
+        "sha256": "d857c541cc29f96ca952c2f0690e247d761c625e4d79a4beba8841dfa97f7283"
+    },
+    {
+        "file": "por_pe_matos_soares.ebf1.json",
+        "name": "Padre Matos Soares",
+        "language": "por",
+        "slug": "padre-matos-soares",
+        "type": "catholic",
+        "size": 7056932,
+        "sha256": "bc276ddc93421fea8461320d8d68b329959dfdfe6dcb5a5d418f7e47a06f50d4"
+    },
+    {
+        "file": "rus_cass70_480.ebf1.json",
+        "name": "перевод Еп. Кассиана",
+        "language": "rus",
+        "slug": "cassian-new-testament",
+        "type": "other",
+        "size": 1885725,
+        "sha256": "ca81e0dc6d77a61aaf3ab1fc1e1f8f44250c5937a91ca3b92b8b1f67202ed077"
+    },
+    {
+        "file": "rus_crvnt_1999.ebf1.json",
+        "name": "Современный русский перевод (2-е изд.)",
+        "language": "rus",
+        "slug": "contemporary-russian-version-2nd-ed-nt",
+        "type": "other",
+        "size": 3114487,
+        "sha256": "b9a7f3e991a1e142a5e3f8f5b4cae4bcb69361fe405fdea99e2a5a3750062be9"
+    },
+    {
+        "file": "rus_cslav_45.ebf1.json",
+        "name": "Библия на церковнославянском языке",
+        "language": "rus",
+        "slug": "cslav",
+        "type": "other",
+        "size": 1790388,
+        "sha256": "31e880dba50c4b54e3e8101e7f6ea0ad17a9aca9de8a8b955fd9cecc43438ad9"
+    },
+    {
+        "file": "rus_nrt_143.ebf1.json",
+        "name": "Новый русский перевод",
+        "language": "rus",
+        "slug": "new-russian-translation-2023",
+        "type": "protestant",
+        "size": 8278240,
+        "sha256": "8bfe13bc5f3f73d7115be1117a8bb8fe1b33d75c33a1c22e3aff8202f70b19e5"
+    },
+    {
+        "file": "rus_rbt_313.ebf1.json",
+        "name": "Библия под ред. М.П. Кулакова и М.М. Кулакова",
+        "language": "rus",
+        "slug": "rbt",
+        "type": "protestant",
+        "size": 8663842,
+        "sha256": "d66567b67eb0fdffdce0cbb74508219e7aeb89efb6cdcb3e89d07ee3965b662d"
+    },
+    {
+        "file": "rus_rsp_201.ebf1.json",
+        "name": "Святая Библия: Современный перевод",
+        "language": "rus",
+        "slug": "holy-bible-easy-to-read-translation",
+        "type": "protestant",
+        "size": 9035210,
+        "sha256": "5f879da689e73cf355452e696736073db2b628f67cc20bb57344e260f7b407cb"
+    },
+    {
+        "file": "rus_syno_400.ebf1.json",
+        "name": "Синодальный перевод",
+        "language": "rus",
+        "slug": "synodal-bible-protestant-version",
+        "type": "protestant",
+        "size": 12322436,
+        "sha256": "b7c65ab05f9963578e3cbcbbb6acb9f5abff78404e88daca014c55a1d034a541"
+    },
+    {
+        "file": "spa_bhti_222.ebf1.json",
+        "name": "La Biblia Hispanoamericana (Traducción Interconfesional, versión hispanoamericana)",
+        "language": "spa",
+        "slug": "la-biblia-hispanoamericana-traduccion-interconfesional-version-hispanoamericana",
+        "type": "other",
+        "size": 10751820,
+        "sha256": "c7c54c6f1f404f2280bc1271498ab53f3ce4487b07fd97dee9d77683c53c1ab2"
+    },
+    {
+        "file": "spa_lbla_89.ebf1.json",
+        "name": "La Biblia de las Américas",
+        "language": "spa",
+        "slug": "la-biblia-de-las-americas",
+        "type": "protestant",
+        "size": 6076732,
+        "sha256": "75e30830f028ea2b17ca88614bb6d58533097beed587387c21f49b755593f5aa"
+    },
+    {
+        "file": "spa_ntv_127.ebf1.json",
+        "name": "Nueva Traducción Viviente",
+        "language": "spa",
+        "slug": "nueva-traduccion-viviente",
+        "type": "protestant",
+        "size": 6411408,
+        "sha256": "77cc0a67e6d2ecd4bef141fc09c7d2d9b57e5e26cd91557d9e3a9f17415f9b46"
+    },
+    {
+        "file": "spa_nvi-s_128.ebf1.json",
+        "name": "Nueva Versión Internacional - Español",
+        "language": "spa",
+        "slug": "nueva-version-internacional-espanol",
+        "type": "protestant",
+        "size": 6075585,
+        "sha256": "fb57f00596388c90df131707aa5e6efe3178bf40f83b4ed0a5bd59b597026714"
+    },
+    {
+        "file": "spa_rvc_146.ebf1.json",
+        "name": "Reina Valera Contemporánea",
+        "language": "spa",
+        "slug": "reina-valera-contemporanea",
+        "type": "protestant",
+        "size": 8233528,
+        "sha256": "6098131ab2cb5ad60f5580486fd5d556debad103da6ac2b064b8941a15ef1ec2"
+    },
+    {
+        "file": "spa_rvr1960_149.ebf1.json",
+        "name": "Biblia Reina Valera 1960",
+        "language": "spa",
+        "slug": "biblia-reina-valera-1960",
+        "type": "protestant",
+        "size": 8059798,
+        "sha256": "911ce06059f674ac7a049d6b422661feab754cdf1eceba841bdd11c17f0f2240"
+    },
+    {
+        "file": "urd_ucv_3536.ebf1.json",
+        "name": "اُردو ہم عصر ترجُمہ",
+        "language": "urd",
+        "slug": "urdu-contemporary-version-2024",
+        "type": "protestant",
+        "size": 9581578,
+        "sha256": "e781135f530fc895a04e825302c9e5a355ef55de301341b7540d26eab50ea269"
+    },
+    {
+        "file": "urd_urd_189.ebf1.json",
+        "name": "کِتابِ مُقادّس",
+        "language": "urd",
+        "slug": "urdu-bible",
+        "type": "protestant",
+        "size": 8995424,
+        "sha256": "783cca55056b71c2b830826319fed6723cf51f3095d6cbb30a1e3f277bf96a08"
+    },
+    {
+        "file": "urd_urdgvu_187.ebf1.json",
+        "name": "ہولی بائبل کا اردو جیو ورژن",
+        "language": "urd",
+        "slug": "urdu-geo-version-urdu-script",
+        "type": "protestant",
+        "size": 8993827,
+        "sha256": "a920b609b6ea5fa2c5077de72ae9a1fa95f2e2fad498caab8ff7aa978a761c62"
+    },
+    {
+        "file": "zho_ccb_36.ebf1.json",
+        "name": "当代译本",
+        "language": "zho",
+        "slug": "chinese-contemporary-bible-2022-simplified",
+        "type": "protestant",
+        "size": 5157786,
+        "sha256": "e8c8f63de190ea74edb8e624e0ec4da975790b1431b6c073c633e7e73722dad7"
+    },
+    {
+        "file": "zho_cnvs_41.ebf1.json",
+        "name": "新译本",
+        "language": "zho",
+        "slug": "cnvs",
+        "type": "protestant",
+        "size": 5617972,
+        "sha256": "998c8bcd96a59e503192aebfbe9c05e3e9005b49f0f52dc0dcaec50e6b10259e"
+    },
+    {
+        "file": "zho_cunpss-shangti_47.ebf1.json",
+        "name": "新标点和合本, 上帝版",
+        "language": "zho",
+        "slug": "chinese-union-version-new-punctuation-shangti-edition-ss",
+        "type": "protestant",
+        "size": 5273212,
+        "sha256": "40cb63d931ebcd8eaad952e7e719d0647aa6527356b3ad95785195999c4e6b61"
+    },
+    {
+        "file": "zho_rcuvss_140.ebf1.json",
+        "name": "和合本修订版",
+        "language": "zho",
+        "slug": "revised-chinese-union-version-simplified-script",
+        "type": "protestant",
+        "size": 5356446,
+        "sha256": "768da26f091b00ca30a175c7d3ed35c9b8fe5674b173e33e1653c8cab5f1711e"
+    }
+]

@@ -1,29 +1,24 @@
 // Checks the build in dist/, run after `vite build`:
-// - the public data (index.json and EBF1 Bibles) was published byte for byte;
+// - the only public data is index.json: the Bibles stay in the Blob store and never ship with the site;
 // - the application is bundled into one JS and one CSS file, and the HTML is minified.
-import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
-import { join, relative } from 'node:path';
+import { join } from 'node:path';
 
-const DATA_SOURCE = 'public/assets/data';
 const DATA_OUTPUT = 'dist/assets/data';
 
 const listFiles = (dir) =>
     readdirSync(dir, { withFileTypes: true }).flatMap((entry) =>
         entry.isDirectory() ? listFiles(join(dir, entry.name)) : [join(dir, entry.name)],
     );
-const sha256 = (file) => createHash('sha256').update(readFileSync(file)).digest('hex');
 
 const problems = [];
 
-const dataFiles = listFiles(DATA_SOURCE).filter((file) => file.endsWith('.json'));
-for (const file of dataFiles) {
-    const published = join(DATA_OUTPUT, relative(DATA_SOURCE, file));
-    if (!existsSync(published)) {
-        problems.push(`missing data file: ${published}`);
-    } else if (sha256(file) !== sha256(published)) {
-        problems.push(`modified data file: ${published}`);
-    }
+const dataFiles = existsSync(DATA_OUTPUT) ? listFiles(DATA_OUTPUT) : [];
+if (!dataFiles.includes(join(DATA_OUTPUT, 'index.json'))) {
+    problems.push(`missing data file: ${join(DATA_OUTPUT, 'index.json')}`);
+}
+for (const file of dataFiles.filter((file) => !file.endsWith('index.json'))) {
+    problems.push(`unexpected data file (the Bibles must not be published by the site): ${file}`);
 }
 
 const bundles = readdirSync('dist/assets').filter((file) => /\.(js|css)$/.test(file));
@@ -43,4 +38,4 @@ if (problems.length > 0) {
     console.error(`Build problems:\n  ${problems.join('\n  ')}`);
     process.exit(1);
 }
-console.log(`check-dist: ${dataFiles.length} data files unchanged; 1 JS and 1 CSS; HTML minified.`);
+console.log('check-dist: index.json only (no Bibles); 1 JS and 1 CSS; HTML minified.');

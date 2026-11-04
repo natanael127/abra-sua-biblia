@@ -5,7 +5,7 @@ const bible = (language: string, slug: string): BibleIndexEntry => ({
     name: `${language} ${slug}`,
     language,
     slug,
-    path: `bibles/${language}_${slug}.ebf1.json`,
+    url: `https://example.com/${language}_${slug}.ebf1.json`,
 });
 
 const bibles = [bible('por', 'ave-maria'), bible('por', 'cnbb'), bible('eng', 'kjv'), bible('eng', 'nabre'), bible('lat', 'vulgata')];

@@ -2,9 +2,9 @@
  * Easy Bible Format, version 1 (EBF1).
  * https://github.com/natanael127/easy-bible-format
  *
- * The Bibles in public/assets/data/bibles follow this format and are published
- * without any transformation, so they can be downloaded and used in other
- * projects. Their conformance to the official schema (ebf1-schema.json from the
+ * The Bibles in the Blob store (bibles-catalog.json) follow this format and are
+ * published without any transformation, so they can be downloaded and used in
+ * other projects. Their conformance to the official schema (ebf1-schema.json from the
  * easy-bible-format package, pinned to a commit) is checked in the tests.
  *
  * The types below describe what the site is able to read, more leniently than

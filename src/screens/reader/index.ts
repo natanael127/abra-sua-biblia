@@ -38,7 +38,7 @@ import {
     type BibleIndexEntry,
     bibleKey,
     getAvailableBibles,
-    loadBibleFromPath,
+    loadBibleFromUrl,
     parseEbfJson,
     selectableBibles,
 } from '../../data/bibles';
@@ -334,7 +334,7 @@ function selectBible(key: string): Promise<boolean> {
 
     storage.saveBible(key);
     const entry = findBibleEntry(key);
-    state.bibleLoad = (entry ? loadBibleFromPath(entry.path) : Promise.resolve(null)).then((ebf) => {
+    state.bibleLoad = (entry ? loadBibleFromUrl(entry.url) : Promise.resolve(null)).then((ebf) => {
         if (token !== state.loadToken) return false;
         if (!ebf) {
             showTemporaryMessage(t('messages.bibleLoadError'));
