@@ -615,7 +615,6 @@ test('minified inline script applies the saved theme before the bundle', async (
     await page.route(/\/assets\/index-[^/]*\.js$/, (route) => route.abort());
     await page.goto('/');
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-    await expect(page.locator('#theme-icon')).toHaveText('🌓');
 });
 
 test('"Sobre" section ends with the build version (commit hash and date)', async ({ page }) => {
@@ -919,7 +918,8 @@ test.describe('URL and browser history', () => {
         for (const path of ['/por/ave-maria', '/por/ave-maria/mt/5,3-12.21-38', '/por/ave-maria/j%C3%B3/1']) {
             const response = await request.get(path);
             expect(response.ok(), path).toBe(true);
-            expect(await response.text(), path).toContain('id="reader"');
+            // The page of the app (index.html), whose screens are drawn by the bundle
+            expect(await response.text(), path).toMatch(/<script type="module" crossorigin src="\/assets\/index-[^"]+\.js">/);
         }
     });
 });

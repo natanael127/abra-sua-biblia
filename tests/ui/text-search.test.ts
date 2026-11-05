@@ -4,6 +4,7 @@
  * search once the index is ready. The index is mocked to control the exact
  * moment it becomes ready.
  */
+import { flushSync, mount } from 'svelte';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { EbfDocument } from '../../src/core/ebf';
 import type { SearchResponse, SearchResult } from '../../src/core/search';
@@ -35,12 +36,17 @@ vi.mock('../../src/core/search', async (importOriginal) => {
     };
 });
 
-const { showTextSearchModal } = await import('../../src/ui/dialogs');
+const { default: TextSearchModal } = await import('../../src/ui/dialogs/TextSearchModal.svelte');
 const { getSearchOrder } = await import('../../src/ui/storage');
 
 const bible = { bible: { name: 'Teste', books: [] } } as EbfDocument;
-/** The modal is created on the first opening and keeps this callback. */
 const onSelect = vi.fn();
+/** Mounted once, like on the page. */
+let component: { open: () => void };
+const showTextSearchModal = () => {
+    component.open();
+    flushSync();
+};
 const modal = () => document.getElementById('text-search-modal') as HTMLDialogElement;
 const input = () => modal().querySelector<HTMLInputElement>('.text-search-input')!;
 const status = () => modal().querySelector<HTMLElement>('.text-search-status')!;
@@ -48,7 +54,10 @@ const references = () => Array.from(modal().querySelectorAll('.text-search-resul
 const selected = () => modal().querySelector('.text-search-result-item.selected .text-search-result-reference')?.textContent;
 const orderOption = (order: string) => modal().querySelector<HTMLButtonElement>(`.text-search-order-option[data-order="${order}"]`)!;
 const checkedOrder = () => modal().querySelector('.text-search-order-option[aria-checked="true"]')?.getAttribute('data-order');
-const press = (key: string) => input().dispatchEvent(new KeyboardEvent('keydown', { key, cancelable: true }));
+const press = (key: string) => {
+    input().dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
+    flushSync();
+};
 
 beforeAll(() => {
     // jsdom implements neither modal <dialog> nor scrolling
@@ -60,6 +69,7 @@ beforeAll(() => {
         this.dispatchEvent(new Event('close'));
     };
     Element.prototype.scrollIntoView = () => {};
+    component = mount(TextSearchModal, { target: document.body, props: { bible, onselect: onSelect } });
 });
 
 beforeEach(() => {
@@ -70,7 +80,7 @@ beforeEach(() => {
 
 async function typeQuery(query: string) {
     input().value = query;
-    input().dispatchEvent(new Event('input'));
+    input().dispatchEvent(new Event('input', { bubbles: true }));
     await vi.waitFor(() => {
         expect(references()).toHaveLength(3);
     });
@@ -78,7 +88,7 @@ async function typeQuery(query: string) {
 
 describe('text search modal', () => {
     it('redoes the search by relevance when the index is ready', async () => {
-        showTextSearchModal(() => bible, onSelect);
+        showTextSearchModal();
         expect(status().dataset.ranked).toBe('false');
         expect(status().textContent).toBe('Preparando a busca por relevância…');
 
@@ -95,7 +105,7 @@ describe('text search modal', () => {
     });
 
     it('keeps the verse selected with the arrow keys when the search is redone', async () => {
-        showTextSearchModal(() => bible, onSelect);
+        showTextSearchModal();
         await typeQuery('luz');
 
         press('ArrowDown');
@@ -116,26 +126,27 @@ describe('text search modal', () => {
 
     it('with the index already ready, shows the relevance order on opening', () => {
         index.ready = true;
-        showTextSearchModal(() => bible, onSelect);
+        showTextSearchModal();
         expect(status().dataset.ranked).toBe('true');
         modal().close();
     });
 
     it('switches to book order, redoes the search and remembers the choice', async () => {
         index.ready = true;
-        showTextSearchModal(() => bible, onSelect);
+        showTextSearchModal();
         expect(checkedOrder()).toBe('relevance');
         await typeQuery('luz');
         expect(references()).toEqual(['João 1,3', 'João 1,1', 'João 1,2']);
 
         orderOption('book').click();
+        flushSync();
         expect(checkedOrder()).toBe('book');
         expect(references()).toEqual(['João 1,1', 'João 1,2', 'João 1,3']);
         expect(status().textContent).toBe('Na ordem da Bíblia');
         expect(localStorage.getItem('searchOrder')).toBe('book');
         modal().close();
 
-        // The modal is created only once; the saved choice applies to new sessions
+        // The saved choice applies to new sessions
         expect(getSearchOrder()).toBe('book');
     });
 });

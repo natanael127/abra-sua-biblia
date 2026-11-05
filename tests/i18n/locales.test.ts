@@ -72,9 +72,10 @@ describe.each(UI_LANGUAGES.map((language) => [language.code, language] as const)
 describe('index.html', () => {
     const html = readFileSync('index.html', 'utf8');
 
+    // The page title and the <meta> tags; the components call `t`, whose keys the typecheck validates
     it('only uses translation keys that exist', () => {
         const keys = [...html.matchAll(/data-i18n(?:-[a-z-]+)?="([^"]+)"/g)].map((match) => match[1] ?? '');
-        expect(keys.length).toBeGreaterThan(20);
+        expect(keys.length).toBeGreaterThan(0);
         for (const key of keys) expect(referenceKeys.has(key), key).toBe(true);
     });
 });

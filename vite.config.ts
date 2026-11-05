@@ -4,25 +4,25 @@ import { fileURLToPath } from 'node:url';
 import Ajv from 'ajv';
 import standaloneCode from 'ajv/dist/standalone';
 import { minify } from 'html-minifier-terser';
+import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { type Plugin } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import { defineConfig } from 'vitest/config';
 import { readSettings, writeIndex } from './scripts/build-index.ts';
 import { describePageVersion, uncommittedChanges } from './scripts/build-version.ts';
-import { escapeHtml } from './src/core/text.ts';
 
-/** Replaces %PAGE_VERSION% in index.html with the version (in the build and in the dev server). */
-function injectVersion(): Plugin {
+const pageVersion = describePageVersion();
+
+/** Reports the page version (shown in the About section) when the build and the dev server start. */
+function reportVersion(): Plugin {
     return {
-        name: 'inject-version',
+        name: 'report-version',
         buildStart() {
-            const version = describePageVersion();
-            console.log(`Version: ${version}`);
-            if (version.includes('-dirty')) {
+            console.log(`Version: ${pageVersion}`);
+            if (pageVersion.includes('-dirty')) {
                 console.log(`Files changed since the commit:\n${uncommittedChanges()}`);
             }
         },
-        transformIndexHtml: (html) => html.replace('%PAGE_VERSION%', escapeHtml(describePageVersion())),
     };
 }
 
@@ -106,7 +106,11 @@ export default defineConfig({
         __DEFAULT_UI_LANGUAGE__: JSON.stringify(settings.defaultLanguage),
         // Origin of the Blob store with the Bibles, which the service worker also caches (settings.json)
         __BIBLES_ORIGIN__: JSON.stringify(new URL(settings.biblesUrl).origin),
+        // Commit hash and date, at the end of the About section (scripts/build-version.ts)
+        __PAGE_VERSION__: JSON.stringify(pageVersion),
     },
+    // The component tests mount Svelte components in jsdom: they need its browser build
+    resolve: process.env.VITEST ? { conditions: ['browser'] } : undefined,
     build: {
         rolldownOptions: {
             // A single JS file: also bundles what is imported on demand
@@ -116,7 +120,8 @@ export default defineConfig({
     plugins: [
         generateBibleIndex(),
         ebf1Validator(),
-        injectVersion(),
+        svelte(),
+        reportVersion(),
         minifyStaticFiles(),
         VitePWA({
             strategies: 'injectManifest',
