@@ -10,6 +10,7 @@
     import { t } from './i18n/reactive.svelte';
     import { createRouter, type Router, type Screen } from './router/router';
     import About from './screens/about/About.svelte';
+    import Help from './screens/help/Help.svelte';
     import { type Destination, ensureReaderBehindPage, navigateTo, PAGE_PATHS, type PageId } from './screens/navigation';
     import Reader from './screens/reader/Reader.svelte';
     import { createReaderScreen } from './screens/reader/reader.svelte';
@@ -17,6 +18,7 @@
     import MainMenu from './ui/components/MainMenu.svelte';
 
     let readerRoot = $state<HTMLElement>();
+    let helpRoot = $state<HTMLElement>();
     let aboutRoot = $state<HTMLElement>();
 
     /** Screen displayed. */
@@ -24,6 +26,7 @@
     let router: Router | undefined;
 
     const PAGE_TITLES: Record<PageId, () => string> = {
+        help: () => t('menu.help'),
         about: () => t('menu.about'),
     };
 
@@ -43,9 +46,10 @@
     });
 
     onMount(() => {
-        if (!readerRoot || !aboutRoot) return;
+        if (!readerRoot || !helpRoot || !aboutRoot) return;
         const reader = createReaderScreen(() => router as Router, readerRoot);
         router = createRouter([
+            { pattern: PAGE_PATHS.help, screen: pageScreen('help', helpRoot) },
             { pattern: PAGE_PATHS.about, screen: pageScreen('about', aboutRoot) },
             {
                 pattern: READER_PATTERN,
@@ -67,6 +71,7 @@
 </script>
 
 <Reader bind:root={readerRoot} />
+<Help bind:root={helpRoot} />
 <About bind:root={aboutRoot} />
 <MainMenu
     {current}

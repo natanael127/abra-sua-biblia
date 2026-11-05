@@ -17,6 +17,7 @@
     import HistoryModal from '../../ui/dialogs/HistoryModal.svelte';
     import ReferenceHelpModal from '../../ui/dialogs/ReferenceHelpModal.svelte';
     import TextSearchModal from '../../ui/dialogs/TextSearchModal.svelte';
+    import ShareIcon from '../../ui/icons/ShareIcon.svelte';
     import * as storage from '../../ui/storage';
     import {
         chooseBible,
@@ -147,15 +148,7 @@
         title={t('buttons.share')}
         aria-label={t('buttons.share')}
         use:clickFeedback
-        onclick={sharePassage}
-        ><svg class="share-icon" viewBox="0 0 24 24" aria-hidden="true"
-            ><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><line
-                x1="8.6"
-                y1="13.5"
-                x2="15.4"
-                y2="17.5"
-            /><line x1="15.4" y1="6.5" x2="8.6" y2="10.5" /></svg
-        ></button
+        onclick={sharePassage}><ShareIcon /></button
     >
     <button
         id="{prefix}next-chapter-button"

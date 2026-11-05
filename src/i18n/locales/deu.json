@@ -10,6 +10,7 @@
         "open": "Menü öffnen",
         "label": "Hauptmenü",
         "bible": "Bibel",
+        "help": "Hilfe",
         "about": "Über"
     },
     "reader": {
@@ -62,6 +63,57 @@
         "usfm": "der USFM-Code des Buches, in allen Übersetzungen gleich",
         "spacedName": "Bücher mit Leerzeichen im Namen (wie 1. Korinther): nur über die Abkürzung oder den USFM-Code",
         "note": "Groß- und Kleinschreibung spielt keine Rolle. Die Abkürzung jedes Buches steht in der Bücherliste."
+    },
+    "helpPage": {
+        "intro": "Was jede Schaltfläche auf dem Bibelbildschirm macht.",
+        "menu": {
+            "title": "Menü",
+            "button": "Öffnet das Menü mit der Bibel, dieser Hilfe und der Seite „Über“."
+        },
+        "translation": {
+            "title": "Übersetzung und Darstellung",
+            "language": "Sprache der Oberfläche. Die Übersetzungsliste zeigt die Bibeln in dieser Sprache.",
+            "bible": "Bibelübersetzung. Die letzte Option, „Datei hochladen...“, öffnet eine Bibeldatei von deinem Gerät.",
+            "theme": "Design: automatisch (wie das Gerät), hell oder dunkel. Jedes Tippen wechselt zum nächsten."
+        },
+        "upload": {
+            "title": "Bibel hochladen",
+            "intro": "Erscheint, wenn als Übersetzung „Datei hochladen...“ gewählt ist.",
+            "file": "Wählt die Bibeldatei: EBF (JSON), OSIS oder USFX (XML).",
+            "download": "Lädt die geladene Bibel herunter, ins EBF-Format konvertiert.",
+            "help": "Unterstützte Formate und wo du Bibeln zum Herunterladen findest."
+        },
+        "books": {
+            "title": "Bücher",
+            "list": "Öffnet die Liste der Bücher der Übersetzung mit der Abkürzung jedes Buches. Ein Tippen auf ein Buch öffnet Kapitel 1."
+        },
+        "reference": {
+            "title": "Bibelstelle",
+            "field": "Gib die Bibelstelle ein: Der Abschnitt erscheint schon beim Tippen. Das Feld wird rot, wenn die Angabe fehlerhaft ist.",
+            "search": "Textsuche: sucht Wörter im Bibeltext, nach Relevanz oder in der Reihenfolge der Bücher.",
+            "history": "Verlauf der geöffneten Bibelstellen. Ein Tippen auf einen Eintrag öffnet den Abschnitt erneut.",
+            "help": "Wie du die Bibelstelle eingibst (siehe auch am Ende dieser Seite)."
+        },
+        "formatting": {
+            "title": "Textformatierung",
+            "intro": "Jede Schaltfläche schaltet eine Anzeigeoption ein oder aus; leuchtet sie, ist die Option aktiv. Die Auswahl wird auf dem Gerät gespeichert und gilt auch für kopierten Text.",
+            "quotes": "Setzt den Abschnitt in Anführungszeichen.",
+            "verseNumbers": "Zeigt die Nummer jedes Verses.",
+            "lineBreaks": "Beginnt jeden Vers in einer neuen Zeile.",
+            "ellipsis": "Zeigt [...], wo der Abschnitt Verse überspringt.",
+            "parenthesesReference": "Zeigt die Bibelstelle in Klammern nach dem Text.",
+            "sectionTitles": "Zeigt die Abschnittsüberschriften, sofern die Übersetzung welche hat."
+        },
+        "actions": {
+            "title": "Aktionen zum Abschnitt",
+            "intro": "Wenn du scrollst und diese Schaltflächen aus dem Bild verschwinden, erscheint eine Kopie davon direkt unter dem Text.",
+            "prevChapter": "Geht zum vorherigen Kapitel.",
+            "nextChapter": "Geht zum nächsten Kapitel.",
+            "copy": "Kopiert den angezeigten Text mit der gewählten Formatierung.",
+            "share": "Teilt den Link zum Abschnitt. Kann das Gerät nicht teilen, wird der Link kopiert.",
+            "crossReferences": "Steht nach Versen mit Querverweisen (in manchen Übersetzungen). Ein Tippen zeigt die verwandten Stellen."
+        },
+        "referenceTitle": "So gibst du die Bibelstelle ein"
     },
     "about": {
         "developedBy": "Entwickelt von:",

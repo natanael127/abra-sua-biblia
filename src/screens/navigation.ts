@@ -1,6 +1,6 @@
 /**
  * Navigation between the reader (the Bible) and the other pages of the main
- * menu (about).
+ * menu (help, about).
  *
  * A page is always one history entry above the reader, so that Back on any
  * page returns to the Bible:
@@ -15,7 +15,7 @@ import { matchPath } from '../router/path';
 import type { Router } from '../router/router';
 
 /** Paths of the pages; the reader has all the others. */
-export const PAGE_PATHS = { about: '/sobre' } as const;
+export const PAGE_PATHS = { help: '/ajuda', about: '/sobre' } as const;
 
 export type PageId = keyof typeof PAGE_PATHS;
 /** Destinations of the main menu. */

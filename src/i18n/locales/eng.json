@@ -10,6 +10,7 @@
         "open": "Open the menu",
         "label": "Main menu",
         "bible": "Bible",
+        "help": "Help",
         "about": "About"
     },
     "reader": {
@@ -62,6 +63,57 @@
         "usfm": "the USFM code of the book, the same in every translation",
         "spacedName": "books with a space in their name (like 1 Corinthians): only by abbreviation or USFM code",
         "note": "Upper or lower case makes no difference. The abbreviation of each book is shown in the book list."
+    },
+    "helpPage": {
+        "intro": "What each button on the Bible screen does.",
+        "menu": {
+            "title": "Menu",
+            "button": "Opens the menu, with the Bible, this help and the About page."
+        },
+        "translation": {
+            "title": "Translation and appearance",
+            "language": "Interface language. The translation list shows the Bibles in that language.",
+            "bible": "Bible translation. The last option, “Upload...”, opens a Bible file from your device.",
+            "theme": "Theme: automatic (follows the device), light or dark. Each tap switches to the next one."
+        },
+        "upload": {
+            "title": "Bible upload",
+            "intro": "Shown when the chosen translation is “Upload...”.",
+            "file": "Chooses the Bible file: EBF (JSON), OSIS or USFX (XML).",
+            "download": "Downloads the loaded Bible, converted to the EBF format.",
+            "help": "Supported formats and where to find Bibles to download."
+        },
+        "books": {
+            "title": "Books",
+            "list": "Opens the list of books in the translation, with the abbreviation of each one. Tapping a book opens chapter 1."
+        },
+        "reference": {
+            "title": "Reference",
+            "field": "Type the Bible reference: the passage appears as you type. The field turns red when the reference is wrong.",
+            "search": "Text search: looks for words in the Bible text, by relevance or in book order.",
+            "history": "History of opened references. Tapping one opens the passage again.",
+            "help": "How to type the reference (see also the end of this page)."
+        },
+        "formatting": {
+            "title": "Text formatting",
+            "intro": "Each button turns a display option on or off; when lit, it is on. The choice is saved on the device and also applies to copied text.",
+            "quotes": "Puts the passage in quotation marks.",
+            "verseNumbers": "Shows the number of each verse.",
+            "lineBreaks": "Starts each verse on a new line.",
+            "ellipsis": "Shows [...] where the passage skips verses.",
+            "parenthesesReference": "Shows the reference in parentheses after the text.",
+            "sectionTitles": "Shows section titles, in translations that have them."
+        },
+        "actions": {
+            "title": "Passage actions",
+            "intro": "When you scroll and these buttons leave the screen, a copy of them appears just below the text.",
+            "prevChapter": "Goes to the previous chapter.",
+            "nextChapter": "Goes to the next chapter.",
+            "copy": "Copies the displayed text, with the chosen formatting.",
+            "share": "Shares the link to the passage. If the device can't share, the link is copied instead.",
+            "crossReferences": "Placed after verses that have cross-references (in some translations). Tapping it shows the related passages."
+        },
+        "referenceTitle": "How to type the reference"
     },
     "about": {
         "developedBy": "Developed by:",

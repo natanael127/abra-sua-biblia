@@ -10,6 +10,7 @@
         "open": "Aperire indicem",
         "label": "Index principalis",
         "bible": "Biblia",
+        "help": "Auxilium",
         "about": "De hoc situ"
     },
     "reader": {
@@ -62,6 +63,57 @@
         "usfm": "nota USFM libri, eadem in omnibus translationibus",
         "spacedName": "libri quorum nomen spatium habet (ut 1 Corinthios): tantum per abbreviationem aut notam USFM",
         "note": "Litterae maiusculae an minusculae nihil refert. Abbreviatio cuiusque libri in indice librorum invenitur."
+    },
+    "helpPage": {
+        "intro": "Quid quodque pulsabulum paginae Bibliae faciat.",
+        "menu": {
+            "title": "Index",
+            "button": "Aperit indicem, cum Biblia, hoc auxilio et pagina “De hoc situ”."
+        },
+        "translation": {
+            "title": "Versio et species",
+            "language": "Lingua interfaciei. Index versionum Biblias huius linguae ostendit.",
+            "bible": "Versio Bibliae. Optio ultima, “Imponere fasciculum...”, fasciculum Bibliae ex instrumento tuo aperit.",
+            "theme": "Thema: automaticum (instrumentum sequitur), clarum aut obscurum. Quisque tactus ad sequens transit."
+        },
+        "upload": {
+            "title": "Impositio Bibliae",
+            "intro": "Apparet cum versio electa est “Imponere fasciculum...”.",
+            "file": "Fasciculum Bibliae eligit: EBF (JSON), OSIS aut USFX (XML).",
+            "download": "Bibliam impositam, in formam EBF conversam, deponit.",
+            "help": "Formae quae sustinentur et ubi Bibliae deponendae inveniantur."
+        },
+        "books": {
+            "title": "Libri",
+            "list": "Indicem librorum versionis aperit, cum abbreviatione cuiusque. Tactus in libro caput 1 aperit."
+        },
+        "reference": {
+            "title": "Locus",
+            "field": "Scribe locum biblicum: textus apparet dum scribis. Campus rubescit cum locus erratus est.",
+            "search": "Quaestio textualis: verba in textu Bibliae quaerit, secundum pertinentiam aut secundum ordinem librorum.",
+            "history": "Historia locorum apertorum. Tactus in uno eorum textum iterum aperit.",
+            "help": "Quomodo locus scribatur (vide etiam in fine huius paginae)."
+        },
+        "formatting": {
+            "title": "Forma textus",
+            "intro": "Quodque pulsabulum optionem ostensionis accendit aut exstinguit; accensum, optio valet. Electio in instrumento servatur et etiam ad textum descriptum pertinet.",
+            "quotes": "Textum inter signa citationis ponit.",
+            "verseNumbers": "Numerum cuiusque versus ostendit.",
+            "lineBreaks": "Quemque versum in nova linea incipit.",
+            "ellipsis": "[...] ostendit ubi textus versus praetermittit.",
+            "parenthesesReference": "Locum inter parentheses post textum ostendit.",
+            "sectionTitles": "Titulos sectionum ostendit, in versionibus quae eos habent."
+        },
+        "actions": {
+            "title": "Actiones in textu",
+            "intro": "Cum paginam volvis et haec pulsabula ex conspectu exeunt, exemplar eorum statim sub textu apparet.",
+            "prevChapter": "Ad caput praecedens transit.",
+            "nextChapter": "Ad caput sequens transit.",
+            "copy": "Textum ostensum describit, cum forma electa.",
+            "share": "Nexum textus communicat. Si instrumentum communicare non potest, nexus describitur.",
+            "crossReferences": "Post versum ponitur qui loca parallela habet (in quibusdam versionibus). Tactus loca coniuncta ostendit."
+        },
+        "referenceTitle": "Quomodo locus scribatur"
     },
     "about": {
         "developedBy": "Elaboravit:",

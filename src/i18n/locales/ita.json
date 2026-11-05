@@ -10,6 +10,7 @@
         "open": "Apri il menu",
         "label": "Menu principale",
         "bible": "Bibbia",
+        "help": "Aiuto",
         "about": "Informazioni"
     },
     "reader": {
@@ -62,6 +63,57 @@
         "usfm": "il codice USFM del libro, uguale in tutte le traduzioni",
         "spacedName": "i libri con uno spazio nel nome (come 1 Corinzi): solo con l'abbreviazione o il codice USFM",
         "note": "Maiuscole o minuscole, non fa differenza. L'abbreviazione di ogni libro è nell'elenco dei libri."
+    },
+    "helpPage": {
+        "intro": "Cosa fa ogni pulsante della schermata della Bibbia.",
+        "menu": {
+            "title": "Menu",
+            "button": "Apre il menu, con la Bibbia, questo aiuto e la pagina Informazioni."
+        },
+        "translation": {
+            "title": "Traduzione e aspetto",
+            "language": "Lingua dell'interfaccia. L'elenco delle traduzioni mostra le Bibbie in quella lingua.",
+            "bible": "Traduzione della Bibbia. L'ultima opzione, «Carica un file...», apre un file della Bibbia dal tuo dispositivo.",
+            "theme": "Tema: automatico (segue il dispositivo), chiaro o scuro. Ogni tocco passa al successivo."
+        },
+        "upload": {
+            "title": "Caricamento della Bibbia",
+            "intro": "Compare quando la traduzione scelta è «Carica un file...».",
+            "file": "Sceglie il file della Bibbia: EBF (JSON), OSIS o USFX (XML).",
+            "download": "Scarica la Bibbia caricata, convertita nel formato EBF.",
+            "help": "Formati supportati e dove trovare Bibbie da scaricare."
+        },
+        "books": {
+            "title": "Libri",
+            "list": "Apre l'elenco dei libri della traduzione, con l'abbreviazione di ciascuno. Un tocco su un libro apre il capitolo 1."
+        },
+        "reference": {
+            "title": "Riferimento",
+            "field": "Digita il riferimento biblico: il brano compare mentre scrivi. Il campo diventa rosso quando il riferimento è errato.",
+            "search": "Ricerca testuale: cerca parole nel testo della Bibbia, per rilevanza o nell'ordine dei libri.",
+            "history": "Cronologia dei riferimenti aperti. Un tocco su uno di essi riapre il brano.",
+            "help": "Come digitare il riferimento (vedi anche in fondo a questa pagina)."
+        },
+        "formatting": {
+            "title": "Formattazione del testo",
+            "intro": "Ogni pulsante attiva o disattiva un'opzione di visualizzazione; se è acceso, è attiva. La scelta viene salvata sul dispositivo e vale anche per il testo copiato.",
+            "quotes": "Mette il brano tra virgolette.",
+            "verseNumbers": "Mostra il numero di ogni versetto.",
+            "lineBreaks": "Inizia ogni versetto su una nuova riga.",
+            "ellipsis": "Mostra [...] dove il brano salta dei versetti.",
+            "parenthesesReference": "Mostra il riferimento tra parentesi dopo il testo.",
+            "sectionTitles": "Mostra i titoli delle sezioni, nelle traduzioni che li hanno."
+        },
+        "actions": {
+            "title": "Azioni sul brano",
+            "intro": "Quando scorri la pagina e questi pulsanti escono dallo schermo, una loro copia compare subito sotto il testo.",
+            "prevChapter": "Va al capitolo precedente.",
+            "nextChapter": "Va al capitolo successivo.",
+            "copy": "Copia il testo visualizzato, con la formattazione scelta.",
+            "share": "Condivide il link del brano. Se il dispositivo non permette la condivisione, il link viene copiato.",
+            "crossReferences": "Si trova dopo il versetto che ha riferimenti incrociati (in alcune traduzioni). Un tocco mostra i brani correlati."
+        },
+        "referenceTitle": "Come digitare il riferimento"
     },
     "about": {
         "developedBy": "Sviluppato da:",

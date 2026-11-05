@@ -10,6 +10,7 @@
         "open": "Ouvrir le menu",
         "label": "Menu principal",
         "bible": "Bible",
+        "help": "Aide",
         "about": "À propos"
     },
     "reader": {
@@ -62,6 +63,57 @@
         "usfm": "le code USFM du livre, identique dans toutes les traductions",
         "spacedName": "les livres dont le nom contient une espace (comme 1 Corinthiens) : seulement par l'abréviation ou le code USFM",
         "note": "Majuscules ou minuscules, peu importe. L'abréviation de chaque livre figure dans la liste des livres."
+    },
+    "helpPage": {
+        "intro": "Ce que fait chaque bouton de l'écran de la Bible.",
+        "menu": {
+            "title": "Menu",
+            "button": "Ouvre le menu, avec la Bible, cette aide et la page À propos."
+        },
+        "translation": {
+            "title": "Traduction et apparence",
+            "language": "Langue de l'interface. La liste des traductions affiche les Bibles de cette langue.",
+            "bible": "Traduction de la Bible. La dernière option, « Téléverser un fichier... », ouvre un fichier de Bible de votre appareil.",
+            "theme": "Thème : automatique (suit l'appareil), clair ou sombre. Chaque appui passe au suivant."
+        },
+        "upload": {
+            "title": "Téléversement de Bible",
+            "intro": "Apparaît quand la traduction choisie est « Téléverser un fichier... ».",
+            "file": "Choisit le fichier de la Bible : EBF (JSON), OSIS ou USFX (XML).",
+            "download": "Télécharge la Bible chargée, convertie au format EBF.",
+            "help": "Formats pris en charge et où trouver des Bibles à télécharger."
+        },
+        "books": {
+            "title": "Livres",
+            "list": "Ouvre la liste des livres de la traduction, avec l'abréviation de chacun. Un appui sur un livre ouvre le chapitre 1."
+        },
+        "reference": {
+            "title": "Référence",
+            "field": "Saisissez la référence biblique : le passage apparaît pendant la saisie. Le champ devient rouge quand la référence est erronée.",
+            "search": "Recherche de texte : cherche des mots dans le texte de la Bible, par pertinence ou dans l'ordre des livres.",
+            "history": "Historique des références ouvertes. Un appui sur l'une d'elles rouvre le passage.",
+            "help": "Comment saisir la référence (voir aussi la fin de cette page)."
+        },
+        "formatting": {
+            "title": "Mise en forme du texte",
+            "intro": "Chaque bouton active ou désactive une option d'affichage ; allumé, il est activé. Le choix est enregistré sur l'appareil et vaut aussi pour le texte copié.",
+            "quotes": "Met le passage entre guillemets.",
+            "verseNumbers": "Affiche le numéro de chaque verset.",
+            "lineBreaks": "Commence chaque verset sur une nouvelle ligne.",
+            "ellipsis": "Affiche [...] là où le passage saute des versets.",
+            "parenthesesReference": "Affiche la référence entre parenthèses après le texte.",
+            "sectionTitles": "Affiche les titres des sections, dans les traductions qui en ont."
+        },
+        "actions": {
+            "title": "Actions sur le passage",
+            "intro": "Quand vous faites défiler la page et que ces boutons sortent de l'écran, une copie apparaît juste sous le texte.",
+            "prevChapter": "Passe au chapitre précédent.",
+            "nextChapter": "Passe au chapitre suivant.",
+            "copy": "Copie le texte affiché, avec la mise en forme choisie.",
+            "share": "Partage le lien du passage. Si l'appareil ne permet pas le partage, le lien est copié.",
+            "crossReferences": "Se trouve après les versets qui ont des références croisées (dans certaines traductions). Un appui affiche les passages liés."
+        },
+        "referenceTitle": "Comment saisir la référence"
     },
     "about": {
         "developedBy": "Développé par :",

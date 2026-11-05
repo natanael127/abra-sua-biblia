@@ -673,6 +673,38 @@ test.describe('main menu', () => {
         await expect(page).toHaveTitle('Jo 3,16 (Ave-Maria) - Abra sua Bíblia!');
     });
 
+    test('the Help page explains the buttons and how to type a reference, with the open Bible', async ({ page }) => {
+        await open(page, 'Jo 3,16');
+        await openFromMenu(page, 'Ajuda');
+        await expect(page).toHaveURL('/ajuda');
+        await expect(page).toHaveTitle('Ajuda - Abra sua Bíblia!');
+        const help = page.locator('#help');
+        await expect(help.locator('.screen-title')).toHaveText('❓ Ajuda');
+        await expect(help).toContainText('Mostra o número de cada versículo.');
+        await expect(help).toContainText('Busca textual: procura palavras no texto da Bíblia');
+        // The same help as the modal, with the books of the open Bible
+        await expect(help.locator('.help-examples code').first()).toHaveText('Mt 5');
+
+        // From one page to another, Back still returns to the Bible
+        await openFromMenu(page, 'Sobre');
+        await expect(page).toHaveURL('/sobre');
+        await page.goBack();
+        await expect(page).toHaveURL('/por/ave-maria/jhn/3,16');
+        await expect(page.locator('#reader')).toBeVisible();
+    });
+
+    test('the pages follow the interface language', async ({ page }) => {
+        await open(page);
+        await openFromMenu(page, 'Ajuda');
+        await page.evaluate(() => {
+            localStorage.setItem('uiLanguage', 'eng');
+        });
+        await page.reload();
+        await expect(page.locator('#help .screen-title')).toHaveText('❓ Help');
+        await expect(page).toHaveTitle('Help - Open Your Bible!');
+        await expect(page.locator('#help')).toContainText('Shows the number of each verse.');
+    });
+
     test('the Bible item of the menu goes back to the passage, without a new history entry', async ({ page }) => {
         await open(page, 'Jo 3,16');
         const length = await page.evaluate(() => history.length);

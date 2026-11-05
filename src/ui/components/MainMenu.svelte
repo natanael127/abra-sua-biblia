@@ -19,6 +19,7 @@
 
     const ITEMS: readonly { destination: Destination; emoji: string; href: string; label: () => string }[] = [
         { destination: 'reader', emoji: '📖', href: '/', label: () => t('menu.bible') },
+        { destination: 'help', emoji: '❓', href: PAGE_PATHS.help, label: () => t('menu.help') },
         { destination: 'about', emoji: 'ℹ️', href: PAGE_PATHS.about, label: () => t('menu.about') },
     ];
 

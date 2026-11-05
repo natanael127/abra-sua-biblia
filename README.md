@@ -80,7 +80,7 @@ src/
   router/               SPA router (History API), independent of the screens
   screens/              screens; reader/ is the reading one (/{bible}/{book}/{passage}): Reader.svelte
                         draws it, reader.svelte.ts holds its state and actions; about/ is the About
-                        page; navigation.ts, the navigation of the main menu
+                        page and help/ the Help one; navigation.ts, the navigation of the main menu
   ui/                   theme, messages, preferences; components/ (language combobox, modal...) and
                         dialogs/ (the modals of the reader) in Svelte
   i18n/                 interface languages: i18next setup, detection, flags and locales/*.json
@@ -101,7 +101,8 @@ e2e/                    end-to-end tests (Playwright)
 The interface is made of [Svelte 5](https://svelte.dev) components, with runes (`$state`,
 `$derived`, `$props`). The pure logic stays out of them, in plain TypeScript (`src/core/`,
 `src/data/`, `src/router/`); the state shared by the components is in `.svelte.ts` modules (e.g.
-`src/screens/reader/reader.svelte.ts`). The styles are global, in `src/styles/style.css`.
+`src/screens/reader/reader.svelte.ts`). The styles of the reader are global, in `src/styles/style.css`;
+the newer components (main menu, Help and About pages) keep theirs in their own `<style>`.
 
 `npm run typecheck` runs `svelte-check`, which checks the `.ts` files and the components (including
 the translation keys passed to `t`). ESLint also lints the components (`eslint-plugin-svelte`),
@@ -114,7 +115,8 @@ components, which `svelte-check` does check. The unit tests of components mount 
 The site is a single page (SPA): the router (`src/router/`) shows the screen of the URL and hides
 the others, without reloading the page. The main menu (☰, `src/ui/components/MainMenu.svelte`, a
 popover drawer) leads to the Bible (the reader) and to the pages, each item with an emoji:
-📖 Bible, ℹ️ About (`/sobre`).
+📖 Bible, ❓ Help (`/ajuda`: what each button does and how to type a reference), ℹ️ About
+(`/sobre`).
 
 From any page, going back always returns to the Bible (`src/screens/navigation.ts`): a page is
 always one history entry above the reader. Opening a page from the reader creates an entry, opening
@@ -143,8 +145,8 @@ passage displayed, which can differ:
   `Jo 3,16-18`. It is shown after the passage (with the `()` option), in the page title and when
   sharing.
 
-The help on how to type a reference (`src/screens/reader/instructions.ts`, shown in the help modal
-and in place of the passage when the reference is invalid) writes its examples with the books of the
+The help on how to type a reference (`src/screens/reader/instructions.ts`, shown in the help modal,
+on the Help page and in place of the passage when the reference is invalid) writes its examples with the books of the
 open Bible (`Mt 5,13` in one, `Мф 5,13` in another), so that every example works when typed.
 
 The passage is built (`src/core/passage.ts`) from the input reference and the display options

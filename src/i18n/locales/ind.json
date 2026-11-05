@@ -10,6 +10,7 @@
         "open": "Buka menu",
         "label": "Menu utama",
         "bible": "Alkitab",
+        "help": "Bantuan",
         "about": "Tentang"
     },
     "reader": {
@@ -62,6 +63,57 @@
         "usfm": "kode USFM kitab, sama di semua terjemahan",
         "spacedName": "kitab yang namanya mengandung spasi (seperti 1 Korintus): hanya dengan singkatan atau kode USFM",
         "note": "Huruf besar atau kecil tidak berpengaruh. Singkatan setiap kitab ada di daftar kitab."
+    },
+    "helpPage": {
+        "intro": "Fungsi setiap tombol di layar Alkitab.",
+        "menu": {
+            "title": "Menu",
+            "button": "Membuka menu, berisi Alkitab, bantuan ini, dan halaman Tentang."
+        },
+        "translation": {
+            "title": "Terjemahan dan tampilan",
+            "language": "Bahasa antarmuka. Daftar terjemahan menampilkan Alkitab dalam bahasa tersebut.",
+            "bible": "Terjemahan Alkitab. Pilihan terakhir, “Unggah berkas...”, membuka berkas Alkitab dari perangkatmu.",
+            "theme": "Tema: otomatis (mengikuti perangkat), terang, atau gelap. Setiap ketukan berpindah ke tema berikutnya."
+        },
+        "upload": {
+            "title": "Unggah Alkitab",
+            "intro": "Muncul jika terjemahan yang dipilih adalah “Unggah berkas...”.",
+            "file": "Memilih berkas Alkitab: EBF (JSON), OSIS, atau USFX (XML).",
+            "download": "Mengunduh Alkitab yang dimuat, dikonversi ke format EBF.",
+            "help": "Format yang didukung dan tempat menemukan Alkitab untuk diunduh."
+        },
+        "books": {
+            "title": "Kitab",
+            "list": "Membuka daftar kitab dalam terjemahan, dengan singkatan masing-masing. Ketuk sebuah kitab untuk membuka pasal 1."
+        },
+        "reference": {
+            "title": "Rujukan",
+            "field": "Ketik rujukan Alkitab: perikopnya muncul selagi kamu mengetik. Kolom menjadi merah jika rujukannya salah.",
+            "search": "Pencarian teks: mencari kata dalam teks Alkitab, berdasarkan relevansi atau sesuai urutan kitab.",
+            "history": "Riwayat rujukan yang telah dibuka. Ketuk salah satunya untuk membuka kembali perikopnya.",
+            "help": "Cara mengetik rujukan (lihat juga di akhir halaman ini)."
+        },
+        "formatting": {
+            "title": "Format teks",
+            "intro": "Setiap tombol menyalakan atau mematikan satu pilihan tampilan; jika menyala, pilihan itu aktif. Pilihan disimpan di perangkat dan juga berlaku untuk teks yang disalin.",
+            "quotes": "Menempatkan perikop di antara tanda kutip.",
+            "verseNumbers": "Menampilkan nomor setiap ayat.",
+            "lineBreaks": "Memulai setiap ayat di baris baru.",
+            "ellipsis": "Menampilkan [...] di tempat perikop melompati ayat.",
+            "parenthesesReference": "Menampilkan rujukan dalam tanda kurung setelah teks.",
+            "sectionTitles": "Menampilkan judul bagian, pada terjemahan yang memilikinya."
+        },
+        "actions": {
+            "title": "Tindakan pada perikop",
+            "intro": "Saat kamu menggulir halaman dan tombol-tombol ini keluar dari layar, salinannya muncul tepat di bawah teks.",
+            "prevChapter": "Ke pasal sebelumnya.",
+            "nextChapter": "Ke pasal berikutnya.",
+            "copy": "Menyalin teks yang ditampilkan, dengan format yang dipilih.",
+            "share": "Membagikan tautan perikop. Jika perangkat tidak mendukung berbagi, tautannya disalin.",
+            "crossReferences": "Ada setelah ayat yang memiliki referensi silang (pada beberapa terjemahan). Ketuk untuk melihat perikop terkait."
+        },
+        "referenceTitle": "Cara mengetik rujukan"
     },
     "about": {
         "developedBy": "Dikembangkan oleh:",

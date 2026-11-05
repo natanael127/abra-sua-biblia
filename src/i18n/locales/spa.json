@@ -10,6 +10,7 @@
         "open": "Abrir el menú",
         "label": "Menú principal",
         "bible": "Biblia",
+        "help": "Ayuda",
         "about": "Acerca de"
     },
     "reader": {
@@ -62,6 +63,57 @@
         "usfm": "el código USFM del libro, el mismo en todas las traducciones",
         "spacedName": "libros con un espacio en el nombre (como 1 Corintios): solo con la abreviatura o el código USFM",
         "note": "Da igual usar mayúsculas o minúsculas. La abreviatura de cada libro aparece en la lista de libros."
+    },
+    "helpPage": {
+        "intro": "Qué hace cada botón de la pantalla de la Biblia.",
+        "menu": {
+            "title": "Menú",
+            "button": "Abre el menú, con la Biblia, esta ayuda y la página Acerca de."
+        },
+        "translation": {
+            "title": "Traducción y apariencia",
+            "language": "Idioma de la interfaz. La lista de traducciones muestra las Biblias de ese idioma.",
+            "bible": "Traducción de la Biblia. La última opción, «Subir archivo...», abre un archivo de Biblia de tu dispositivo.",
+            "theme": "Tema: automático (sigue al dispositivo), claro u oscuro. Cada toque pasa al siguiente."
+        },
+        "upload": {
+            "title": "Subida de Biblia",
+            "intro": "Aparece cuando la traducción elegida es «Subir archivo...».",
+            "file": "Elige el archivo de la Biblia: EBF (JSON), OSIS o USFX (XML).",
+            "download": "Descarga la Biblia cargada, convertida al formato EBF.",
+            "help": "Formatos admitidos y dónde encontrar Biblias para descargar."
+        },
+        "books": {
+            "title": "Libros",
+            "list": "Abre la lista de libros de la traducción, con la abreviatura de cada uno. Un toque en un libro abre el capítulo 1."
+        },
+        "reference": {
+            "title": "Referencia",
+            "field": "Escribe la referencia bíblica: el pasaje aparece mientras escribes. El campo se pone rojo cuando la referencia es incorrecta.",
+            "search": "Búsqueda de texto: busca palabras en el texto de la Biblia, por relevancia o en el orden de los libros.",
+            "history": "Historial de las referencias abiertas. Un toque en una de ellas vuelve a abrir el pasaje.",
+            "help": "Cómo escribir la referencia (consulta también el final de esta página)."
+        },
+        "formatting": {
+            "title": "Formato del texto",
+            "intro": "Cada botón activa o desactiva una opción de visualización; encendido, está activa. La elección se guarda en el dispositivo y también se aplica al texto copiado.",
+            "quotes": "Pone el pasaje entre comillas.",
+            "verseNumbers": "Muestra el número de cada versículo.",
+            "lineBreaks": "Empieza cada versículo en una nueva línea.",
+            "ellipsis": "Muestra [...] donde el pasaje salta versículos.",
+            "parenthesesReference": "Muestra la referencia entre paréntesis después del texto.",
+            "sectionTitles": "Muestra los títulos de las secciones, en las traducciones que los tienen."
+        },
+        "actions": {
+            "title": "Acciones sobre el pasaje",
+            "intro": "Cuando desplazas la página y estos botones salen de la pantalla, aparece una copia de ellos justo debajo del texto.",
+            "prevChapter": "Va al capítulo anterior.",
+            "nextChapter": "Va al capítulo siguiente.",
+            "copy": "Copia el texto mostrado, con el formato elegido.",
+            "share": "Comparte el enlace del pasaje. Si el dispositivo no permite compartir, el enlace se copia.",
+            "crossReferences": "Aparece después del versículo que tiene referencias cruzadas (en algunas traducciones). Un toque muestra los pasajes relacionados."
+        },
+        "referenceTitle": "Cómo escribir la referencia"
     },
     "about": {
         "developedBy": "Desarrollado por:",
