@@ -81,6 +81,32 @@ test('invalid reference shows the instructions and hides the actions', async ({ 
     await expect(page.locator('#copy-button')).toBeHidden();
 });
 
+test('a wrong reference turns the field red until it is corrected', async ({ page }) => {
+    await open(page);
+    const field = reference(page);
+    await expect(field).not.toHaveAttribute('aria-invalid');
+    const normalBorder = await field.evaluate((element) => getComputedStyle(element).borderTopColor);
+
+    for (const wrong of ['Jo 3:16', 'Xyz 1', 'Jo 99', '1 Cor 13']) {
+        await field.fill(wrong);
+        await expect(field, wrong).toHaveAttribute('aria-invalid', 'true');
+    }
+    const wrongBorder = await field.evaluate((element) => getComputedStyle(element).borderTopColor);
+    expect(wrongBorder).not.toBe(normalBorder);
+
+    await field.fill('1Cor 13,4');
+    await expect(field).not.toHaveAttribute('aria-invalid');
+    await field.fill('Mt');
+    await expect(field).toHaveAttribute('aria-invalid', 'true');
+    await field.fill('');
+    await expect(field).not.toHaveAttribute('aria-invalid');
+});
+
+test('a wrong reference from a link also turns the field red', async ({ page }) => {
+    await open(page, 'Jo 3,abc');
+    await expect(reference(page)).toHaveAttribute('aria-invalid', 'true');
+});
+
 test('book name containing HTML is not interpreted (XSS)', async ({ page }) => {
     let dialogOpened = false;
     page.on('dialog', (dialog) => {

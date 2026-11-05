@@ -265,6 +265,15 @@ button:hover {
     width: 100%;
 }
 
+/* Reference field with a reference that leads to no passage: needs correcting */
+#reference[aria-invalid="true"] {
+    padding: 9px;
+    border: 2px solid var(--error-color);
+    background-color: color-mix(in srgb, var(--error-color) 18%, var(--bg-primary));
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--error-color) 35%, transparent);
+    outline: none;
+}
+
 .expandable-section {
     margin-bottom: 10px;
     border: 1px solid var(--border-light);

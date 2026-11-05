@@ -216,6 +216,14 @@ function showPassage(mode?: UrlMode): void {
     for (const id of RESULT_BUTTONS) {
         byId(id).classList.toggle('hidden', result.error);
     }
+    // A reference that leads to no passage (format, book or chapter) is marked
+    // for correction; not while there is no Bible to check it against
+    const wrong = !!inputReference && result.error && state.ebf !== null;
+    if (wrong) {
+        referenceField().setAttribute('aria-invalid', 'true');
+    } else {
+        referenceField().removeAttribute('aria-invalid');
+    }
     if (valid) {
         storage.saveSearchHistory(addToHistory(storage.getSearchHistory(), inputReference));
     }
