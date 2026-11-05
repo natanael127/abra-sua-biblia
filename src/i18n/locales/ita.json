@@ -112,7 +112,28 @@
             "share": "Condivide il link del brano. Se il dispositivo non permette la condivisione, il link viene copiato.",
             "crossReferences": "Si trova dopo il versetto che ha riferimenti incrociati (in alcune traduzioni). Un tocco mostra i brani correlati."
         },
-        "referenceTitle": "Come digitare il riferimento"
+        "referenceTitle": "Come digitare il riferimento",
+        "install": {
+            "title": "Installare come app",
+            "intro": "Apri la tua Bibbia! si può installare sul telefono o sul tablet come un'app, senza passare da uno store. Ha un'icona nella schermata Home, si apre a schermo intero, senza la barra del browser, e funziona senza internet con le Bibbie che hai già aperto.",
+            "android": {
+                "title": "Android",
+                "step1": "Apri questo sito in Chrome.",
+                "step2": "Tocca il menu di Chrome (⋮), nell'angolo in alto a destra dello schermo.",
+                "step3": "Tocca «Aggiungi a schermata Home» (in alcune versioni, «Installa app»).",
+                "step4": "Tocca «Installa» per confermare. L'icona compare nella schermata Home e nell'elenco delle app.",
+                "tip": "A volte è Chrome stesso a proporre l'installazione con un messaggio in fondo allo schermo: basta toccarlo. Altri browser, come Samsung Internet e Firefox, hanno un'opzione simile nel menu."
+            },
+            "ios": {
+                "title": "iPhone e iPad",
+                "step1": "Apri questo sito in Safari.",
+                "step2": "Tocca il pulsante Condividi (un quadrato con una freccia verso l'alto). Se non lo vedi, tocca prima «⋯», accanto all'indirizzo.",
+                "step3": "Scorri le opzioni e tocca «Aggiungi alla schermata Home».",
+                "step4": "Lascia attiva l'opzione «Apri come app web», se compare, e tocca «Aggiungi», in alto a destra.",
+                "tip": "Nelle versioni recenti di iOS, anche Chrome e altri browser mostrano «Aggiungi alla schermata Home» nel pulsante Condividi."
+            },
+            "after": "Una volta installata, aprila dalla sua icona, come qualsiasi app. Gli aggiornamenti arrivano da soli, ogni volta che c'è internet. Per disinstallarla, rimuovi l'icona come faresti con qualsiasi altra app."
+        }
     },
     "about": {
         "developedBy": "Sviluppato da:",

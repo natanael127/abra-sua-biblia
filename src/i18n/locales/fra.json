@@ -112,7 +112,28 @@
             "share": "Partage le lien du passage. Si l'appareil ne permet pas le partage, le lien est copié.",
             "crossReferences": "Se trouve après les versets qui ont des références croisées (dans certaines traductions). Un appui affiche les passages liés."
         },
-        "referenceTitle": "Comment saisir la référence"
+        "referenceTitle": "Comment saisir la référence",
+        "install": {
+            "title": "Installer comme application",
+            "intro": "Ouvrez votre Bible ! peut être installé sur votre téléphone ou votre tablette comme une application, sans passer par un magasin d'applications. Il a une icône sur l'écran d'accueil, s'ouvre en plein écran, sans la barre du navigateur, et fonctionne sans internet avec les Bibles que vous avez déjà ouvertes.",
+            "android": {
+                "title": "Android",
+                "step1": "Ouvrez ce site dans Chrome.",
+                "step2": "Touchez le menu de Chrome (⋮), en haut à droite de l'écran.",
+                "step3": "Touchez « Ajouter à l'écran d'accueil » (dans certaines versions, « Installer l'application »).",
+                "step4": "Touchez « Installer » pour confirmer. L'icône apparaît sur l'écran d'accueil et dans la liste des applications.",
+                "tip": "Parfois, Chrome propose lui-même l'installation dans un message en bas de l'écran : il suffit de le toucher. D'autres navigateurs, comme Samsung Internet et Firefox, ont une option semblable dans leur menu."
+            },
+            "ios": {
+                "title": "iPhone et iPad",
+                "step1": "Ouvrez ce site dans Safari.",
+                "step2": "Touchez le bouton Partager (un carré avec une flèche vers le haut). S'il n'est pas visible, touchez d'abord « ⋯ », à côté de l'adresse.",
+                "step3": "Faites défiler les options et touchez « Sur l'écran d'accueil ».",
+                "step4": "Laissez activée l'option « Ouvrir en tant qu'app web », si elle apparaît, et touchez « Ajouter », en haut à droite.",
+                "tip": "Dans les versions récentes d'iOS, Chrome et d'autres navigateurs affichent aussi « Sur l'écran d'accueil » dans le bouton Partager."
+            },
+            "after": "Une fois installée, ouvrez-la depuis son icône, comme n'importe quelle application. Les mises à jour arrivent toutes seules dès qu'il y a internet. Pour la désinstaller, supprimez l'icône comme pour toute autre application."
+        }
     },
     "about": {
         "developedBy": "Développé par :",

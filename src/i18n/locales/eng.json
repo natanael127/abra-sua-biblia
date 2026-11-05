@@ -112,7 +112,28 @@
             "share": "Shares the link to the passage. If the device can't share, the link is copied instead.",
             "crossReferences": "Placed after verses that have cross-references (in some translations). Tapping it shows the related passages."
         },
-        "referenceTitle": "How to type the reference"
+        "referenceTitle": "How to type the reference",
+        "install": {
+            "title": "Install as an app",
+            "intro": "Open Your Bible! can be installed on your phone or tablet as an app, without going through an app store. It gets an icon on the home screen, opens full screen, without the browser bar, and works offline with the Bibles you have already opened.",
+            "android": {
+                "title": "Android",
+                "step1": "Open this site in Chrome.",
+                "step2": "Tap the Chrome menu (⋮), in the top right corner of the screen.",
+                "step3": "Tap “Add to Home screen” (in some versions, “Install app”).",
+                "step4": "Tap “Install” to confirm. The icon appears on the home screen and in the app list.",
+                "tip": "Sometimes Chrome itself offers to install it in a message at the bottom of the screen: just tap it. Other browsers, such as Samsung Internet and Firefox, have a similar option in their menu."
+            },
+            "ios": {
+                "title": "iPhone and iPad",
+                "step1": "Open this site in Safari.",
+                "step2": "Tap the Share button (a square with an arrow pointing up). If you can't see it, first tap “⋯”, next to the address.",
+                "step3": "Scroll through the options and tap “Add to Home Screen”.",
+                "step4": "Leave “Open as Web App” on, if it appears, and tap “Add”, in the top right corner.",
+                "tip": "On recent versions of iOS, Chrome and other browsers also show “Add to Home Screen” in the Share button."
+            },
+            "after": "Once installed, open it from its icon, like any other app. Updates arrive on their own whenever there is an internet connection. To uninstall it, remove the icon as you would with any other app."
+        }
     },
     "about": {
         "developedBy": "Developed by:",

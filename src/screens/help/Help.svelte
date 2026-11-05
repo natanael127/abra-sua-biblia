@@ -1,7 +1,8 @@
 <!--
     Help page (/help): what each button of the Bible screen does, each one
     drawn as it looks there, and how to type a reference (the same help as the
-    ❓ modal, with examples in the open Bible).
+    ❓ modal, with examples in the open Bible), and how to install the site as
+    an app on Android and on iPhone/iPad.
 -->
 <script lang="ts">
     import type { Snippet } from 'svelte';
@@ -177,6 +178,34 @@
             <!-- eslint-disable-next-line svelte/no-at-html-tags -->
             {@html referenceHelp}
         </section>
+
+        <section class="help-card">
+            <h3>{t('helpPage.install.title')}</h3>
+            <p class="help-section-intro">{t('helpPage.install.intro')}</p>
+            <div class="install-platforms">
+                <div>
+                    <h4>{t('helpPage.install.android.title')}</h4>
+                    <ol>
+                        <li>{t('helpPage.install.android.step1')}</li>
+                        <li>{t('helpPage.install.android.step2')}</li>
+                        <li>{t('helpPage.install.android.step3')}</li>
+                        <li>{t('helpPage.install.android.step4')}</li>
+                    </ol>
+                    <p class="install-tip">{t('helpPage.install.android.tip')}</p>
+                </div>
+                <div>
+                    <h4>{t('helpPage.install.ios.title')}</h4>
+                    <ol>
+                        <li>{t('helpPage.install.ios.step1')}</li>
+                        <li>{t('helpPage.install.ios.step2')}</li>
+                        <li>{t('helpPage.install.ios.step3')}</li>
+                        <li>{t('helpPage.install.ios.step4')}</li>
+                    </ol>
+                    <p class="install-tip">{t('helpPage.install.ios.tip')}</p>
+                </div>
+            </div>
+            <p class="install-after">{t('helpPage.install.after')}</p>
+        </section>
     </div>
 </div>
 
@@ -313,6 +342,39 @@
     .upload-links ul {
         margin: 0 0 6px;
         padding-inline-start: 20px;
+    }
+
+    /* Installing as an app: the steps of each system side by side, one below the other on narrow screens */
+    .install-platforms {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 4px 20px;
+    }
+
+    .install-platforms h4 {
+        margin: 6px 0 4px;
+        font-size: 15px;
+    }
+
+    .install-platforms ol {
+        margin: 0 0 6px;
+        padding-inline-start: 22px;
+    }
+
+    .install-platforms li {
+        margin-bottom: 4px;
+    }
+
+    .install-tip {
+        margin: 0 0 8px;
+        color: var(--text-secondary);
+        font-size: 14px;
+    }
+
+    .install-after {
+        margin: 6px 0 0;
+        padding-top: 10px;
+        border-top: 1px solid var(--border-light);
     }
 
     /* Narrow screens: the description goes below the buttons */

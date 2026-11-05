@@ -112,7 +112,28 @@
             "share": "Comparte el enlace del pasaje. Si el dispositivo no permite compartir, el enlace se copia.",
             "crossReferences": "Aparece después del versículo que tiene referencias cruzadas (en algunas traducciones). Un toque muestra los pasajes relacionados."
         },
-        "referenceTitle": "Cómo escribir la referencia"
+        "referenceTitle": "Cómo escribir la referencia",
+        "install": {
+            "title": "Instalar como aplicación",
+            "intro": "¡Abre tu Biblia! se puede instalar en el teléfono o la tableta como una aplicación, sin pasar por una tienda de apps. Tiene un icono en la pantalla de inicio, se abre a pantalla completa, sin la barra del navegador, y funciona sin internet con las Biblias que ya abriste.",
+            "android": {
+                "title": "Android",
+                "step1": "Abre este sitio en Chrome.",
+                "step2": "Toca el menú de Chrome (⋮), en la esquina superior derecha de la pantalla.",
+                "step3": "Toca «Añadir a pantalla de inicio» (en algunas versiones, «Instalar aplicación»).",
+                "step4": "Toca «Instalar» para confirmar. El icono aparece en la pantalla de inicio y en la lista de aplicaciones.",
+                "tip": "A veces el propio Chrome ofrece la instalación en un mensaje en la parte inferior de la pantalla: basta con tocarlo. Otros navegadores, como Samsung Internet y Firefox, tienen una opción parecida en el menú."
+            },
+            "ios": {
+                "title": "iPhone y iPad",
+                "step1": "Abre este sitio en Safari.",
+                "step2": "Toca el botón Compartir (un cuadrado con una flecha hacia arriba). Si no lo ves, toca antes «⋯», junto a la dirección.",
+                "step3": "Desplázate por las opciones y toca «Añadir a pantalla de inicio».",
+                "step4": "Deja activada la opción «Abrir como app web», si aparece, y toca «Añadir», en la esquina superior derecha.",
+                "tip": "En las versiones recientes de iOS, Chrome y otros navegadores también muestran «Añadir a pantalla de inicio» en el botón Compartir."
+            },
+            "after": "Una vez instalada, ábrela desde su icono, como cualquier aplicación. Las actualizaciones llegan solas, siempre que haya internet. Para desinstalarla, quita el icono como harías con cualquier otra aplicación."
+        }
     },
     "about": {
         "developedBy": "Desarrollado por:",

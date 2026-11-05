@@ -112,7 +112,28 @@
             "share": "Teilt den Link zum Abschnitt. Kann das Gerät nicht teilen, wird der Link kopiert.",
             "crossReferences": "Steht nach Versen mit Querverweisen (in manchen Übersetzungen). Ein Tippen zeigt die verwandten Stellen."
         },
-        "referenceTitle": "So gibst du die Bibelstelle ein"
+        "referenceTitle": "So gibst du die Bibelstelle ein",
+        "install": {
+            "title": "Als App installieren",
+            "intro": "Schlag deine Bibel auf! lässt sich auf dem Handy oder Tablet wie eine App installieren, ganz ohne App-Store. Es bekommt ein Symbol auf dem Startbildschirm, öffnet sich im Vollbild, ohne die Leiste des Browsers, und funktioniert ohne Internet mit den Bibeln, die du schon geöffnet hast.",
+            "android": {
+                "title": "Android",
+                "step1": "Öffne diese Seite in Chrome.",
+                "step2": "Tippe auf das Chrome-Menü (⋮) oben rechts auf dem Bildschirm.",
+                "step3": "Tippe auf „Zum Startbildschirm hinzufügen“ (in manchen Versionen „App installieren“).",
+                "step4": "Tippe zur Bestätigung auf „Installieren“. Das Symbol erscheint auf dem Startbildschirm und in der App-Liste.",
+                "tip": "Manchmal bietet Chrome die Installation selbst in einer Meldung unten auf dem Bildschirm an: Tippe einfach darauf. Andere Browser wie Samsung Internet und Firefox haben eine ähnliche Option im Menü."
+            },
+            "ios": {
+                "title": "iPhone und iPad",
+                "step1": "Öffne diese Seite in Safari.",
+                "step2": "Tippe auf die Teilen-Taste (ein Quadrat mit einem Pfeil nach oben). Wenn du sie nicht siehst, tippe zuerst auf „⋯“ neben der Adresse.",
+                "step3": "Scrolle durch die Optionen und tippe auf „Zum Home-Bildschirm“.",
+                "step4": "Lass „Als Web-App öffnen“ eingeschaltet, falls es angezeigt wird, und tippe oben rechts auf „Hinzufügen“.",
+                "tip": "In neueren iOS-Versionen zeigen auch Chrome und andere Browser „Zum Home-Bildschirm“ in der Teilen-Taste an."
+            },
+            "after": "Nach der Installation öffnest du sie über ihr Symbol, wie jede andere App. Updates kommen von selbst, sobald Internet da ist. Zum Deinstallieren entfernst du das Symbol wie bei jeder anderen App."
+        }
     },
     "about": {
         "developedBy": "Entwickelt von:",

@@ -112,7 +112,28 @@
             "share": "Compartilha o link da passagem. Sem compartilhamento no aparelho, o link é copiado.",
             "crossReferences": "Fica depois do versículo que tem referências cruzadas (em algumas traduções). Um toque mostra as passagens relacionadas."
         },
-        "referenceTitle": "Como digitar a referência"
+        "referenceTitle": "Como digitar a referência",
+        "install": {
+            "title": "Instalar como aplicativo",
+            "intro": "O Abra sua Bíblia! pode ser instalado no celular ou no tablet como um aplicativo, sem passar por loja de apps. Ele ganha um ícone na tela inicial, abre em tela cheia, sem a barra do navegador, e funciona sem internet com as Bíblias que você já abriu.",
+            "android": {
+                "title": "Android",
+                "step1": "Abra este site no Chrome.",
+                "step2": "Toque no menu do Chrome (⋮), no canto superior direito da tela.",
+                "step3": "Toque em “Adicionar à tela inicial” (em algumas versões, “Instalar app”).",
+                "step4": "Toque em “Instalar” para confirmar. O ícone aparece na tela inicial e na lista de aplicativos.",
+                "tip": "Às vezes o próprio Chrome oferece a instalação numa mensagem na parte de baixo da tela: basta tocar nela. Outros navegadores, como o Samsung Internet e o Firefox, têm uma opção parecida no menu."
+            },
+            "ios": {
+                "title": "iPhone e iPad",
+                "step1": "Abra este site no Safari.",
+                "step2": "Toque no botão Compartilhar (um quadrado com uma seta para cima). Se ele não estiver à vista, toque antes em “⋯”, ao lado do endereço.",
+                "step3": "Role a lista de opções e toque em “Adicionar à Tela de Início”.",
+                "step4": "Deixe ligada a opção “Abrir como App Web”, se ela aparecer, e toque em “Adicionar”, no canto superior direito.",
+                "tip": "Nas versões recentes do iOS, o Chrome e outros navegadores também mostram “Adicionar à Tela de Início” no botão Compartilhar."
+            },
+            "after": "Depois de instalado, abra-o pelo ícone, como qualquer aplicativo. As atualizações chegam sozinhas, sempre que houver internet. Para desinstalar, remova o ícone como faria com qualquer outro aplicativo."
+        }
     },
     "about": {
         "developedBy": "Desenvolvido por:",

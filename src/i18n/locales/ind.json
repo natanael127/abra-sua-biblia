@@ -112,7 +112,28 @@
             "share": "Membagikan tautan perikop. Jika perangkat tidak mendukung berbagi, tautannya disalin.",
             "crossReferences": "Ada setelah ayat yang memiliki referensi silang (pada beberapa terjemahan). Ketuk untuk melihat perikop terkait."
         },
-        "referenceTitle": "Cara mengetik rujukan"
+        "referenceTitle": "Cara mengetik rujukan",
+        "install": {
+            "title": "Pasang sebagai aplikasi",
+            "intro": "Buka Alkitabmu! bisa dipasang di ponsel atau tablet seperti aplikasi, tanpa lewat toko aplikasi. Ia mendapat ikon di layar utama, terbuka dalam layar penuh tanpa bilah peramban, dan bisa dipakai tanpa internet untuk Alkitab yang sudah pernah kamu buka.",
+            "android": {
+                "title": "Android",
+                "step1": "Buka situs ini di Chrome.",
+                "step2": "Ketuk menu Chrome (⋮) di pojok kanan atas layar.",
+                "step3": "Ketuk “Tambahkan ke layar utama” (di beberapa versi, “Instal aplikasi”).",
+                "step4": "Ketuk “Instal” untuk mengonfirmasi. Ikonnya muncul di layar utama dan di daftar aplikasi.",
+                "tip": "Kadang Chrome sendiri menawarkan pemasangan lewat pesan di bagian bawah layar: cukup ketuk pesan itu. Peramban lain, seperti Samsung Internet dan Firefox, punya pilihan serupa di menunya."
+            },
+            "ios": {
+                "title": "iPhone dan iPad",
+                "step1": "Buka situs ini di Safari.",
+                "step2": "Ketuk tombol Bagikan (kotak dengan panah ke atas). Jika tidak terlihat, ketuk dulu “⋯” di samping alamat.",
+                "step3": "Gulir pilihan dan ketuk “Tambah ke Layar Utama”.",
+                "step4": "Biarkan pilihan “Buka sebagai App Web” tetap aktif, jika muncul, lalu ketuk “Tambah” di pojok kanan atas.",
+                "tip": "Di versi iOS terbaru, Chrome dan peramban lain juga menampilkan “Tambah ke Layar Utama” di tombol Bagikan."
+            },
+            "after": "Setelah terpasang, buka lewat ikonnya seperti aplikasi lain. Pembaruan datang sendiri setiap kali ada internet. Untuk menghapusnya, hapus ikonnya seperti aplikasi lain."
+        }
     },
     "about": {
         "developedBy": "Dikembangkan oleh:",

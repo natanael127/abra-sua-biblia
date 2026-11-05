@@ -112,7 +112,28 @@
             "share": "Nexum textus communicat. Si instrumentum communicare non potest, nexus describitur.",
             "crossReferences": "Post versum ponitur qui loca parallela habet (in quibusdam versionibus). Tactus loca coniuncta ostendit."
         },
-        "referenceTitle": "Quomodo locus scribatur"
+        "referenceTitle": "Quomodo locus scribatur",
+        "install": {
+            "title": "Ut applicationem instituere",
+            "intro": "“Aperi Bibliam tuam!” in telephono aut tabula ut applicatio institui potest, sine taberna applicationum. Iconem in pagina principali accipit, tota in pagina aperitur, sine tabula navigatri, et sine interreti cum Bibliis quas iam aperuisti operatur.",
+            "android": {
+                "title": "Android",
+                "step1": "Hunc situm in Chrome aperi.",
+                "step2": "Tange indicem Chrome (⋮), in angulo dextro superiore paginae.",
+                "step3": "Tange optionem quae situm paginae principali addit (aut, in quibusdam versionibus, quae applicationem instituit).",
+                "step4": "Tange optionem instituendi ut confirmes. Icon in pagina principali et in indice applicationum apparet.",
+                "tip": "Interdum ipse Chrome institutionem nuntio in ima pagina offert: satis est id tangere. Alii navigatores, ut Samsung Internet et Firefox, optionem similem in indice habent."
+            },
+            "ios": {
+                "title": "iPhone et iPad",
+                "step1": "Hunc situm in Safari aperi.",
+                "step2": "Tange globulum communicandi (quadratum cum sagitta sursum versa). Si non videtur, prius tange “⋯”, iuxta inscriptionem.",
+                "step3": "Optiones percurre et tange eam quae situm paginae principali addit.",
+                "step4": "Optionem aperiendi ut applicationem interretialem, si apparet, accensam relinque, et tange “Addere”, in angulo dextro superiore.",
+                "tip": "In recentioribus versionibus iOS, etiam Chrome et alii navigatores eandem optionem in globulo communicandi ostendunt."
+            },
+            "after": "Postquam instituta est, eam ex icone aperi, ut quamlibet applicationem. Renovationes sponte adveniunt, quotiens interrete adest. Ut eam removeas, iconem remove, ut cum quavis alia applicatione facis."
+        }
     },
     "about": {
         "developedBy": "Elaboravit:",

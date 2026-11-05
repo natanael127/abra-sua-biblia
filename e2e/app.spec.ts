@@ -685,6 +685,10 @@ test.describe('main menu', () => {
         await expect(help.getByRole('link', { name: 'Bíblias convertidas para EBF' })).toBeVisible();
         // The same help as the modal, with the books of the open Bible
         await expect(help.locator('.help-examples code').first()).toHaveText('Mt 5');
+        // How to install it as an app, on Android and on iOS
+        await expect(help.getByRole('heading', { name: 'Instalar como aplicativo' })).toBeVisible();
+        await expect(help).toContainText('toque em “Adicionar à Tela de Início”');
+        await expect(help).toContainText('Abra este site no Chrome.');
 
         // From one page to another, Back still returns to the Bible
         await openFromMenu(page, 'Sobre');
