@@ -43,32 +43,19 @@
         "close": "关闭"
     },
     "help": {
-        "intro": "请按以下任一格式输入经文引用：",
-        "chapter": {
-            "format": "书卷 章",
-            "description": "显示整章",
-            "example": "（例：<code>Mt 5</code> 显示马太福音第 5 章全章）"
-        },
-        "verse": {
-            "format": "书卷 章,节",
-            "description": "显示指定的一节",
-            "example": "（例：<code>Mt 5,13</code> 表示马太福音第 5 章第 13 节）"
-        },
-        "from": {
-            "format": "书卷 章,节-",
-            "description": "从指定的一节开始显示",
-            "example": "（例：<code>Mt 5,3-</code> 表示马太福音第 5 章从第 3 节起）"
-        },
-        "range": {
-            "format": "书卷 章,起-止",
-            "description": "显示一段经节范围",
-            "example": "（例：<code>Mt 5,3-12</code> 表示马太福音第 5 章第 3 至 12 节）"
-        },
-        "combined": {
-            "format": "书卷 章,组合经节",
-            "description": "不连续的经节或范围用句点分隔",
-            "example": "（例：<code>Mt 5,3-12.21-38</code> 表示马太福音第 5 章第 3 至 12 节，以及第 21 至 38 节）"
-        }
+        "intro": "请输入书卷、章，以及（可选的）节：",
+        "chapter": "第 5 章全章",
+        "verse": "第 13 节",
+        "range": "第 3 至 12 节",
+        "from": "从第 3 节到本章结束",
+        "combined": "第 3 至 12 节和第 21 至 38 节（用句点分隔各部分）",
+        "otherForms": "也可以这样写：",
+        "colon": "章后用冒号，此时各部分用逗号分隔",
+        "dash": "用破折号代替连字符",
+        "name": "书卷全名",
+        "usfm": "书卷的 USFM 代码，各译本通用",
+        "spacedName": "名称含空格的书卷（如 1 Corinthians）只能用缩写或 USFM 代码",
+        "note": "不区分大小写。每卷书的缩写见书卷列表。"
     },
     "about": {
         "title": "关于",

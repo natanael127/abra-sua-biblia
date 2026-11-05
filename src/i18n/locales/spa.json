@@ -43,32 +43,19 @@
         "close": "Cerrar"
     },
     "help": {
-        "intro": "Escribe la referencia bíblica en uno de los siguientes formatos:",
-        "chapter": {
-            "format": "Libro capítulo",
-            "description": "Muestra el capítulo completo",
-            "example": "(p. ej.: <code>Mt 5</code> para mostrar el capítulo 5 de Mateo completo)"
-        },
-        "verse": {
-            "format": "Libro capítulo,versículo",
-            "description": "Muestra un versículo específico",
-            "example": "(p. ej.: <code>Mt 5,13</code> para Mateo, capítulo 5, versículo 13)"
-        },
-        "from": {
-            "format": "Libro capítulo,versículo-",
-            "description": "Muestra desde un versículo específico en adelante",
-            "example": "(p. ej.: <code>Mt 5,3-</code> para Mateo, capítulo 5, del versículo 3 en adelante)"
-        },
-        "range": {
-            "format": "Libro capítulo,inicio-fin",
-            "description": "Muestra un intervalo de versículos",
-            "example": "(p. ej.: <code>Mt 5,3-12</code> para Mateo, capítulo 5, versículos del 3 al 12)"
-        },
-        "combined": {
-            "format": "Libro capítulo,versículos combinados",
-            "description": "Usa un punto para separar versículos o intervalos no consecutivos",
-            "example": "(p. ej.: <code>Mt 5,3-12.21-38</code> para Mateo, capítulo 5, versículos del 3 al 12, más los versículos del 21 al 38)"
-        }
+        "intro": "Escribe el libro, el capítulo y, si quieres, los versículos:",
+        "chapter": "el capítulo 5 completo",
+        "verse": "el versículo 13",
+        "range": "los versículos del 3 al 12",
+        "from": "del versículo 3 hasta el final del capítulo",
+        "combined": "los versículos del 3 al 12 y del 21 al 38 (el punto separa las partes)",
+        "otherForms": "También se aceptan:",
+        "colon": "dos puntos después del capítulo; entonces las partes se separan con comas",
+        "dash": "una raya en lugar del guion",
+        "name": "el nombre completo del libro",
+        "usfm": "el código USFM del libro, el mismo en todas las traducciones",
+        "spacedName": "libros con un espacio en el nombre (como 1 Corintios): solo con la abreviatura o el código USFM",
+        "note": "Da igual usar mayúsculas o minúsculas. La abreviatura de cada libro aparece en la lista de libros."
     },
     "about": {
         "title": "Acerca de",

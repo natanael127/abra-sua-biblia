@@ -99,11 +99,10 @@ export function showCrossReferencesModal(source: string, references: readonly Cr
 }
 
 export function showReferenceHelpModal(instructionsHtml: string): void {
-    getOrCreateModal({
-        id: 'reference-help-modal',
-        title: t('modals.referenceHelp.title'),
-        contentHtml: instructionsHtml,
-    }).showModal();
+    const modal = getOrCreateModal({ id: 'reference-help-modal', title: t('modals.referenceHelp.title') });
+    // Filled on each opening: the examples follow the Bible currently loaded
+    getModalContent(modal).innerHTML = instructionsHtml;
+    modal.showModal();
 }
 
 const link = (href: string, text: string) =>

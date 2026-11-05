@@ -43,32 +43,19 @@
         "close": "Tutup"
     },
     "help": {
-        "intro": "Ketik rujukan Alkitab dalam salah satu format berikut:",
-        "chapter": {
-            "format": "Kitab pasal",
-            "description": "Menampilkan satu pasal penuh",
-            "example": "(mis.: <code>Mt 5</code> untuk menampilkan seluruh Matius pasal 5)"
-        },
-        "verse": {
-            "format": "Kitab pasal,ayat",
-            "description": "Menampilkan satu ayat tertentu",
-            "example": "(mis.: <code>Mt 5,13</code> untuk Matius pasal 5, ayat 13)"
-        },
-        "from": {
-            "format": "Kitab pasal,ayat-",
-            "description": "Menampilkan mulai dari ayat tertentu",
-            "example": "(mis.: <code>Mt 5,3-</code> untuk Matius pasal 5, mulai dari ayat 3)"
-        },
-        "range": {
-            "format": "Kitab pasal,awal-akhir",
-            "description": "Menampilkan rentang ayat",
-            "example": "(mis.: <code>Mt 5,3-12</code> untuk Matius pasal 5, ayat 3 sampai 12)"
-        },
-        "combined": {
-            "format": "Kitab pasal,gabungan ayat",
-            "description": "Gunakan titik untuk memisahkan ayat atau rentang yang tidak berurutan",
-            "example": "(mis.: <code>Mt 5,3-12.21-38</code> untuk Matius pasal 5, ayat 3 sampai 12, ditambah ayat 21 sampai 38)"
-        }
+        "intro": "Ketik kitab, pasal, dan jika perlu, ayatnya:",
+        "chapter": "seluruh pasal 5",
+        "verse": "ayat 13",
+        "range": "ayat 3 sampai 12",
+        "from": "dari ayat 3 sampai akhir pasal",
+        "combined": "ayat 3 sampai 12 dan 21 sampai 38 (titik memisahkan bagian-bagiannya)",
+        "otherForms": "Juga diterima:",
+        "colon": "titik dua setelah pasal; bagian-bagiannya lalu dipisahkan dengan koma",
+        "dash": "tanda pisah sebagai ganti tanda hubung",
+        "name": "nama lengkap kitab",
+        "usfm": "kode USFM kitab, sama di semua terjemahan",
+        "spacedName": "kitab yang namanya mengandung spasi (seperti 1 Korintus): hanya dengan singkatan atau kode USFM",
+        "note": "Huruf besar atau kecil tidak berpengaruh. Singkatan setiap kitab ada di daftar kitab."
     },
     "about": {
         "title": "Tentang",

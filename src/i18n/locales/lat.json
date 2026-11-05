@@ -43,32 +43,19 @@
         "close": "Claudere"
     },
     "help": {
-        "intro": "Scribe locum biblicum in una ex his formis:",
-        "chapter": {
-            "format": "Liber caput",
-            "description": "Ostendit totum caput",
-            "example": "(exempli gratia: <code>Mt 5</code> ut totum caput quintum Matthaei ostendatur)"
-        },
-        "verse": {
-            "format": "Liber caput,versus",
-            "description": "Ostendit unum versum certum",
-            "example": "(exempli gratia: <code>Mt 5,13</code> pro Matthaeo, capite 5, versu 13)"
-        },
-        "from": {
-            "format": "Liber caput,versus-",
-            "description": "Ostendit a certo versu usque ad finem",
-            "example": "(exempli gratia: <code>Mt 5,3-</code> pro Matthaeo, capite 5, a versu 3 usque ad finem)"
-        },
-        "range": {
-            "format": "Liber caput,initium-finis",
-            "description": "Ostendit seriem versuum",
-            "example": "(exempli gratia: <code>Mt 5,3-12</code> pro Matthaeo, capite 5, versibus 3 ad 12)"
-        },
-        "combined": {
-            "format": "Liber caput,versus coniuncti",
-            "description": "Utere puncto ad versus vel series non continuas separandas",
-            "example": "(exempli gratia: <code>Mt 5,3-12.21-38</code> pro Matthaeo, capite 5, versibus 3 ad 12, et versibus 21 ad 38)"
-        }
+        "intro": "Scribe librum, caput et, si vis, versus:",
+        "chapter": "totum caput 5",
+        "verse": "versus 13",
+        "range": "versus 3 ad 12",
+        "from": "a versu 3 usque ad finem capitis",
+        "combined": "versus 3 ad 12 et 21 ad 38 (punctum partes separat)",
+        "otherForms": "Accipiuntur etiam:",
+        "colon": "duo puncta post caput; tum partes commatibus separantur",
+        "dash": "linea longior pro lineola",
+        "name": "plenum nomen libri",
+        "usfm": "nota USFM libri, eadem in omnibus translationibus",
+        "spacedName": "libri quorum nomen spatium habet (ut 1 Corinthios): tantum per abbreviationem aut notam USFM",
+        "note": "Litterae maiusculae an minusculae nihil refert. Abbreviatio cuiusque libri in indice librorum invenitur."
     },
     "about": {
         "title": "De hoc situ",

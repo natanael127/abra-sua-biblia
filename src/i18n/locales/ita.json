@@ -43,32 +43,19 @@
         "close": "Chiudi"
     },
     "help": {
-        "intro": "Digita il riferimento biblico in uno dei seguenti formati:",
-        "chapter": {
-            "format": "Libro capitolo",
-            "description": "Mostra il capitolo completo",
-            "example": "(es.: <code>Mt 5</code> per mostrare l'intero capitolo 5 di Matteo)"
-        },
-        "verse": {
-            "format": "Libro capitolo,versetto",
-            "description": "Mostra un versetto specifico",
-            "example": "(es.: <code>Mt 5,13</code> per Matteo, capitolo 5, versetto 13)"
-        },
-        "from": {
-            "format": "Libro capitolo,versetto-",
-            "description": "Mostra a partire da un versetto specifico",
-            "example": "(es.: <code>Mt 5,3-</code> per Matteo, capitolo 5, dal versetto 3 in poi)"
-        },
-        "range": {
-            "format": "Libro capitolo,inizio-fine",
-            "description": "Mostra un intervallo di versetti",
-            "example": "(es.: <code>Mt 5,3-12</code> per Matteo, capitolo 5, versetti da 3 a 12)"
-        },
-        "combined": {
-            "format": "Libro capitolo,versetti combinati",
-            "description": "Usa il punto per separare versetti o intervalli non consecutivi",
-            "example": "(es.: <code>Mt 5,3-12.21-38</code> per Matteo, capitolo 5, versetti da 3 a 12, più i versetti da 21 a 38)"
-        }
+        "intro": "Digita il libro, il capitolo e, se vuoi, i versetti:",
+        "chapter": "tutto il capitolo 5",
+        "verse": "il versetto 13",
+        "range": "i versetti da 3 a 12",
+        "from": "dal versetto 3 alla fine del capitolo",
+        "combined": "i versetti da 3 a 12 e da 21 a 38 (il punto separa le parti)",
+        "otherForms": "Sono accettati anche:",
+        "colon": "i due punti dopo il capitolo; le parti sono allora separate da virgole",
+        "dash": "la lineetta al posto del trattino",
+        "name": "il nome completo del libro",
+        "usfm": "il codice USFM del libro, uguale in tutte le traduzioni",
+        "spacedName": "i libri con uno spazio nel nome (come 1 Corinzi): solo con l'abbreviazione o il codice USFM",
+        "note": "Maiuscole o minuscole, non fa differenza. L'abbreviazione di ogni libro è nell'elenco dei libri."
     },
     "about": {
         "title": "Informazioni",

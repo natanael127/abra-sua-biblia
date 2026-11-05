@@ -420,6 +420,105 @@ button:hover {
     overflow-y: auto;
 }
 
+/* How to type a reference: tables of example -> meaning */
+.reference-help p {
+    margin: 0 0 6px;
+}
+
+.help-examples {
+    width: 100%;
+    margin: 0 0 16px;
+    border-collapse: collapse;
+}
+
+.help-examples td {
+    padding: 5px 0;
+    vertical-align: baseline;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.help-examples tr:last-child td,
+.help-examples tr:has(+ .help-section) td {
+    border-bottom: none;
+}
+
+.help-section th {
+    padding: 14px 0 4px;
+    font-weight: normal;
+    text-align: start;
+}
+
+/* The help modal has room for the whole help */
+#reference-help-modal .help-content {
+    max-height: min(75vh, 640px);
+}
+
+.help-examples .help-example {
+    width: 1%;
+    padding-inline-end: 16px;
+    white-space: nowrap;
+}
+
+.help-example code {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background-color: var(--bg-accent);
+    color: var(--text-primary);
+    font-family: Consolas, Menlo, monospace;
+    font-size: 0.95em;
+}
+
+.help-example code + code {
+    margin-inline-start: 6px;
+}
+
+.help-note {
+    color: var(--text-secondary);
+    font-size: 0.9em;
+}
+
+.reference-help .help-note {
+    margin-bottom: 0;
+}
+
+/* Narrow screens: the meaning goes below the example */
+@media (max-width: 480px) {
+    .help-examples tr,
+    .help-examples td {
+        display: block;
+    }
+
+    .help-examples td {
+        border-bottom: none;
+        padding: 0;
+    }
+
+    .help-examples tr {
+        padding: 6px 0;
+        border-bottom: 1px solid var(--border-light);
+    }
+
+    .help-examples tr:last-child,
+    .help-examples tr:has(+ .help-section) {
+        border-bottom: none;
+    }
+
+    .help-section th {
+        display: block;
+    }
+
+    .help-examples .help-example {
+        width: auto;
+        padding: 0;
+        white-space: normal;
+    }
+
+    .help-example code {
+        overflow-wrap: anywhere;
+    }
+}
+
 .help-icon {
     font-weight: bold;
     font-size: 16px;

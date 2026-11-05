@@ -43,32 +43,19 @@
         "close": "Fermer"
     },
     "help": {
-        "intro": "Saisissez la référence biblique dans l'un des formats suivants :",
-        "chapter": {
-            "format": "Livre chapitre",
-            "description": "Affiche le chapitre entier",
-            "example": "(ex. : <code>Mt 5</code> pour afficher tout le chapitre 5 de Matthieu)"
-        },
-        "verse": {
-            "format": "Livre chapitre,verset",
-            "description": "Affiche un verset précis",
-            "example": "(ex. : <code>Mt 5,13</code> pour Matthieu, chapitre 5, verset 13)"
-        },
-        "from": {
-            "format": "Livre chapitre,verset-",
-            "description": "Affiche à partir d'un verset précis",
-            "example": "(ex. : <code>Mt 5,3-</code> pour Matthieu, chapitre 5, à partir du verset 3)"
-        },
-        "range": {
-            "format": "Livre chapitre,début-fin",
-            "description": "Affiche une plage de versets",
-            "example": "(ex. : <code>Mt 5,3-12</code> pour Matthieu, chapitre 5, versets 3 à 12)"
-        },
-        "combined": {
-            "format": "Livre chapitre,versets combinés",
-            "description": "Utilisez un point pour séparer des versets ou des plages non consécutifs",
-            "example": "(ex. : <code>Mt 5,3-12.21-38</code> pour Matthieu, chapitre 5, versets 3 à 12, plus les versets 21 à 38)"
-        }
+        "intro": "Saisissez le livre, le chapitre et, si vous le souhaitez, les versets :",
+        "chapter": "tout le chapitre 5",
+        "verse": "le verset 13",
+        "range": "les versets 3 à 12",
+        "from": "du verset 3 jusqu'à la fin du chapitre",
+        "combined": "les versets 3 à 12 et 21 à 38 (le point sépare les parties)",
+        "otherForms": "Sont aussi acceptés :",
+        "colon": "deux-points après le chapitre ; les parties sont alors séparées par des virgules",
+        "dash": "un tiret demi-cadratin au lieu du trait d'union",
+        "name": "le nom complet du livre",
+        "usfm": "le code USFM du livre, identique dans toutes les traductions",
+        "spacedName": "les livres dont le nom contient une espace (comme 1 Corinthiens) : seulement par l'abréviation ou le code USFM",
+        "note": "Majuscules ou minuscules, peu importe. L'abréviation de chaque livre figure dans la liste des livres."
     },
     "about": {
         "title": "À propos",

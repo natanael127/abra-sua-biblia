@@ -76,14 +76,14 @@ describe('translateDocument', () => {
             <h3 data-i18n="reader.chooseTranslation">x</h3>
             <button data-i18n-title="buttons.copy" data-i18n-aria-label="buttons.share" title="x"></button>
             <input data-i18n-placeholder="reader.referencePlaceholder">
-            <p data-i18n-html="help.chapter.example"></p>`;
+            <p data-i18n-html="help.intro"></p>`;
         setUiLanguage('fra');
         expect(document.querySelector('h3')?.textContent).toBe('Choisissez votre traduction :');
         const button = document.querySelector('button');
         expect(button?.title).toBe('Copier le texte');
         expect(button?.getAttribute('aria-label')).toBe('Partager');
         expect(document.querySelector('input')?.placeholder).toBe('Ex. : Mt 5,3-12.21-38');
-        expect(document.querySelector('p code')?.textContent).toBe('Mt 5');
+        expect(document.querySelector('p')?.innerHTML).toBe('Saisissez le livre, le chapitre et, si vous le souhaitez, les versets :');
         translateDocument();
     });
 });

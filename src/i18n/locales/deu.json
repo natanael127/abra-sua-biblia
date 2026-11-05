@@ -43,32 +43,19 @@
         "close": "Schließen"
     },
     "help": {
-        "intro": "Gib die Bibelstelle in einem der folgenden Formate ein:",
-        "chapter": {
-            "format": "Buch Kapitel",
-            "description": "Zeigt das ganze Kapitel",
-            "example": "(z. B. <code>Mt 5</code>, um das ganze 5. Kapitel des Matthäus anzuzeigen)"
-        },
-        "verse": {
-            "format": "Buch Kapitel,Vers",
-            "description": "Zeigt einen bestimmten Vers",
-            "example": "(z. B. <code>Mt 5,13</code> für Matthäus, Kapitel 5, Vers 13)"
-        },
-        "from": {
-            "format": "Buch Kapitel,Vers-",
-            "description": "Zeigt ab einem bestimmten Vers",
-            "example": "(z. B. <code>Mt 5,3-</code> für Matthäus, Kapitel 5, ab Vers 3)"
-        },
-        "range": {
-            "format": "Buch Kapitel,Anfang-Ende",
-            "description": "Zeigt einen Versbereich",
-            "example": "(z. B. <code>Mt 5,3-12</code> für Matthäus, Kapitel 5, Verse 3 bis 12)"
-        },
-        "combined": {
-            "format": "Buch Kapitel,kombinierte Verse",
-            "description": "Trenne Verse oder Bereiche, die nicht aufeinanderfolgen, mit einem Punkt",
-            "example": "(z. B. <code>Mt 5,3-12.21-38</code> für Matthäus, Kapitel 5, Verse 3 bis 12 sowie die Verse 21 bis 38)"
-        }
+        "intro": "Gib das Buch, das Kapitel und, wenn du möchtest, die Verse ein:",
+        "chapter": "das ganze Kapitel 5",
+        "verse": "Vers 13",
+        "range": "die Verse 3 bis 12",
+        "from": "ab Vers 3 bis zum Ende des Kapitels",
+        "combined": "die Verse 3 bis 12 und 21 bis 38 (der Punkt trennt die Teile)",
+        "otherForms": "Ebenfalls möglich:",
+        "colon": "ein Doppelpunkt nach dem Kapitel; die Teile werden dann durch Kommas getrennt",
+        "dash": "ein Gedankenstrich statt des Bindestrichs",
+        "name": "der vollständige Name des Buches",
+        "usfm": "der USFM-Code des Buches, in allen Übersetzungen gleich",
+        "spacedName": "Bücher mit Leerzeichen im Namen (wie 1. Korinther): nur über die Abkürzung oder den USFM-Code",
+        "note": "Groß- und Kleinschreibung spielt keine Rolle. Die Abkürzung jedes Buches steht in der Bücherliste."
     },
     "about": {
         "title": "Über",

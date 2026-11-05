@@ -209,7 +209,7 @@ function showPassage(mode?: UrlMode): void {
     const inputReference = referenceField().value.trim();
     storage.saveInputReference(inputReference);
 
-    const result = renderInputReference(inputReference, state.ebf, state.displayOptions, instructionsHtml());
+    const result = renderInputReference(inputReference, state.ebf, state.displayOptions, instructionsHtml(state.ebf));
     const valid = !result.error && !!inputReference;
     state.passage = result.passage ?? null;
 
@@ -541,7 +541,7 @@ function setupActionButtons(): void {
             showHistoryModal(storage.getSearchHistory(), goToInputReference);
         },
         'reference-help-button': () => {
-            showReferenceHelpModal(instructionsHtml());
+            showReferenceHelpModal(instructionsHtml(state.ebf));
         },
         'file-help-button': showFileHelpModal,
     };

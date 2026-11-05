@@ -97,7 +97,8 @@ test('a link in the colon notation opens the passage', async ({ page }) => {
 test('invalid reference shows the instructions and hides the actions', async ({ page }) => {
     await open(page);
     await reference(page).fill('Mt');
-    await expect(result(page)).toContainText('Digite a referência bíblica');
+    await expect(result(page)).toContainText('Digite o livro, o capítulo e, se quiser, os versículos');
+    await expect(result(page).locator('.help-examples code').first()).toHaveText('Mt 5');
     await expect(page.locator('#copy-button')).toBeHidden();
 });
 
@@ -317,6 +318,55 @@ test('cross-references: the balloon after the verse lists them and opens the one
     await expect(reference(page)).toHaveValue('Lv 17,10-14');
     await expect(page).toHaveURL(/\/por\/almeida-revista-e-atualizada\/lev\/17,10-14$/);
     await expect(page.locator('#copy-button')).toBeVisible();
+});
+
+test('the reference help follows the open Bible, and its examples work', async ({ page }) => {
+    // Loads two full Bibles
+    test.slow();
+    await open(page);
+    const modal = page.locator('#reference-help-modal');
+    const examples = modal.locator('.help-examples code');
+
+    await page.locator('#reference-help-button').click();
+    await expect(examples).toHaveText([
+        'Mt 5',
+        'Mt 5,13',
+        'Mt 5,3-12',
+        'Mt 5,3-',
+        'Mt 5,3-12.21-38',
+        'Mt 5:3-12,21-38',
+        'Mt 5,3–12',
+        'Mateus 5',
+        'MAT 5',
+        '1Cor 13',
+        '1CO 13',
+    ]);
+    await page.keyboard.press('Escape');
+
+    // In the Almeida Corrigida Fiel, 1 Corinthians is "1Co", which is the USFM id itself ignoring case
+    await page.locator('#bible-select').selectOption('Almeida Corrigida e Revisada Fiel');
+    await expect(result(page).locator('.passage-heading')).toContainText('(Almeida Corrigida', { timeout: 20_000 });
+    await page.locator('#reference-help-button').click();
+    await expect(examples.filter({ hasText: / 13$/ })).toHaveText(['1Co 13']);
+    await page.keyboard.press('Escape');
+
+    for (const example of ['Mt 5:3-12,21-38', 'Mateus 5', 'MAT 5', '1Co 13', '1CO 13']) {
+        await reference(page).fill(example);
+        await expect(result(page).locator('.passage-heading'), example).toBeVisible();
+        await expect(reference(page), example).not.toHaveAttribute('aria-invalid');
+    }
+});
+
+test('the reference help fits a narrow screen, with the meaning below the example', async ({ page }) => {
+    await page.setViewportSize({ width: 360, height: 740 });
+    await open(page);
+    await page.locator('#reference-help-button').click();
+    const content = page.locator('#reference-help-modal .help-content');
+    const overflow = await content.evaluate((element) => element.scrollWidth - element.clientWidth);
+    expect(overflow).toBeLessThanOrEqual(0);
+    const row = page.locator('#reference-help-modal .help-examples tr').first();
+    const [example, meaning] = await Promise.all([row.locator('td').first().boundingBox(), row.locator('td').last().boundingBox()]);
+    expect(meaning!.y).toBeGreaterThanOrEqual(example!.y + example!.height - 1);
 });
 
 test('modals close with Esc and with a click outside', async ({ page }) => {
@@ -888,7 +938,7 @@ test.describe('interface language', () => {
             await expect(page.locator('.page-title')).toHaveText('Choose your translation:');
             await expect(page).toHaveTitle('Jo 3,16 (Ave-Maria) - Open Your Bible!');
             await reference(page).fill('Mt');
-            await expect(result(page)).toContainText('Type the Bible reference');
+            await expect(result(page)).toContainText('Type the book, the chapter and, if you like, the verses');
         });
 
         test('the saved choice wins over the browser language', async ({ page }) => {

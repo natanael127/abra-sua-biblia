@@ -43,32 +43,19 @@
         "close": "Close"
     },
     "help": {
-        "intro": "Type the Bible reference in one of the following formats:",
-        "chapter": {
-            "format": "Book chapter",
-            "description": "Shows the whole chapter",
-            "example": "(e.g. <code>Mt 5</code> to show Matthew chapter 5 in full)"
-        },
-        "verse": {
-            "format": "Book chapter,verse",
-            "description": "Shows a specific verse",
-            "example": "(e.g. <code>Mt 5,13</code> for Matthew chapter 5, verse 13)"
-        },
-        "from": {
-            "format": "Book chapter,verse-",
-            "description": "Shows everything from a specific verse onward",
-            "example": "(e.g. <code>Mt 5,3-</code> for Matthew chapter 5, from verse 3 onward)"
-        },
-        "range": {
-            "format": "Book chapter,start-end",
-            "description": "Shows a range of verses",
-            "example": "(e.g. <code>Mt 5,3-12</code> for Matthew chapter 5, verses 3 to 12)"
-        },
-        "combined": {
-            "format": "Book chapter,combined verses",
-            "description": "Use a period to separate verses or ranges that are not consecutive",
-            "example": "(e.g. <code>Mt 5,3-12.21-38</code> for Matthew chapter 5, verses 3 to 12, plus verses 21 to 38)"
-        }
+        "intro": "Type the book, the chapter and, if you like, the verses:",
+        "chapter": "the whole of chapter 5",
+        "verse": "verse 13",
+        "range": "verses 3 to 12",
+        "from": "from verse 3 to the end of the chapter",
+        "combined": "verses 3 to 12 and 21 to 38 (the dot separates the parts)",
+        "otherForms": "Also accepted:",
+        "colon": "a colon after the chapter; the parts are then separated by commas",
+        "dash": "an en dash instead of the hyphen",
+        "name": "the full name of the book",
+        "usfm": "the USFM code of the book, the same in every translation",
+        "spacedName": "books with a space in their name (like 1 Corinthians): only by abbreviation or USFM code",
+        "note": "Upper or lower case makes no difference. The abbreviation of each book is shown in the book list."
     },
     "about": {
         "title": "About",
