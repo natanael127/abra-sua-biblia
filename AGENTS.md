@@ -1,1 +1,1 @@
-Read [README.md](README.md) before doing anything else, and follow it.
+Read [README.md](README.md) and the documents it links in [docs/](docs/) before doing anything else, and follow them.
