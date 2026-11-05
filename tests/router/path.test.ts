@@ -43,14 +43,17 @@ describe('buildPath', () => {
         expect(buildPath('ave-maria', 'mt', '5,3-12.21-')).toBe('/ave-maria/mt/5,3-12.21-');
     });
 
-    it('encodes special characters, keeping the comma readable', () => {
+    it('encodes special characters, keeping the comma and the colon readable', () => {
         expect(encodePathSegment('êx')).toBe('%C3%AAx');
         expect(encodePathSegment('a/b c')).toBe('a%2Fb%20c');
         expect(encodePathSegment('5,3')).toBe('5,3');
+        expect(encodePathSegment('5:3-12,21')).toBe('5:3-12,21');
+        expect(encodePathSegment('5,3–12')).toBe('5,3%E2%80%9312');
     });
 
-    it('is the inverse of matchPath', () => {
-        const segments = ['bíblia', '1 cor', '13,4-7.13'];
+    it.each([['13,4-7.13'], ['13:4-7,13'], ['13,4–7.13']])('is the inverse of matchPath (%s)', (passage) => {
+        const segments = ['bíblia', '1 cor', passage];
         expect(matchPath('/:a/:b/:c', buildPath(...segments))).toEqual({ a: segments[0], b: segments[1], c: segments[2] });
+        expect(matchPath('/:c', `/${passage}`)).toEqual({ c: passage });
     });
 });

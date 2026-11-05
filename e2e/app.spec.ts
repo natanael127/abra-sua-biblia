@@ -74,6 +74,26 @@ test('updates the result while typing', async ({ page }) => {
     await expect(result(page).locator('sup')).toHaveText(['3', '4', '5']);
 });
 
+test('accepts the colon notation and dashes, displaying the reference in the Bible notation', async ({ page }) => {
+    await open(page);
+    await reference(page).fill('Mt 5:3-5,7');
+    await expect(result(page).locator('.resulting-reference')).toHaveText('(Mt 5,3-5.7)');
+    await expect(result(page).locator('sup')).toHaveText(['3', '4', '5', '7']);
+    await reference(page).press('Enter');
+    await expect(page).toHaveURL('/por/ave-maria/mat/5:3-5,7');
+
+    await reference(page).fill('Mt 5,3–5');
+    await expect(result(page).locator('.resulting-reference')).toHaveText('(Mt 5,3-5)');
+    await expect(reference(page)).not.toHaveAttribute('aria-invalid');
+});
+
+test('a link in the colon notation opens the passage', async ({ page }) => {
+    await page.goto('/por/ave-maria/jhn/3:16');
+    await expect(result(page).locator('.resulting-reference')).toHaveText('(Jo 3,16)');
+    await expect(reference(page)).toHaveValue('Jo 3:16');
+    await expect(page).toHaveURL('/por/ave-maria/jhn/3:16');
+});
+
 test('invalid reference shows the instructions and hides the actions', async ({ page }) => {
     await open(page);
     await reference(page).fill('Mt');
@@ -87,7 +107,7 @@ test('a wrong reference turns the field red until it is corrected', async ({ pag
     await expect(field).not.toHaveAttribute('aria-invalid');
     const normalBorder = await field.evaluate((element) => getComputedStyle(element).borderTopColor);
 
-    for (const wrong of ['Jo 3:16', 'Xyz 1', 'Jo 99', '1 Cor 13']) {
+    for (const wrong of ['Jo 3;16', 'Jo 3:16.17', 'Xyz 1', 'Jo 99', '1 Cor 13']) {
         await field.fill(wrong);
         await expect(field, wrong).toHaveAttribute('aria-invalid', 'true');
     }

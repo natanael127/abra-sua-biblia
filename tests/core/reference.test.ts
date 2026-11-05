@@ -38,6 +38,50 @@ describe('parseReference', () => {
         expect(parseReference('Mt 5,\t3')?.verses).toEqual([2]);
     });
 
+    describe('colon notation: "Book chapter:verses", with commas between the verses', () => {
+        it.each([
+            ['Jo 3:16', 'Jo 3,16'],
+            ['Mt 5:3-12', 'Mt 5,3-12'],
+            ['Mt 5:3-12,21-38', 'Mt 5,3-12.21-38'],
+            ['Mt 5:7,3-5,4', 'Mt 5,7.3-5.4'],
+            ['Mt 5:3-', 'Mt 5,3-'],
+            ['Mt 5:3-,10', 'Mt 5,3-.10'],
+            ['Mt 5:7,3-', 'Mt 5,7.3-'],
+            ['Mt 5: 3 - 5 , 7 ', 'Mt 5, 3 - 5 . 7 '],
+            ['Jo 3:0-2', 'Jo 3,0-2'],
+            ['Jo 3:16-14', 'Jo 3,16-14'],
+            ['1CO 13:4-7,13', '1CO 13,4-7.13'],
+        ])('"%s" is read like "%s"', (colon, comma) => {
+            expect(parseReference(colon)).toEqual(parseReference(comma));
+            expect(parseReference(colon)).not.toBeNull();
+        });
+
+        it.each(['Jo 3:', 'Jo 3:16.17', 'Jo 3:16,17.18', 'Jo 3,16:17', 'Jo 3:16:17', 'Jo 3 :16', 'Jo 3:,16', 'Jo 3:16,', 'Jo 3::16'])(
+            'rejects "%s"',
+            (reference) => {
+                expect(parseReference(reference)).toBeNull();
+            },
+        );
+    });
+
+    describe('en dash and em dash work as the range hyphen', () => {
+        it.each([
+            ['Jo 3,16–18', 'Jo 3,16-18'],
+            ['Jo 3,16—18', 'Jo 3,16-18'],
+            ['Jo 3,16 – 18', 'Jo 3,16 - 18'],
+            ['Mt 5,3–12.21—38', 'Mt 5,3-12.21-38'],
+            ['Mt 5,3–', 'Mt 5,3-'],
+            ['Mt 5:3–12,21—', 'Mt 5,3-12.21-'],
+        ])('"%s" is read like "%s"', (dash, hyphen) => {
+            expect(parseReference(dash)).toEqual(parseReference(hyphen));
+            expect(parseReference(dash)).not.toBeNull();
+        });
+
+        it.each(['Jo 3,16−18', 'Jo 3,16‐18', 'Jo 3,16~18', 'Jo 3,16_18', 'Jo 3,16–—18', 'Jo 3,–16', 'Jo 3–4'])('rejects "%s"', (reference) => {
+            expect(parseReference(reference)).toBeNull();
+        });
+    });
+
     it.each([
         ['Jo 3,16', 'Jo'],
         ['jo 3,16', 'jo'],
@@ -103,11 +147,9 @@ describe('parseReference', () => {
         'Jo 3 ,16',
         'Jo3,16',
         // other separators
-        'Jo 3:16',
         'Jo 3;16',
         'Jo 3,16,17',
         'Jo 3,16;17',
-        'Jo 3,16–18',
         'Jo 3-4',
         'Jo 3.16',
         // not numbers
@@ -153,6 +195,9 @@ describe('parseReference', () => {
             `Jo 3,${'1 . '.repeat(20000)}x`,
             `${'J'.repeat(50000)} 3,1x`,
             `Jo ${'1'.repeat(50000)}`,
+            `Jo 3:${'1,'.repeat(20000)}x`,
+            `Jo 3:${'1 – '.repeat(20000)}x`,
+            `Jo 3,${'1–'.repeat(20000)}`,
         ];
         const start = performance.now();
         for (const input of inputs) parseReference(input);

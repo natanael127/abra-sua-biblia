@@ -57,9 +57,12 @@ export function matchPath(pattern: string, path: string): PathParams | null {
     return params;
 }
 
-/** Encodes a path segment, keeping the safe characters of Bible notation readable. */
+/**
+ * Encodes a path segment, keeping the safe characters of Bible notation (comma
+ * and colon, both valid in a path) readable.
+ */
 export function encodePathSegment(value: string): string {
-    return encodeURIComponent(value).replace(/%2C/gi, ',');
+    return encodeURIComponent(value).replace(/%2C/gi, ',').replace(/%3A/gi, ':');
 }
 
 /** Builds a path from segments; empty or missing ones are omitted. */

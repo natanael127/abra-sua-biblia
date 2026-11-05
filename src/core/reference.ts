@@ -17,9 +17,9 @@
  *   parentheses, with the `parenthesesReference` option), in the page title
  *   and when sharing (see `Passage.resultingReference` in ./passage).
  *
- * They can differ in the book (name or abbreviation), the spacing, the order
- * and repetition of verses, and verses that do not exist in the chapter
- * ("Jo 3,16-99" -> "Jo 3,16-36").
+ * They can differ in the book (name or abbreviation), the notation
+ * ("Jo 3:16" -> "Jo 3,16"), the spacing, the order and repetition of verses,
+ * and verses that do not exist in the chapter ("Jo 3,16-99" -> "Jo 3,16-36").
  */
 
 /** Input reference broken into its parts, before being fitted to the chapter. */
@@ -37,31 +37,43 @@ export interface ParsedReference {
 /** Chapter or verse number: up to 3 digits (no chapter or verse goes beyond 176). */
 const NUMBER = String.raw`\d{1,3}`;
 
+/** Range dash: hyphen, en dash or em dash (the last two come with texts copied from documents). */
+const DASH = '[-\u2013\u2014]';
+
 /** One verse segment: "N", "N-M" or "N-" (from N onwards), with optional spaces around the numbers. */
-const SEGMENT = String.raw`\s*${NUMBER}\s*(?:-\s*(?:${NUMBER}\s*)?)?`;
+const SEGMENT = String.raw`\s*${NUMBER}\s*(?:${DASH}\s*(?:${NUMBER}\s*)?)?`;
 
 /**
- * Whole input reference: "Book chapter[,segment.segment...]". The book is a
- * single word, so books whose names have spaces are written by abbreviation or
- * USFM id ("1Cor", "1CO"); exactly one space separates it from the chapter.
+ * Whole input reference, in one of two notations that do not overlap:
+ *
+ * - "Book chapter,segment.segment..." (comma before the verses, dots between them);
+ * - "Book chapter:segment,segment..." (colon before the verses, commas between them).
+ *
+ * The book is a single word, so books whose names have spaces are written by
+ * abbreviation or USFM id ("1Cor", "1CO"); exactly one space separates it from
+ * the chapter.
  */
-const REFERENCE_PATTERN = new RegExp(String.raw`^(\S+) (${NUMBER})(?:,(${SEGMENT}(?:\.${SEGMENT})*))?$`);
+const REFERENCE_PATTERN = new RegExp(
+    String.raw`^(\S+) (${NUMBER})(?:,(${SEGMENT}(?:\.${SEGMENT})*)|:(${SEGMENT}(?:,${SEGMENT})*))?$`,
+);
 
 /** Picks the parts of each segment of an already validated verse list. */
-const SEGMENT_PARTS_PATTERN = /(\d+)\s*(?:(-)\s*(\d+)?)?/g;
+const SEGMENT_PARTS_PATTERN = new RegExp(String.raw`(\d+)\s*(?:(${DASH})\s*(\d+)?)?`, 'g');
 
 /**
  * Parses an input reference in the format "Book chapter[,verses]", where verses
- * are numbers or ranges separated by dots. E.g.: "Mt 5,3-12.21-". The book is
- * kept as written: it is only looked up in the Bible later. Returns null when
- * the reference does not follow the format.
+ * are numbers or ranges separated by dots ("Mt 5,3-12.21-"), or
+ * "Book chapter[:verses]", where they are separated by commas
+ * ("Mt 5:3-12,21-"). The book is kept as written: it is only looked up in the
+ * Bible later. Returns null when the reference does not follow the format.
  */
 export function parseReference(inputReference: string): ParsedReference | null {
     const match = REFERENCE_PATTERN.exec(inputReference);
     if (!match) {
         return null;
     }
-    const [, book = '', chapter = '', verseList] = match;
+    const [, book = '', chapter = '', dotList, commaList] = match;
+    const verseList = dotList ?? commaList;
 
     const versesList: number[] = [];
     let allAfterLast = false;
