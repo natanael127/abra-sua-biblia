@@ -63,7 +63,6 @@
         "note": "Upper or lower case makes no difference. The abbreviation of each book is shown in the book list."
     },
     "helpPage": {
-        "intro": "What each button on the Bible screen does.",
         "menu": {
             "title": "Menu",
             "button": "Opens the menu, with the Bible, this help and the About page."

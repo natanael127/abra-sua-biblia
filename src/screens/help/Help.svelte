@@ -46,8 +46,6 @@
             <h2 class="screen-title"><span aria-hidden="true">❓</span> {t('menu.help')}</h2>
         </div>
 
-        <p class="help-intro">{t('helpPage.intro')}</p>
-
         <section class="help-card">
             <h3>{t('helpPage.menu.title')}</h3>
             <ul class="help-items">
@@ -183,12 +181,6 @@
 </div>
 
 <style>
-    .help-intro {
-        margin: 0;
-        font-size: 18px;
-        color: var(--text-secondary);
-    }
-
     .help-card {
         padding: 15px 20px;
         border: 1px solid var(--border-light);

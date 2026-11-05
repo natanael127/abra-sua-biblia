@@ -63,7 +63,6 @@
         "note": "Da igual usar mayúsculas o minúsculas. La abreviatura de cada libro aparece en la lista de libros."
     },
     "helpPage": {
-        "intro": "Qué hace cada botón de la pantalla de la Biblia.",
         "menu": {
             "title": "Menú",
             "button": "Abre el menú, con la Biblia, esta ayuda y la página Acerca de."

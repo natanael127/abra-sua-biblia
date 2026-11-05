@@ -63,7 +63,6 @@
         "note": "Majuscules ou minuscules, peu importe. L'abréviation de chaque livre figure dans la liste des livres."
     },
     "helpPage": {
-        "intro": "Ce que fait chaque bouton de l'écran de la Bible.",
         "menu": {
             "title": "Menu",
             "button": "Ouvre le menu, avec la Bible, cette aide et la page À propos."

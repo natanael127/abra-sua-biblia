@@ -63,7 +63,6 @@
         "note": "Tanto faz usar maiúsculas ou minúsculas. A abreviação de cada livro aparece na lista de livros."
     },
     "helpPage": {
-        "intro": "O que faz cada botão da tela da Bíblia.",
         "menu": {
             "title": "Menu",
             "button": "Abre o menu, com a Bíblia, esta ajuda e a página Sobre."
