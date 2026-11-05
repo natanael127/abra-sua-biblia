@@ -33,7 +33,6 @@
             "auto": "Tema: Otomatis"
         },
         "downloadEbf": "Unduh berkas EBF yang dihasilkan",
-        "fileHelp": "Bantuan unggah berkas",
         "textSearch": "Pencarian teks",
         "history": "Riwayat pencarian",
         "quotes": "Tanda kutip pada teks",
@@ -80,7 +79,10 @@
             "intro": "Muncul jika terjemahan yang dipilih adalah “Unggah berkas...”.",
             "file": "Memilih berkas Alkitab: EBF (JSON), OSIS, atau USFX (XML).",
             "download": "Mengunduh Alkitab yang dimuat, dikonversi ke format EBF.",
-            "help": "Format yang didukung dan tempat menemukan Alkitab untuk diunduh."
+            "formats": "Format yang didukung:",
+            "repositories": "Repositori Alkitab:",
+            "convertedBibles": "Alkitab yang dikonversi ke EBF",
+            "osisBibles": "Alkitab dalam format OSIS"
         },
         "books": {
             "title": "Kitab",
@@ -143,13 +145,6 @@
         "history": {
             "title": "Riwayat pencarian",
             "empty": "Tidak ada pencarian terbaru"
-        },
-        "fileHelp": {
-            "title": "Unggah berkas",
-            "formats": "Format yang didukung:",
-            "repositories": "Repositori Alkitab:",
-            "convertedBibles": "Alkitab yang dikonversi ke EBF",
-            "osisBibles": "Alkitab dalam format OSIS"
         },
         "textSearch": {
             "title": "Pencarian teks",

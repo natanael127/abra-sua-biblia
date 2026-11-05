@@ -33,7 +33,6 @@
             "auto": "Tema: Automático"
         },
         "downloadEbf": "Descargar el archivo EBF generado",
-        "fileHelp": "Ayuda sobre la subida de archivos",
         "textSearch": "Búsqueda de texto",
         "history": "Historial de búsquedas",
         "quotes": "Comillas en el texto",
@@ -80,7 +79,10 @@
             "intro": "Aparece cuando la traducción elegida es «Subir archivo...».",
             "file": "Elige el archivo de la Biblia: EBF (JSON), OSIS o USFX (XML).",
             "download": "Descarga la Biblia cargada, convertida al formato EBF.",
-            "help": "Formatos admitidos y dónde encontrar Biblias para descargar."
+            "formats": "Formatos admitidos:",
+            "repositories": "Repositorios de Biblias:",
+            "convertedBibles": "Biblias convertidas a EBF",
+            "osisBibles": "Biblias en formato OSIS"
         },
         "books": {
             "title": "Libros",
@@ -143,13 +145,6 @@
         "history": {
             "title": "Historial de búsquedas",
             "empty": "Ninguna búsqueda reciente"
-        },
-        "fileHelp": {
-            "title": "Subida de archivos",
-            "formats": "Formatos admitidos:",
-            "repositories": "Repositorios de Biblias:",
-            "convertedBibles": "Biblias convertidas a EBF",
-            "osisBibles": "Biblias en formato OSIS"
         },
         "textSearch": {
             "title": "Búsqueda de texto",

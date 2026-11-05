@@ -33,7 +33,6 @@
             "auto": "Theme: Automatic"
         },
         "downloadEbf": "Download the generated EBF file",
-        "fileHelp": "Help with uploading",
         "textSearch": "Text search",
         "history": "Search history",
         "quotes": "Quotation marks in the text",
@@ -80,7 +79,10 @@
             "intro": "Shown when the chosen translation is “Upload...”.",
             "file": "Chooses the Bible file: EBF (JSON), OSIS or USFX (XML).",
             "download": "Downloads the loaded Bible, converted to the EBF format.",
-            "help": "Supported formats and where to find Bibles to download."
+            "formats": "Supported formats:",
+            "repositories": "Bible repositories:",
+            "convertedBibles": "Bibles converted to EBF",
+            "osisBibles": "Bibles in OSIS format"
         },
         "books": {
             "title": "Books",
@@ -143,13 +145,6 @@
         "history": {
             "title": "Search history",
             "empty": "No recent searches"
-        },
-        "fileHelp": {
-            "title": "File upload",
-            "formats": "Supported formats:",
-            "repositories": "Bible repositories:",
-            "convertedBibles": "Bibles converted to EBF",
-            "osisBibles": "Bibles in OSIS format"
         },
         "textSearch": {
             "title": "Text search",

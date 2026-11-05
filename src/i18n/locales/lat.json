@@ -33,7 +33,6 @@
             "auto": "Thema: Automaticum"
         },
         "downloadEbf": "Deponere fasciculum EBF confectum",
-        "fileHelp": "Auxilium de impositione",
         "textSearch": "Quaestio textualis",
         "history": "Historia quaestionum",
         "quotes": "Signa citationis in textu",
@@ -80,7 +79,10 @@
             "intro": "Apparet cum versio electa est “Imponere fasciculum...”.",
             "file": "Fasciculum Bibliae eligit: EBF (JSON), OSIS aut USFX (XML).",
             "download": "Bibliam impositam, in formam EBF conversam, deponit.",
-            "help": "Formae quae sustinentur et ubi Bibliae deponendae inveniantur."
+            "formats": "Formae quae sustinentur:",
+            "repositories": "Repositoria Bibliarum:",
+            "convertedBibles": "Bibliae in EBF conversae",
+            "osisBibles": "Bibliae in forma OSIS"
         },
         "books": {
             "title": "Libri",
@@ -143,13 +145,6 @@
         "history": {
             "title": "Historia quaestionum",
             "empty": "Nullae quaestiones recentes"
-        },
-        "fileHelp": {
-            "title": "Impositio fasciculorum",
-            "formats": "Formae quae sustinentur:",
-            "repositories": "Repositoria Bibliarum:",
-            "convertedBibles": "Bibliae in EBF conversae",
-            "osisBibles": "Bibliae in forma OSIS"
         },
         "textSearch": {
             "title": "Quaestio textualis",

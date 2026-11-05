@@ -31,6 +31,10 @@
     </li>
 {/snippet}
 
+{#snippet link(href: string, text: string)}
+    <a {href} target="_blank" rel="noopener noreferrer">{text}</a>
+{/snippet}
+
 {#snippet glyph(text: string)}
     <span class="action-button help-glyph">{text}</span>
 {/snippet}
@@ -77,9 +81,34 @@
                 {@render item(file, t('helpPage.upload.file'))}
                 {#snippet download()}{@render glyph('⏬')}{/snippet}
                 {@render item(download, t('helpPage.upload.download'))}
-                {#snippet fileHelp()}{@render glyph('❓')}{/snippet}
-                {@render item(fileHelp, t('helpPage.upload.help'))}
             </ul>
+            <div class="upload-links">
+                <div>
+                    <h4>{t('helpPage.upload.formats')}</h4>
+                    <ul>
+                        <li>
+                            <strong>EBF/JSON</strong>:
+                            {@render link('https://github.com/natanael127/easy-bible-format', 'Easy Bible Format')}
+                        </li>
+                        <li>
+                            <strong>OSIS/XML</strong>:
+                            {@render link('https://crosswire.org/osis/', 'Open Scripture Information Standard')}
+                        </li>
+                        <li>
+                            <strong>USFX/XML</strong>:
+                            {@render link('https://ebible.org/usfx/', 'Unified Scripture Format XML')}
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>{t('helpPage.upload.repositories')}</h4>
+                    <ul>
+                        <li>{@render link('https://ebible.org/find/', 'eBible')}</li>
+                        <li>{@render link('https://github.com/natanael127/ebf-converted-bibles', t('helpPage.upload.convertedBibles'))}</li>
+                        <li>{@render link('https://github.com/gratis-bible/bible', t('helpPage.upload.osisBibles'))}</li>
+                    </ul>
+                </div>
+            </div>
         </section>
 
         <section class="help-card">
@@ -272,6 +301,26 @@
     /* Right-to-left languages: the arrows point the other way, as on the Bible screen */
     :global([dir='rtl']) .help-arrow {
         transform: scaleX(-1);
+    }
+
+    /* Supported formats and where to find Bibles */
+    .upload-links {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 4px 20px;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid var(--border-light);
+    }
+
+    .upload-links h4 {
+        margin: 0 0 4px;
+        font-size: 15px;
+    }
+
+    .upload-links ul {
+        margin: 0 0 6px;
+        padding-inline-start: 20px;
     }
 
     /* Narrow screens: the description goes below the buttons */

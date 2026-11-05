@@ -680,6 +680,9 @@ test.describe('main menu', () => {
         await expect(help.locator('.screen-title')).toHaveText('❓ Ajuda');
         await expect(help).toContainText('Mostra o número de cada versículo.');
         await expect(help).toContainText('Busca textual: procura palavras no texto da Bíblia');
+        // The upload help: formats and where to find Bibles
+        await expect(help.getByRole('link', { name: 'Easy Bible Format' })).toHaveAttribute('href', 'https://github.com/natanael127/easy-bible-format');
+        await expect(help.getByRole('link', { name: 'Bíblias convertidas para EBF' })).toBeVisible();
         // The same help as the modal, with the books of the open Bible
         await expect(help.locator('.help-examples code').first()).toHaveText('Mt 5');
 

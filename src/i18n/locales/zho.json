@@ -33,7 +33,6 @@
             "auto": "主题：自动"
         },
         "downloadEbf": "下载生成的 EBF 文件",
-        "fileHelp": "上传帮助",
         "textSearch": "文本搜索",
         "history": "搜索历史",
         "quotes": "正文中的引号",
@@ -80,7 +79,10 @@
             "intro": "当所选译本为“上传文件…”时出现。",
             "file": "选择圣经文件：EBF（JSON）、OSIS 或 USFX（XML）。",
             "download": "下载已加载的圣经，并转换为 EBF 格式。",
-            "help": "支持的格式，以及在哪里可以找到圣经下载。"
+            "formats": "支持的格式：",
+            "repositories": "圣经资源库：",
+            "convertedBibles": "已转换为 EBF 的圣经",
+            "osisBibles": "OSIS 格式的圣经"
         },
         "books": {
             "title": "书卷",
@@ -143,13 +145,6 @@
         "history": {
             "title": "搜索历史",
             "empty": "没有最近的搜索"
-        },
-        "fileHelp": {
-            "title": "文件上传",
-            "formats": "支持的格式：",
-            "repositories": "圣经资源库：",
-            "convertedBibles": "已转换为 EBF 的圣经",
-            "osisBibles": "OSIS 格式的圣经"
         },
         "textSearch": {
             "title": "文本搜索",

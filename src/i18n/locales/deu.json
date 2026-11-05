@@ -33,7 +33,6 @@
             "auto": "Design: Automatisch"
         },
         "downloadEbf": "Erzeugte EBF-Datei herunterladen",
-        "fileHelp": "Hilfe zum Hochladen",
         "textSearch": "Textsuche",
         "history": "Suchverlauf",
         "quotes": "Anführungszeichen im Text",
@@ -80,7 +79,10 @@
             "intro": "Erscheint, wenn als Übersetzung „Datei hochladen...“ gewählt ist.",
             "file": "Wählt die Bibeldatei: EBF (JSON), OSIS oder USFX (XML).",
             "download": "Lädt die geladene Bibel herunter, ins EBF-Format konvertiert.",
-            "help": "Unterstützte Formate und wo du Bibeln zum Herunterladen findest."
+            "formats": "Unterstützte Formate:",
+            "repositories": "Bibel-Sammlungen:",
+            "convertedBibles": "In EBF konvertierte Bibeln",
+            "osisBibles": "Bibeln im OSIS-Format"
         },
         "books": {
             "title": "Bücher",
@@ -143,13 +145,6 @@
         "history": {
             "title": "Suchverlauf",
             "empty": "Keine letzten Suchen"
-        },
-        "fileHelp": {
-            "title": "Datei hochladen",
-            "formats": "Unterstützte Formate:",
-            "repositories": "Bibel-Sammlungen:",
-            "convertedBibles": "In EBF konvertierte Bibeln",
-            "osisBibles": "Bibeln im OSIS-Format"
         },
         "textSearch": {
             "title": "Textsuche",

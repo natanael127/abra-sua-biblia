@@ -13,7 +13,6 @@
     import MenuButton from '../../ui/components/MenuButton.svelte';
     import ThemeButton from '../../ui/components/ThemeButton.svelte';
     import CrossReferencesModal from '../../ui/dialogs/CrossReferencesModal.svelte';
-    import FileHelpModal from '../../ui/dialogs/FileHelpModal.svelte';
     import HistoryModal from '../../ui/dialogs/HistoryModal.svelte';
     import TextSearchModal from '../../ui/dialogs/TextSearchModal.svelte';
     import ShareIcon from '../../ui/icons/ShareIcon.svelte';
@@ -64,7 +63,6 @@
     let staticActionButtons: HTMLElement;
     let historyModal: HistoryModal;
     let crossReferencesModal: CrossReferencesModal;
-    let fileHelpModal: FileHelpModal;
     let textSearchModal: TextSearchModal;
 
     /** The floating buttons are shown when the original buttons leave the screen. */
@@ -208,17 +206,6 @@
             >
                 <span class="download-icon">&#x23EC;</span>
             </button>
-            <button
-                id="file-help-button"
-                class="action-button"
-                title={t('buttons.fileHelp')}
-                use:clickFeedback
-                onclick={() => {
-                    fileHelpModal.open();
-                }}
-            >
-                <span class="help-icon">&#x2753;</span>
-            </button>
         </div>
 
         <Expandable class="book-section">
@@ -313,6 +300,5 @@
 
     <HistoryModal bind:this={historyModal} onselect={goToInputReference} />
     <CrossReferencesModal bind:this={crossReferencesModal} onselect={goToInputReference} />
-    <FileHelpModal bind:this={fileHelpModal} />
     <TextSearchModal bind:this={textSearchModal} bible={reader.ebf} onselect={goToInputReference} />
 </div>

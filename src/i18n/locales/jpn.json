@@ -33,7 +33,6 @@
             "auto": "テーマ：自動"
         },
         "downloadEbf": "生成された EBF ファイルをダウンロード",
-        "fileHelp": "アップロードのヘルプ",
         "textSearch": "テキスト検索",
         "history": "検索履歴",
         "quotes": "本文の引用符",
@@ -80,7 +79,10 @@
             "intro": "選択した翻訳が「アップロード…」のときに表示されます。",
             "file": "聖書ファイルを選びます：EBF（JSON）、OSIS、USFX（XML）。",
             "download": "読み込んだ聖書を EBF 形式に変換してダウンロードします。",
-            "help": "対応フォーマットと、ダウンロードできる聖書の入手先です。"
+            "formats": "対応フォーマット：",
+            "repositories": "聖書のリポジトリ：",
+            "convertedBibles": "EBF に変換された聖書",
+            "osisBibles": "OSIS 形式の聖書"
         },
         "books": {
             "title": "書",
@@ -143,13 +145,6 @@
         "history": {
             "title": "検索履歴",
             "empty": "最近の検索はありません"
-        },
-        "fileHelp": {
-            "title": "ファイルのアップロード",
-            "formats": "対応フォーマット：",
-            "repositories": "聖書のリポジトリ：",
-            "convertedBibles": "EBF に変換された聖書",
-            "osisBibles": "OSIS 形式の聖書"
         },
         "textSearch": {
             "title": "テキスト検索",
