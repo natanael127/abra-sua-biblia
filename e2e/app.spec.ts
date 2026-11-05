@@ -659,7 +659,7 @@ test.describe('main menu', () => {
     test('the About page has the credits and the contact; Back returns to the Bible', async ({ page }) => {
         await open(page, 'Jo 3,16');
         await openFromMenu(page, 'Sobre');
-        await expect(page).toHaveURL('/sobre');
+        await expect(page).toHaveURL('/about');
         await expect(page).toHaveTitle('Sobre - Abra sua Bíblia!');
         await expect(page.locator('#reader')).toBeHidden();
         const about = page.locator('#about');
@@ -676,7 +676,7 @@ test.describe('main menu', () => {
     test('the Help page explains the buttons and how to type a reference, with the open Bible', async ({ page }) => {
         await open(page, 'Jo 3,16');
         await openFromMenu(page, 'Ajuda');
-        await expect(page).toHaveURL('/ajuda');
+        await expect(page).toHaveURL('/help');
         await expect(page).toHaveTitle('Ajuda - Abra sua Bíblia!');
         const help = page.locator('#help');
         await expect(help.locator('.screen-title')).toHaveText('❓ Ajuda');
@@ -687,7 +687,7 @@ test.describe('main menu', () => {
 
         // From one page to another, Back still returns to the Bible
         await openFromMenu(page, 'Sobre');
-        await expect(page).toHaveURL('/sobre');
+        await expect(page).toHaveURL('/about');
         await page.goBack();
         await expect(page).toHaveURL('/por/ave-maria/jhn/3,16');
         await expect(page.locator('#reader')).toBeVisible();
@@ -713,7 +713,7 @@ test.describe('main menu', () => {
         await expect(page).toHaveURL('/por/ave-maria/jhn/3,16');
         await expect(page.locator('#reader')).toBeVisible();
         await page.goForward();
-        await expect(page).toHaveURL('/sobre');
+        await expect(page).toHaveURL('/about');
         expect(await page.evaluate(() => history.length)).toBe(length + 1);
     });
 
@@ -723,7 +723,7 @@ test.describe('main menu', () => {
         await reference(page).fill('Rm 8,28');
         await expect(page).toHaveURL('/por/ave-maria/rom/8,28');
 
-        await page.goto('/sobre');
+        await page.goto('/about');
         await expect(page.locator('#about')).toBeVisible();
         await page.reload();
         await expect(page.locator('#about')).toBeVisible();

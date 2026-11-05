@@ -1,4 +1,4 @@
-<!-- About page (/sobre): who made the site and the translations, contact and version of the page. -->
+<!-- About page (/about): who made the site and the translations, contact and version of the page. -->
 <script lang="ts">
     import { t } from '../../i18n/reactive.svelte';
     import MenuButton from '../../ui/components/MenuButton.svelte';

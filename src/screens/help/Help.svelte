@@ -1,5 +1,5 @@
 <!--
-    Help page (/ajuda): what each button of the Bible screen does, each one
+    Help page (/help): what each button of the Bible screen does, each one
     drawn as it looks there, and how to type a reference (the same help as the
     ❓ modal, with examples in the open Bible).
 -->

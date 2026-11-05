@@ -15,7 +15,7 @@ import { matchPath } from '../router/path';
 import type { Router } from '../router/router';
 
 /** Paths of the pages; the reader has all the others. */
-export const PAGE_PATHS = { help: '/ajuda', about: '/sobre' } as const;
+export const PAGE_PATHS = { help: '/help', about: '/about' } as const;
 
 export type PageId = keyof typeof PAGE_PATHS;
 /** Destinations of the main menu. */
