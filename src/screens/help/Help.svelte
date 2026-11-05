@@ -99,8 +99,6 @@
                 {@render item(search, t('helpPage.reference.search'))}
                 {#snippet history()}{@render glyph('⏳')}{/snippet}
                 {@render item(history, t('helpPage.reference.history'))}
-                {#snippet referenceHelpButton()}{@render glyph('❓')}{/snippet}
-                {@render item(referenceHelpButton, t('helpPage.reference.help'))}
             </ul>
         </section>
 

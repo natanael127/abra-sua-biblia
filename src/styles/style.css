@@ -448,10 +448,6 @@ button:hover {
     text-align: start;
 }
 
-/* The help modal has room for the whole help */
-#reference-help-modal .help-content {
-    max-height: min(75vh, 640px);
-}
 
 .help-examples .help-example {
     width: 1%;

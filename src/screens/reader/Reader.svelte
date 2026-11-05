@@ -15,7 +15,6 @@
     import CrossReferencesModal from '../../ui/dialogs/CrossReferencesModal.svelte';
     import FileHelpModal from '../../ui/dialogs/FileHelpModal.svelte';
     import HistoryModal from '../../ui/dialogs/HistoryModal.svelte';
-    import ReferenceHelpModal from '../../ui/dialogs/ReferenceHelpModal.svelte';
     import TextSearchModal from '../../ui/dialogs/TextSearchModal.svelte';
     import ShareIcon from '../../ui/icons/ShareIcon.svelte';
     import * as storage from '../../ui/storage';
@@ -65,7 +64,6 @@
     let staticActionButtons: HTMLElement;
     let historyModal: HistoryModal;
     let crossReferencesModal: CrossReferencesModal;
-    let referenceHelpModal: ReferenceHelpModal;
     let fileHelpModal: FileHelpModal;
     let textSearchModal: TextSearchModal;
 
@@ -279,17 +277,6 @@
             >
                 <span class="history-icon">&#x23F3;</span>
             </button>
-            <button
-                id="reference-help-button"
-                class="action-button"
-                title={t('buttons.referenceHelp')}
-                use:clickFeedback
-                onclick={() => {
-                    referenceHelpModal.open();
-                }}
-            >
-                <span class="help-icon">&#x2753;</span>
-            </button>
         </div>
 
         <div class="buttons-block" id="formatting-buttons">
@@ -326,7 +313,6 @@
 
     <HistoryModal bind:this={historyModal} onselect={goToInputReference} />
     <CrossReferencesModal bind:this={crossReferencesModal} onselect={goToInputReference} />
-    <ReferenceHelpModal bind:this={referenceHelpModal} bible={reader.ebf} />
     <FileHelpModal bind:this={fileHelpModal} />
     <TextSearchModal bind:this={textSearchModal} bible={reader.ebf} onselect={goToInputReference} />
 </div>

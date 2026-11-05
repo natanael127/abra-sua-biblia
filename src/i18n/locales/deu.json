@@ -36,7 +36,6 @@
         "fileHelp": "Hilfe zum Hochladen",
         "textSearch": "Textsuche",
         "history": "Suchverlauf",
-        "referenceHelp": "Hilfe",
         "quotes": "Anführungszeichen im Text",
         "verseNumbers": "Versnummern",
         "lineBreaks": "Zeilenumbruch nach jedem Vers",
@@ -91,8 +90,7 @@
             "title": "Bibelstelle",
             "field": "Gib die Bibelstelle ein: Der Abschnitt erscheint schon beim Tippen. Das Feld wird rot, wenn die Angabe fehlerhaft ist.",
             "search": "Textsuche: sucht Wörter im Bibeltext, nach Relevanz oder in der Reihenfolge der Bücher.",
-            "history": "Verlauf der geöffneten Bibelstellen. Ein Tippen auf einen Eintrag öffnet den Abschnitt erneut.",
-            "help": "Wie du die Bibelstelle eingibst (siehe auch am Ende dieser Seite)."
+            "history": "Verlauf der geöffneten Bibelstellen. Ein Tippen auf einen Eintrag öffnet den Abschnitt erneut."
         },
         "formatting": {
             "title": "Textformatierung",
@@ -145,9 +143,6 @@
         "history": {
             "title": "Suchverlauf",
             "empty": "Keine letzten Suchen"
-        },
-        "referenceHelp": {
-            "title": "Bibelstelle"
         },
         "fileHelp": {
             "title": "Datei hochladen",

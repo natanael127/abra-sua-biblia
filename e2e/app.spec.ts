@@ -324,10 +324,9 @@ test('the reference help follows the open Bible, and its examples work', async (
     // Loads two full Bibles
     test.slow();
     await open(page);
-    const modal = page.locator('#reference-help-modal');
-    const examples = modal.locator('.help-examples code');
+    const examples = page.locator('#help .help-examples code');
 
-    await page.locator('#reference-help-button').click();
+    await openFromMenu(page, 'Ajuda');
     await expect(examples).toHaveText([
         'Mt 5',
         'Mt 5,13',
@@ -341,14 +340,14 @@ test('the reference help follows the open Bible, and its examples work', async (
         '1Cor 13',
         '1CO 13',
     ]);
-    await page.keyboard.press('Escape');
+    await openFromMenu(page, 'Bíblia');
 
     // In the Almeida Corrigida Fiel, 1 Corinthians is "1Co", which is the USFM id itself ignoring case
     await page.locator('#bible-select').selectOption('Almeida Corrigida e Revisada Fiel');
     await expect(result(page).locator('.passage-heading')).toContainText('(Almeida Corrigida', { timeout: 20_000 });
-    await page.locator('#reference-help-button').click();
+    await openFromMenu(page, 'Ajuda');
     await expect(examples.filter({ hasText: / 13$/ })).toHaveText(['1Co 13']);
-    await page.keyboard.press('Escape');
+    await openFromMenu(page, 'Bíblia');
 
     for (const example of ['Mt 5:3-12,21-38', 'Mateus 5', 'MAT 5', '1Co 13', '1CO 13']) {
         await reference(page).fill(example);
@@ -360,25 +359,24 @@ test('the reference help follows the open Bible, and its examples work', async (
 test('the reference help fits a narrow screen, with the meaning below the example', async ({ page }) => {
     await page.setViewportSize({ width: 360, height: 740 });
     await open(page);
-    await page.locator('#reference-help-button').click();
-    const content = page.locator('#reference-help-modal .help-content');
-    const overflow = await content.evaluate((element) => element.scrollWidth - element.clientWidth);
+    await openFromMenu(page, 'Ajuda');
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(overflow).toBeLessThanOrEqual(0);
-    const row = page.locator('#reference-help-modal .help-examples tr').first();
+    const row = page.locator('#help .help-examples tr').first();
     const [example, meaning] = await Promise.all([row.locator('td').first().boundingBox(), row.locator('td').last().boundingBox()]);
     expect(meaning!.y).toBeGreaterThanOrEqual(example!.y + example!.height - 1);
 });
 
 test('modals close with Esc and with a click outside', async ({ page }) => {
     await open(page);
-    const modal = page.locator('#reference-help-modal');
+    const modal = page.locator('#history-modal');
 
-    await page.locator('#reference-help-button').click();
+    await page.locator('#history-button').click();
     await expect(modal).toBeVisible();
     await page.keyboard.press('Escape');
     await expect(modal).toBeHidden();
 
-    await page.locator('#reference-help-button').click();
+    await page.locator('#history-button').click();
     await expect(modal).toBeVisible();
     await page.mouse.click(2, 2);
     await expect(modal).toBeHidden();

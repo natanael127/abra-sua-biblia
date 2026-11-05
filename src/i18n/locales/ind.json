@@ -36,7 +36,6 @@
         "fileHelp": "Bantuan unggah berkas",
         "textSearch": "Pencarian teks",
         "history": "Riwayat pencarian",
-        "referenceHelp": "Bantuan",
         "quotes": "Tanda kutip pada teks",
         "verseNumbers": "Nomor ayat",
         "lineBreaks": "Pindah baris setelah setiap ayat",
@@ -91,8 +90,7 @@
             "title": "Rujukan",
             "field": "Ketik rujukan Alkitab: perikopnya muncul selagi kamu mengetik. Kolom menjadi merah jika rujukannya salah.",
             "search": "Pencarian teks: mencari kata dalam teks Alkitab, berdasarkan relevansi atau sesuai urutan kitab.",
-            "history": "Riwayat rujukan yang telah dibuka. Ketuk salah satunya untuk membuka kembali perikopnya.",
-            "help": "Cara mengetik rujukan (lihat juga di akhir halaman ini)."
+            "history": "Riwayat rujukan yang telah dibuka. Ketuk salah satunya untuk membuka kembali perikopnya."
         },
         "formatting": {
             "title": "Format teks",
@@ -145,9 +143,6 @@
         "history": {
             "title": "Riwayat pencarian",
             "empty": "Tidak ada pencarian terbaru"
-        },
-        "referenceHelp": {
-            "title": "Rujukan Alkitab"
         },
         "fileHelp": {
             "title": "Unggah berkas",

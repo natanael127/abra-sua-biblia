@@ -36,7 +36,6 @@
         "fileHelp": "Ayuda sobre la subida de archivos",
         "textSearch": "Búsqueda de texto",
         "history": "Historial de búsquedas",
-        "referenceHelp": "Ayuda",
         "quotes": "Comillas en el texto",
         "verseNumbers": "Números de los versículos",
         "lineBreaks": "Salto de línea después de cada versículo",
@@ -91,8 +90,7 @@
             "title": "Referencia",
             "field": "Escribe la referencia bíblica: el pasaje aparece mientras escribes. El campo se pone rojo cuando la referencia es incorrecta.",
             "search": "Búsqueda de texto: busca palabras en el texto de la Biblia, por relevancia o en el orden de los libros.",
-            "history": "Historial de las referencias abiertas. Un toque en una de ellas vuelve a abrir el pasaje.",
-            "help": "Cómo escribir la referencia (consulta también el final de esta página)."
+            "history": "Historial de las referencias abiertas. Un toque en una de ellas vuelve a abrir el pasaje."
         },
         "formatting": {
             "title": "Formato del texto",
@@ -145,9 +143,6 @@
         "history": {
             "title": "Historial de búsquedas",
             "empty": "Ninguna búsqueda reciente"
-        },
-        "referenceHelp": {
-            "title": "Referencia bíblica"
         },
         "fileHelp": {
             "title": "Subida de archivos",

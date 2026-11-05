@@ -36,7 +36,6 @@
         "fileHelp": "上传帮助",
         "textSearch": "文本搜索",
         "history": "搜索历史",
-        "referenceHelp": "帮助",
         "quotes": "正文中的引号",
         "verseNumbers": "节号",
         "lineBreaks": "每节后换行",
@@ -91,8 +90,7 @@
             "title": "经文引用",
             "field": "输入经文引用：经文会随着输入即时显示。引用有误时，输入框会变红。",
             "search": "文本搜索：在圣经正文中搜索词语，可按相关度或按书卷顺序排列。",
-            "history": "已打开的经文引用历史。点一下即可重新打开该段经文。",
-            "help": "如何输入经文引用（另见本页末尾）。"
+            "history": "已打开的经文引用历史。点一下即可重新打开该段经文。"
         },
         "formatting": {
             "title": "文本格式",
@@ -145,9 +143,6 @@
         "history": {
             "title": "搜索历史",
             "empty": "没有最近的搜索"
-        },
-        "referenceHelp": {
-            "title": "经文引用"
         },
         "fileHelp": {
             "title": "文件上传",

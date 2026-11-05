@@ -36,7 +36,6 @@
         "fileHelp": "Aide sur le téléversement",
         "textSearch": "Recherche de texte",
         "history": "Historique des recherches",
-        "referenceHelp": "Aide",
         "quotes": "Guillemets dans le texte",
         "verseNumbers": "Numéros des versets",
         "lineBreaks": "Retour à la ligne après chaque verset",
@@ -91,8 +90,7 @@
             "title": "Référence",
             "field": "Saisissez la référence biblique : le passage apparaît pendant la saisie. Le champ devient rouge quand la référence est erronée.",
             "search": "Recherche de texte : cherche des mots dans le texte de la Bible, par pertinence ou dans l'ordre des livres.",
-            "history": "Historique des références ouvertes. Un appui sur l'une d'elles rouvre le passage.",
-            "help": "Comment saisir la référence (voir aussi la fin de cette page)."
+            "history": "Historique des références ouvertes. Un appui sur l'une d'elles rouvre le passage."
         },
         "formatting": {
             "title": "Mise en forme du texte",
@@ -145,9 +143,6 @@
         "history": {
             "title": "Historique des recherches",
             "empty": "Aucune recherche récente"
-        },
-        "referenceHelp": {
-            "title": "Référence biblique"
         },
         "fileHelp": {
             "title": "Téléversement de fichiers",

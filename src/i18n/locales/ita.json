@@ -36,7 +36,6 @@
         "fileHelp": "Aiuto sul caricamento",
         "textSearch": "Ricerca testuale",
         "history": "Cronologia delle ricerche",
-        "referenceHelp": "Aiuto",
         "quotes": "Virgolette nel testo",
         "verseNumbers": "Numeri dei versetti",
         "lineBreaks": "A capo dopo ogni versetto",
@@ -91,8 +90,7 @@
             "title": "Riferimento",
             "field": "Digita il riferimento biblico: il brano compare mentre scrivi. Il campo diventa rosso quando il riferimento è errato.",
             "search": "Ricerca testuale: cerca parole nel testo della Bibbia, per rilevanza o nell'ordine dei libri.",
-            "history": "Cronologia dei riferimenti aperti. Un tocco su uno di essi riapre il brano.",
-            "help": "Come digitare il riferimento (vedi anche in fondo a questa pagina)."
+            "history": "Cronologia dei riferimenti aperti. Un tocco su uno di essi riapre il brano."
         },
         "formatting": {
             "title": "Formattazione del testo",
@@ -145,9 +143,6 @@
         "history": {
             "title": "Cronologia delle ricerche",
             "empty": "Nessuna ricerca recente"
-        },
-        "referenceHelp": {
-            "title": "Riferimento biblico"
         },
         "fileHelp": {
             "title": "Caricamento di file",

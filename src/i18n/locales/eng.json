@@ -36,7 +36,6 @@
         "fileHelp": "Help with uploading",
         "textSearch": "Text search",
         "history": "Search history",
-        "referenceHelp": "Help",
         "quotes": "Quotation marks in the text",
         "verseNumbers": "Verse numbers",
         "lineBreaks": "Line break after each verse",
@@ -91,8 +90,7 @@
             "title": "Reference",
             "field": "Type the Bible reference: the passage appears as you type. The field turns red when the reference is wrong.",
             "search": "Text search: looks for words in the Bible text, by relevance or in book order.",
-            "history": "History of opened references. Tapping one opens the passage again.",
-            "help": "How to type the reference (see also the end of this page)."
+            "history": "History of opened references. Tapping one opens the passage again."
         },
         "formatting": {
             "title": "Text formatting",
@@ -145,9 +143,6 @@
         "history": {
             "title": "Search history",
             "empty": "No recent searches"
-        },
-        "referenceHelp": {
-            "title": "Bible reference"
         },
         "fileHelp": {
             "title": "File upload",

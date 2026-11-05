@@ -145,8 +145,8 @@ passage displayed, which can differ:
   `Jo 3,16-18`. It is shown after the passage (with the `()` option), in the page title and when
   sharing.
 
-The help on how to type a reference (`src/screens/reader/instructions.ts`, shown in the help modal,
-on the Help page and in place of the passage when the reference is invalid) writes its examples with the books of the
+The help on how to type a reference (`src/screens/reader/instructions.ts`, shown on the Help
+page and in place of the passage when the reference is invalid) writes its examples with the books of the
 open Bible (`Mt 5,13` in one, `Мф 5,13` in another), so that every example works when typed.
 
 The passage is built (`src/core/passage.ts`) from the input reference and the display options
