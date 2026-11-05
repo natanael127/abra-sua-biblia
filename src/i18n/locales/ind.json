@@ -6,6 +6,12 @@
     "language": {
         "label": "Bahasa antarmuka"
     },
+    "menu": {
+        "open": "Buka menu",
+        "label": "Menu utama",
+        "bible": "Alkitab",
+        "about": "Tentang"
+    },
     "reader": {
         "chooseTranslation": "Pilih terjemahanmu:",
         "upload": "Unggah berkas...",
@@ -58,12 +64,13 @@
         "note": "Huruf besar atau kecil tidak berpengaruh. Singkatan setiap kitab ada di daftar kitab."
     },
     "about": {
-        "title": "Tentang",
         "developedBy": "Dikembangkan oleh:",
         "translationsAveMariaCnbb": "Terjemahan Ave-Maria dan CNBB:",
         "translationsAaAcfNvi": "Terjemahan AA, ACF, dan NVI:",
         "translationPadreMatosSoares": "Terjemahan Pastor Matos Soares:",
-        "version": "Versi halaman:"
+        "version": "Versi halaman:",
+        "credits": "Kredit",
+        "contact": "Kontak"
     },
     "messages": {
         "bibleLoadError": "Gagal memuat Alkitab",

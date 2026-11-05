@@ -6,6 +6,12 @@
     "language": {
         "label": "Γλώσσα της διεπαφής"
     },
+    "menu": {
+        "open": "Άνοιγμα μενού",
+        "label": "Κύριο μενού",
+        "bible": "Βίβλος",
+        "about": "Σχετικά"
+    },
     "reader": {
         "chooseTranslation": "Επίλεξε τη μετάφρασή σου:",
         "upload": "Μεταφόρτωση αρχείου...",
@@ -58,12 +64,13 @@
         "note": "Κεφαλαία ή πεζά, δεν έχει σημασία. Η συντομογραφία κάθε βιβλίου φαίνεται στη λίστα των βιβλίων."
     },
     "about": {
-        "title": "Σχετικά",
         "developedBy": "Ανάπτυξη:",
         "translationsAveMariaCnbb": "Μεταφράσεις Ave-Maria και CNBB:",
         "translationsAaAcfNvi": "Μεταφράσεις AA, ACF και NVI:",
         "translationPadreMatosSoares": "Μετάφραση του πατέρα Matos Soares:",
-        "version": "Έκδοση της σελίδας:"
+        "version": "Έκδοση της σελίδας:",
+        "credits": "Συντελεστές",
+        "contact": "Επικοινωνία"
     },
     "messages": {
         "bibleLoadError": "Σφάλμα κατά τη φόρτωση της Βίβλου",

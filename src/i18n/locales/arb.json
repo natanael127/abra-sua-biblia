@@ -6,6 +6,12 @@
     "language": {
         "label": "لغة الواجهة"
     },
+    "menu": {
+        "open": "فتح القائمة",
+        "label": "القائمة الرئيسية",
+        "bible": "الكتاب المقدّس",
+        "about": "حول الموقع"
+    },
     "reader": {
         "chooseTranslation": "اختر ترجمتك:",
         "upload": "رفع ملف...",
@@ -58,12 +64,13 @@
         "note": "لا فرق بين الأحرف الكبيرة والصغيرة. يظهر اختصار كل سفر في قائمة الأسفار."
     },
     "about": {
-        "title": "حول الموقع",
         "developedBy": "تطوير:",
         "translationsAveMariaCnbb": "ترجمتا Ave-Maria وCNBB:",
         "translationsAaAcfNvi": "ترجمات AA وACF وNVI:",
         "translationPadreMatosSoares": "ترجمة الأب ماتوس سواريس:",
-        "version": "إصدار الصفحة:"
+        "version": "إصدار الصفحة:",
+        "credits": "شكر وتقدير",
+        "contact": "تواصل معنا"
     },
     "messages": {
         "bibleLoadError": "حدث خطأ أثناء تحميل الكتاب المقدّس",

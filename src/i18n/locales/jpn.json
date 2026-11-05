@@ -6,6 +6,12 @@
     "language": {
         "label": "表示言語"
     },
+    "menu": {
+        "open": "メニューを開く",
+        "label": "メインメニュー",
+        "bible": "聖書",
+        "about": "このサイトについて"
+    },
     "reader": {
         "chooseTranslation": "翻訳を選んでください：",
         "upload": "アップロード…",
@@ -58,12 +64,13 @@
         "note": "大文字・小文字は区別しません。各書の略称は書名一覧に表示されます。"
     },
     "about": {
-        "title": "このサイトについて",
         "developedBy": "開発者：",
         "translationsAveMariaCnbb": "Ave-Maria 訳と CNBB 訳：",
         "translationsAaAcfNvi": "AA 訳、ACF 訳、NVI 訳：",
         "translationPadreMatosSoares": "マトス・ソアレス神父訳：",
-        "version": "ページのバージョン："
+        "version": "ページのバージョン：",
+        "credits": "クレジット",
+        "contact": "お問い合わせ"
     },
     "messages": {
         "bibleLoadError": "聖書の読み込み中にエラーが発生しました",

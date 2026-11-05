@@ -617,34 +617,89 @@ test('minified inline script applies the saved theme before the bundle', async (
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
 });
 
-test('"Sobre" section ends with the build version (commit hash and date)', async ({ page }) => {
+test('the About page ends with the build version (commit hash and date)', async ({ page }) => {
     await open(page);
-    await page.locator('#about-footer .expandable-header').click();
-    const version = page.locator('#about-footer .expandable-content > :last-child');
-    await expect(version).toHaveId('build-version');
+    await openFromMenu(page, 'Sobre');
+    const about = page.locator('#about');
+    await expect(about.locator('.container > :last-child')).toHaveId('build-version');
+    const version = page.locator('#build-version');
     // Commit hash and date in UTC, matching git in this repository
     const head = execSync('git show -s --format=%h%n%ct HEAD', { encoding: 'utf8' }).trim().split('\n');
     const date = new Date(Number(head[1]) * 1000).toISOString().slice(0, 19).replace('T', ' ');
     await expect(version).toHaveText(new RegExp(`^Versão da página: ${head[0]}(-dirty)? ${date}$`));
     await expect(version).toHaveCSS('font-style', 'italic');
-
-    const sizes = await version.evaluate((element) => {
-        const content = element.closest('.expandable-content')!;
-        // Wait for the section's opening animation to finish
-        return new Promise<{ version: number; text: number; bottom: number; limit: number }>((resolve) => {
-            setTimeout(() => {
-                resolve({
-                    version: parseFloat(getComputedStyle(element).fontSize),
-                    text: parseFloat(getComputedStyle(content).fontSize),
-                    bottom: element.getBoundingClientRect().bottom,
-                    limit: content.getBoundingClientRect().bottom,
-                });
-            }, 500);
-        });
-    });
+    const sizes = await version.evaluate((element) => ({
+        version: parseFloat(getComputedStyle(element).fontSize),
+        text: parseFloat(getComputedStyle(element.parentElement!).fontSize),
+    }));
     expect(sizes.version).toBeLessThan(sizes.text);
-    // The section has a max height with hidden overflow: the version must not be clipped
-    expect(sizes.bottom).toBeLessThanOrEqual(sizes.limit);
+});
+
+/** Opens a page from the main menu (hamburger), by the label of its item. */
+async function openFromMenu(page: Page, label: string) {
+    await page.locator('.menu-button:visible').click();
+    const menu = page.locator('#main-menu');
+    await expect(menu).toBeVisible();
+    await menu.getByRole('link', { name: label }).click();
+    await expect(menu).toBeHidden();
+}
+
+test.describe('main menu', () => {
+    test('lists the destinations, each one with an emoji', async ({ page }) => {
+        await open(page);
+        await page.locator('.menu-button:visible').click();
+        const items = page.locator('#main-menu .main-menu-item');
+        await expect(items.first()).toHaveText('📖 Bíblia');
+        await expect(items.first()).toHaveAttribute('aria-current', 'page');
+        await expect(page.locator('#main-menu').getByRole('link', { name: 'Sobre' })).toContainText('ℹ️');
+        await page.keyboard.press('Escape');
+        await expect(page.locator('#main-menu')).toBeHidden();
+    });
+
+    test('the About page has the credits and the contact; Back returns to the Bible', async ({ page }) => {
+        await open(page, 'Jo 3,16');
+        await openFromMenu(page, 'Sobre');
+        await expect(page).toHaveURL('/sobre');
+        await expect(page).toHaveTitle('Sobre - Abra sua Bíblia!');
+        await expect(page.locator('#reader')).toBeHidden();
+        const about = page.locator('#about');
+        await expect(about.locator('.screen-title')).toHaveText('ℹ️ Sobre');
+        await expect(about.getByRole('link', { name: 'Natanael de Souza Figueiredo' })).toBeVisible();
+        await expect(about.getByRole('link', { name: 'contato@abrasuabiblia.com.br' })).toBeVisible();
+
+        await page.goBack();
+        await expect(page).toHaveURL('/por/ave-maria/jhn/3,16');
+        await expect(result(page).locator('.resulting-reference')).toHaveText('(Jo 3,16)');
+        await expect(page).toHaveTitle('Jo 3,16 (Ave-Maria) - Abra sua Bíblia!');
+    });
+
+    test('the Bible item of the menu goes back to the passage, without a new history entry', async ({ page }) => {
+        await open(page, 'Jo 3,16');
+        const length = await page.evaluate(() => history.length);
+        await openFromMenu(page, 'Sobre');
+        await openFromMenu(page, 'Bíblia');
+        await expect(page).toHaveURL('/por/ave-maria/jhn/3,16');
+        await expect(page.locator('#reader')).toBeVisible();
+        await page.goForward();
+        await expect(page).toHaveURL('/sobre');
+        expect(await page.evaluate(() => history.length)).toBe(length + 1);
+    });
+
+    test('a page opened directly also goes back to the Bible, even after a reload', async ({ page }) => {
+        await page.goto('/');
+        await waitForBible(page);
+        await reference(page).fill('Rm 8,28');
+        await expect(page).toHaveURL('/por/ave-maria/rom/8,28');
+
+        await page.goto('/sobre');
+        await expect(page.locator('#about')).toBeVisible();
+        await page.reload();
+        await expect(page.locator('#about')).toBeVisible();
+        await page.goBack();
+        // The last reading
+        await expect(page).toHaveURL('/por/ave-maria/rom/8,28');
+        await expect(result(page).locator('.resulting-reference')).toHaveText('(Rm 8,28)');
+    });
 });
 
 test('the Bibles come from the Blob store, versioned by hash, and not from the site', async ({ page }) => {

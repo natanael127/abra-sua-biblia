@@ -6,6 +6,12 @@
     "language": {
         "label": "Lingua interfaciei"
     },
+    "menu": {
+        "open": "Aperire indicem",
+        "label": "Index principalis",
+        "bible": "Biblia",
+        "about": "De hoc situ"
+    },
     "reader": {
         "chooseTranslation": "Elige versionem tuam:",
         "upload": "Imponere fasciculum...",
@@ -58,12 +64,13 @@
         "note": "Litterae maiusculae an minusculae nihil refert. Abbreviatio cuiusque libri in indice librorum invenitur."
     },
     "about": {
-        "title": "De hoc situ",
         "developedBy": "Elaboravit:",
         "translationsAveMariaCnbb": "Versiones Ave-Maria et CNBB:",
         "translationsAaAcfNvi": "Versiones AA, ACF et NVI:",
         "translationPadreMatosSoares": "Versio Patris Matos Soares:",
-        "version": "Forma paginae:"
+        "version": "Forma paginae:",
+        "credits": "Grates",
+        "contact": "Inscriptio"
     },
     "messages": {
         "bibleLoadError": "Error in Biblia imponenda",

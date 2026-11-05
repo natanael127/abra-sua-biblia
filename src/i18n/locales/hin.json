@@ -6,6 +6,12 @@
     "language": {
         "label": "इंटरफ़ेस की भाषा"
     },
+    "menu": {
+        "open": "मेनू खोलें",
+        "label": "मुख्य मेनू",
+        "bible": "बाइबल",
+        "about": "परिचय"
+    },
     "reader": {
         "chooseTranslation": "अपना अनुवाद चुनें:",
         "upload": "फ़ाइल अपलोड करें...",
@@ -58,12 +64,13 @@
         "note": "बड़े या छोटे अक्षरों से कोई फ़र्क नहीं पड़ता। हर पुस्तक का संक्षिप्त नाम पुस्तकों की सूची में दिखता है।"
     },
     "about": {
-        "title": "परिचय",
         "developedBy": "विकासकर्ता:",
         "translationsAveMariaCnbb": "Ave-Maria और CNBB अनुवाद:",
         "translationsAaAcfNvi": "AA, ACF और NVI अनुवाद:",
         "translationPadreMatosSoares": "फ़ादर मातोस सोअरेस का अनुवाद:",
-        "version": "पृष्ठ का संस्करण:"
+        "version": "पृष्ठ का संस्करण:",
+        "credits": "आभार",
+        "contact": "संपर्क"
     },
     "messages": {
         "bibleLoadError": "बाइबल लोड करने में त्रुटि",

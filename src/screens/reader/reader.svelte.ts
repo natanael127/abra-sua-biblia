@@ -89,6 +89,8 @@ const internal = {
     navToken: 0,
     /** An edit of the input reference is in progress (see UrlMode `edit`). */
     editing: false,
+    /** The reader is the screen displayed (it owns the page title). */
+    active: false,
 };
 
 let getRouter: () => Router;
@@ -189,9 +191,11 @@ export function showPassage(mode?: UrlMode): void {
     }
     reader.resultHtml = result.html;
 
-    const title = passageTitle();
-    const appTitle = t('app.title');
-    document.title = title ? `${title} - ${appTitle}` : appTitle;
+    if (internal.active) {
+        const title = passageTitle();
+        const appTitle = t('app.title');
+        document.title = title ? `${title} - ${appTitle}` : appTitle;
+    }
     if (mode) {
         syncUrl(currentPath(inputReference, valid), mode);
     }
@@ -462,6 +466,12 @@ export function createReaderScreen(router: () => Router, root: HTMLElement): Scr
 
     return {
         root,
-        show: (params) => show(params, biblesReady),
+        show: (params) => {
+            internal.active = true;
+            return show(params, biblesReady);
+        },
+        hide: () => {
+            internal.active = false;
+        },
     };
 }

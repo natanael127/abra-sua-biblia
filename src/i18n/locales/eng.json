@@ -6,6 +6,12 @@
     "language": {
         "label": "Interface language"
     },
+    "menu": {
+        "open": "Open the menu",
+        "label": "Main menu",
+        "bible": "Bible",
+        "about": "About"
+    },
     "reader": {
         "chooseTranslation": "Choose your translation:",
         "upload": "Upload...",
@@ -58,12 +64,13 @@
         "note": "Upper or lower case makes no difference. The abbreviation of each book is shown in the book list."
     },
     "about": {
-        "title": "About",
         "developedBy": "Developed by:",
         "translationsAveMariaCnbb": "Ave-Maria and CNBB translations:",
         "translationsAaAcfNvi": "AA, ACF and NVI translations:",
         "translationPadreMatosSoares": "Father Matos Soares translation:",
-        "version": "Page version:"
+        "version": "Page version:",
+        "credits": "Credits",
+        "contact": "Contact"
     },
     "messages": {
         "bibleLoadError": "Error loading the Bible",

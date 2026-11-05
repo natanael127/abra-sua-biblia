@@ -6,6 +6,12 @@
     "language": {
         "label": "Язык интерфейса"
     },
+    "menu": {
+        "open": "Открыть меню",
+        "label": "Главное меню",
+        "bible": "Библия",
+        "about": "О проекте"
+    },
     "reader": {
         "chooseTranslation": "Выберите перевод:",
         "upload": "Загрузить файл...",
@@ -58,12 +64,13 @@
         "note": "Регистр букв не важен. Сокращение каждой книги указано в списке книг."
     },
     "about": {
-        "title": "О проекте",
         "developedBy": "Разработчик:",
         "translationsAveMariaCnbb": "Переводы Ave-Maria и CNBB:",
         "translationsAaAcfNvi": "Переводы AA, ACF и NVI:",
         "translationPadreMatosSoares": "Перевод отца Матуса Соареса:",
-        "version": "Версия страницы:"
+        "version": "Версия страницы:",
+        "credits": "Благодарности",
+        "contact": "Контакты"
     },
     "messages": {
         "bibleLoadError": "Ошибка при загрузке Библии",

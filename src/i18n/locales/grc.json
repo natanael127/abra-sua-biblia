@@ -6,6 +6,12 @@
     "language": {
         "label": "Γλῶσσα τῆς διεπαφῆς"
     },
+    "menu": {
+        "open": "Ἄνοιξον τὸν πίνακα",
+        "label": "Ὁ κύριος πίναξ",
+        "bible": "Βίβλος",
+        "about": "Περὶ τοῦ ἱστοτόπου"
+    },
     "reader": {
         "chooseTranslation": "Ἔκλεξαι τὴν μετάφρασίν σου:",
         "upload": "Ἀνάθες ἀρχεῖον...",
@@ -58,12 +64,13 @@
         "note": "Κεφαλαῖα ἢ μικρὰ γράμματα, οὐδὲν διαφέρει. Ἡ βραχυγραφία ἑκάστου βιβλίου ἐν τῷ καταλόγῳ τῶν βιβλίων φαίνεται."
     },
     "about": {
-        "title": "Περὶ τοῦ ἱστοτόπου",
         "developedBy": "Ἐποίησε:",
         "translationsAveMariaCnbb": "Μεταφράσεις Ave-Maria καὶ CNBB:",
         "translationsAaAcfNvi": "Μεταφράσεις AA, ACF καὶ NVI:",
         "translationPadreMatosSoares": "Μετάφρασις τοῦ πατρὸς Matos Soares:",
-        "version": "Ἔκδοσις τῆς σελίδος:"
+        "version": "Ἔκδοσις τῆς σελίδος:",
+        "credits": "Συντελεσταί",
+        "contact": "Ἐπικοινωνία"
     },
     "messages": {
         "bibleLoadError": "Σφάλμα ἐν τῇ φορτώσει τῆς Βίβλου",

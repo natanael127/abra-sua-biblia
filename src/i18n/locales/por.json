@@ -6,6 +6,12 @@
     "language": {
         "label": "Idioma da interface"
     },
+    "menu": {
+        "open": "Abrir o menu",
+        "label": "Menu principal",
+        "bible": "Bíblia",
+        "about": "Sobre"
+    },
     "reader": {
         "chooseTranslation": "Escolha sua tradução:",
         "upload": "Fazer upload...",
@@ -58,12 +64,13 @@
         "note": "Tanto faz usar maiúsculas ou minúsculas. A abreviação de cada livro aparece na lista de livros."
     },
     "about": {
-        "title": "Sobre",
         "developedBy": "Desenvolvido por:",
         "translationsAveMariaCnbb": "Traduções Ave-Maria e CNBB:",
         "translationsAaAcfNvi": "Traduções AA, ACF e NVI:",
         "translationPadreMatosSoares": "Tradução do Padre Matos Soares:",
-        "version": "Versão da página:"
+        "version": "Versão da página:",
+        "credits": "Créditos",
+        "contact": "Contato"
     },
     "messages": {
         "bibleLoadError": "Erro ao carregar a Bíblia",

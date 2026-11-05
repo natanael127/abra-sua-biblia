@@ -10,6 +10,7 @@
     import { clickFeedback } from '../../ui/click-feedback';
     import Expandable from '../../ui/components/Expandable.svelte';
     import LanguageSelect from '../../ui/components/LanguageSelect.svelte';
+    import MenuButton from '../../ui/components/MenuButton.svelte';
     import ThemeButton from '../../ui/components/ThemeButton.svelte';
     import CrossReferencesModal from '../../ui/dialogs/CrossReferencesModal.svelte';
     import FileHelpModal from '../../ui/dialogs/FileHelpModal.svelte';
@@ -171,6 +172,7 @@
     <div class="container">
         <div class="preloaded-bibles">
             <div class="bible-selection">
+                <MenuButton />
                 <h3 class="page-title">{t('reader.chooseTranslation')}</h3>
             </div>
             <div class="bible-selection">
@@ -327,35 +329,6 @@
                 {@render chapterButtons('floating-')}
             </div>
         </div>
-
-        <Expandable id="about-footer" class="about-section">
-            {#snippet header()}
-                <span>{t('about.title')}</span>
-            {/snippet}
-            <ul>
-                <li>
-                    <span>{t('about.developedBy')}</span><br />
-                    <a href="https://github.com/natanael127" target="_blank" rel="noopener noreferrer">Natanael de Souza Figueiredo</a>
-                </li>
-                <li>
-                    <span>{t('about.translationsAveMariaCnbb')}</span><br />
-                    <a href="https://yourmenial.blogspot.com/" target="_blank" rel="noopener noreferrer">Gustavo Monteiro Gonçalves</a>
-                </li>
-                <li>
-                    <span>{t('about.translationsAaAcfNvi')}</span><br />
-                    <a href="https://github.com/thiagobodruk/bible" target="_blank" rel="noopener noreferrer">Thiago Bodruk</a>
-                </li>
-                <li>
-                    <span>{t('about.translationPadreMatosSoares')}</span><br />
-                    <a href="https://catolicoabencoai.app.br/" target="_blank" rel="noopener noreferrer">Hans Mateus Boron</a>
-                </li>
-            </ul>
-            <p>
-                <a href="mailto:contato@abrasuabiblia.com.br" target="_blank" rel="noopener noreferrer">contato@abrasuabiblia.com.br</a>
-            </p>
-            <!-- Commit hash and date of the build (scripts/build-version.ts) -->
-            <p id="build-version" class="build-version"><span>{t('about.version')}</span> {__PAGE_VERSION__}</p>
-        </Expandable>
     </div>
 
     <HistoryModal bind:this={historyModal} onselect={goToInputReference} />

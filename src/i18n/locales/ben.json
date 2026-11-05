@@ -6,6 +6,12 @@
     "language": {
         "label": "ইন্টারফেসের ভাষা"
     },
+    "menu": {
+        "open": "মেনু খুলুন",
+        "label": "প্রধান মেনু",
+        "bible": "বাইবেল",
+        "about": "সম্পর্কে"
+    },
     "reader": {
         "chooseTranslation": "আপনার অনুবাদ বেছে নিন:",
         "upload": "ফাইল আপলোড করুন...",
@@ -58,12 +64,13 @@
         "note": "বড় বা ছোট হাতের অক্ষরে কোনো পার্থক্য নেই। প্রতিটি বইয়ের সংক্ষিপ্ত রূপ বইয়ের তালিকায় দেখা যায়।"
     },
     "about": {
-        "title": "সম্পর্কে",
         "developedBy": "তৈরি করেছেন:",
         "translationsAveMariaCnbb": "Ave-Maria ও CNBB অনুবাদ:",
         "translationsAaAcfNvi": "AA, ACF ও NVI অনুবাদ:",
         "translationPadreMatosSoares": "ফাদার মাতোস সোয়ারেসের অনুবাদ:",
-        "version": "পৃষ্ঠার সংস্করণ:"
+        "version": "পৃষ্ঠার সংস্করণ:",
+        "credits": "কৃতজ্ঞতা",
+        "contact": "যোগাযোগ"
     },
     "messages": {
         "bibleLoadError": "বাইবেল লোড করতে ত্রুটি হয়েছে",

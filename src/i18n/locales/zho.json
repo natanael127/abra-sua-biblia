@@ -6,6 +6,12 @@
     "language": {
         "label": "界面语言"
     },
+    "menu": {
+        "open": "打开菜单",
+        "label": "主菜单",
+        "bible": "圣经",
+        "about": "关于"
+    },
     "reader": {
         "chooseTranslation": "选择译本：",
         "upload": "上传文件…",
@@ -58,12 +64,13 @@
         "note": "不区分大小写。每卷书的缩写见书卷列表。"
     },
     "about": {
-        "title": "关于",
         "developedBy": "开发者：",
         "translationsAveMariaCnbb": "Ave-Maria 与 CNBB 译本：",
         "translationsAaAcfNvi": "AA、ACF 与 NVI 译本：",
         "translationPadreMatosSoares": "马托斯·苏亚雷斯神父译本：",
-        "version": "页面版本："
+        "version": "页面版本：",
+        "credits": "致谢",
+        "contact": "联系方式"
     },
     "messages": {
         "bibleLoadError": "加载圣经时出错",

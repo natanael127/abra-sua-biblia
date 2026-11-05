@@ -6,6 +6,12 @@
     "language": {
         "label": "انٹرفیس کی زبان"
     },
+    "menu": {
+        "open": "مینو کھولیں",
+        "label": "مرکزی مینو",
+        "bible": "بائبل",
+        "about": "تعارف"
+    },
     "reader": {
         "chooseTranslation": "اپنا ترجمہ منتخب کریں:",
         "upload": "فائل اپ لوڈ کریں...",
@@ -58,12 +64,13 @@
         "note": "بڑے یا چھوٹے حروف سے فرق نہیں پڑتا۔ ہر کتاب کا مخفف کتابوں کی فہرست میں نظر آتا ہے۔"
     },
     "about": {
-        "title": "تعارف",
         "developedBy": "تیار کنندہ:",
         "translationsAveMariaCnbb": "Ave-Maria اور CNBB کے تراجم:",
         "translationsAaAcfNvi": "AA، ACF اور NVI کے تراجم:",
         "translationPadreMatosSoares": "فادر ماتوس سواریس کا ترجمہ:",
-        "version": "صفحے کا ورژن:"
+        "version": "صفحے کا ورژن:",
+        "credits": "اعتراف و تشکر",
+        "contact": "رابطہ"
     },
     "messages": {
         "bibleLoadError": "بائبل لوڈ کرنے میں خرابی",

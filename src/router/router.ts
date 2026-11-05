@@ -27,6 +27,8 @@ export interface Route {
 export interface NavigateOptions {
     /** Replaces the current history entry instead of creating a new one. */
     replace?: boolean;
+    /** Stored with the history entry (`history.state`); null by default. */
+    state?: unknown;
 }
 
 export interface Router {
@@ -82,15 +84,15 @@ export function createRouter(routes: readonly Route[], options: RouterOptions = 
         void screen.show(params);
     }
 
-    function writeHistory(path: string, replace = false): boolean {
+    function writeHistory(path: string, replace = false, state: unknown = null): boolean {
         const target = normalize(path);
         if (target === window.location.pathname && !window.location.search && !window.location.hash) {
             return false;
         }
         if (replace) {
-            history.replaceState(null, '', target);
+            history.replaceState(state, '', target);
         } else {
-            history.pushState(null, '', target);
+            history.pushState(state, '', target);
         }
         return true;
     }
@@ -122,12 +124,12 @@ export function createRouter(routes: readonly Route[], options: RouterOptions = 
             window.removeEventListener('popstate', resolve);
             document.removeEventListener('click', onClick);
         },
-        navigate(path, { replace = false } = {}) {
-            writeHistory(path, replace);
+        navigate(path, { replace = false, state } = {}) {
+            writeHistory(path, replace, state);
             resolve();
         },
-        updateUrl(path, { replace = false } = {}) {
-            return writeHistory(path, replace);
+        updateUrl(path, { replace = false, state } = {}) {
+            return writeHistory(path, replace, state);
         },
     };
     return router;

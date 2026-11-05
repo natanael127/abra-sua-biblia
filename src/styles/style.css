@@ -1004,3 +1004,15 @@ button.cross-reference-item:focus-visible {
     line-clamp: 3;
     overflow: hidden;
 }
+
+/* Header of the pages of the main menu: menu button and title */
+.page-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.screen-title {
+    margin: 0;
+    font-size: 22px;
+}

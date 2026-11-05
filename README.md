@@ -79,12 +79,13 @@ src/
   data/                 loading of the index and of the Bibles
   router/               SPA router (History API), independent of the screens
   screens/              screens; reader/ is the reading one (/{bible}/{book}/{passage}): Reader.svelte
-                        draws it, reader.svelte.ts holds its state and actions
+                        draws it, reader.svelte.ts holds its state and actions; about/ is the About
+                        page; navigation.ts, the navigation of the main menu
   ui/                   theme, messages, preferences; components/ (language combobox, modal...) and
                         dialogs/ (the modals of the reader) in Svelte
   i18n/                 interface languages: i18next setup, detection, flags and locales/*.json
   sw/                   service worker (Workbox)
-  App.svelte            SPA shell: draws the screens and registers their routes
+  App.svelte            SPA shell: draws the screens and the main menu and registers their routes
   app.ts                start: interface language, theme and mounting of App.svelte
 public/                 copied unchanged into the build
   assets/data/          index.json, generated at build time (the Bibles are not here)
@@ -107,6 +108,18 @@ the translation keys passed to `t`). ESLint also lints the components (`eslint-p
 except for the `no-unsafe-*` rules there: typescript-eslint does not know the types of imported
 components, which `svelte-check` does check. The unit tests of components mount them in jsdom
 (`mount` from `svelte`, e.g. `tests/ui/text-search.test.ts`).
+
+## Screens and main menu
+
+The site is a single page (SPA): the router (`src/router/`) shows the screen of the URL and hides
+the others, without reloading the page. The main menu (☰, `src/ui/components/MainMenu.svelte`, a
+popover drawer) leads to the Bible (the reader) and to the pages, each item with an emoji:
+📖 Bible, ℹ️ About (`/sobre`).
+
+From any page, going back always returns to the Bible (`src/screens/navigation.ts`): a page is
+always one history entry above the reader. Opening a page from the reader creates an entry, opening
+another page replaces it, and a page opened directly (link, new tab) gets the reader's last reading
+(`/`) behind it. The Bible item of the menu, on a page, is the same as Back.
 
 ## Bible references and passages
 

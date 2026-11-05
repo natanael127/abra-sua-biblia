@@ -104,6 +104,14 @@ describe('createRouter', () => {
         expect(reader.shown.at(-1)).toEqual({ bible: 'cnbb', book: 'jo', chapterVerses: '3' });
     });
 
+    it('stores the given state with the history entry (null by default)', () => {
+        const router = start('/ave-maria/jo/3');
+        router.navigate('/planos', { state: { page: true } });
+        expect(history.state).toEqual({ page: true });
+        router.navigate('/cnbb/jo/3', { replace: true });
+        expect(history.state).toBeNull();
+    });
+
     it('updateUrl records the URL without showing the screen again', () => {
         const router = start('/ave-maria/jo/3');
         const length = history.length;
