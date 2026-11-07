@@ -5,7 +5,7 @@ import tseslint from 'typescript-eslint';
 import svelteConfig from './svelte.config.js';
 
 export default tseslint.config(
-    { ignores: ['dist', '.vercel', 'dev-dist', 'node_modules', 'public', 'coverage', 'playwright-report', 'test-results'] },
+    { ignores: ['dist', '.vercel', 'dev-dist', '.svelte-check', 'node_modules', 'public', 'coverage', 'playwright-report', 'test-results'] },
     js.configs.recommended,
     ...tseslint.configs.strictTypeChecked,
     ...svelte.configs.recommended,
