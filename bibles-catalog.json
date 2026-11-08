@@ -405,6 +405,51 @@
         "sha256": "9407378526106658a5b1bf2cc428f42fe22b954ed7de5af8a2946be26f0c994e"
     },
     {
+        "file": "heb_hd_24.ebf1.json",
+        "name": "Habrit Hakhadasha/Haderekh",
+        "language": "heb",
+        "slug": "habrit-hakhadasha-haderekh",
+        "type": "other",
+        "size": 1778796,
+        "sha256": "5ee503e5064a4d2ccc9b8aa32db5041d93cd0ac57fe7ffc9b14e7b3fa5e73714"
+    },
+    {
+        "file": "heb_hebbdhnt_2220.ebf1.json",
+        "name": "תנ\"ך וברית חדשה בתרגום דליטש",
+        "language": "heb",
+        "slug": "tanach-and-delitzsch-s-hebrew-new-testament",
+        "type": "protestant",
+        "size": 9198802,
+        "sha256": "26eec99c0e49b338266ef1e3cec20bac802a00200f3c4af23ae074fee5b46d13"
+    },
+    {
+        "file": "heb_hebbmhnt_2221.ebf1.json",
+        "name": "תנ\"ך וברית חדשה בתרגום מודני",
+        "language": "heb",
+        "slug": "tanach-and-modern-hebrew-new-testament",
+        "type": "protestant",
+        "size": 9250458,
+        "sha256": "d83bde4e5ce3c1cd79b898486df1b080635d98b791170de507cd559a0f72734d"
+    },
+    {
+        "file": "heb_mhnt2020_380.ebf1.json",
+        "name": "הברית החדשה בעברית מודרנית",
+        "language": "heb",
+        "slug": "revised-modern-hebrew-new-testament-2020",
+        "type": "other",
+        "size": 2262913,
+        "sha256": "94c0b373b0e94a2b2fa9201bc599f29b1632fb7c0e5559677096b4ce2b901496"
+    },
+    {
+        "file": "heb_wlc_3585.ebf1.json",
+        "name": "Westminster Leningrad Codex",
+        "language": "heb",
+        "slug": "westminster-leningrad-codex",
+        "type": "other",
+        "size": 6808076,
+        "sha256": "7cfa84716fafaf1aaa214731bc9fda084e01af595b2614c6f27c27997de08627"
+    },
+    {
         "file": "hin_hcv_1628.ebf1.json",
         "name": "सरल हिन्दी बाइबल",
         "language": "hin",
