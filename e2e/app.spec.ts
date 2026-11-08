@@ -301,14 +301,15 @@ test('an open search is redone by relevance once the index is ready', async ({ p
     await expect(modal.locator('.text-search-result-reference').first()).toHaveText('Mateus 5,8');
 });
 
-test('cross-references: the balloon before the verse text lists them and opens the one clicked', async ({ page }) => {
+test('notes: the balloon before the verse text lists the cross-references and opens the one clicked', async ({ page }) => {
     await open(page, 'Gn 9,3-4', 'por/almeida-revista-e-atualizada');
     // Only Gn 9,4 has cross-references
-    await expect(result(page).locator('.cross-references-button')).toHaveCount(1);
+    await expect(result(page).locator('.notes-button')).toHaveCount(1);
 
-    await result(page).locator('.cross-references-button').click();
-    const modal = page.locator('#cross-references-modal');
-    await expect(modal.locator('.app-modal-title')).toHaveText('Referências cruzadas de Gn 9,4');
+    await result(page).locator('.notes-button').click();
+    const modal = page.locator('#notes-modal');
+    await expect(modal.locator('.app-modal-title')).toHaveText('Referências cruzadas e comentários de Gn 9,4');
+    await expect(modal.locator('.notes-comment')).toHaveCount(0);
     // Consecutive verses of the same chapter are grouped
     await expect(modal.locator('.cross-reference-reference')).toHaveText(['Lv 7,26-27', 'Lv 17,10-14', 'Lv 19,26', 'Dt 12,16.23', 'Dt 15,23']);
     await expect(modal.locator('.cross-reference-item').first()).toContainText('Não comereis sangue');
@@ -318,6 +319,25 @@ test('cross-references: the balloon before the verse text lists them and opens t
     await expect(reference(page)).toHaveValue('Lv 17,10-14');
     await expect(page).toHaveURL(/\/por\/almeida-revista-e-atualizada\/lev\/17,10-14$/);
     await expect(page.locator('#copy-button')).toBeVisible();
+});
+
+test('notes: the comments of a verse and of the chapter, each one in its balloon', async ({ page }) => {
+    // Lv 1 of the Edição Pastoral has a comment on the chapter and one on verse 1
+    await open(page, 'Lv 1,1-2', 'por/edicao-pastoral');
+    const modal = page.locator('#notes-modal');
+
+    await result(page).locator('.passage-heading .notes-button').click();
+    await expect(modal.locator('.app-modal-title')).toHaveText('Comentários de Lv 1');
+    await expect(modal.locator('.notes-comment')).toContainText('Estes capítulos apresentam uma classificação dos sacrifícios');
+    await expect(modal.locator('.cross-reference-item')).toHaveCount(0);
+    await page.keyboard.press('Escape');
+    await expect(modal).toBeHidden();
+
+    // Only verse 1 has a comment
+    await expect(result(page).locator('.verse-text .notes-button')).toHaveCount(1);
+    await result(page).locator('.verse-text .notes-button').click();
+    await expect(modal.locator('.app-modal-title')).toHaveText('Referências cruzadas e comentários de Lv 1,1');
+    await expect(modal.locator('.notes-comment')).toContainText('Holocausto é um sacrifício');
 });
 
 test('the reference help follows the open Bible, and its examples work', async ({ page }) => {

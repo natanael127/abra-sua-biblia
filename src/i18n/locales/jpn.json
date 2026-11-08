@@ -24,7 +24,8 @@
         "books": "書",
         "booksCount": "書（{{count}}）",
         "referencePlaceholder": "例：Mt 5,3-12.21-38",
-        "crossReferences": "{{reference}} の引照"
+        "crossReferencesAndComments": "{{reference}} の引照と注解",
+        "chapterComments": "{{reference}} の注解"
     },
     "buttons": {
         "theme": {
@@ -110,7 +111,7 @@
             "nextChapter": "次の章に移動します。",
             "copy": "表示中のテキストを、選んだ書式でコピーします。",
             "share": "聖句へのリンクを共有します。端末が共有に対応していない場合は、リンクがコピーされます。",
-            "crossReferences": "引照のある節の本文の前に表示されます（一部の翻訳のみ）。タップすると関連する聖句が表示されます。"
+            "crossReferencesAndComments": "引照または注解のある節の本文の前と、注解のある章の見出しの前に表示されます（一部の翻訳のみ）。タップすると内容が表示されます。"
         },
         "referenceTitle": "参照の入力方法",
         "install": {

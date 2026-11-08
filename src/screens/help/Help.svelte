@@ -161,14 +161,14 @@
                 {@render item(copy, t('helpPage.actions.copy'))}
                 {#snippet share()}<span class="action-button help-glyph"><ShareIcon /></span>{/snippet}
                 {@render item(share, t('helpPage.actions.share'))}
-                {#snippet crossReferences()}
-                    <span class="cross-references-button help-balloon">
+                {#snippet notes()}
+                    <span class="notes-button help-balloon">
                         <svg viewBox="0 0 24 24"
                             ><path d="M4 4h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H10l-5 4v-4H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z" /></svg
                         >
                     </span>
                 {/snippet}
-                {@render item(crossReferences, t('helpPage.actions.crossReferences'))}
+                {@render item(notes, t('helpPage.actions.crossReferencesAndComments'))}
             </ul>
         </section>
 

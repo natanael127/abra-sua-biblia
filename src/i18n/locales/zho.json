@@ -24,7 +24,8 @@
         "books": "书卷",
         "booksCount": "书卷（{{count}}）",
         "referencePlaceholder": "例如：Mt 5,3-12.21-38",
-        "crossReferences": "{{reference}} 的串珠经文"
+        "crossReferencesAndComments": "{{reference}} 的串珠经文和注释",
+        "chapterComments": "{{reference}} 的注释"
     },
     "buttons": {
         "theme": {
@@ -110,7 +111,7 @@
             "nextChapter": "转到下一章。",
             "copy": "按所选格式复制显示的文本。",
             "share": "分享经文链接。如果设备不支持分享，则复制链接。",
-            "crossReferences": "位于有串珠经文的经节正文之前（部分译本）。点一下即可显示相关经文。"
+            "crossReferencesAndComments": "位于有串珠经文或注释的经节正文之前，以及有注释的章标题之前（部分译本）。点一下即可显示。"
         },
         "referenceTitle": "如何输入经文引用",
         "install": {

@@ -24,7 +24,8 @@
         "books": "Bücher",
         "booksCount": "Bücher ({{count}})",
         "referencePlaceholder": "z. B.: Mt 5,3-12.21-38",
-        "crossReferences": "Querverweise zu {{reference}}"
+        "crossReferencesAndComments": "Querverweise und Kommentare zu {{reference}}",
+        "chapterComments": "Kommentare zu {{reference}}"
     },
     "buttons": {
         "theme": {
@@ -110,7 +111,7 @@
             "nextChapter": "Geht zum nächsten Kapitel.",
             "copy": "Kopiert den angezeigten Text mit der gewählten Formatierung.",
             "share": "Teilt den Link zum Abschnitt. Kann das Gerät nicht teilen, wird der Link kopiert.",
-            "crossReferences": "Steht vor dem Text von Versen mit Querverweisen (in manchen Übersetzungen). Ein Tippen zeigt die verwandten Stellen."
+            "crossReferencesAndComments": "Steht vor dem Text von Versen mit Querverweisen oder Kommentaren und vor der Überschrift von Kapiteln mit Kommentaren (in manchen Übersetzungen). Ein Tippen zeigt sie an."
         },
         "referenceTitle": "So gibst du die Bibelstelle ein",
         "install": {

@@ -32,9 +32,16 @@ const fixture = JSON.parse(readFixture('legacy-render.json')) as LegacyFixture;
 
 /**
  * The legacy code wrote the single quotes it put in place of double quotes
- * unescaped; now every single quote in the text is escaped (same display).
+ * unescaped; now every single quote in the text is escaped (same display). It
+ * also lacked the notes balloons.
  */
-const sameDisplay = (html: string) => html.replaceAll('&#39;', "'");
+const sameDisplay = (html: string) =>
+    html
+        .replaceAll('&#39;', "'")
+        // The notes balloons (comments and cross-references) did not exist: after a verse number...
+        .replaceAll(/(<\/sup>)<button [^>]*notes-button.*?<\/button>/g, '$1')
+        // ...or at the start of a verse or of the heading, followed by a space
+        .replaceAll(/<button [^>]*notes-button.*?<\/button> /g, '');
 
 const comparable = (result: { error: boolean; html: string }) => ({ error: result.error, html: sameDisplay(result.html) });
 

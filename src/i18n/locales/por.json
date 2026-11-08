@@ -24,7 +24,8 @@
         "books": "Livros",
         "booksCount": "Livros ({{count}})",
         "referencePlaceholder": "Ex: Mt 5,3-12.21-38",
-        "crossReferences": "Referências cruzadas de {{reference}}"
+        "crossReferencesAndComments": "Referências cruzadas e comentários de {{reference}}",
+        "chapterComments": "Comentários de {{reference}}"
     },
     "buttons": {
         "theme": {
@@ -110,7 +111,7 @@
             "nextChapter": "Vai para o próximo capítulo.",
             "copy": "Copia o texto exibido, com a formatação escolhida.",
             "share": "Compartilha o link da passagem. Sem compartilhamento no aparelho, o link é copiado.",
-            "crossReferences": "Fica antes do texto do versículo que tem referências cruzadas (em algumas traduções). Um toque mostra as passagens relacionadas."
+            "crossReferencesAndComments": "Fica antes do texto do versículo que tem referências cruzadas ou comentários, e antes do título do capítulo que tem comentários (em algumas traduções). Um toque os mostra."
         },
         "referenceTitle": "Como digitar a referência",
         "install": {

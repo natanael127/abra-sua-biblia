@@ -24,7 +24,8 @@
         "books": "Libri",
         "booksCount": "Libri ({{count}})",
         "referencePlaceholder": "Exempli gratia: Mt 5,3-12.21-38",
-        "crossReferences": "Loca parallela ad {{reference}}"
+        "crossReferencesAndComments": "Loca parallela et commentarii ad {{reference}}",
+        "chapterComments": "Commentarii ad {{reference}}"
     },
     "buttons": {
         "theme": {
@@ -110,7 +111,7 @@
             "nextChapter": "Ad caput sequens transit.",
             "copy": "Textum ostensum describit, cum forma electa.",
             "share": "Nexum textus communicat. Si instrumentum communicare non potest, nexus describitur.",
-            "crossReferences": "Ante textum versus ponitur qui loca parallela habet (in quibusdam versionibus). Tactus loca coniuncta ostendit."
+            "crossReferencesAndComments": "Ante textum versus ponitur qui loca parallela vel commentarios habet, et ante titulum capitis quod commentarios habet (in quibusdam versionibus). Tactus ea ostendit."
         },
         "referenceTitle": "Quomodo locus scribatur",
         "install": {

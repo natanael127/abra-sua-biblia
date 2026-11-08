@@ -62,6 +62,10 @@ export function getVerseTitle(verse: EbfVerse | undefined): string | undefined {
     return typeof verse === 'object' ? verse.title : undefined;
 }
 
+export function getVerseComment(verse: EbfVerse | undefined): string | undefined {
+    return typeof verse === 'object' ? verse.comment : undefined;
+}
+
 /** Main name of the book, with fallbacks for incomplete files. */
 export function getBookName(book: EbfBook): string {
     return book.names[0] ?? book.abbreviation ?? book.usfm_id ?? '';

@@ -24,7 +24,8 @@
         "books": "Kitab",
         "booksCount": "Kitab ({{count}})",
         "referencePlaceholder": "Mis.: Mt 5,3-12.21-38",
-        "crossReferences": "Referensi silang untuk {{reference}}"
+        "crossReferencesAndComments": "Referensi silang dan catatan untuk {{reference}}",
+        "chapterComments": "Catatan untuk {{reference}}"
     },
     "buttons": {
         "theme": {
@@ -110,7 +111,7 @@
             "nextChapter": "Ke pasal berikutnya.",
             "copy": "Menyalin teks yang ditampilkan, dengan format yang dipilih.",
             "share": "Membagikan tautan perikop. Jika perangkat tidak mendukung berbagi, tautannya disalin.",
-            "crossReferences": "Ada sebelum teks ayat yang memiliki referensi silang (pada beberapa terjemahan). Ketuk untuk melihat perikop terkait."
+            "crossReferencesAndComments": "Ada sebelum teks ayat yang memiliki referensi silang atau catatan, dan sebelum judul pasal yang memiliki catatan (pada beberapa terjemahan). Ketuk untuk melihatnya."
         },
         "referenceTitle": "Cara mengetik rujukan",
         "install": {

@@ -24,7 +24,8 @@
         "books": "Libri",
         "booksCount": "Libri ({{count}})",
         "referencePlaceholder": "Es.: Mt 5,3-12.21-38",
-        "crossReferences": "Riferimenti incrociati di {{reference}}"
+        "crossReferencesAndComments": "Riferimenti incrociati e commenti di {{reference}}",
+        "chapterComments": "Commenti di {{reference}}"
     },
     "buttons": {
         "theme": {
@@ -110,7 +111,7 @@
             "nextChapter": "Va al capitolo successivo.",
             "copy": "Copia il testo visualizzato, con la formattazione scelta.",
             "share": "Condivide il link del brano. Se il dispositivo non permette la condivisione, il link viene copiato.",
-            "crossReferences": "Si trova prima del testo del versetto che ha riferimenti incrociati (in alcune traduzioni). Un tocco mostra i brani correlati."
+            "crossReferencesAndComments": "Si trova prima del testo del versetto che ha riferimenti incrociati o commenti, e prima del titolo del capitolo che ha commenti (in alcune traduzioni). Un tocco li mostra."
         },
         "referenceTitle": "Come digitare il riferimento",
         "install": {

@@ -895,8 +895,8 @@ a:visited {
     transform: scaleX(-1);
 }
 
-/* Cross-references: balloon between the verse number and the text, and the modal that lists them */
-.cross-references-button {
+/* Notes (comment and cross-references): balloon between the verse number and the text, or before the chapter heading, and the modal that shows them */
+.notes-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -915,37 +915,52 @@ a:visited {
     transition: opacity 0.15s, transform 0.15s;
 }
 
-.cross-references-button svg {
+.notes-button svg {
     width: 100%;
     height: 100%;
     fill: currentColor;
 }
 
-.cross-references-button:hover,
-.cross-references-button:focus-visible {
+.passage-heading .notes-button {
+    vertical-align: middle;
+}
+
+.notes-button:hover,
+.notes-button:focus-visible {
     opacity: 1;
     transform: scale(1.15);
 }
 
-.cross-references-button:focus-visible {
+.notes-button:focus-visible {
     outline: 2px solid var(--button-active-bg);
     outline-offset: 1px;
     border-radius: 3px;
 }
 
-.cross-references-modal.app-modal {
+.notes-modal.app-modal {
     max-width: 600px;
     width: 90%;
 }
 
-.cross-references-modal .help-content {
+.notes-modal .help-content {
     padding: 0;
 }
 
-.cross-references-list {
+.notes-list {
     max-height: 60vh;
     overflow-y: auto;
     padding: 15px 20px;
+}
+
+.notes-comment {
+    white-space: pre-line;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+}
+
+.notes-comment:last-child {
+    margin-bottom: 0;
 }
 
 .cross-reference-item {

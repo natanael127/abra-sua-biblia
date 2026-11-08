@@ -12,7 +12,7 @@
     import LanguageSelect from '../../ui/components/LanguageSelect.svelte';
     import MenuButton from '../../ui/components/MenuButton.svelte';
     import ThemeButton from '../../ui/components/ThemeButton.svelte';
-    import CrossReferencesModal from '../../ui/dialogs/CrossReferencesModal.svelte';
+    import NotesModal from '../../ui/dialogs/NotesModal.svelte';
     import HistoryModal from '../../ui/dialogs/HistoryModal.svelte';
     import TextSearchModal from '../../ui/dialogs/TextSearchModal.svelte';
     import ShareIcon from '../../ui/icons/ShareIcon.svelte';
@@ -62,7 +62,7 @@
     let referenceField: HTMLInputElement;
     let staticActionButtons: HTMLElement;
     let historyModal: HistoryModal;
-    let crossReferencesModal: CrossReferencesModal;
+    let notesModal: NotesModal;
     let textSearchModal: TextSearchModal;
 
     /** The floating buttons are shown when the original buttons leave the screen. */
@@ -108,14 +108,25 @@
         }
     }
 
-    /** The balloon after a verse opens its cross-references. */
+    /** The balloon of a verse or of the chapter heading opens its notes: comment and cross-references. */
     function onResultClick(event: MouseEvent): void {
-        const button = (event.target as Element).closest<HTMLElement>('.cross-references-button');
-        const element = reader.passage?.elements[Number(button?.dataset.element)];
-        if (!reader.ebf || element?.type !== 'verse' || !element.crossReferences) return;
+        const button = (event.target as Element).closest<HTMLElement>('.notes-button');
+        if (!reader.ebf || !reader.passage || !button) return;
 
-        const { source, references } = element.crossReferences;
-        void crossReferencesModal.open(source, resolveCrossReferences(reader.ebf, references));
+        if ('chapter' in button.dataset) {
+            const notes = reader.passage.chapterNotes;
+            if (notes) void notesModal.open(t('reader.chapterComments', { reference: notes.source }), notes.comment, []);
+            return;
+        }
+        const element = reader.passage.elements[Number(button.dataset.element)];
+        if (element?.type !== 'verse' || !element.notes) return;
+
+        const { source, comment, references = [] } = element.notes;
+        void notesModal.open(
+            t('reader.crossReferencesAndComments', { reference: source }),
+            comment,
+            resolveCrossReferences(reader.ebf, references),
+        );
     }
 </script>
 
@@ -299,6 +310,6 @@
     </div>
 
     <HistoryModal bind:this={historyModal} onselect={goToInputReference} />
-    <CrossReferencesModal bind:this={crossReferencesModal} onselect={goToInputReference} />
+    <NotesModal bind:this={notesModal} onselect={goToInputReference} />
     <TextSearchModal bind:this={textSearchModal} bible={reader.ebf} onselect={goToInputReference} />
 </div>

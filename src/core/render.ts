@@ -7,17 +7,18 @@ import { buildPassage, type DisplayOptions, type Passage, type PassageElement } 
 import { escapeHtml, toSuperscript } from './text';
 import { t } from '../i18n';
 
-/** Speech balloon of the cross-references button. */
-const CROSS_REFERENCES_ICON =
+/** Speech balloon of the notes button (cross-references and comments). */
+const NOTES_ICON =
     '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H10l-5 4v-4H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/></svg>';
 
 /**
- * Button that opens the cross-references of a verse. The screen finds them by
- * the index of the element in the passage (`data-element`).
+ * Button that opens the notes (comment and cross-references) of a verse or of
+ * the chapter. `target` tells the screen which ones: `data-element` is the index
+ * of the verse in the passage, `data-chapter` marks the chapter.
  */
-function crossReferencesButton(source: string, elementIndex: number): string {
-    const label = escapeHtml(t('reader.crossReferences', { reference: source }));
-    return `<button type="button" class="cross-references-button" data-element="${elementIndex}" title="${label}" aria-label="${label}">${CROSS_REFERENCES_ICON}</button>`;
+function notesButton(label: string, target: string): string {
+    const text = escapeHtml(label);
+    return `<button type="button" class="notes-button" ${target} title="${text}" aria-label="${text}">${NOTES_ICON}</button>`;
 }
 
 export interface RenderResult {
@@ -74,9 +75,11 @@ export function renderPassageHtml(passage: Passage): string {
                 html = `<span class="section-title">${escapeHtml(element.text)}</span>`;
                 break;
             case 'verse': {
-                // Verse number, cross-references balloon (if any) and then the text
+                // Verse number, notes balloon (if any) and then the text
                 const number = element.number === undefined ? '' : `<sup>${element.number}</sup>`;
-                const balloon = element.crossReferences ? crossReferencesButton(element.crossReferences.source, index) : '';
+                const balloon = element.notes
+                    ? notesButton(t('reader.crossReferencesAndComments', { reference: element.notes.source }), `data-element="${index}"`)
+                    : '';
                 html = `${number}${balloon}${number || balloon ? ' ' : ''}${escapeHtml(element.text)}`;
                 break;
             }
@@ -93,7 +96,11 @@ export function renderPassageHtml(passage: Passage): string {
     });
 
     const content = lines.join(passage.lineBreaks ? '<br>' : ' ');
-    return `<div class="passage-heading">${escapeHtml(passage.heading)}</div><div class="verse-text">${content}</div>`;
+    // The balloon of the chapter comment comes before the heading
+    const chapterBalloon = passage.chapterNotes
+        ? `${notesButton(t('reader.chapterComments', { reference: passage.chapterNotes.source }), 'data-chapter')} `
+        : '';
+    return `<div class="passage-heading">${chapterBalloon}${escapeHtml(passage.heading)}</div><div class="verse-text">${content}</div>`;
 }
 
 /**

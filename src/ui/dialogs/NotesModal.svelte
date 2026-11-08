@@ -1,7 +1,7 @@
 <!--
-    Cross-references of a verse (`source`, "Jo 3,16"): each one with the text of
-    its verses, opened on click. The ones whose book the Bible lacks are listed
-    but cannot be opened.
+    Notes of a verse or chapter: its comment, if it has one, and the
+    cross-references (verses only), each one with the text of its verses, opened
+    on click. The ones whose book the Bible lacks are listed but cannot be opened.
 -->
 <script lang="ts">
     import { tick } from 'svelte';
@@ -14,11 +14,13 @@
 
     let modal: Modal;
     let list: HTMLElement;
-    let source = $state('');
+    let title = $state('');
+    let comment = $state('');
     let references = $state.raw<readonly CrossReference[]>([]);
 
-    export async function open(verse: string, items: readonly CrossReference[]): Promise<void> {
-        source = verse;
+    export async function open(heading: string, text: string | undefined, items: readonly CrossReference[]): Promise<void> {
+        title = heading;
+        comment = text ?? '';
         references = items;
         modal.showModal();
         await tick();
@@ -31,8 +33,11 @@
     }
 </script>
 
-<Modal bind:this={modal} id="cross-references-modal" class="cross-references-modal" title={t('reader.crossReferences', { reference: source })}>
-    <div class="cross-references-list" bind:this={list}>
+<Modal bind:this={modal} id="notes-modal" class="notes-modal" {title}>
+    <div class="notes-list" bind:this={list}>
+        {#if comment}
+            <div class="notes-comment" dir="auto">{comment}</div>
+        {/if}
         {#each references as { reference, text, available }, index (index)}
             {#if available}
                 <button

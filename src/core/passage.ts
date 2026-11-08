@@ -18,6 +18,7 @@ import {
     findBook,
     getBookAbbreviation,
     getBookName,
+    getVerseComment,
     getVerseText,
     getVerseTitle,
 } from './ebf';
@@ -50,10 +51,10 @@ export type PassageElement =
     /** Section title, shown before the verse it introduces. */
     | { type: 'title'; text: string }
     /**
-     * Verse; `number` only when verse numbers are displayed, `crossReferences`
-     * only when the verse has cross-references.
+     * Verse; `number` only when verse numbers are displayed, `notes` only when
+     * the verse has a comment or cross-references.
      */
-    | { type: 'verse'; text: string; number?: number; crossReferences?: VerseCrossReferences }
+    | { type: 'verse'; text: string; number?: number; notes?: Notes }
     /** Verses left out between two selected ones. */
     | { type: 'omission'; text: string }
     /**
@@ -62,16 +63,23 @@ export type PassageElement =
      */
     | { type: 'resulting-reference'; text: string };
 
-/** Cross-references of a displayed verse, as stored in the Bible (see ./cross-references). */
-export interface VerseCrossReferences {
-    /** Reference of the verse itself, with the Bible's abbreviation ("Jo 3,16"). */
+/**
+ * What the Bible says about a displayed verse or chapter besides its text: a
+ * comment and (verses only) cross-references, as stored in the Bible (see
+ * ./cross-references). At least one of them is present.
+ */
+export interface Notes {
+    /** Reference of the verse or chapter itself, with the Bible's abbreviation ("Jo 3,16", "Jo 3"). */
     source: string;
-    references: readonly EbfCrossReference[];
+    comment?: string;
+    references?: readonly EbfCrossReference[];
 }
 
 export interface Passage {
     /** Book and chapter, with the chapter title and the Bible name ("Gênesis 1: A criação (Ave Maria)"). */
     heading: string;
+    /** Comment of the chapter, when it has one. */
+    chapterNotes?: Notes;
     /**
      * Resulting reference: the reference of what is displayed, compacted and
      * with the Bible's abbreviation ("Gn 1,1-2.4"), always present, even when it is
@@ -104,7 +112,7 @@ const errorResult = (message: string): PassageResult => ({
 /**
  * Elements of the selected verses: titles, verses and omission markers.
  * `chapterReference` is the book abbreviation and chapter ("Jo 3"), for the
- * source of the cross-references.
+ * source of the notes.
  */
 export function buildVerseElements(
     verseIndexes: readonly number[],
@@ -135,13 +143,18 @@ export function buildVerseElements(
         if (displayOpt.sectionTitles && title) {
             elements.push({ type: 'title', text: adjustQuotes(title) });
         }
+        const comment = getVerseComment(verse);
         const references = typeof verse === 'object' ? verse.references : undefined;
         elements.push({
             type: 'verse',
             text: adjustQuotes(text),
             ...(displayOpt.verseNumbers && { number: verseIndex + 1 }),
-            ...(references?.length && {
-                crossReferences: { source: `${chapterReference},${verseIndex + 1}`, references },
+            ...((comment || references?.length) && {
+                notes: {
+                    source: `${chapterReference},${verseIndex + 1}`,
+                    ...(comment && { comment }),
+                    ...(references?.length && { references }),
+                },
             }),
         });
     }
@@ -203,6 +216,13 @@ function build(inputReference: string, ebf: EbfDocument, displayOpt: DisplayOpti
 
     return {
         kind: 'passage',
-        passage: { heading, resultingReference, elements, quoted: displayOpt.quotes, lineBreaks: displayOpt.lineBreaks },
+        passage: {
+            heading,
+            ...(chapter.comment && { chapterNotes: { source: chapterReference, comment: chapter.comment } }),
+            resultingReference,
+            elements,
+            quoted: displayOpt.quotes,
+            lineBreaks: displayOpt.lineBreaks,
+        },
     };
 }
