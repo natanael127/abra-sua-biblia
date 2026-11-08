@@ -12,6 +12,7 @@ import fr from 'flag-icons/flags/4x3/fr.svg?url';
 import gb from 'flag-icons/flags/4x3/gb.svg?url';
 import gr from 'flag-icons/flags/4x3/gr.svg?url';
 import id from 'flag-icons/flags/4x3/id.svg?url';
+import il from 'flag-icons/flags/4x3/il.svg?url';
 import it from 'flag-icons/flags/4x3/it.svg?url';
 import jp from 'flag-icons/flags/4x3/jp.svg?url';
 import pk from 'flag-icons/flags/4x3/pk.svg?url';
@@ -40,4 +41,5 @@ export const FLAG_URLS: Readonly<Record<string, string>> = {
     lat: va,
     ell: gr,
     grc: gr,
+    heb: il,
 };

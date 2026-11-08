@@ -22,6 +22,7 @@ export const UI_LANGUAGES: readonly UiLanguage[] = [
     { code: 'eng', tag: 'en', nativeName: 'English', dir: 'ltr' },
     { code: 'fra', tag: 'fr', nativeName: 'Français', dir: 'ltr' },
     { code: 'grc', tag: 'grc', nativeName: 'Ἑλληνική', dir: 'ltr' },
+    { code: 'heb', tag: 'he', nativeName: 'עברית', dir: 'rtl' },
     { code: 'hin', tag: 'hi', nativeName: 'हिन्दी', dir: 'ltr' },
     { code: 'ind', tag: 'id', nativeName: 'Bahasa Indonesia', dir: 'ltr' },
     { code: 'ita', tag: 'it', nativeName: 'Italiano', dir: 'ltr' },

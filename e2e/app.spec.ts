@@ -1053,12 +1053,12 @@ test.describe('interface language', () => {
         });
     });
 
-    test('lists the 17 languages with flag and code, and translates the page when one is chosen', async ({ page }) => {
+    test('lists the 18 languages with flag and code, and translates the page when one is chosen', async ({ page }) => {
         await open(page);
         await expect(languageButton(page)).toContainText('por');
         await languageButton(page).click();
-        await expect(page.locator('.language-option')).toHaveCount(17);
-        await expect(page.locator('.language-option img')).toHaveCount(17);
+        await expect(page.locator('.language-option')).toHaveCount(18);
+        await expect(page.locator('.language-option img')).toHaveCount(18);
         await expect(languageOption(page, 'por')).toHaveAttribute('aria-selected', 'true');
 
         await languageOption(page, 'deu').click();

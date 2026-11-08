@@ -1,6 +1,6 @@
 # Interface languages
 
-The texts of the interface are translated into 17 languages, which are also the languages of the
+The texts of the interface are translated into 18 languages, which are also the languages of the
 Bibles: the list of translations only offers the ones in the interface language (plus the one
 currently open, if it is of another language, since a link may open any Bible and changing the
 interface language does not disturb the reading). They use
@@ -19,7 +19,7 @@ The components use `t('some.key')` from `src/i18n/reactive.svelte.ts`, which mak
 again in the new language when it changes (the pure logic uses `t` from `src/i18n`). The few texts
 of `index.html` (title, `<meta>` tags) are marked with `data-i18n` (text), `data-i18n-html`,
 `data-i18n-title`, `data-i18n-placeholder`, `data-i18n-aria-label` and `data-i18n-content`
-(attributes). Arabic and Urdu are right to left: the page receives `dir="rtl"` and is mirrored, while the
+(attributes). Arabic, Hebrew and Urdu are right to left: the page receives `dir="rtl"` and is mirrored, while the
 Bible text keeps its own direction (`dir="auto"`).
 
 To add a language:

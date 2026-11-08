@@ -18,6 +18,7 @@ import ell from './locales/ell.json';
 import eng from './locales/eng.json';
 import fra from './locales/fra.json';
 import grc from './locales/grc.json';
+import heb from './locales/heb.json';
 import hin from './locales/hin.json';
 import ind from './locales/ind.json';
 import ita from './locales/ita.json';
@@ -39,7 +40,7 @@ declare module 'i18next' {
 
 /** Translations by ISO 639-3 code. */
 export const TRANSLATIONS: Readonly<Record<string, Record<string, unknown>>> = {
-    arb, ben, deu, ell, eng, fra, grc, hin, ind, ita, jpn, lat, por, rus, spa, urd, zho,
+    arb, ben, deu, ell, eng, fra, grc, heb, hin, ind, ita, jpn, lat, por, rus, spa, urd, zho,
 };
 
 export { t };
