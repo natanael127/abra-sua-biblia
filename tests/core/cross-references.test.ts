@@ -69,12 +69,19 @@ describe('cross-references in the passage', () => {
         expect(second).not.toHaveProperty('crossReferences');
     });
 
-    it('a balloon after the verse (and after the closing quote) in the HTML, not in the copied text', () => {
+    it('a balloon between the verse number and its text in the HTML, not in the copied text', () => {
         const passage = build({ quotes: true, parenthesesReference: false });
         const html = renderPassageHtml(passage);
         expect(html.match(/cross-references-button/g)).toHaveLength(1);
-        expect(html).toContain('"<sup>1</sup> No princípio. <button type="button" class="cross-references-button" data-element="0"');
+        expect(html).toMatch(
+            /"<sup>1<\/sup><button type="button" class="cross-references-button" data-element="0"[^>]*><svg.*?<\/svg><\/button> No princípio\./,
+        );
         expect(html).toContain('title="Referências cruzadas de Gn 1,1"');
         expect(renderPassageText(passage)).not.toContain('Referências');
+    });
+
+    it('without verse numbers, the balloon comes before the text of the verse', () => {
+        const html = renderPassageHtml(build({ verseNumbers: false, parenthesesReference: false }));
+        expect(html).toMatch(/<div class="verse-text"><button [^>]*cross-references-button[^>]*><svg.*?<\/svg><\/button> No princípio\./);
     });
 });

@@ -110,7 +110,7 @@
             "nextChapter": "Va al capítulo siguiente.",
             "copy": "Copia el texto mostrado, con el formato elegido.",
             "share": "Comparte el enlace del pasaje. Si el dispositivo no permite compartir, el enlace se copia.",
-            "crossReferences": "Aparece después del versículo que tiene referencias cruzadas (en algunas traducciones). Un toque muestra los pasajes relacionados."
+            "crossReferences": "Aparece antes del texto del versículo que tiene referencias cruzadas (en algunas traducciones). Un toque muestra los pasajes relacionados."
         },
         "referenceTitle": "Cómo escribir la referencia",
         "install": {

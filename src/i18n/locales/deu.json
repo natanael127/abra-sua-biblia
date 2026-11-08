@@ -110,7 +110,7 @@
             "nextChapter": "Geht zum nächsten Kapitel.",
             "copy": "Kopiert den angezeigten Text mit der gewählten Formatierung.",
             "share": "Teilt den Link zum Abschnitt. Kann das Gerät nicht teilen, wird der Link kopiert.",
-            "crossReferences": "Steht nach Versen mit Querverweisen (in manchen Übersetzungen). Ein Tippen zeigt die verwandten Stellen."
+            "crossReferences": "Steht vor dem Text von Versen mit Querverweisen (in manchen Übersetzungen). Ein Tippen zeigt die verwandten Stellen."
         },
         "referenceTitle": "So gibst du die Bibelstelle ein",
         "install": {

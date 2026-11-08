@@ -11,6 +11,15 @@ import { t } from '../i18n';
 const CROSS_REFERENCES_ICON =
     '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H10l-5 4v-4H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/></svg>';
 
+/**
+ * Button that opens the cross-references of a verse. The screen finds them by
+ * the index of the element in the passage (`data-element`).
+ */
+function crossReferencesButton(source: string, elementIndex: number): string {
+    const label = escapeHtml(t('reader.crossReferences', { reference: source }));
+    return `<button type="button" class="cross-references-button" data-element="${elementIndex}" title="${label}" aria-label="${label}">${CROSS_REFERENCES_ICON}</button>`;
+}
+
 export interface RenderResult {
     error: boolean;
     html: string;
@@ -64,12 +73,13 @@ export function renderPassageHtml(passage: Passage): string {
             case 'title':
                 html = `<span class="section-title">${escapeHtml(element.text)}</span>`;
                 break;
-            case 'verse':
-                html = escapeHtml(element.text);
-                if (element.number !== undefined) {
-                    html = `<sup>${element.number}</sup> ${html}`;
-                }
+            case 'verse': {
+                // Verse number, cross-references balloon (if any) and then the text
+                const number = element.number === undefined ? '' : `<sup>${element.number}</sup>`;
+                const balloon = element.crossReferences ? crossReferencesButton(element.crossReferences.source, index) : '';
+                html = `${number}${balloon}${number || balloon ? ' ' : ''}${escapeHtml(element.text)}`;
                 break;
+            }
             case 'omission':
                 html = escapeHtml(element.text);
                 break;
@@ -79,11 +89,6 @@ export function renderPassageHtml(passage: Passage): string {
         }
         if (index === open) html = `"${html}`;
         if (index === close) html = `${html}"`;
-        if (element.type === 'verse' && element.crossReferences) {
-            // The screen finds the cross-references by the index of the element in the passage
-            const label = escapeHtml(t('reader.crossReferences', { reference: element.crossReferences.source }));
-            html += ` <button type="button" class="cross-references-button" data-element="${index}" title="${label}" aria-label="${label}">${CROSS_REFERENCES_ICON}</button>`;
-        }
         return html;
     });
 

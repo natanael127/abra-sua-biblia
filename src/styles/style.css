@@ -895,7 +895,7 @@ a:visited {
     transform: scaleX(-1);
 }
 
-/* Cross-references: balloon after the verse and the modal that lists them */
+/* Cross-references: balloon between the verse number and the text, and the modal that lists them */
 .cross-references-button {
     display: inline-flex;
     align-items: center;

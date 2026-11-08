@@ -110,7 +110,7 @@
             "nextChapter": "Va al capitolo successivo.",
             "copy": "Copia il testo visualizzato, con la formattazione scelta.",
             "share": "Condivide il link del brano. Se il dispositivo non permette la condivisione, il link viene copiato.",
-            "crossReferences": "Si trova dopo il versetto che ha riferimenti incrociati (in alcune traduzioni). Un tocco mostra i brani correlati."
+            "crossReferences": "Si trova prima del testo del versetto che ha riferimenti incrociati (in alcune traduzioni). Un tocco mostra i brani correlati."
         },
         "referenceTitle": "Come digitare il riferimento",
         "install": {

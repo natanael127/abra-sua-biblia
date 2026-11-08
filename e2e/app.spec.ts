@@ -301,7 +301,7 @@ test('an open search is redone by relevance once the index is ready', async ({ p
     await expect(modal.locator('.text-search-result-reference').first()).toHaveText('Mateus 5,8');
 });
 
-test('cross-references: the balloon after the verse lists them and opens the one clicked', async ({ page }) => {
+test('cross-references: the balloon before the verse text lists them and opens the one clicked', async ({ page }) => {
     await open(page, 'Gn 9,3-4', 'por/almeida-revista-e-atualizada');
     // Only Gn 9,4 has cross-references
     await expect(result(page).locator('.cross-references-button')).toHaveCount(1);

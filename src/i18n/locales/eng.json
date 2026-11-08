@@ -110,7 +110,7 @@
             "nextChapter": "Goes to the next chapter.",
             "copy": "Copies the displayed text, with the chosen formatting.",
             "share": "Shares the link to the passage. If the device can't share, the link is copied instead.",
-            "crossReferences": "Placed after verses that have cross-references (in some translations). Tapping it shows the related passages."
+            "crossReferences": "Placed before the text of verses that have cross-references (in some translations). Tapping it shows the related passages."
         },
         "referenceTitle": "How to type the reference",
         "install": {

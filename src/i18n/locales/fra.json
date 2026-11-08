@@ -110,7 +110,7 @@
             "nextChapter": "Passe au chapitre suivant.",
             "copy": "Copie le texte affiché, avec la mise en forme choisie.",
             "share": "Partage le lien du passage. Si l'appareil ne permet pas le partage, le lien est copié.",
-            "crossReferences": "Se trouve après les versets qui ont des références croisées (dans certaines traductions). Un appui affiche les passages liés."
+            "crossReferences": "Se trouve avant le texte des versets qui ont des références croisées (dans certaines traductions). Un appui affiche les passages liés."
         },
         "referenceTitle": "Comment saisir la référence",
         "install": {

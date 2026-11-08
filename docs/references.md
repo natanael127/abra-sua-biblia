@@ -29,8 +29,8 @@ into a structure independent of the output format, which carries the resulting r
 then rendered (`src/core/render.ts`) as HTML for reading and as plain text for copying. See
 `src/core/reference.ts` for the details.
 
-Verses with cross-references (`references` in EBF1, e.g. in the Almeida Revista e Atualizada) end
-with a balloon in the HTML (never in the copied text). Clicking it opens a modal listing them, with
+Verses with cross-references (`references` in EBF1, e.g. in the Almeida Revista e Atualizada) have
+a balloon in the HTML (never in the copied text), between the verse number (if shown) and the text. Clicking it opens a modal listing them, with
 consecutive verses of the same chapter grouped (`Mc 10,7-8`) and the text of each one; clicking a
 reference opens it. A book the Bible lacks is listed by its USFM id and cannot be opened. See
 `src/core/cross-references.ts`.
