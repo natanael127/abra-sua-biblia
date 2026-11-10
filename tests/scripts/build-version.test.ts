@@ -46,13 +46,13 @@ describe('local build', () => {
     it('short hash and HEAD date in UTC, including across a day boundary', () => {
         expect(describeVersion({}, repo)).toBe(second.slice(0, 7));
         expect(describeCommitDate({}, repo)).toBe('2026-10-28 02:59:59');
-        expect(describePageVersion({}, repo)).toBe(`${second.slice(0, 7)} 2026-10-28 02:59:59`);
+        expect(describePageVersion({}, repo)).toBe(`${second.slice(0, 7)} 2026-10-28 02:59:59 UTC`);
     });
 
     it('with uncommitted changes, appends -dirty and keeps the commit date', () => {
         writeFileSync(join(repo, 'file.txt'), 'changed');
         try {
-            expect(describePageVersion({}, repo)).toBe(`${second.slice(0, 7)}-dirty 2026-10-28 02:59:59`);
+            expect(describePageVersion({}, repo)).toBe(`${second.slice(0, 7)}-dirty 2026-10-28 02:59:59 UTC`);
         } finally {
             run('git checkout -q -- file.txt', repo);
         }
@@ -62,7 +62,7 @@ describe('local build', () => {
 describe('Vercel', () => {
     it('uses the deploy commit (VERCEL_GIT_COMMIT_SHA), not HEAD', () => {
         const env = { VERCEL_GIT_COMMIT_SHA: first };
-        expect(describePageVersion(env, repo)).toBe(`${first.slice(0, 7)} 2026-01-02 06:04:05`);
+        expect(describePageVersion(env, repo)).toBe(`${first.slice(0, 7)} 2026-01-02 06:04:05 UTC`);
     });
 
     it('works in a shallow clone, like the one Vercel makes for the build', () => {
@@ -70,7 +70,7 @@ describe('Vercel', () => {
         run(`git clone -q --depth=1 file://${repo} ${shallow}`, root);
         expect(run('git rev-parse --is-shallow-repository', shallow)).toBe('true');
         expect(describePageVersion({ VERCEL_GIT_COMMIT_SHA: second }, shallow)).toBe(
-            `${second.slice(0, 7)} 2026-10-28 02:59:59`,
+            `${second.slice(0, 7)} 2026-10-28 02:59:59 UTC`,
         );
     });
 

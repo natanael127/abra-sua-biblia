@@ -1,6 +1,6 @@
 /**
  * Page version, shown at the end of the About section: short commit hash and
- * commit date in UTC, e.g.: "593816c 2026-10-27 17:02:41".
+ * commit date in UTC, e.g.: "593816c 2026-10-27 17:02:41 UTC".
  */
 import { execSync } from 'node:child_process';
 
@@ -46,9 +46,10 @@ export function describeCommitDate(env = process.env, cwd?: string): string | un
     }
 }
 
-/** Text shown on the page: hash and, when available, the commit date. */
+/** Text shown on the page: hash and, when available, the commit date followed by "UTC". */
 export function describePageVersion(env = process.env, cwd?: string): string {
-    return [describeVersion(env, cwd), describeCommitDate(env, cwd)].filter(Boolean).join(' ');
+    const date = describeCommitDate(env, cwd);
+    return [describeVersion(env, cwd), date && `${date} UTC`].filter(Boolean).join(' ');
 }
 
 /** Uncommitted changes, for the local build log. */

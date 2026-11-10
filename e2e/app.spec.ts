@@ -644,7 +644,7 @@ test('the About page ends with the build version (commit hash and date)', async 
     // Commit hash and date in UTC, matching git in this repository
     const head = execSync('git show -s --format=%h%n%ct HEAD', { encoding: 'utf8' }).trim().split('\n');
     const date = new Date(Number(head[1]) * 1000).toISOString().slice(0, 19).replace('T', ' ');
-    await expect(version).toHaveText(new RegExp(`^Versão da página: ${head[0]}(-dirty)? ${date}$`));
+    await expect(version).toHaveText(new RegExp(`^Versão: ${head[0]}(-dirty)? ${date} UTC$`));
     await expect(version).toHaveCSS('font-style', 'italic');
     const sizes = await version.evaluate((element) => ({
         version: parseFloat(getComputedStyle(element).fontSize),
