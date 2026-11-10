@@ -1,7 +1,6 @@
 <!-- Reader screen (/{language}/{bible}/{book}/{chapterVerses}); its state and actions are in reader.svelte.ts. -->
 <script lang="ts">
     import { debounce } from 'es-toolkit';
-    import { tick } from 'svelte';
     import { resolveCrossReferences } from '../../core/cross-references';
     import { getBookAbbreviation, getBookName } from '../../core/ebf';
     import type { DisplayOptions } from '../../core/passage';
@@ -60,13 +59,9 @@
     };
 
     let referenceField: HTMLInputElement;
-    let staticActionButtons: HTMLElement;
     let historyModal: HistoryModal;
     let notesModal: NotesModal;
     let textSearchModal: TextSearchModal;
-
-    /** The floating buttons are shown when the original buttons leave the screen. */
-    let floatingVisible = $state(false);
 
     /** Translations of the interface language and, if it is of another one, the selected Bible. */
     const bibleGroups = $derived.by(() => {
@@ -78,24 +73,6 @@
     });
 
     const books = $derived(reader.ebf?.bible.books ?? []);
-
-    function updateFloatingButtons(): void {
-        const rect = staticActionButtons.getBoundingClientRect();
-        const isVisible =
-            rect.top >= 0 &&
-            rect.left >= 0 &&
-            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-            rect.right <= (window.innerWidth || document.documentElement.clientWidth);
-        floatingVisible = !isVisible;
-    }
-
-    // The passage changes the height of the page
-    $effect(() => {
-        // Only reads the state, to run again when it changes
-        // eslint-disable-next-line @typescript-eslint/no-meaningless-void-operator
-        void reader.resultHtml;
-        void tick().then(updateFloatingButtons);
-    });
 
     const showWhileTyping = debounce(editInputReference, TYPING_DEBOUNCE_MS);
 
@@ -129,44 +106,6 @@
         );
     }
 </script>
-
-<svelte:window onscroll={updateFloatingButtons} onresize={updateFloatingButtons} />
-
-{#snippet chapterButtons(prefix: string)}
-    <button
-        id="{prefix}prev-chapter-button"
-        class={['action-button', reader.resultError && 'hidden']}
-        title={t('buttons.prevChapter')}
-        use:clickFeedback
-        onclick={() => {
-            navigateChapter(-1);
-        }}>&#9664;</button
-    >
-    <button
-        id="{prefix}copy-button"
-        class={['action-button', reader.resultError && 'hidden']}
-        title={t('buttons.copy')}
-        use:clickFeedback
-        onclick={copyResult}>&#128203;</button
-    >
-    <button
-        id="{prefix}share-button"
-        class={['action-button', reader.resultError && 'hidden']}
-        title={t('buttons.share')}
-        aria-label={t('buttons.share')}
-        use:clickFeedback
-        onclick={sharePassage}><ShareIcon /></button
-    >
-    <button
-        id="{prefix}next-chapter-button"
-        class={['action-button', reader.resultError && 'hidden']}
-        title={t('buttons.nextChapter')}
-        use:clickFeedback
-        onclick={() => {
-            navigateChapter(1);
-        }}>&#9654;</button
-    >
-{/snippet}
 
 <div id="reader" class="main-content" bind:this={root}>
     <div class="container">
@@ -290,21 +229,51 @@
             {/each}
         </div>
 
-        <div class="buttons-block" id="static-action-buttons" bind:this={staticActionButtons}>
-            {@render chapterButtons('')}
-        </div>
-
         <div class="result-container">
+            <!-- Frozen at the top of the screen while the passage scrolls under it -->
+            {#if !reader.resultError}
+                <div class="buttons-block" id="action-buttons">
+                    <button
+                        id="prev-chapter-button"
+                        class="action-button"
+                        title={t('buttons.prevChapter')}
+                        use:clickFeedback
+                        onclick={() => {
+                            navigateChapter(-1);
+                        }}>&#9664;</button
+                    >
+                    <button
+                        id="copy-button"
+                        class="action-button"
+                        title={t('buttons.copy')}
+                        use:clickFeedback
+                        onclick={copyResult}>&#128203;</button
+                    >
+                    <button
+                        id="share-button"
+                        class="action-button"
+                        title={t('buttons.share')}
+                        aria-label={t('buttons.share')}
+                        use:clickFeedback
+                        onclick={sharePassage}><ShareIcon /></button
+                    >
+                    <button
+                        id="next-chapter-button"
+                        class="action-button"
+                        title={t('buttons.nextChapter')}
+                        use:clickFeedback
+                        onclick={() => {
+                            navigateChapter(1);
+                        }}>&#9654;</button
+                    >
+                </div>
+            {/if}
+
             <!-- The result HTML is built by src/core/render.ts, with the Bible texts escaped -->
             <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
             <div class="result" id="result" dir="auto" onclick={onResultClick}>
                 <!-- eslint-disable-next-line svelte/no-at-html-tags -->
                 {@html reader.resultHtml}
-            </div>
-
-            <!-- Floating navigation buttons -->
-            <div class={['buttons-block', floatingVisible && 'visible']} id="floating-action-buttons">
-                {@render chapterButtons('floating-')}
             </div>
         </div>
     </div>

@@ -154,6 +154,17 @@ button:hover {
     position: relative;
 }
 
+/* Controls of the passage: always above the text and frozen at the top of the screen while it scrolls (opaque, so the text does not show through) */
+#action-buttons {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    margin-bottom: 0;
+    padding: 8px 0;
+    background-color: var(--bg-primary);
+    box-sizing: border-box;
+}
+
 .buttons-block {
     display: flex;
     justify-content: space-between;
@@ -580,10 +591,6 @@ button:hover {
     opacity: 0.7;
 }
 
-.action-button.hidden {
-    display: none;
-}
-
 @media (max-width: 768px) {
     .action-button {
         padding: 6px 3px;
@@ -609,20 +616,6 @@ button:hover {
     font-size: 16px;
     font-weight: bold;
     box-shadow: 0 2px 10px var(--shadow-color);
-}
-
-#floating-action-buttons {
-    display: none;
-    margin: 15px 0;
-    background-color: var(--bg-primary);
-    padding: 10px;
-    border-radius: 8px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-#floating-action-buttons.visible {
-    display: flex;
 }
 
 /* Theme button */
@@ -889,9 +882,7 @@ a:visited {
 
 /* Right-to-left languages: the arrows that mean "previous" and "next" point the other way */
 [dir='rtl'] #prev-chapter-button,
-[dir='rtl'] #next-chapter-button,
-[dir='rtl'] #floating-prev-chapter-button,
-[dir='rtl'] #floating-next-chapter-button {
+[dir='rtl'] #next-chapter-button {
     transform: scaleX(-1);
 }
 

@@ -166,6 +166,25 @@ test('navigates between chapters', async ({ page }) => {
     await expect(reference(page)).toHaveValue('Gn 1');
 });
 
+test('the chapter controls stay above the text and frozen at the top while a long passage scrolls', async ({ page }) => {
+    // Psalm 118 of the Ave-Maria (119 in the Hebrew numbering) has 176 verses
+    await open(page, 'Sl 118');
+    const buttons = page.locator('#action-buttons');
+    const box = async () => (await buttons.boundingBox())!;
+
+    // Above the text
+    expect((await box()).y + (await box()).height).toBeLessThanOrEqual((await result(page).boundingBox())!.y);
+
+    await page.evaluate(() => {
+        window.scrollTo(0, 1500);
+    });
+    expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(1000);
+    await expect.poll(async () => Math.round((await box()).y)).toBe(0);
+    await expect(page.locator('#next-chapter-button')).toBeInViewport();
+    // Only the controls are frozen: the formatting buttons scrolled away
+    await expect(page.locator('#formatting-buttons')).not.toBeInViewport();
+});
+
 test('book list opens the first chapter', async ({ page }) => {
     await open(page);
     await page.locator('.book-section .expandable-header').click();
@@ -508,13 +527,11 @@ test.describe('sharing via the Web Share API', () => {
         await expect(page.locator('.temporary-message')).toHaveCount(0);
     });
 
-    test('share buttons use the three-node icon', async ({ page }) => {
+    test('share button uses the three-node icon', async ({ page }) => {
         await open(page, 'Jo 3,16');
-        for (const id of ['#share-button', '#floating-share-button']) {
-            const button = page.locator(id);
-            await expect(button).toHaveAttribute('aria-label', 'Compartilhar');
-            await expect(button.locator('svg.share-icon circle')).toHaveCount(3);
-        }
+        const button = page.locator('#share-button');
+        await expect(button).toHaveAttribute('aria-label', 'Compartilhar');
+        await expect(button.locator('svg.share-icon circle')).toHaveCount(3);
     });
 });
 
