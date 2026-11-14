@@ -1,6 +1,6 @@
 # Development
 
-Requires Node.js 24.
+Requires Node.js 26.
 
 ```bash
 npm install

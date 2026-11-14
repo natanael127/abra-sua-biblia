@@ -3,7 +3,7 @@
     "private": true,
     "type": "module",
     "engines": {
-        "node": "24.x"
+        "node": "26.x"
     },
     "scripts": {
         "dev": "vite",
@@ -23,7 +23,7 @@
         "@playwright/test": "^1.64.1",
         "@sveltejs/vite-plugin-svelte": "^7.3.1",
         "@types/html-minifier-terser": "^7.0.2",
-        "@types/node": "^24.19.2",
+        "@types/node": "^26.6.6",
         "@typescript/native": "npm:typescript@^7.0.2",
         "easy-bible-format": "git+https://github.com/natanael127/easy-bible-format.git#bd1623bd09abd2465c06a72ffd226d50f575bafd",
         "eslint": "^10.13.0",

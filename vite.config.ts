@@ -143,5 +143,8 @@ export default defineConfig({
         // Brings the local copy of the Bibles (from the Blob store) up to date
         globalSetup: ['tests/global-setup.ts'],
         setupFiles: ['tests/setup.ts'],
+        // Node 26 warns whenever the globals are enumerated (jsdom does it) and its experimental
+        // Web Storage is on; the tests use the jsdom one
+        execArgv: ['--no-experimental-webstorage'],
     },
 });
