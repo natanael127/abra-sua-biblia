@@ -64,6 +64,7 @@
         "note": "Majuscules ou minuscules, peu importe. L'abréviation de chaque livre figure dans la liste des livres."
     },
     "helpPage": {
+        "contents": "Sommaire",
         "menu": {
             "title": "Menu",
             "button": "Ouvre le menu, avec la Bible, cette aide et la page À propos."

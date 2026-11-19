@@ -64,6 +64,7 @@
         "note": "Upper or lower case makes no difference. The abbreviation of each book is shown in the book list."
     },
     "helpPage": {
+        "contents": "Contents",
         "menu": {
             "title": "Menu",
             "button": "Opens the menu, with the Bible, this help and the About page."

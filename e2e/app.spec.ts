@@ -722,6 +722,14 @@ test.describe('main menu', () => {
         await expect(help.getByRole('link', { name: 'Bíblias convertidas para EBF' })).toBeVisible();
         // The same help as the modal, with the books of the open Bible
         await expect(help.locator('.help-examples code').first()).toHaveText('Mt 5');
+        // The contents list scrolls to its section, without a new history entry
+        const contents = help.getByRole('navigation', { name: 'Índice' });
+        await expect(contents.getByRole('link')).toHaveCount(9);
+        const historyLength = await page.evaluate(() => history.length);
+        await contents.getByRole('link', { name: 'Instalar como aplicativo' }).click();
+        await expect(page.locator('#help-install')).toBeInViewport();
+        await expect(page).toHaveURL('/help');
+        expect(await page.evaluate(() => history.length)).toBe(historyLength);
         // How to install it as an app, on Android and on iOS
         await expect(help.getByRole('heading', { name: 'Instalar como aplicativo' })).toBeVisible();
         await expect(help).toContainText('toque em “Adicionar à Tela de Início”');

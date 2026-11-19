@@ -64,6 +64,7 @@
         "note": "Maiuscole o minuscole, non fa differenza. L'abbreviazione di ogni libro è nell'elenco dei libri."
     },
     "helpPage": {
+        "contents": "Indice",
         "menu": {
             "title": "Menu",
             "button": "Apre il menu, con la Bibbia, questo aiuto e la pagina Informazioni."

@@ -23,6 +23,35 @@
     });
 
     const bibleName = $derived(reader.ebf?.bible.name ?? 'Ave-Maria');
+
+    /** The sections of the page, in order: the contents list links to each card by its id. */
+    const sections = [
+        { id: 'menu', title: () => t('helpPage.menu.title') },
+        { id: 'translation', title: () => t('helpPage.translation.title') },
+        { id: 'upload', title: () => t('helpPage.upload.title') },
+        { id: 'books', title: () => t('helpPage.books.title') },
+        { id: 'reference', title: () => t('helpPage.reference.title') },
+        { id: 'formatting', title: () => t('helpPage.formatting.title') },
+        { id: 'actions', title: () => t('helpPage.actions.title') },
+        { id: 'typing', title: () => t('helpPage.referenceTitle') },
+        { id: 'install', title: () => t('helpPage.install.title') },
+    ];
+
+    /**
+     * Scrolls to a section without touching the URL: a real fragment would add a history entry and
+     * break the "Back returns to the Bible" rule (see screens/navigation.ts). The `href` is kept so
+     * that the links still work for the keyboard and the context menu.
+     */
+    function goTo(event: MouseEvent, id: string): void {
+        event.preventDefault();
+        const card = root?.querySelector<HTMLElement>(`#help-${id}`);
+        if (!card) return;
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        card.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+        const heading = card.querySelector<HTMLElement>('h3');
+        heading?.setAttribute('tabindex', '-1');
+        heading?.focus({ preventScroll: true });
+    }
 </script>
 
 {#snippet item(button: Snippet, description: string)}
@@ -47,7 +76,23 @@
             <h2 class="screen-title"><span aria-hidden="true">❓</span> {t('menu.help')}</h2>
         </div>
 
-        <section class="help-card">
+        <nav class="help-card help-contents" aria-labelledby="help-contents-title">
+            <h3 id="help-contents-title">{t('helpPage.contents')}</h3>
+            <ol>
+                {#each sections as section (section.id)}
+                    <li>
+                        <a
+                            href="#help-{section.id}"
+                            onclick={(event) => {
+                                goTo(event, section.id);
+                            }}>{section.title()}</a
+                        >
+                    </li>
+                {/each}
+            </ol>
+        </nav>
+
+        <section class="help-card" id="help-menu">
             <h3>{t('helpPage.menu.title')}</h3>
             <ul class="help-items">
                 {#snippet menuButton()}{@render glyph('☰')}{/snippet}
@@ -55,7 +100,7 @@
             </ul>
         </section>
 
-        <section class="help-card">
+        <section class="help-card" id="help-translation">
             <h3>{t('helpPage.translation.title')}</h3>
             <ul class="help-items">
                 {#snippet language()}
@@ -72,7 +117,7 @@
             </ul>
         </section>
 
-        <section class="help-card">
+        <section class="help-card" id="help-upload">
             <h3>{t('helpPage.upload.title')}</h3>
             <p class="help-section-intro">{t('helpPage.upload.intro')}</p>
             <ul class="help-items">
@@ -110,7 +155,7 @@
             </div>
         </section>
 
-        <section class="help-card">
+        <section class="help-card" id="help-books">
             <h3>{t('helpPage.books.title')}</h3>
             <ul class="help-items">
                 {#snippet books()}<span class="help-books">{t('reader.books')} ▼</span>{/snippet}
@@ -118,7 +163,7 @@
             </ul>
         </section>
 
-        <section class="help-card">
+        <section class="help-card" id="help-reference">
             <h3>{t('helpPage.reference.title')}</h3>
             <ul class="help-items">
                 {#snippet field()}<span class="help-field">{t('reader.referencePlaceholder')}</span>{/snippet}
@@ -130,7 +175,7 @@
             </ul>
         </section>
 
-        <section class="help-card">
+        <section class="help-card" id="help-formatting">
             <h3>{t('helpPage.formatting.title')}</h3>
             <p class="help-section-intro">{t('helpPage.formatting.intro')}</p>
             <ul class="help-items">
@@ -149,7 +194,7 @@
             </ul>
         </section>
 
-        <section class="help-card">
+        <section class="help-card" id="help-actions">
             <h3>{t('helpPage.actions.title')}</h3>
             <p class="help-section-intro">{t('helpPage.actions.intro')}</p>
             <ul class="help-items">
@@ -172,14 +217,14 @@
             </ul>
         </section>
 
-        <section class="help-card">
+        <section class="help-card" id="help-typing">
             <h3>{t('helpPage.referenceTitle')}</h3>
             <!-- Our own static texts, with the book names escaped (see instructionsHtml) -->
             <!-- eslint-disable-next-line svelte/no-at-html-tags -->
             {@html referenceHelp}
         </section>
 
-        <section class="help-card">
+        <section class="help-card" id="help-install">
             <h3>{t('helpPage.install.title')}</h3>
             <p class="help-section-intro">{t('helpPage.install.intro')}</p>
             <div class="install-platforms">
@@ -215,6 +260,28 @@
         border: 1px solid var(--border-light);
         border-radius: 8px;
         background-color: var(--bg-secondary);
+    }
+
+    /* Targets of the contents list: leave a margin above them when scrolled to */
+    .help-card[id] {
+        scroll-margin-top: 10px;
+    }
+
+    .help-card h3:focus {
+        outline: none;
+    }
+
+    /* The contents list: numbered links in columns, filled top to bottom */
+    .help-contents ol {
+        columns: 260px 2;
+        column-gap: 20px;
+        margin: 0;
+        padding-inline-start: 24px;
+    }
+
+    .help-contents li {
+        padding: 3px 0;
+        break-inside: avoid;
     }
 
     .help-card h3 {

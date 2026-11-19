@@ -64,6 +64,7 @@
         "note": "Litterae maiusculae an minusculae nihil refert. Abbreviatio cuiusque libri in indice librorum invenitur."
     },
     "helpPage": {
+        "contents": "Index",
         "menu": {
             "title": "Index",
             "button": "Aperit indicem, cum Biblia, hoc auxilio et pagina “De hoc situ”."

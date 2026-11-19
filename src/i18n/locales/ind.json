@@ -64,6 +64,7 @@
         "note": "Huruf besar atau kecil tidak berpengaruh. Singkatan setiap kitab ada di daftar kitab."
     },
     "helpPage": {
+        "contents": "Daftar isi",
         "menu": {
             "title": "Menu",
             "button": "Membuka menu, berisi Alkitab, bantuan ini, dan halaman Tentang."
