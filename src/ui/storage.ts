@@ -9,6 +9,7 @@ const KEYS = {
     displayOptions: 'bibleDisplayOptions',
     history: 'searchHistory',
     searchOrder: 'searchOrder',
+    favoriteBibles: 'favoriteBibles',
 } as const;
 
 function readJson(key: string): unknown {
@@ -78,4 +79,15 @@ export function getSearchOrder(): SearchOrder {
 
 export const saveSearchOrder = (order: SearchOrder): void => {
     localStorage.setItem(KEYS.searchOrder, order);
+};
+
+/** Favorite translations: JSON list of Bible keys (language/slug, e.g. "por/ave-maria"); empty by default. */
+export function getFavoriteBibles(): string[] {
+    const saved = readJson(KEYS.favoriteBibles);
+    const keys = Array.isArray(saved) ? saved.filter((item): item is string => typeof item === 'string') : [];
+    return [...new Set(keys)];
+}
+
+export const saveFavoriteBibles = (keys: readonly string[]): void => {
+    localStorage.setItem(KEYS.favoriteBibles, JSON.stringify(keys));
 };

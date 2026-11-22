@@ -33,6 +33,36 @@ export function selectableBibles(
     return bibles.filter((bible) => bible.language === language || bibleKey(bible) === currentKey);
 }
 
+/** Sections of the translation menu, in order: the favorites, then one per type of Bible. */
+export type BibleMenuSection = 'favorites' | BibleType;
+
+const BIBLE_TYPE_ORDER: readonly BibleType[] = ['catholic', 'protestant', 'other'];
+
+/**
+ * Sections of the translation menu, without the empty ones. The favorites come first and are
+ * always there, whatever the language; the others are the selectable Bibles (see
+ * `selectableBibles`) grouped by type, without repeating the favorites. Keys of favorites that
+ * are not in the index are ignored.
+ */
+export function bibleMenuSections(
+    bibles: readonly BibleIndexEntry[],
+    language: string,
+    currentKey: string,
+    favoriteKeys: readonly string[],
+): { section: BibleMenuSection; bibles: BibleIndexEntry[] }[] {
+    const favorites = new Set(favoriteKeys);
+    const isFavorite = (bible: BibleIndexEntry) => favorites.has(bibleKey(bible));
+    const others = selectableBibles(bibles, language, currentKey).filter((bible) => !isFavorite(bible));
+    const sections: { section: BibleMenuSection; bibles: BibleIndexEntry[] }[] = [
+        { section: 'favorites', bibles: bibles.filter(isFavorite) },
+        ...BIBLE_TYPE_ORDER.map((type) => ({
+            section: type,
+            bibles: others.filter((bible) => (bible.type ?? 'other') === type),
+        })),
+    ];
+    return sections.filter((section) => section.bibles.length > 0);
+}
+
 export async function getAvailableBibles(fetchFn: typeof fetch = fetch): Promise<BibleIndexEntry[]> {
     try {
         const response = await fetchFn(`${DATA_PATH}index.json`);
