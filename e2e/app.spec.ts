@@ -1199,23 +1199,107 @@ test.describe('interface language', () => {
         await expect(page.locator('html')).toHaveAttribute('dir', 'ltr');
     });
 
-    test('the translation row fits on the screen, with the language to the left of the translation', async ({ page }) => {
+    test('the header fits on the screen: menu, language, title and theme on a row, star and translation below', async ({ page }) => {
         await open(page);
         const viewport = page.viewportSize();
+        const box = async (selector: string) => page.locator(selector).first().boundingBox();
+        const menu = await box('#reader .menu-button');
         const language = await languageButton(page).boundingBox();
-        const select = await page.locator('#bible-select').boundingBox();
-        const theme = await page.locator('#theme-button').boundingBox();
-        expect(language && select && theme).toBeTruthy();
-        if (!language || !select || !theme || !viewport) return;
-        expect(language.x + language.width).toBeLessThanOrEqual(select.x);
-        expect(select.x + select.width).toBeLessThanOrEqual(theme.x + 1);
+        const title = await box('#reader .page-title');
+        const theme = await box('#theme-button');
+        const star = await box('#favorite-button');
+        const select = await box('#bible-select');
+        expect(menu && language && title && theme && star && select).toBeTruthy();
+        if (!menu || !language || !title || !theme || !star || !select || !viewport) return;
+
+        // First row, from left to right: menu, language, title, theme
+        expect(menu.x + menu.width).toBeLessThanOrEqual(language.x + 1);
+        expect(language.x + language.width).toBeLessThanOrEqual(title.x + 1);
+        expect(title.x + title.width).toBeLessThanOrEqual(theme.x + 1);
         expect(theme.x + theme.width).toBeLessThanOrEqual(viewport.width);
-        // Same line
-        expect(Math.abs(language.y - select.y)).toBeLessThan(4);
+        expect(Math.abs(menu.y - language.y)).toBeLessThan(4);
+        expect(Math.abs(language.y - theme.y)).toBeLessThan(4);
+
+        // Second row: star, then the translation taking the rest of the space
+        expect(star.y).toBeGreaterThan(language.y + language.height - 1);
+        expect(star.x + star.width).toBeLessThanOrEqual(select.x + 1);
+        expect(Math.abs(star.y - select.y)).toBeLessThan(4);
+        expect(select.x + select.width).toBeLessThanOrEqual(viewport.width);
+        // The theme button, at the far end of the first row, ends where the translation does
+        expect(Math.abs(theme.x + theme.width - (select.x + select.width))).toBeLessThan(4);
 
         // The open list is within the screen too
         await languageButton(page).click();
         const list = await page.locator('#language-listbox').boundingBox();
         expect(list && list.x >= 0 && list.x + list.width <= viewport.width).toBe(true);
+    });
+});
+
+test.describe('favorite translations', () => {
+    const star = (page: Page) => page.locator('#favorite-button');
+    const select = (page: Page) => page.locator('#bible-select');
+    const labels = (page: Page) => select(page).locator('optgroup').evaluateAll((groups) => groups.map((g) => g.getAttribute('label')));
+    const valuesOf = (page: Page, label: string) =>
+        select(page).locator(`optgroup[label="${label}"] option`).evaluateAll((options) => options.map((o) => (o as HTMLOptionElement).value));
+    const saved = (page: Page) => page.evaluate(() => localStorage.getItem('favoriteBibles'));
+
+    test('starts with no favorites: empty star and no "Favoritas" section', async ({ page }) => {
+        await open(page);
+        await expect(star(page)).toHaveAttribute('aria-pressed', 'false');
+        await expect(star(page)).toHaveText('☆');
+        expect(await labels(page)).toEqual(['Católicas', 'Evangélicas']);
+        expect(await saved(page)).toBeNull();
+    });
+
+    test('favoriting moves the Bible to the first section, without repeating it, and survives a reload', async ({ page }) => {
+        await open(page);
+        await star(page).click();
+        await expect(star(page)).toHaveAttribute('aria-pressed', 'true');
+        await expect(star(page)).toHaveText('★');
+        expect(await saved(page)).toBe('["por/ave-maria"]');
+        expect((await labels(page))[0]).toBe('Favoritas');
+        expect(await valuesOf(page, 'Favoritas')).toEqual(['por/ave-maria']);
+        expect(await valuesOf(page, 'Católicas')).not.toContain('por/ave-maria');
+        await expect(select(page)).toHaveValue('por/ave-maria');
+
+        await page.reload();
+        await waitForBible(page);
+        await expect(star(page)).toHaveText('★');
+        expect(await valuesOf(page, 'Favoritas')).toEqual(['por/ave-maria']);
+
+        // Unfavoriting brings it back to its section and the "Favoritas" one disappears
+        await star(page).click();
+        await expect(star(page)).toHaveText('☆');
+        expect(await saved(page)).toBe('[]');
+        expect(await labels(page)).toEqual(['Católicas', 'Evangélicas']);
+        expect(await valuesOf(page, 'Católicas')).toContain('por/ave-maria');
+    });
+
+    test('the favorites are listed whatever the interface language', async ({ page }) => {
+        await page.addInitScript(() => {
+            if (!localStorage.getItem('favoriteBibles')) localStorage.setItem('favoriteBibles', '["eng/king-james-version","por/edicao-pastoral"]');
+        });
+        await open(page);
+        expect(await valuesOf(page, 'Favoritas')).toEqual(expect.arrayContaining(['eng/king-james-version', 'por/edicao-pastoral']));
+        expect(await valuesOf(page, 'Católicas')).not.toContain('por/edicao-pastoral');
+
+        // A favorite of another language can be chosen, and the star shows it is one
+        await select(page).selectOption('eng/king-james-version');
+        await expect(select(page)).toHaveValue('eng/king-james-version');
+        await expect(star(page)).toHaveText('★');
+        await expect(page).toHaveURL(/\/eng\/king-james-version\//);
+
+        // Another interface language: the favorites are still there, in the new language's section name
+        await page.locator('#language-button').click();
+        await page.locator('#language-option-eng').click();
+        expect((await labels(page))[0]).toBe('Favorites');
+        expect(await valuesOf(page, 'Favorites')).toEqual(expect.arrayContaining(['eng/king-james-version', 'por/edicao-pastoral']));
+    });
+
+    test('the Bible uploaded by the user cannot be favorited', async ({ page }) => {
+        await open(page);
+        await select(page).selectOption('upload');
+        await expect(star(page)).toBeDisabled();
+        await expect(star(page)).toHaveText('☆');
     });
 });

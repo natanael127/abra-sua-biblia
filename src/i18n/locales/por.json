@@ -17,6 +17,7 @@
         "chooseTranslation": "Escolha sua tradução:",
         "upload": "Fazer upload...",
         "bibleTypes": {
+            "favorites": "Favoritas",
             "catholic": "Católicas",
             "protestant": "Evangélicas",
             "other": "Outras"
@@ -34,6 +35,8 @@
             "auto": "Tema: Automático"
         },
         "downloadEbf": "Baixar arquivo EBF gerado",
+        "favoriteAdd": "Adicionar às favoritas",
+        "favoriteRemove": "Remover das favoritas",
         "textSearch": "Busca textual",
         "history": "Histórico de buscas",
         "quotes": "Aspas no texto",
@@ -72,6 +75,7 @@
         "translation": {
             "title": "Tradução e aparência",
             "language": "Idioma da interface. A lista de traduções mostra as Bíblias desse idioma.",
+            "favorite": "Estrela vazia: a tradução não é favorita; cheia: é favorita. Um toque alterna. As favoritas ficam na seção “Favoritas”, no topo da lista, em qualquer idioma.",
             "bible": "Tradução da Bíblia. A última opção, “Fazer upload...”, abre um arquivo de Bíblia do seu aparelho.",
             "theme": "Tema: automático (segue o aparelho), claro ou escuro. Cada toque passa para o próximo."
         },

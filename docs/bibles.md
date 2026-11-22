@@ -39,6 +39,20 @@ To add, change or remove a Bible:
 5. commit the catalog. To check that the store has exactly what the catalog says, delete
    `.bibles-cache/` and run `npm run bibles:fetch`: it fails if any file differs.
 
+## Favorite translations
+
+The star (☆/★) to the left of the translation list adds the open Bible to the user's favorites or takes it
+out. They are kept in `localStorage` (`favoriteBibles`) as a JSON list of the Bible keys, the same
+`language/slug` as in the URL (`["por/ave-maria","eng/king-james-version"]`); it starts empty. The
+Bible uploaded by the user is not in the catalog and cannot be a favorite (the star is disabled).
+
+The favorites are in a "Favorites" section at the top of the list, whatever the interface language, and
+are not repeated in the other sections (Catholic, Protestant, Other). The section only exists while there is
+a favorite. Keys that are no longer in the catalog are ignored, and stay in the list. The sections are built
+by `bibleMenuSections` (`src/data/bibles.ts`).
+
+## Settings
+
 The Bible opened on the first visit is set in `settings.json`, by language and slug (`defaultBible`).
 
 The interface language used when the user has not chosen one and the browser's has no translation

@@ -17,6 +17,7 @@
         "chooseTranslation": "Pilih terjemahanmu:",
         "upload": "Unggah berkas...",
         "bibleTypes": {
+            "favorites": "Favorit",
             "catholic": "Katolik",
             "protestant": "Protestan",
             "other": "Lainnya"
@@ -34,6 +35,8 @@
             "auto": "Tema: Otomatis"
         },
         "downloadEbf": "Unduh berkas EBF yang dihasilkan",
+        "favoriteAdd": "Tambahkan ke favorit",
+        "favoriteRemove": "Hapus dari favorit",
         "textSearch": "Pencarian teks",
         "history": "Riwayat pencarian",
         "quotes": "Tanda kutip pada teks",
@@ -72,6 +75,7 @@
         "translation": {
             "title": "Terjemahan dan tampilan",
             "language": "Bahasa antarmuka. Daftar terjemahan menampilkan Alkitab dalam bahasa tersebut.",
+            "favorite": "Bintang kosong: terjemahan bukan favorit; bintang penuh: favorit. Setiap ketukan mengubahnya. Favorit ada di bagian “Favorit” di atas daftar, dalam bahasa apa pun.",
             "bible": "Terjemahan Alkitab. Pilihan terakhir, “Unggah berkas...”, membuka berkas Alkitab dari perangkatmu.",
             "theme": "Tema: otomatis (mengikuti perangkat), terang, atau gelap. Setiap ketukan berpindah ke tema berikutnya."
         },

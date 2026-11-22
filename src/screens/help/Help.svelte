@@ -110,6 +110,8 @@
                     </span>
                 {/snippet}
                 {@render item(language, t('helpPage.translation.language'))}
+                {#snippet favorite()}{@render glyph('☆')}{@render glyph('★')}{/snippet}
+                {@render item(favorite, t('helpPage.translation.favorite'))}
                 {#snippet bible()}<span class="help-select">{bibleName}</span>{/snippet}
                 {@render item(bible, t('helpPage.translation.bible'))}
                 {#snippet theme()}{@render glyph('🌓')}{@render glyph('☀️')}{@render glyph('🌙')}{/snippet}

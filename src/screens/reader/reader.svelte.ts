@@ -60,6 +60,8 @@ class ReaderState {
     bibles = $state.raw<BibleIndexEntry[]>([]);
     /** Identifier of the selected Bible ("por/ave-maria", or UPLOAD_KEY); empty until the first navigation. */
     bibleKey = $state('');
+    /** Keys of the favorite Bibles ("por/ave-maria"), saved in localStorage. */
+    favoriteBibles = $state<string[]>(storage.getFavoriteBibles());
     /** Content of the reference field: the input reference, as the user wrote it. */
     inputReference = $state('');
     displayOptions = $state<DisplayOptions>(storage.getSavedDisplayOptions());
@@ -283,6 +285,14 @@ function selectBible(key: string): Promise<boolean> {
 export function chooseBible(key: string): void {
     const inputReference = reader.inputReference.trim();
     getRouter().navigate(readerPath(key, replaceBook(inputReference, findBook, getBookUrlId)));
+}
+
+/** Adds the Bible to the favorites, or takes it out if it already is one. */
+export function toggleFavoriteBible(key: string): void {
+    reader.favoriteBibles = reader.favoriteBibles.includes(key)
+        ? reader.favoriteBibles.filter((favorite) => favorite !== key)
+        : [...reader.favoriteBibles, key];
+    storage.saveFavoriteBibles(reader.favoriteBibles);
 }
 
 export async function uploadBible(file: File | undefined): Promise<void> {

@@ -17,6 +17,7 @@
         "chooseTranslation": "Choose your translation:",
         "upload": "Upload...",
         "bibleTypes": {
+            "favorites": "Favorites",
             "catholic": "Catholic",
             "protestant": "Protestant",
             "other": "Other"
@@ -34,6 +35,8 @@
             "auto": "Theme: Automatic"
         },
         "downloadEbf": "Download the generated EBF file",
+        "favoriteAdd": "Add to favorites",
+        "favoriteRemove": "Remove from favorites",
         "textSearch": "Text search",
         "history": "Search history",
         "quotes": "Quotation marks in the text",
@@ -72,6 +75,7 @@
         "translation": {
             "title": "Translation and appearance",
             "language": "Interface language. The translation list shows the Bibles in that language.",
+            "favorite": "Empty star: the translation is not a favorite; filled star: it is. Each tap switches. Favorites go in the “Favorites” section at the top of the list, in any language.",
             "bible": "Bible translation. The last option, “Upload...”, opens a Bible file from your device.",
             "theme": "Theme: automatic (follows the device), light or dark. Each tap switches to the next one."
         },

@@ -3,7 +3,8 @@
 The texts of the interface are translated into 18 languages, which are also the languages of the
 Bibles: the list of translations only offers the ones in the interface language (plus the one
 currently open, if it is of another language, since a link may open any Bible and changing the
-interface language does not disturb the reading). They use
+interface language does not disturb the reading, plus the user's [favorites](bibles.md#favorite-translations),
+which are offered in every language). They use
 [i18next](https://www.i18next.com), with one file per language in `src/i18n/locales/`, named by the
 ISO 639-3 code (`por.json`, `eng.json`, `zho.json`...). Portuguese is the reference: its keys type
 `t()` and `tests/i18n` fail if another language lacks a key, has an empty text, changes the

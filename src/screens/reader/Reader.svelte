@@ -4,7 +4,7 @@
     import { resolveCrossReferences } from '../../core/cross-references';
     import { getBookAbbreviation, getBookName } from '../../core/ebf';
     import type { DisplayOptions } from '../../core/passage';
-    import { bibleKey, selectableBibles } from '../../data/bibles';
+    import { bibleKey, bibleMenuSections } from '../../data/bibles';
     import { t, uiLanguage } from '../../i18n/reactive.svelte';
     import { clickFeedback } from '../../ui/click-feedback';
     import Expandable from '../../ui/components/Expandable.svelte';
@@ -27,6 +27,7 @@
         reader,
         sharePassage,
         toggleDisplayOption,
+        toggleFavoriteBible,
         uploadBible,
     } from './reader.svelte';
     import { UPLOAD_KEY } from './url';
@@ -36,8 +37,6 @@
 
     /** Pause in typing the input reference before the passage is displayed. */
     const TYPING_DEBOUNCE_MS = 500;
-
-    const BIBLE_TYPE_ORDER = ['catholic', 'protestant', 'other'] as const;
 
     /** Formatting buttons: id, display option and label. */
     const FORMAT_BUTTONS: readonly { id: string; option: keyof DisplayOptions; label: string }[] = [
@@ -63,14 +62,15 @@
     let notesModal: NotesModal;
     let textSearchModal: TextSearchModal;
 
-    /** Translations of the interface language and, if it is of another one, the selected Bible. */
-    const bibleGroups = $derived.by(() => {
-        const bibles = selectableBibles(reader.bibles, uiLanguage().code, reader.bibleKey);
-        return BIBLE_TYPE_ORDER.map((type) => ({
-            type,
-            bibles: bibles.filter((bible) => (bible.type || 'other') === type),
-        })).filter((group) => group.bibles.length > 0);
-    });
+    /**
+     * The favorites, whatever the language, and then the translations of the interface language
+     * (plus the selected Bible, if it is of another one) by type.
+     */
+    const bibleGroups = $derived(bibleMenuSections(reader.bibles, uiLanguage().code, reader.bibleKey, reader.favoriteBibles));
+
+    /** Only a Bible of the catalog can be a favorite (not the one uploaded by the user). */
+    const canFavorite = $derived(reader.bibles.some((bible) => bibleKey(bible) === reader.bibleKey));
+    const isFavorite = $derived(reader.favoriteBibles.includes(reader.bibleKey));
 
     const books = $derived(reader.ebf?.bible.books ?? []);
 
@@ -112,10 +112,22 @@
         <div class="preloaded-bibles">
             <div class="bible-selection">
                 <MenuButton />
+                <LanguageSelect />
                 <h3 class="page-title">{t('reader.chooseTranslation')}</h3>
+                <ThemeButton />
             </div>
             <div class="bible-selection">
-                <LanguageSelect />
+                <button
+                    id="favorite-button"
+                    class={['favorite-button', isFavorite && 'active']}
+                    title={isFavorite ? t('buttons.favoriteRemove') : t('buttons.favoriteAdd')}
+                    aria-label={isFavorite ? t('buttons.favoriteRemove') : t('buttons.favoriteAdd')}
+                    aria-pressed={isFavorite}
+                    disabled={!canFavorite}
+                    onclick={() => {
+                        toggleFavoriteBible(reader.bibleKey);
+                    }}>{isFavorite ? '★' : '☆'}</button
+                >
                 <select
                     id="bible-select"
                     value={reader.bibleKey}
@@ -123,8 +135,8 @@
                         chooseBible(event.currentTarget.value);
                     }}
                 >
-                    {#each bibleGroups as group (group.type)}
-                        <optgroup label={t(`reader.bibleTypes.${group.type}`)}>
+                    {#each bibleGroups as group (group.section)}
+                        <optgroup label={t(`reader.bibleTypes.${group.section}`)}>
                             {#each group.bibles as bible (bibleKey(bible))}
                                 <option value={bibleKey(bible)}>{bible.name}</option>
                             {/each}
@@ -134,7 +146,6 @@
                         <option value={UPLOAD_KEY}>{t('reader.upload')}</option>
                     {/if}
                 </select>
-                <ThemeButton />
             </div>
         </div>
 

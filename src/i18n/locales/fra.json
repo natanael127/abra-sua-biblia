@@ -17,6 +17,7 @@
         "chooseTranslation": "Choisissez votre traduction :",
         "upload": "Téléverser un fichier...",
         "bibleTypes": {
+            "favorites": "Favorites",
             "catholic": "Catholiques",
             "protestant": "Protestantes",
             "other": "Autres"
@@ -34,6 +35,8 @@
             "auto": "Thème : Automatique"
         },
         "downloadEbf": "Télécharger le fichier EBF généré",
+        "favoriteAdd": "Ajouter aux favorites",
+        "favoriteRemove": "Retirer des favorites",
         "textSearch": "Recherche de texte",
         "history": "Historique des recherches",
         "quotes": "Guillemets dans le texte",
@@ -72,6 +75,7 @@
         "translation": {
             "title": "Traduction et apparence",
             "language": "Langue de l'interface. La liste des traductions affiche les Bibles de cette langue.",
+            "favorite": "Étoile vide : la traduction n’est pas une favorite ; étoile pleine : elle l’est. Chaque appui bascule. Les favorites figurent dans la section « Favorites », en haut de la liste, quelle que soit la langue.",
             "bible": "Traduction de la Bible. La dernière option, « Téléverser un fichier... », ouvre un fichier de Bible de votre appareil.",
             "theme": "Thème : automatique (suit l'appareil), clair ou sombre. Chaque appui passe au suivant."
         },

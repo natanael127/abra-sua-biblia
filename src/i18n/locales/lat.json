@@ -17,6 +17,7 @@
         "chooseTranslation": "Elige versionem tuam:",
         "upload": "Imponere fasciculum...",
         "bibleTypes": {
+            "favorites": "Dilectae",
             "catholic": "Catholicae",
             "protestant": "Protestanticae",
             "other": "Aliae"
@@ -34,6 +35,8 @@
             "auto": "Thema: Automaticum"
         },
         "downloadEbf": "Deponere fasciculum EBF confectum",
+        "favoriteAdd": "Adde ad dilectas",
+        "favoriteRemove": "Remove ex dilectis",
         "textSearch": "Quaestio textualis",
         "history": "Historia quaestionum",
         "quotes": "Signa citationis in textu",
@@ -72,6 +75,7 @@
         "translation": {
             "title": "Versio et species",
             "language": "Lingua interfaciei. Index versionum Biblias huius linguae ostendit.",
+            "favorite": "Stella vacua: versio non est dilecta; plena: dilecta est. Quisque tactus mutat. Dilectae in sectione «Dilectae», in capite indicis, in quavis lingua inveniuntur.",
             "bible": "Versio Bibliae. Optio ultima, “Imponere fasciculum...”, fasciculum Bibliae ex instrumento tuo aperit.",
             "theme": "Thema: automaticum (instrumentum sequitur), clarum aut obscurum. Quisque tactus ad sequens transit."
         },

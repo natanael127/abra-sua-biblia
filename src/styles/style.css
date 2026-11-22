@@ -20,6 +20,7 @@
     --success-color: #4CAF50;
     --success-hover: #45a049;
     --error-color: #d32f2f;
+    --favorite-color: #e6a100;
     --modal-overlay: rgba(0, 0, 0, 0.5);
     --shadow-color: rgba(0, 0, 0, 0.2);
 }
@@ -46,6 +47,7 @@
     --success-color: #66bb6a;
     --success-hover: #4caf50;
     --error-color: #ef5350;
+    --favorite-color: #ffca28;
     --modal-overlay: rgba(0, 0, 0, 0.7);
     --shadow-color: rgba(0, 0, 0, 0.5);
 }
@@ -65,7 +67,7 @@ body {
 }
 
 .page-title {
-    text-align: center;
+    text-align: start;
 }
 
 .book-list {
@@ -230,6 +232,21 @@ button:hover {
 .bible-selection span {
     white-space: nowrap;
     margin-inline-end: 10px;
+}
+
+/* Heading of the first row: takes the room between the language and the theme button, which stays at the end */
+.bible-selection .page-title {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+}
+
+/* On a phone the heading would take three lines between the language and the theme button */
+@media (max-width: 480px) {
+    .bible-selection .page-title {
+        font-size: 1rem;
+        line-height: 1.3;
+    }
 }
 
 .bible-option {
@@ -641,6 +658,39 @@ button:hover {
 .theme-button:focus {
     outline: none;
     border-color: var(--success-color);
+}
+
+/* Favorite button: empty star = not a favorite, filled star = favorite */
+.favorite-button {
+    flex: none;
+    padding: 8px 12px;
+    background-color: var(--button-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--border-accent);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1.4;
+    min-width: 44px;
+    transition: background-color 0.2s;
+}
+
+.favorite-button:hover:not(:disabled) {
+    background-color: var(--button-hover);
+}
+
+.favorite-button:focus-visible {
+    outline: none;
+    border-color: var(--success-color);
+}
+
+.favorite-button.active {
+    color: var(--favorite-color);
+}
+
+.favorite-button:disabled {
+    opacity: 0.5;
+    cursor: default;
 }
 
 /* Links */

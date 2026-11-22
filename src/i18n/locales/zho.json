@@ -17,6 +17,7 @@
         "chooseTranslation": "选择译本：",
         "upload": "上传文件…",
         "bibleTypes": {
+            "favorites": "收藏",
             "catholic": "天主教",
             "protestant": "新教",
             "other": "其他"
@@ -34,6 +35,8 @@
             "auto": "主题：自动"
         },
         "downloadEbf": "下载生成的 EBF 文件",
+        "favoriteAdd": "加入收藏",
+        "favoriteRemove": "取消收藏",
         "textSearch": "文本搜索",
         "history": "搜索历史",
         "quotes": "正文中的引号",
@@ -72,6 +75,7 @@
         "translation": {
             "title": "译本与外观",
             "language": "界面语言。译本列表会显示该语言的圣经。",
+            "favorite": "空心星：该译本未收藏；实心星：已收藏。每点一次切换一次。收藏的译本会显示在列表顶部的“收藏”分组中，不受语言限制。",
             "bible": "圣经译本。最后一项“上传文件…”可打开你设备上的圣经文件。",
             "theme": "主题：自动（跟随设备）、浅色或深色。每点一次切换到下一个。"
         },
