@@ -14,6 +14,7 @@
     import NotesModal from '../../ui/dialogs/NotesModal.svelte';
     import HistoryModal from '../../ui/dialogs/HistoryModal.svelte';
     import TextSearchModal from '../../ui/dialogs/TextSearchModal.svelte';
+    import CopyIcon from '../../ui/icons/CopyIcon.svelte';
     import ShareIcon from '../../ui/icons/ShareIcon.svelte';
     import * as storage from '../../ui/storage';
     import {
@@ -257,8 +258,9 @@
                         id="copy-button"
                         class="action-button"
                         title={t('buttons.copy')}
+                        aria-label={t('buttons.copy')}
                         use:clickFeedback
-                        onclick={copyResult}>&#128203;</button
+                        onclick={copyResult}><CopyIcon /></button
                     >
                     <button
                         id="share-button"

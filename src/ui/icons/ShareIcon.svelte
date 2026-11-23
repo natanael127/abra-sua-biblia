@@ -2,7 +2,7 @@
 <script lang="ts">
 </script>
 
-<svg class="share-icon" viewBox="0 0 24 24" aria-hidden="true"
+<svg class="line-icon" viewBox="0 0 24 24" aria-hidden="true"
     ><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><line
         x1="8.6"
         y1="13.5"

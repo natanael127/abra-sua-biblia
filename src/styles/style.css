@@ -615,8 +615,8 @@ button:hover {
     }
 }
 
-/* Share icon (SVG): same size and color as the button text, in both themes */
-.share-icon {
+/* Line icons (SVG, share and copy): same size and color as the button text, in both themes */
+.line-icon {
     width: 1em;
     height: 1em;
     vertical-align: -0.125em;

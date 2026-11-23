@@ -531,7 +531,15 @@ test.describe('sharing via the Web Share API', () => {
         await open(page, 'Jo 3,16');
         const button = page.locator('#share-button');
         await expect(button).toHaveAttribute('aria-label', 'Compartilhar');
-        await expect(button.locator('svg.share-icon circle')).toHaveCount(3);
+        await expect(button.locator('svg.line-icon circle')).toHaveCount(3);
+    });
+
+    test('copy button uses the two-sheet icon', async ({ page }) => {
+        await open(page, 'Jo 3,16');
+        const button = page.locator('#copy-button');
+        await expect(button).toHaveAttribute('aria-label', 'Copiar texto');
+        await expect(button.locator('svg.line-icon rect')).toHaveCount(1);
+        await expect(button).not.toContainText('📋');
     });
 });
 

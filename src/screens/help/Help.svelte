@@ -9,6 +9,7 @@
     import { FLAG_URLS } from '../../i18n/flags';
     import { t, uiLanguage } from '../../i18n/reactive.svelte';
     import MenuButton from '../../ui/components/MenuButton.svelte';
+    import CopyIcon from '../../ui/icons/CopyIcon.svelte';
     import ShareIcon from '../../ui/icons/ShareIcon.svelte';
     import { reader } from '../reader/reader.svelte';
     import { instructionsHtml } from '../reader/instructions';
@@ -204,7 +205,7 @@
                 {@render item(previous, t('helpPage.actions.prevChapter'))}
                 {#snippet next()}<span class="action-button help-glyph help-arrow">&#9654;</span>{/snippet}
                 {@render item(next, t('helpPage.actions.nextChapter'))}
-                {#snippet copy()}{@render glyph('📋')}{/snippet}
+                {#snippet copy()}<span class="action-button help-glyph"><CopyIcon /></span>{/snippet}
                 {@render item(copy, t('helpPage.actions.copy'))}
                 {#snippet share()}<span class="action-button help-glyph"><ShareIcon /></span>{/snippet}
                 {@render item(share, t('helpPage.actions.share'))}
